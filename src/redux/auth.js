@@ -13,6 +13,7 @@ export const types = {
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
   CHECK_USER: "CHECK_USER"
 }
+
 export const checkUser = (email) => ({
   type: types.CHECK_USER,
   payload: {
