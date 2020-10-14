@@ -5,9 +5,9 @@ import { API } from "aws-amplify";
 
 export const types = {
   TRIAL_REGISTER: "TRIAL_REGISTER",
-  REGISTER_USER: "REGISTER_USER",
-  REGISTER_USER_SUCCESS: "REGISTER_USER_SUCCESS",
-  REGISTER_USER_FAIL: "REGISTER_USER_FAIL",
+  SIGNUP_USER: "SIGNUP_USER",
+  SIGNUP_USER_SUCCESS: "SIGNUP_USER_SUCCESS",
+  SIGNUP_USER_FAIL: "SIGNUP_USER_FAIL",
   LOGIN_USER: "LOGIN_USER",
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
@@ -40,13 +40,15 @@ export const trialRegister = (email, password, firstname, lastname, phone) => ({
   }
 });
 
-export const registerUserSuccess = user => ({
-  type: types.REGISTER_USER_SUCCESS,
-  payload: user
-});
-export const registerUserFail = errorMessageID => ({
-  type: types.REGISTER_USER_FAIL,
-  payload: errorMessageID
+export const signupUser = (email, password, firstname, lastname, phone) => ({
+  type: types.TRIAL_REGISTER,
+  payload: {
+    email,
+    password,
+    firstname,
+    lastname,
+    phone
+  }
 });
 
 /* END OF ACTION Section */
@@ -93,6 +95,29 @@ const trialRegisterSagaAsync = async (
   }
 };
 
+const signupUserSagaAsync = async (  
+  email,
+  password,
+  firstname,
+  lastname,
+  phone
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/signup", {
+      body: {
+        email: email,
+        password: password,
+        first_name: firstname,
+        last_name: lastname,
+        phone: phone
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+};
+
 const loginUserSagaAsync = async (
   email,
   password
@@ -122,6 +147,30 @@ function* checkUserSaga({ payload }) {
     );
   } catch (error) {
     console.log("error from checkUserSaga :", error);
+  }
+}
+
+function* signupUserSaga({ payload }) {
+  const {
+    email,
+    password,
+    firstname,
+    lastname,
+    phone
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      signupUserSagaAsync,
+      email,
+      password,
+      firstname,
+      lastname,
+      phone
+    );
+    console.log("signupUser : ", apiResult);
+  } catch (error) {
+    console.log("error from signupUser :", error);
   }
 }
 
@@ -173,9 +222,6 @@ function* loginUserSaga({ payload }) {
   }
 }
 
-function* registerWithEmailPassword({ payload }) {
-}
-
 export function* watchCheckUser() {
   yield takeEvery(types.CHECK_USER, checkUserSaga)
 }
@@ -184,8 +230,8 @@ export function* watchLoginUser() {
   yield takeEvery(types.LOGIN_USER, loginUserSaga)
 }
 
-export function* watchRegisterUser() {
-  yield takeEvery(types.REGISTER_USER, registerWithEmailPassword);
+export function* watchSignupUser() {
+  yield takeEvery(types.SIGNUP_USER, signupUserSaga);
 }
 
 export function* watchTrialRegister() {
@@ -194,10 +240,10 @@ export function* watchTrialRegister() {
 
 export function* saga() {
   yield all([
-    fork(watchRegisterUser),
     fork(watchLoginUser),
     fork(watchTrialRegister),
-    fork(watchCheckUser)
+    fork(watchCheckUser),
+    fork(watchSignupUser)
   ]);
 }
 

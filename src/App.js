@@ -6,7 +6,8 @@ import {
 } from "react-router-dom";
 
 import Login from "./views/login";
-import Register from "./views/register";
+import TrialRegister from "./views/trial_register";
+import Signup from "./views/signup";
 
 import backgroundImg from "./assets/img/mainbg.jpg";
 
@@ -27,14 +28,18 @@ function App() {
               <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/register">สมัครสมาชิก</a>
+              <a className="nav-link" href="/signup">สมัครสมาชิก</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/trial_register">ทดลองใช้ฟรี</a>
             </li>
           </ul>
         </div>
       </nav>
       <Switch>
         <Route path='/login' component={Login} />
-        <Route path='/register' component={Register} />
+        <Route path='/trial_register' component={TrialRegister} />
+        <Route path='/signup' component={Signup} />
       </Switch>
     </div>
   );

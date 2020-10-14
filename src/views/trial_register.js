@@ -10,7 +10,7 @@ import {
 import { connect } from "react-redux";
 
 import { trialRegister, checkUser } from "../redux/auth";
-import "./register.scss";
+import "./trial_register.scss";
 
 class Register extends Component {
   constructor(props) {
@@ -57,8 +57,8 @@ class Register extends Component {
             </div>
 
             <div className="form-side">
-              <CardTitle className="h3 mb-4">
-                {"สมัครสมาชิก"}
+              <CardTitle className="h6 mb-4">
+                {"กรอกข้อมูลเพื่อทดลองใช้โปรแกรม"}
               </CardTitle>
 
               <Form>
