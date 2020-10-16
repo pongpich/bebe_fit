@@ -8,6 +8,7 @@ import {
 import Login from "./views/login";
 import TrialRegister from "./views/trial_register";
 import Signup from "./views/signup";
+import RegisterSub from "./views/register_sub";
 
 import backgroundImg from "./assets/img/mainbg.jpg";
 
@@ -40,6 +41,7 @@ function App() {
         <Route path='/login' component={Login} />
         <Route path='/trial_register' component={TrialRegister} />
         <Route path='/signup' component={Signup} />
+        <Route path='/register_sub' component={RegisterSub} />
       </Switch>
     </div>
   );
