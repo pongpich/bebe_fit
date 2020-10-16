@@ -11,7 +11,8 @@ export const types = {
   LOGIN_USER: "LOGIN_USER",
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
-  CHECK_USER: "CHECK_USER"
+  CHECK_USER: "CHECK_USER",
+  UPDATE_PROFILE: "UPDATE_PROFILE"
 }
 
 export const checkUser = (email) => ({
@@ -28,6 +29,16 @@ export const loginUser = (email, password) => ({
     password
   }
 });
+
+export const updateProfile = (
+  email,
+  other_attributes) => ({
+    type: types.UPDATE_PROFILE,
+    payload: {
+      email,
+      other_attributes 
+    }
+  });
 
 export const trialRegister = (email, password, firstname, lastname, phone) => ({
   type: types.TRIAL_REGISTER,
@@ -95,7 +106,24 @@ const trialRegisterSagaAsync = async (
   }
 };
 
-const signupUserSagaAsync = async (  
+const updateProfileSagaAsync = async (
+  email,
+  other_attributes
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/updateProfile", {
+      body: {
+        email: email,
+        other_attributes
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const signupUserSagaAsync = async (
   email,
   password,
   firstname,
@@ -147,6 +175,23 @@ function* checkUserSaga({ payload }) {
     );
   } catch (error) {
     console.log("error from checkUserSaga :", error);
+  }
+}
+
+function* updateProfileSaga({ payload }) {
+  const {
+    email,
+    other_attributes
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      updateProfileSagaAsync,
+      email,
+      other_attributes
+    );
+  } catch (error) {
+    console.log("error from updateProfile :", error);
   }
 }
 
@@ -238,12 +283,17 @@ export function* watchTrialRegister() {
   yield takeEvery(types.TRIAL_REGISTER, trialRegisterSaga)
 }
 
+export function* watchUpdateProfile() {
+  yield takeEvery(types.UPDATE_PROFILE, updateProfileSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
     fork(watchTrialRegister),
     fork(watchCheckUser),
-    fork(watchSignupUser)
+    fork(watchSignupUser),
+    fork(watchUpdateProfile)
   ]);
 }
 

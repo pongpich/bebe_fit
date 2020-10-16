@@ -6,15 +6,18 @@ import {
   Input,
   Button
 } from "reactstrap";
+import { connect } from "react-redux";
+
+import { updateProfile } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
-
 import "./register_sub.scss";
 
 class Register_Sub extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      email: "",
       sex: "male",
       age: "",
       weight: "",
@@ -23,6 +26,8 @@ class Register_Sub extends Component {
       waist: "",
       hip: ""
     };
+
+    this.onUpdateProfile = this.onUpdateProfile.bind(this);
   }
 
   handleChange(event) {
@@ -32,7 +37,40 @@ class Register_Sub extends Component {
   };
 
   onChange = e => {
-    this.setState({[e.target.name]: e.target.value});
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+
+  onUpdateProfile(event) {
+    const {
+      email,
+      sex,
+      age,
+      weight,
+      height,
+      chest,
+      waist,
+      hip
+    } = this.state;
+
+    const other_attributes = {
+      sex,
+      age: Number(age),
+      weight: Number(weight),
+      height: Number(height),
+      chest: Number(chest),
+      waist: Number(waist),
+      hip: Number(hip)
+    }
+
+    this.props.updateProfile(
+      email,
+      other_attributes
+    );
+    console.log(
+      email,
+      other_attributes
+    )
   }
 
   render() {
@@ -66,10 +104,10 @@ class Register_Sub extends Component {
                       <div class="form-check" onChange={this.onChangeValue}>
                         <span>เพศ : </span>
                         <label class="form-check-label" style={{ marginLeft: "20px" }}>
-                          <input 
-                            class="form-check-input" 
-                            type="radio" 
-                            value="male" 
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            value="male"
                             name="sex"
                             checked={this.state.sex === "male"}
                             onChange={this.onChange}
@@ -79,12 +117,12 @@ class Register_Sub extends Component {
                           </span>
                         </label>
                         <label class="form-check-label" style={{ marginLeft: "20px" }}>
-                          <input 
+                          <input
                             class="form-check-input"
                             type="radio"
                             value="female"
                             name="sex"
-                            checked={this.state.sex === "female"} 
+                            checked={this.state.sex === "female"}
                             onChange={this.onChange}
                           /> หญิง
                           <span class="circle">
@@ -97,13 +135,13 @@ class Register_Sub extends Component {
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="age" class="bmd-label-floating">อายุ</label>
-                        <input 
-                          type="number" 
-                          class="form-control" 
-                          id="age" 
-                          name="age" 
-                          step=".01" 
-                          value={this.state.age} 
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="age"
+                          name="age"
+                          step=".01"
+                          value={this.state.age}
                           onChange={(event) => this.handleChange(event)}
                         />
                       </div>
@@ -111,13 +149,13 @@ class Register_Sub extends Component {
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="weight" class="bmd-label-floating">น้ำหนัก (กก.)</label>
-                        <input 
-                          type="number" 
-                          class="form-control" 
-                          id="weight" 
-                          name="weight" 
-                          step=".01" 
-                          value={this.state.weight} 
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="weight"
+                          name="weight"
+                          step=".01"
+                          value={this.state.weight}
                           onChange={(event) => this.handleChange(event)}
                         />
                       </div>
@@ -125,13 +163,13 @@ class Register_Sub extends Component {
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="height" class="bmd-label-floating">ส่วนสูง (ซม.)</label>
-                        <input 
-                          type="number" 
-                          class="form-control" 
-                          id="height" 
-                          name="height" 
-                          step=".01" 
-                          value={this.state.height} 
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="height"
+                          name="height"
+                          step=".01"
+                          value={this.state.height}
                           onChange={(event) => this.handleChange(event)}
                         />
                       </div>
@@ -145,36 +183,47 @@ class Register_Sub extends Component {
                       <h6>กรุณาวัดสัดส่วนของท่าน <br></br> โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h6>
                       <div class="form-group">
                         <label for="chest" class="bmd-label-floating">รอบอก (นิ้ว)</label>
-                        <input 
-                          type="number" 
-                          class="form-control" 
-                          id="chest" 
-                          name="chest" 
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="chest"
+                          name="chest"
                           step=".01"
-                          value={this.state.chest} 
+                          value={this.state.chest}
                           onChange={(event) => this.handleChange(event)} />
                       </div>
                       <div class="form-group">
                         <label for="waist" class="bmd-label-floating">รอบเอว (นิ้ว)</label>
-                        <input 
-                          type="number" 
+                        <input
+                          type="number"
                           class="form-control"
-                          id="waist" 
-                          name="waist" 
+                          id="waist"
+                          name="waist"
                           step=".01"
-                          value={this.state.waist} 
+                          value={this.state.waist}
                           onChange={(event) => this.handleChange(event)}
                         />
                       </div>
                       <div class="form-group">
                         <label for="hip" class="bmd-label-floating">สะโพก (นิ้ว)</label>
-                        <input 
-                          type="number" 
+                        <input
+                          type="number"
                           class="form-control"
                           id="hip"
                           name="hip"
                           step=".01"
                           value={this.state.hip} onChange={(event) => this.handleChange(event)}
+                        />
+                      </div>
+                      <div class="form-group">
+                        <label for="email" class="bmd-label-floating">Email</label>
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="email"
+                          name="email"
+                          step=".01"
+                          value={this.state.email} onChange={(event) => this.handleChange(event)}
                         />
                       </div>
                     </div>
@@ -194,7 +243,15 @@ class Register_Sub extends Component {
                   <div class="space-70 mb-5"></div>
                   <div class="form-group mb-5">
                     <div class="text-center">
-                      <Button color="danger" className="btn-shadow" type='submit'>ลงทะเบียน</Button>
+                      <Button 
+                        color="danger" 
+                        className="btn-shadow" 
+                        size="lg"
+                        onClick={() => this.onUpdateProfile()}
+                        block
+                      >
+                        ลงทะเบียน
+                      </Button>
                     </div>
                   </div>
                 </form>
@@ -208,4 +265,14 @@ class Register_Sub extends Component {
   }
 }
 
-export default Register_Sub;
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return {user};
+};
+
+const mapActionsToProps = { updateProfile };
+
+export default connect(
+  mapStateToProps, 
+  mapActionsToProps 
+)(Register_Sub);
