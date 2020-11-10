@@ -1,0 +1,18 @@
+.videoItem {
+  border-radius: 15px;
+  border: 1px solid black;
+  height: 100%;
+
+  .videoThumb {
+    float: left;
+  }
+  .videoName {
+    float: left;
+    border-radius: 15px;
+  }
+  
+  .videoDuration {
+    float: right;
+    margin-top: 15%;
+  }
+}

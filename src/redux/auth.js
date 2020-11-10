@@ -12,7 +12,10 @@ export const types = {
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
   CHECK_USER: "CHECK_USER",
-  UPDATE_PROFILE: "UPDATE_PROFILE"
+  UPDATE_PROFILE: "UPDATE_PROFILE",
+  CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
+  VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
+  VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS"
 }
 
 export const checkUser = (email) => ({
@@ -36,7 +39,7 @@ export const updateProfile = (
     type: types.UPDATE_PROFILE,
     payload: {
       email,
-      other_attributes 
+      other_attributes
     }
   });
 
@@ -52,7 +55,7 @@ export const trialRegister = (email, password, firstname, lastname, phone) => ({
 });
 
 export const signupUser = (email, password, firstname, lastname, phone) => ({
-  type: types.TRIAL_REGISTER,
+  type: types.SIGNUP_USER,
   payload: {
     email,
     password,
@@ -62,9 +65,42 @@ export const signupUser = (email, password, firstname, lastname, phone) => ({
   }
 });
 
+export const createCustomWeekForUser = (user_id, weight, startDate, offset) => ({
+  type: types.CREATE_CUSTOM_WEEK_FOR_USER,
+  payload: {
+    user_id,
+    weight,
+    startDate,
+    offset
+  }
+});
+
+export const videoListForUser = (user_id) => ({
+  type: types.VIDEO_LIST_FOR_USER,
+  payload: {
+    user_id
+  }
+});
+
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+const videoListForUserSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/videoListForUser", {
+      queryStringParameters: {
+        user_id: user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
 
 const checkUserSagaAsync = async (
   email
@@ -75,7 +111,6 @@ const checkUserSagaAsync = async (
         email: email
       }
     });
-    console.log("success: ", apiResult);
     return apiResult
   } catch (error) {
     console.log("error :", error);
@@ -115,6 +150,27 @@ const updateProfileSagaAsync = async (
       body: {
         email: email,
         other_attributes
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const createCustomWeekForUserSagaAsync = async (
+  user_id,
+  weight,
+  startDate,
+  offset
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/createCustomWeekForUser", {
+      body: {
+        user_id,
+        weight,
+        startDate,
+        offset
       }
     });
     return apiResult;
@@ -163,6 +219,35 @@ const loginUserSagaAsync = async (
   }
 };
 
+function* videoListForUserSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      videoListForUserSagaAsync,
+      user_id
+    );
+    if (apiResult.results.length > 0) {
+      const day1 = JSON.parse(apiResult.results[0].day1 );
+      const day2 = JSON.parse(apiResult.results[0].day2 );
+      const day3 = JSON.parse(apiResult.results[0].day3 );
+      const day4 = JSON.parse(apiResult.results[0].day4 );
+      yield put({
+        type: types.VIDEO_LIST_FOR_USER_SUCCESS,
+        payload: {
+          day1,
+          day2,
+          day3,
+          day4
+        }
+      })
+    }
+  } catch (error) {
+    console.log("error form videoListForUserSaga", error); 
+  }
+}
+
 function* checkUserSaga({ payload }) {
   const {
     email
@@ -192,6 +277,28 @@ function* updateProfileSaga({ payload }) {
     );
   } catch (error) {
     console.log("error from updateProfile :", error);
+  }
+}
+
+function* createCustomWeekForUserSaga({ payload }) {
+  const {
+    user_id,
+    weight,
+    startDate,
+    offset
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      createCustomWeekForUserSagaAsync,
+      user_id,
+      weight,
+      startDate,
+      offset
+    );
+    console.log("createCustomWeekForUser : ", apiResult);
+  } catch (error) {
+    console.log("error from createCustomWeekForUser :", error);
   }
 }
 
@@ -257,6 +364,7 @@ function* loginUserSaga({ payload }) {
     );
     console.log(loginResult);
     if (loginResult.results.message === "success") {
+      console.log("user :" ,loginResult.results.user);
       yield put({
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user
@@ -287,13 +395,23 @@ export function* watchUpdateProfile() {
   yield takeEvery(types.UPDATE_PROFILE, updateProfileSaga)
 }
 
+export function* watchCreateCustomWeekForUser() {
+  yield takeEvery(types.CREATE_CUSTOM_WEEK_FOR_USER, createCustomWeekForUserSaga)
+}
+
+export function* watchVideoListForUser() {
+  yield takeEvery(types.VIDEO_LIST_FOR_USER, videoListForUserSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
     fork(watchTrialRegister),
     fork(watchCheckUser),
     fork(watchSignupUser),
-    fork(watchUpdateProfile)
+    fork(watchUpdateProfile),
+    fork(watchCreateCustomWeekForUser),
+    fork(watchVideoListForUser)
   ]);
 }
 
@@ -302,7 +420,14 @@ export function* saga() {
 /* REDUCER Section */
 
 const INIT_STATE = {
-  user: null
+  user: null,
+  exerciseVideo: {
+    day1: [],
+    day2: [],
+    day3: [],
+    day4: []
+  },
+  status: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -311,6 +436,12 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         user: action.payload,
+        status: "success"
+      };
+    case types.VIDEO_LIST_FOR_USER_SUCCESS:
+      return {
+        ...state,
+        exerciseVideo: action.payload
       };
     default:
       return { ...state };
