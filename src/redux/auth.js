@@ -13,6 +13,7 @@ export const types = {
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
   CHECK_USER: "CHECK_USER",
   UPDATE_PROFILE: "UPDATE_PROFILE",
+  UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS"
@@ -95,6 +96,7 @@ const videoListForUserSagaAsync = async (
         user_id: user_id
       }
     });
+    console.log("apiResult Async :" ,apiResult);
     return apiResult
   } catch (error) {
     console.log("error :", error);
@@ -228,11 +230,16 @@ function* videoListForUserSaga({ payload }) {
       videoListForUserSagaAsync,
       user_id
     );
+    
+    console.log("apiResult.results :",apiResult.results );
+  
     if (apiResult.results.length > 0) {
-      const day1 = JSON.parse(apiResult.results[0].day1 );
-      const day2 = JSON.parse(apiResult.results[0].day2 );
-      const day3 = JSON.parse(apiResult.results[0].day3 );
-      const day4 = JSON.parse(apiResult.results[0].day4 );
+      const activities = JSON.parse(apiResult.results[0].activities);
+      console.log("activities :", activities);
+      const day1 = activities[0];
+      const day2 = activities[1];
+      const day3 = activities[2];
+      const day4 = activities[3];
       yield put({
         type: types.VIDEO_LIST_FOR_USER_SUCCESS,
         payload: {
@@ -275,6 +282,10 @@ function* updateProfileSaga({ payload }) {
       email,
       other_attributes
     );
+    yield put({
+      type: types.UPDATE_PROFILE_SUCCESS,
+      payload: other_attributes
+    })
   } catch (error) {
     console.log("error from updateProfile :", error);
   }
@@ -364,7 +375,7 @@ function* loginUserSaga({ payload }) {
     );
     console.log(loginResult);
     if (loginResult.results.message === "success") {
-      console.log("user :" ,loginResult.results.user);
+      console.log("user :" ,loginResult.results.user.other_attributes);
       yield put({
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user
@@ -438,6 +449,14 @@ export function reducer(state = INIT_STATE, action) {
         user: action.payload,
         status: "success"
       };
+    case types.UPDATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          other_attributes: action.payload
+        }
+      }
     case types.VIDEO_LIST_FOR_USER_SUCCESS:
       return {
         ...state,

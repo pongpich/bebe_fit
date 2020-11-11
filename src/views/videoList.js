@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import {
-  CardTitle,
-  Form,
-  Label,
-  Input,
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
@@ -30,13 +26,22 @@ class VideoList extends Component {
       dayDuration: [],
       other_attributes: ""
     };
-   
+   console.log("User เฉยๆ :", this.props.user);
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
   }
 
   componentDidMount() {
-    this.props.videoListForUser(125);
+    this.props.videoListForUser(133);  
+  }
+
+  componentDidUpdate(prevProps) {
+    const { user } = this.props;
+    if(user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes){
+      this.setState({
+        other_attributes: user.other_attributes
+      })
+    }
   }
 
   handleChange(event) {
@@ -78,11 +83,11 @@ class VideoList extends Component {
     }
 
     this.props.updateProfile(
-      email,
+      this.props.user.email,
       other_attributes
     );
     console.log(
-      email,
+      this.props.user.email,
       other_attributes
     )
 
@@ -213,17 +218,6 @@ class VideoList extends Component {
                           value={this.state.hip} onChange={(event) => this.handleChange(event)}
                         />
                       </div>
-                      <div class="form-group">
-                        <label for="email" class="bmd-label-floating">Email</label>
-                        <input
-                          type="email"
-                          class="form-control"
-                          id="email"
-                          name="email"
-                          step=".01"
-                          value={this.state.email} onChange={(event) => this.handleChange(event)}
-                        />
-                      </div>
                     </div>
 
                     <div class="col-md-4" style={{ marginTop: "15px" }}>
@@ -264,7 +258,7 @@ class VideoList extends Component {
     switch(focusDay){
       case 1: 
         todayExercise = this.props.exerciseVideo.day1;
-        dayDuration = [];
+        dayDuration = []; 
         break;
       case 2: 
         todayExercise = this.props.exerciseVideo.day2;
@@ -361,7 +355,6 @@ class VideoList extends Component {
   render() {
     let { focusDay, dayDuration, other_attributes} = this.state;
     let todayExercise;
-    console.log("other_attributes :", other_attributes);
     switch(focusDay){
       case 1: 
         todayExercise = this.props.exerciseVideo.day1;
@@ -405,9 +398,9 @@ class VideoList extends Component {
           <div class="container">
             <div class="card card-plain">
               {
-                (other_attributes) 
+                (this.props.user && this.props.user.other_attributes) 
                 ? this.renderVideoList()
-                : this.renderVideoList()
+                : this.renderOtherAttribute()
               }
             </div>
           </div>

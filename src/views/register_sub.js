@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import {
-  CardTitle,
-  Form,
-  Label,
-  Input,
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
