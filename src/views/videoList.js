@@ -4,7 +4,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { updateProfile, createCustomWeekForUser, videoListForUser } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -26,7 +26,6 @@ class VideoList extends Component {
       dayDuration: [],
       other_attributes: ""
     };
-   console.log("User เฉยๆ :", this.props.user);
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
   }
@@ -38,12 +37,15 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { user } = this.props;
+    const { user, status } = this.props;
     if(user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes){
       this.setState({
         other_attributes: user.other_attributes
       })
       this.props.videoListForUser(this.props.user.user_id);  
+    }
+    if (prevProps.user !== status && status === "default") {
+      this.props.history.push('/Login');
     }
   }
 
@@ -61,6 +63,10 @@ class VideoList extends Component {
     this.setState({
       focusDay: day
     });
+  }
+
+  onUserLogout(event) {
+    this.props.logoutUser();
   }
 
   onUpdateProfile(event) {
@@ -98,7 +104,12 @@ class VideoList extends Component {
       other_attributes: other_attributes
     })
 
-    this.props.createCustomWeekForUser(this.props.user.user_id, other_attributes.weight, this.props.user.start_date, this.props.user.offset);
+    this.props.createCustomWeekForUser(
+      this.props.user.user_id, 
+      other_attributes.weight, 
+      this.props.user.start_date, 
+      this.props.user.offset
+    );
   };
 
   renderOtherAttribute() {
@@ -349,6 +360,15 @@ class VideoList extends Component {
                         ))
                       }
                       {/* <h3> {videoForWeek} </h3> */}
+                      <Button 
+                        color="danger" 
+                        className="btn-shadow" 
+                        size="lg"
+                        onClick={() => this.onUserLogout()}
+                        block
+                      >
+                        ออกจากระบบ
+                      </Button>
                     </table>
                   </div>
                 </form>
@@ -416,11 +436,11 @@ class VideoList extends Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user, exerciseVideo } = authUser;
-  return { user, exerciseVideo };
+  const { user, exerciseVideo, status } = authUser;
+  return { user, exerciseVideo, status };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser };
 
 export default connect(
   mapStateToProps,

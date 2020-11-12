@@ -16,8 +16,13 @@ export const types = {
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
-  VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS"
+  VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
+  LOGOUT_USER: "LOGOUT_USER"
 }
+
+export const logoutUser = () => ({
+  type: types.LOGOUT_USER
+});
 
 export const checkUser = (email) => ({
   type: types.CHECK_USER,
@@ -96,7 +101,7 @@ const videoListForUserSagaAsync = async (
         user_id: user_id
       }
     });
-    console.log("apiResult Async :" ,apiResult);
+    console.log("apiResult Async :", apiResult);
     return apiResult
   } catch (error) {
     console.log("error :", error);
@@ -230,9 +235,9 @@ function* videoListForUserSaga({ payload }) {
       videoListForUserSagaAsync,
       user_id
     );
-    
-    console.log("apiResult.results :",apiResult.results );
-  
+
+    console.log("apiResult.results :", apiResult.results);
+
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
       console.log("activities :", activities);
@@ -251,7 +256,7 @@ function* videoListForUserSaga({ payload }) {
       })
     }
   } catch (error) {
-    console.log("error form videoListForUserSaga", error); 
+    console.log("error form videoListForUserSaga", error);
   }
 }
 
@@ -375,7 +380,7 @@ function* loginUserSaga({ payload }) {
     );
     console.log(loginResult);
     if (loginResult.results.message === "success") {
-      console.log("user :" ,loginResult.results.user.other_attributes);
+      console.log("user :", loginResult.results.user.other_attributes);
       yield put({
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user
@@ -461,6 +466,18 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         exerciseVideo: action.payload
+      };
+    case types.LOGOUT_USER:
+      return {
+        ...state,
+        user: null,
+        exerciseVideo: {
+          day1: [],
+          day2: [],
+          day3: [],
+          day4: []
+        },
+        status: "default"
       };
     default:
       return { ...state };
