@@ -37,14 +37,14 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { user, status } = this.props;
+    const { user } = this.props;
     if(user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes){
       this.setState({
         other_attributes: user.other_attributes
       })
       this.props.videoListForUser(this.props.user.user_id);  
     }
-    if (prevProps.user !== status && status === "default") {
+    if (prevProps.user !== user && user === null) {
       this.props.history.push('/Login');
     }
   }
