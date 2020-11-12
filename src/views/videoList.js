@@ -32,7 +32,9 @@ class VideoList extends Component {
   }
 
   componentDidMount() {
-    this.props.videoListForUser(133);  
+    if(this.props.user && this.props.user.other_attributes){
+      this.props.videoListForUser(this.props.user.user_id);  
+    } 
   }
 
   componentDidUpdate(prevProps) {
@@ -41,6 +43,7 @@ class VideoList extends Component {
       this.setState({
         other_attributes: user.other_attributes
       })
+      this.props.videoListForUser(this.props.user.user_id);  
     }
   }
 
@@ -94,6 +97,8 @@ class VideoList extends Component {
     this.setState({
       other_attributes: other_attributes
     })
+
+    this.props.createCustomWeekForUser(this.props.user.user_id, other_attributes.weight, this.props.user.start_date, this.props.user.offset);
   };
 
   renderOtherAttribute() {
