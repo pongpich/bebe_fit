@@ -8,7 +8,6 @@ import {
 import Login from "./views/login";
 import TrialRegister from "./views/trial_register";
 import Signup from "./views/signup";
-import RegisterSub from "./views/register_sub";
 import VideoList from "./views/videoList";
 
 import backgroundImg from "./assets/img/mainbg.jpg";
@@ -19,7 +18,7 @@ Amplify.configure(awsConfig);
 function App() {
   return (
     <div className="App" style={{ backgroundImage: `url(${backgroundImg})` }}>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      {/* <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
         <a className="navbar-brand" href="/">
           <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
           BEBE FIT ROUTINE
@@ -37,12 +36,11 @@ function App() {
             </li>
           </ul>
         </div>
-      </nav>
+      </nav> */}
       <Switch>
         <Route path='/login' component={Login} />
         <Route path='/trial_register' component={TrialRegister} />
         <Route path='/signup' component={Signup} />
-        <Route path='/register_sub' component={RegisterSub} />
         <Route path='/VideoList' component={VideoList} />
       </Switch>
     </div>

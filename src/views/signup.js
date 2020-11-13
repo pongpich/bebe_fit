@@ -43,14 +43,33 @@ class Signup extends Component {
       [event.target.id]: event.target.value
     })
     if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-        this.props.checkUser(value);
-        console.log(value);
-    }    
-}
+      this.props.checkUser(value);
+      console.log(value);
+    }
+  }
 
   render() {
     return (
       <div className="h-100 all-row">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+          <a className="navbar-brand" href="/">
+            <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
+          BEBE FIT ROUTINE
+        </a>
+          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/signup">สมัครสมาชิก</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/trial_register">ทดลองใช้ฟรี</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
         <div className="mx-auto my-auto">
           <div className="auth-card">
             <div className="position-relative image-side-register">
@@ -165,9 +184,9 @@ const mapStateToProps = ({ authUser }) => {
   return { user };
 };
 
-const mapActionsToProps = { 
+const mapActionsToProps = {
   signupUser,
-  checkUser 
+  checkUser
 };
 
 export default connect(
