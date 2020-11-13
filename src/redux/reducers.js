@@ -11,8 +11,6 @@ const persistConfig = {
   stateReconciler: hardSet
 };
 
-console.log("authUser is:",authUser);
-
 const reducers = combineReducers({
   authUser: authUser
 });

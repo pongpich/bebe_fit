@@ -101,7 +101,6 @@ const videoListForUserSagaAsync = async (
         user_id: user_id
       }
     });
-    console.log("apiResult Async :", apiResult);
     return apiResult
   } catch (error) {
     console.log("error :", error);
@@ -235,12 +234,8 @@ function* videoListForUserSaga({ payload }) {
       videoListForUserSagaAsync,
       user_id
     );
-
-    console.log("apiResult.results :", apiResult.results);
-
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
-      console.log("activities :", activities);
       const day1 = activities[0];
       const day2 = activities[1];
       const day3 = activities[2];
@@ -380,7 +375,7 @@ function* loginUserSaga({ payload }) {
     );
     console.log(loginResult);
     if (loginResult.results.message === "success") {
-      console.log("user :", loginResult.results.user.other_attributes);
+      console.log("user :", loginResult.results.user);
       yield put({
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user

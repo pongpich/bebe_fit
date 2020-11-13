@@ -71,7 +71,6 @@ class VideoList extends Component {
 
   onUpdateProfile(event) {
     const {
-      email,
       sex,
       age,
       weight,
@@ -293,46 +292,46 @@ class VideoList extends Component {
         dayDuration = [];
     }
     return (
-      <div class="card-body">
+      <div className="card-body">
 
         <form>
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+          <ul className="nav nav-tabs" id="myTab" role="tablist">
+            <li className="nav-item">
+              <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">รวมคลิปออกกำลังกาย</a>
+            <li className="nav-item">
+              <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">รวมคลิปออกกำลังกาย</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
+            <li className="nav-item">
+              <a className="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
             </li>
           </ul>
-          <div class="tab-content mt-3 mb-2" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <nav class="nav">
-                <a class={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY1</a>
-                <a class={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY2</a>
-                <a class={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY3</a>
-                <a class={`nav-link ${focusDay === 4 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(4)}>DAY4</a>
+          <div className="tab-content mt-3 mb-2" id="myTabContent">
+            <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <nav className="nav">
+                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY1</a>
+                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY2</a>
+                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY3</a>
+                <a className={`nav-link ${focusDay === 4 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(4)}>DAY4</a>
               </nav>
             </div>
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
-            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
+            <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
+            <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
           </div>
 
 
 
-          <div class="">
-            <table class="table">
+          <div className="">
+            <table className="table">
               <thead>
                 <tr>
-                  <th class="tabletitle">
-                    <span class="mr-5" style={{ fontSize: "15px" }}> รายการออกกำลังกาย </span>
+                  <th className="tabletitle">
+                    <span className="mr-5" style={{ fontSize: "15px" }}> รายการออกกำลังกาย </span>
 
                     {
                       todayExercise.map((item) => (dayDuration.push(item.duration))),
 
-                      <span class="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {dayDuration.reduce((acc, curr) => acc += curr, 0).toFixed(2)} นาที </span>
+                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {dayDuration.reduce((acc, curr) => acc += curr, 0).toFixed(2)} นาที </span>
                     }
 
                   </th>
@@ -343,15 +342,15 @@ class VideoList extends Component {
                 todayExercise.map((item) => (
                   <tbody>
                     <tr>
-                      <td class="videoItem mt-5">
+                      <td className="videoItem mt-5">
                         <div>
-                          <img class="videoThumb mr-3" src="../assets/img/thumb/warmup.jpg" width="375px" alt="" />
+                          <img className="videoThumb mr-3" src="../assets/img/thumb/warmup.jpg" width="375px" alt="" />
                         </div>
-                        <div class="videoName">
+                        <div className="videoName">
                           <h3> {item.name} </h3>
                           <h6> {item.category} </h6>
                         </div>
-                        <div class="videoDuration">
+                        <div className="videoDuration">
                           <h6> {item.duration} นาที </h6>
                         </div>
                       </td>
@@ -414,11 +413,11 @@ class VideoList extends Component {
             </ul>
           </div>
         </nav>
-        <div class="page-header header-small" data-parallax="true"
+        <div className="page-header header-small" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
-          <div class="container" >
-            <div class="row mt-5" style={{ color: "black" }} >
-              <div class="col-md-8 ml-auto mr-auto text-center mt-5">
+          <div className="container" >
+            <div className="row mt-5" style={{ color: "black" }} >
+              <div className="col-md-8 ml-auto mr-auto text-center mt-5">
                 <h1> BEBE FIT ROUTINE </h1>
                 <span style={{ color: "#DB5077", fontSize: "20px", fontWeight: "bold", lineHeight: "1.6" }}>
                   BEBE FIT ROUTINE<br></br>
@@ -429,9 +428,9 @@ class VideoList extends Component {
           </div>
         </div>
 
-        <div class="main main-raised">
-          <div class="container">
-            <div class="card card-plain">
+        <div className="main main-raised">
+          <div className="container">
+            <div className="card card-plain">
               {
                 (this.props.user && this.props.user.other_attributes)
                   ? this.renderVideoList()
