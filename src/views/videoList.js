@@ -291,6 +291,7 @@ class VideoList extends Component {
         todayExercise = this.props.exerciseVideo.day1;
         dayDuration = [];
     }
+
     return (
       <div className="card-body">
 
@@ -343,8 +344,11 @@ class VideoList extends Component {
                   <tbody>
                     <tr>
                       <td className="videoItem mt-5">
-                        <div>
-                          <img className="videoThumb mr-3" src="../assets/img/thumb/warmup.jpg" width="375px" alt="" />
+                        <div className="videoThumb mr-3">
+                          {/* <img className="videoThumb mr-3" src="../assets/img/thumb/warmup.jpg" width="375px" alt="" /> */}
+                          <video key={ `https://media.planforfit.com/bebe/video/${item.video_id}.mp4` } width="375" controls poster={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`}>
+                            <source src={ `https://media.planforfit.com/bebe/video/${item.video_id}.mp4` } type="video/mp4" />
+                          </video>
                         </div>
                         <div className="videoName">
                           <h3> {item.name} </h3>
@@ -358,7 +362,6 @@ class VideoList extends Component {
                   </tbody>
                 ))
               }
-            
             </table>
           </div>
         </form>
