@@ -69,6 +69,14 @@ class VideoList extends Component {
     this.props.logoutUser();
   }
 
+  toggle(video_id) {
+    var trailer = document.getElementById(`trailer-${video_id}`);
+    var video = document.getElementById(`video-${video_id}`);
+    trailer.classList.toggle("active");
+    video.pause();
+    video.currentTime = 0;
+  }
+
   onUpdateProfile(event) {
     const {
       sex,
@@ -345,10 +353,11 @@ class VideoList extends Component {
                     <tr>
                       <td className="videoItem mt-5">
                         <div className="videoThumb mr-3">
-                          {/* <img className="videoThumb mr-3" src="../assets/img/thumb/warmup.jpg" width="375px" alt="" /> */}
-                          <video key={ `https://media.planforfit.com/bebe/video/${item.video_id}.mp4` } width="375" controls poster={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`}>
-                            <source src={ `https://media.planforfit.com/bebe/video/${item.video_id}.mp4` } type="video/mp4" />
-                          </video>
+                          <img onClick={() => this.toggle(item.video_id)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                          <div className="trailer" id={`trailer-${item.video_id}`}>
+                            <video src={`https://media.planforfit.com/bebe/video/${item.video_id}.mp4`} id={`video-${item.video_id}`} controls ></video>
+                            <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.toggle(item.video_id)}></img>
+                          </div>
                         </div>
                         <div className="videoName">
                           <h3> {item.name} </h3>
