@@ -4,7 +4,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -22,17 +22,24 @@ class VideoList extends Component {
       chest: "",
       waist: "",
       hip: "",
-      focusDay: 1,
+      focusDay: 0,
       dayDuration: [],
-      other_attributes: ""
+      other_attributes: "",
+      selectedVDO: null
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
+    this.onVideoEnd = this.onVideoEnd.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.close = this.close.bind(this);
   }
 
   componentDidMount() {
+    var video = this.refs.videoPlayer;
+    video.ontimeupdate = () => this.onVideoEnd();
+
     if (this.props.user && this.props.user.other_attributes) {
-      this.props.videoListForUser(this.props.user.user_id);
+      this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
     }
   }
 
@@ -42,7 +49,7 @@ class VideoList extends Component {
       this.setState({
         other_attributes: user.other_attributes
       })
-      this.props.videoListForUser(this.props.user.user_id);
+      this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
     }
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/Login');
@@ -69,12 +76,44 @@ class VideoList extends Component {
     this.props.logoutUser();
   }
 
-  toggle(video_id) {
-    var trailer = document.getElementById(`trailer-${video_id}`);
-    var video = document.getElementById(`video-${video_id}`);
+  toggle(selectedVDO) {
+    var trailer = document.getElementById(`popupVDO`);
+    var video = document.getElementById(`videoPlayer`);
+    this.setState({
+      selectedVDO: selectedVDO
+    })
     trailer.classList.toggle("active");
     video.pause();
     video.currentTime = 0;
+    console.log("toggle :", selectedVDO);
+  }
+
+  close() {
+    var trailer = document.getElementById(`popupVDO`);
+    trailer.classList.toggle("active");
+  }
+
+  onVideoEnd() {
+    var video = this.refs.videoPlayer;
+    const { selectedVDO, focusDay } = this.state;
+    if (video.currentTime >= (video.duration * 0.99) && (selectedVDO.duration !== selectedVDO.play_time)) {
+      const user_id = this.props.user.user_id;
+      const start_date = this.props.user.start_date;
+      const day_number = focusDay;
+      const video_number = selectedVDO.order;
+      const play_time = selectedVDO.duration;
+      const newVideo = { ...selectedVDO, play_time }
+      this.setState({
+        selectedVDO: newVideo
+      });
+
+      this.props.updatePlaytime(user_id, start_date, day_number, video_number, play_time, newVideo);
+      console.log("user_id :", user_id);
+      console.log("start_date :", start_date);
+      console.log("day_number :", day_number);
+      console.log("video_number :", video_number);
+      console.log("play_time :", play_time);
+    }
   }
 
   onUpdateProfile(event) {
@@ -276,22 +315,23 @@ class VideoList extends Component {
   }
 
   renderVideoList() {
-    let { focusDay, dayDuration } = this.state;
+    let { focusDay, dayDuration, selectedVDO } = this.state;
+    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}.mp4` : "";
     let todayExercise;
     switch (focusDay) {
-      case 1:
+      case 0:
         todayExercise = this.props.exerciseVideo.day1;
         dayDuration = [];
         break;
-      case 2:
+      case 1:
         todayExercise = this.props.exerciseVideo.day2;
         dayDuration = [];
         break;
-      case 3:
+      case 2:
         todayExercise = this.props.exerciseVideo.day3;
         dayDuration = [];
         break;
-      case 4:
+      case 3:
         todayExercise = this.props.exerciseVideo.day4;
         dayDuration = [];
         break;
@@ -318,10 +358,10 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY1</a>
-                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY2</a>
-                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY3</a>
-                <a className={`nav-link ${focusDay === 4 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(4)}>DAY4</a>
+                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}>DAY1</a>
+                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY2</a>
+                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY3</a>
+                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY4</a>
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -331,6 +371,10 @@ class VideoList extends Component {
 
 
           <div className="">
+            <div className="trailer" id={`popupVDO`}>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls onEnded={() => this.onVideoEnd()}></video>
+              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.close()}></img>
+            </div>
             <table className="table">
               <thead>
                 <tr>
@@ -353,16 +397,26 @@ class VideoList extends Component {
                     <tr>
                       <td className="videoItem mt-5">
                         <div className="videoThumb mr-3">
-                          <img onClick={() => this.toggle(item.video_id)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
-                          <div className="trailer" id={`trailer-${item.video_id}`}>
-                            <video src={`https://media.planforfit.com/bebe/video/${item.video_id}.mp4`} id={`video-${item.video_id}`} controls ></video>
-                            <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.toggle(item.video_id)}></img>
-                          </div>
+                          <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                          {/* <div class="btn_container">
+                            <div class="app">
+                              <div class="play">
+                                <div class="line line_1"></div>
+                                <div class="line line_2"></div>
+                                <div class="line line_3"></div>
+                              </div>
+                            </div>
+                          </div> */}
                         </div>
                         <div className="videoName">
                           <h3> {item.name} </h3>
                           <h6> {item.category} </h6>
                         </div>
+                        { (item.play_time === item.duration ) &&
+                          <div>
+                            <h6 style={{ color: "green" }}> เล่นสำเร็จ </h6>
+                          </div>
+                        }
                         <div className="videoDuration">
                           <h6> {item.duration} นาที </h6>
                         </div>
@@ -380,30 +434,6 @@ class VideoList extends Component {
   }
 
   render() {
-    let { focusDay, dayDuration } = this.state;
-    let todayExercise;
-    switch (focusDay) {
-      case 1:
-        todayExercise = this.props.exerciseVideo.day1;
-        dayDuration = [];
-        break;
-      case 2:
-        todayExercise = this.props.exerciseVideo.day2;
-        dayDuration = [];
-        break;
-      case 3:
-        todayExercise = this.props.exerciseVideo.day3;
-        dayDuration = [];
-        break;
-      case 4:
-        todayExercise = this.props.exerciseVideo.day4;
-        dayDuration = [];
-        break;
-      default:
-        todayExercise = this.props.exerciseVideo.day1;
-        dayDuration = [];
-    }
-
     return (
       < div >
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -461,7 +491,7 @@ const mapStateToProps = ({ authUser }) => {
   return { user, exerciseVideo, status };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime };
 
 export default connect(
   mapStateToProps,

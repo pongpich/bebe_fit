@@ -17,8 +17,22 @@ export const types = {
   CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
-  LOGOUT_USER: "LOGOUT_USER"
+  LOGOUT_USER: "LOGOUT_USER",
+  UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
+  UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS"
 }
+
+export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, newVideo) => ({
+  type: types.UPDATE_PLAYTIME,
+  payload: {
+    user_id,
+    start_date,
+    day_number,
+    video_number,
+    play_time,
+    newVideo
+  }
+})
 
 export const logoutUser = () => ({
   type: types.LOGOUT_USER
@@ -81,10 +95,11 @@ export const createCustomWeekForUser = (user_id, weight, startDate, offset) => (
   }
 });
 
-export const videoListForUser = (user_id) => ({
+export const videoListForUser = (user_id, start_date) => ({
   type: types.VIDEO_LIST_FOR_USER,
   payload: {
-    user_id
+    user_id,
+    start_date
   }
 });
 
@@ -93,12 +108,14 @@ export const videoListForUser = (user_id) => ({
 /* SAGA Section */
 
 const videoListForUserSagaAsync = async (
-  user_id
+  user_id,
+  start_date
 ) => {
   try {
     const apiResult = await API.get("bebe", "/videoListForUser", {
       queryStringParameters: {
-        user_id: user_id
+        user_id: user_id,
+        start_date
       }
     });
     return apiResult
@@ -185,6 +202,29 @@ const createCustomWeekForUserSagaAsync = async (
   }
 }
 
+const updatePlaytimeSagaAsync = async (
+  user_id,
+  start_date,
+  day_number,
+  video_number,
+  play_time
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/play_time", {
+      body: {
+        user_id,
+        start_date,
+        day_number,
+        video_number,
+        play_time
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const signupUserSagaAsync = async (
   email,
   password,
@@ -225,14 +265,65 @@ const loginUserSagaAsync = async (
   }
 };
 
+function* updatePlaytimeSaga({ payload }) {
+  const {
+    user_id,
+    start_date,
+    day_number,
+    video_number,
+    play_time,
+    newVideo
+  } = payload
+  try {
+    const apiResult = yield call(
+      updatePlaytimeSagaAsync,
+      user_id,
+      start_date,
+      day_number,
+      video_number,
+      play_time
+    );
+    let keyDay = "";
+    switch (day_number) {
+      case 0:
+        keyDay = "day1";
+        break;
+      case 1:
+        keyDay = "day2";
+        break;
+      case 2:
+        keyDay = "day3";
+        break;
+      case 3:
+        keyDay = "day4";
+        break;
+      default:
+        break;
+    }
+    yield put({
+      type: types.UPDATE_PLAYTIME_SUCCESS,
+      payload: {
+        keyDay, 
+        video_number,
+        newVideo
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* videoListForUserSaga({ payload }) {
   const {
-    user_id
+    user_id,
+    start_date
   } = payload
   try {
     const apiResult = yield call(
       videoListForUserSagaAsync,
-      user_id
+      user_id,
+      start_date
     );
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
@@ -414,6 +505,10 @@ export function* watchVideoListForUser() {
   yield takeEvery(types.VIDEO_LIST_FOR_USER, videoListForUserSaga)
 }
 
+export function* watchUpdatePlaytime() {
+  yield takeEvery(types.UPDATE_PLAYTIME, updatePlaytimeSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -422,7 +517,8 @@ export function* saga() {
     fork(watchSignupUser),
     fork(watchUpdateProfile),
     fork(watchCreateCustomWeekForUser),
-    fork(watchVideoListForUser)
+    fork(watchVideoListForUser),
+    fork(watchUpdatePlaytime)
   ]);
 }
 
@@ -440,6 +536,22 @@ const INIT_STATE = {
   },
   status: "default"
 };
+
+function updateObjectInArray(array, action) {
+  return array.map((item, index) => {
+    if (index !== action.index) {
+      // This isn't the item we care about - keep it as-is
+      return item
+    }
+
+    // Otherwise, this is the one we want - return an updated value
+    return {
+      ...item,
+      ...action.item
+    }
+  })
+}
+
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
@@ -473,6 +585,17 @@ export function reducer(state = INIT_STATE, action) {
           day4: []
         },
         status: "default"
+      };
+    case types.UPDATE_PLAYTIME_SUCCESS:
+      return {
+        ...state,
+        exerciseVideo: {
+          ...state.exerciseVideo,
+          [action.payload.keyDay]: updateObjectInArray(
+            state.exerciseVideo[action.payload.keyDay], 
+            {index: action.payload.video_number, item: action.payload.newVideo} 
+          )
+        }
       };
     default:
       return { ...state };
