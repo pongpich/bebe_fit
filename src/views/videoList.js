@@ -4,6 +4,8 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
+
+
 import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
@@ -34,10 +36,9 @@ class VideoList extends Component {
     this.close = this.close.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     var video = this.refs.videoPlayer;
     video.ontimeupdate = () => this.onVideoEnd();
-
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
     }
@@ -79,13 +80,14 @@ class VideoList extends Component {
   toggle(selectedVDO) {
     var trailer = document.getElementById(`popupVDO`);
     var video = document.getElementById(`videoPlayer`);
-    this.setState({
-      selectedVDO: selectedVDO
-    })
+    if (selectedVDO) {
+      this.setState({
+        selectedVDO: selectedVDO
+      })
+    }
     trailer.classList.toggle("active");
     video.pause();
     video.currentTime = 0;
-    console.log("toggle :", selectedVDO);
   }
 
   close() {
@@ -108,11 +110,6 @@ class VideoList extends Component {
       });
 
       this.props.updatePlaytime(user_id, start_date, day_number, video_number, play_time, newVideo);
-      console.log("user_id :", user_id);
-      console.log("start_date :", start_date);
-      console.log("day_number :", day_number);
-      console.log("video_number :", video_number);
-      console.log("play_time :", play_time);
     }
   }
 
@@ -141,10 +138,6 @@ class VideoList extends Component {
       this.props.user.email,
       other_attributes
     );
-    console.log(
-      this.props.user.email,
-      other_attributes
-    )
 
     this.setState({
       other_attributes: other_attributes
@@ -316,7 +309,7 @@ class VideoList extends Component {
 
   renderVideoList() {
     let { focusDay, dayDuration, selectedVDO } = this.state;
-    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}.mp4` : "";
+    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     let todayExercise;
     switch (focusDay) {
       case 0:
@@ -368,12 +361,10 @@ class VideoList extends Component {
             <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
           </div>
 
-
-
           <div className="">
             <div className="trailer" id={`popupVDO`}>
               <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls onEnded={() => this.onVideoEnd()}></video>
-              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.close()}></img>
+              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.toggle()}></img>
             </div>
             <table className="table">
               <thead>
@@ -397,29 +388,26 @@ class VideoList extends Component {
                     <tr>
                       <td className="videoItem mt-5">
                         <div className="videoThumb mr-3">
-                          <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
-                          {/* <div class="btn_container">
-                            <div class="app">
-                              <div class="play">
-                                <div class="line line_1"></div>
-                                <div class="line line_2"></div>
-                                <div class="line line_3"></div>
-                              </div>
-                            </div>
-                          </div> */}
+                          <div className="containerThumb">
+                            <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                            <div class="overlay" onClick={() => this.toggle(item)}>
+                              <br></br>
+                              <i class="fa fa-caret-square-o-right fa-5x" aria-hidden="true"></i>
+                          </div>
+                          </div>
                         </div>
                         <div className="videoName">
                           <h3> {item.name} </h3>
                           <h6> {item.category} </h6>
                         </div>
-                        { (item.play_time === item.duration ) &&
-                          <div>
-                            <h6 style={{ color: "green" }}> เล่นสำเร็จ </h6>
-                          </div>
-                        }
                         <div className="videoDuration">
                           <h6> {item.duration} นาที </h6>
                         </div>
+                        {(item.play_time === item.duration) &&
+                          <div className="videoEnd">
+                            <h6 style={{ color: "green" }}><i class="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          </div>
+                        }
                       </td>
                     </tr>
                   </tbody>
