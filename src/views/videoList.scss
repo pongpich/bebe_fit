@@ -27,7 +27,6 @@
   background-position: center center;
   background-size: cover;
 }
-
 .trailer
 {
 	position: fixed;
@@ -43,6 +42,11 @@
 	align-items: center;
 	visibility: hidden;
 	opacity: 0;
+}
+.trailer.active_list
+{
+  visibility: visible;
+	opacity: 1;
 }
 .trailer.active
 {
@@ -133,15 +137,17 @@
   bottom: 0;
   background: rgb(0, 0, 0);
   background: rgba(0, 0, 0, 0.5); /* Black see-through */
-  color: #f1f1f1; 
+  color: #000000; 
   width: 200%;
   height: 100%;
   transition: .5s ease;
   opacity:2.5;
-  color: white;
   font-size: 20px;
   padding: 20px;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .containerThumb:hover .overlay {

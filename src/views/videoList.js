@@ -25,20 +25,25 @@ class VideoList extends Component {
       waist: "",
       hip: "",
       focusDay: 0,
-      dayDuration: [],
       other_attributes: "",
       selectedVDO: null
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
-    this.onVideoEnd = this.onVideoEnd.bind(this);
+    this.onVideoTimeUpdate = this.onVideoTimeUpdate.bind(this);
     this.toggle = this.toggle.bind(this);
     this.close = this.close.bind(this);
+    this.exerciseDaySelection = this.exerciseDaySelection.bind(this);
+    this.closeList = this.closeList.bind(this);
   }
 
   async componentDidMount() {
     var video = this.refs.videoPlayer;
-    video.ontimeupdate = () => this.onVideoEnd();
+    var videoList = this.refs.videoPlayerList;
+    video.ontimeupdate = () => this.onVideoTimeUpdate("video");
+    videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
+    videoList.onended = () => this.onVideoEnd();
+
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
     }
@@ -55,6 +60,28 @@ class VideoList extends Component {
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/Login');
     }
+  }
+
+  exerciseDaySelection(focusDay) {
+    let todayExercise;
+    switch (focusDay) {
+      case 0:
+        todayExercise = this.props.exerciseVideo.day1;
+        break;
+      case 1:
+        todayExercise = this.props.exerciseVideo.day2;
+        break;
+      case 2:
+        todayExercise = this.props.exerciseVideo.day3;
+        break;
+      case 3:
+        todayExercise = this.props.exerciseVideo.day4;
+        break;
+      default:
+        todayExercise = this.props.exerciseVideo.day1;
+        break;
+    }
+    return todayExercise;
   }
 
   handleChange(event) {
@@ -77,6 +104,31 @@ class VideoList extends Component {
     this.props.logoutUser();
   }
 
+  toggleList() {
+    const { focusDay } = this.state;
+    const todayExercise = this.exerciseDaySelection(focusDay);
+    const selectedVDO = todayExercise.find(element => (element.duration !== element.play_time));
+    if (selectedVDO) {
+      this.setState({
+        selectedVDO
+      }, () => {
+        var trailer = document.getElementById(`popupVDOList`);
+        var video = document.getElementById(`videoPlayerList`);
+        trailer.classList.add("active_list");
+        video.play();
+      })
+    }
+  }
+
+  closeList() {
+    var trailer = document.getElementById(`popupVDOList`);
+    var video = document.getElementById(`videoPlayerList`);
+    trailer.classList.remove("active_list");
+    video.pause();
+    video.currentTime = 0;
+
+  }
+
   toggle(selectedVDO) {
     var trailer = document.getElementById(`popupVDO`);
     var video = document.getElementById(`videoPlayer`);
@@ -96,7 +148,27 @@ class VideoList extends Component {
   }
 
   onVideoEnd() {
-    var video = this.refs.videoPlayer;
+    const { focusDay, selectedVDO } = this.state;
+    var todayExercise = this.exerciseDaySelection(focusDay)
+    console.log("todayExercise : ", todayExercise)
+    const nextVDO = todayExercise.find(
+      element => (element.duration !== element.play_time) && (element.order > selectedVDO.order)
+    );
+    if (nextVDO) {
+      this.setState({
+        selectedVDO: nextVDO
+      }, () => {
+        var trailer = document.getElementById(`popupVDOList`);
+        var video = document.getElementById(`videoPlayerList`);
+        trailer.classList.add("active_list");
+        video.play();
+      })
+    }
+
+  }
+
+  onVideoTimeUpdate(compName = "video") {
+    var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     const { selectedVDO, focusDay } = this.state;
     if (video.currentTime >= (video.duration * 0.99) && (selectedVDO.duration !== selectedVDO.play_time)) {
       const user_id = this.props.user.user_id;
@@ -308,30 +380,10 @@ class VideoList extends Component {
   }
 
   renderVideoList() {
-    let { focusDay, dayDuration, selectedVDO } = this.state;
+    const { focusDay, selectedVDO } = this.state;
     const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
-    let todayExercise;
-    switch (focusDay) {
-      case 0:
-        todayExercise = this.props.exerciseVideo.day1;
-        dayDuration = [];
-        break;
-      case 1:
-        todayExercise = this.props.exerciseVideo.day2;
-        dayDuration = [];
-        break;
-      case 2:
-        todayExercise = this.props.exerciseVideo.day3;
-        dayDuration = [];
-        break;
-      case 3:
-        todayExercise = this.props.exerciseVideo.day4;
-        dayDuration = [];
-        break;
-      default:
-        todayExercise = this.props.exerciseVideo.day1;
-        dayDuration = [];
-    }
+    const todayExercise = this.exerciseDaySelection(focusDay);
+    let dayDuration = [];
 
     return (
       <div className="card-body">
@@ -363,8 +415,12 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls onEnded={() => this.onVideoEnd()}></video>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
               <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.toggle()}></img>
+            </div>
+            <div className="trailer" id={`popupVDOList`}>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table">
               <thead>
@@ -374,9 +430,9 @@ class VideoList extends Component {
 
                     {
                       todayExercise.map((item) => (dayDuration.push(item.duration))),
-
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {dayDuration.reduce((acc, curr) => acc += curr, 0).toFixed(2)} นาที </span>
                     }
+                    <span className="mr-5" style={{ fontSize: "15px" }} onClick={() => this.toggleList()}> เล่นต่อเนื่อง </span>
 
                   </th>
                 </tr>
@@ -391,9 +447,8 @@ class VideoList extends Component {
                           <div className="containerThumb">
                             <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
                             <div class="overlay" onClick={() => this.toggle(item)}>
-                              <br></br>
-                              <i class="fa fa-caret-square-o-right fa-5x" aria-hidden="true"></i>
-                          </div>
+                              <i class="fa fa-play fa-4x" aria-hidden="true"></i>
+                            </div>
                           </div>
                         </div>
                         <div className="videoName">
