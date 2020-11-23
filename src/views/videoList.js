@@ -454,7 +454,8 @@ class VideoList extends Component {
                     {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <span className="mr-5" style={{ fontSize: "15px", cursor: "pointer"}} onClick={() => this.toggleList()}> เล่นต่อเนื่อง </span>
+                    <h7><i class="fa fa-play-circle fa-1x"  style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i></h7>
+
 
                   </th>
                 </tr>
