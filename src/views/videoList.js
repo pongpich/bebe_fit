@@ -45,7 +45,12 @@ class VideoList extends Component {
     videoList.onended = () => this.onVideoEnd();
 
     if (this.props.user && this.props.user.other_attributes) {
-      this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
+      this.props.videoListForUser(
+        this.props.user.user_id, 
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+        );
     }
   }
 
@@ -55,7 +60,12 @@ class VideoList extends Component {
       this.setState({
         other_attributes: user.other_attributes
       })
-      this.props.videoListForUser(this.props.user.user_id, this.props.user.start_date);
+      this.props.videoListForUser(
+        this.props.user.user_id, 
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+        );
     }
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/Login');
@@ -383,7 +393,21 @@ class VideoList extends Component {
     const { focusDay, selectedVDO } = this.state;
     const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     const todayExercise = this.exerciseDaySelection(focusDay);
-    let dayDuration = [];
+    let allMinute = [];
+    let allSecond = [];
+    todayExercise.map((item) => (allMinute.push(Number(String(item.duration).split(".")[0]))));
+    todayExercise.map((item) => (allSecond.push(Number(String(item.duration).split(".")[1]))));
+    let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let minute2 = Math.floor(sumSecond/60);
+    let totalMinute = Number(sumMinute) + Number(minute2);
+    let totalSecond = sumSecond % 60;
+    let timesExercise;
+    if (totalSecond < 10){
+      timesExercise = `${totalMinute}.0${totalSecond}`;
+    } else {
+      timesExercise = `${totalMinute}.${totalSecond}`; 
+    }
 
     return (
       <div className="card-body">
@@ -427,12 +451,10 @@ class VideoList extends Component {
                 <tr>
                   <th className="tabletitle">
                     <span className="mr-5" style={{ fontSize: "15px" }}> รายการออกกำลังกาย </span>
-
                     {
-                      todayExercise.map((item) => (dayDuration.push(item.duration))),
-                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {dayDuration.reduce((acc, curr) => acc += curr, 0).toFixed(2)} นาที </span>
+                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <span className="mr-5" style={{ fontSize: "15px" }} onClick={() => this.toggleList()}> เล่นต่อเนื่อง </span>
+                    <span className="mr-5" style={{ fontSize: "15px", cursor: "pointer"}} onClick={() => this.toggleList()}> เล่นต่อเนื่อง </span>
 
                   </th>
                 </tr>

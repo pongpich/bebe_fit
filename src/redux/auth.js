@@ -95,11 +95,17 @@ export const createCustomWeekForUser = (user_id, weight, startDate, offset) => (
   }
 });
 
-export const videoListForUser = (user_id, start_date) => ({
+export const videoListForUser = (
+  user_id,
+  weight,
+  start_date,
+  offset) => ({
   type: types.VIDEO_LIST_FOR_USER,
   payload: {
     user_id,
-    start_date
+    weight,
+    start_date,
+    offset
   }
 });
 
@@ -109,13 +115,17 @@ export const videoListForUser = (user_id, start_date) => ({
 
 const videoListForUserSagaAsync = async (
   user_id,
-  start_date
+  weight,
+  start_date,
+  offset
 ) => {
   try {
     const apiResult = await API.get("bebe", "/videoListForUser", {
       queryStringParameters: {
-        user_id: user_id,
-        start_date
+        user_id,
+        weight,
+        start_date,
+        offset
       }
     });
     return apiResult
@@ -303,7 +313,7 @@ function* updatePlaytimeSaga({ payload }) {
     yield put({
       type: types.UPDATE_PLAYTIME_SUCCESS,
       payload: {
-        keyDay, 
+        keyDay,
         video_number,
         newVideo
       }
@@ -317,13 +327,17 @@ function* updatePlaytimeSaga({ payload }) {
 function* videoListForUserSaga({ payload }) {
   const {
     user_id,
-    start_date
+    weight,
+    start_date,
+    offset
   } = payload
   try {
     const apiResult = yield call(
       videoListForUserSagaAsync,
       user_id,
-      start_date
+      weight,
+      start_date,
+      offset
     );
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
@@ -592,8 +606,8 @@ export function reducer(state = INIT_STATE, action) {
         exerciseVideo: {
           ...state.exerciseVideo,
           [action.payload.keyDay]: updateObjectInArray(
-            state.exerciseVideo[action.payload.keyDay], 
-            {index: action.payload.video_number, item: action.payload.newVideo} 
+            state.exerciseVideo[action.payload.keyDay],
+            { index: action.payload.video_number, item: action.payload.newVideo }
           )
         }
       };
