@@ -19,8 +19,19 @@ export const types = {
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
   LOGOUT_USER: "LOGOUT_USER",
   UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
-  UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS"
+  UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
+  LOGIN_TEST: "LOGIN_TEST",
+  LOGIN_TEST_NO_USER: "LOGIN_TEST_NO_USER",
+  LOGIN_TEST_HAVE_USER_HAVE_PASSWORD: "LOGIN_TEST_HAVE_USER_HAVE_PASSWORD",
+  LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD"
 }
+
+export const loginTest = (email) => ({
+  type: types.LOGIN_TEST,
+  payload: {
+    email
+  }
+})
 
 export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, newVideo) => ({
   type: types.UPDATE_PLAYTIME,
@@ -100,14 +111,14 @@ export const videoListForUser = (
   weight,
   start_date,
   offset) => ({
-  type: types.VIDEO_LIST_FOR_USER,
-  payload: {
-    user_id,
-    weight,
-    start_date,
-    offset
-  }
-});
+    type: types.VIDEO_LIST_FOR_USER,
+    payload: {
+      user_id,
+      weight,
+      start_date,
+      offset
+    }
+  });
 
 /* END OF ACTION Section */
 
@@ -257,6 +268,21 @@ const signupUserSagaAsync = async (
     return { error, messsage: error.message };
   }
 };
+
+const loginTestSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/login_test", {
+      queryStringParameters: {
+        email: email
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 const loginUserSagaAsync = async (
   email,
@@ -466,6 +492,40 @@ function* trialRegisterSaga({ payload }) {
   }
 }
 
+function* loginTestSaga({ payload }) {
+  const {
+    email
+  } = payload
+  try {
+    const apiResult = yield call(
+      loginTestSagaAsync,
+      email
+    );
+    console.log(apiResult);
+    if (apiResult.results.message === "no_user") {
+      console.log("user :", apiResult.results.user);
+      yield put({
+        type: types.LOGIN_TEST_NO_USER,
+        payload: apiResult.results.user
+      })
+    } else if (apiResult.results.message === "have_user_have_password") {
+      console.log("user :", apiResult.results.user);
+      yield put({
+        type: types.LOGIN_TEST_HAVE_USER_HAVE_PASSWORD,
+        payload: apiResult.results.user
+      })
+    } else if (apiResult.results.message === "have_user_no_password") {
+      console.log("user :", apiResult.results.user);
+      yield put({
+        type: types.LOGIN_TEST_HAVE_USER_NO_PASSWORD,
+        payload: apiResult.results.user
+      })
+    }
+  } catch (error) {
+    console.log("error form loginTest", error);
+  }
+}
+
 function* loginUserSaga({ payload }) {
   const {
     email,
@@ -523,6 +583,10 @@ export function* watchUpdatePlaytime() {
   yield takeEvery(types.UPDATE_PLAYTIME, updatePlaytimeSaga)
 }
 
+export function* watchLoginTest() {
+  yield takeEvery(types.LOGIN_TEST, loginTestSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -532,7 +596,8 @@ export function* saga() {
     fork(watchUpdateProfile),
     fork(watchCreateCustomWeekForUser),
     fork(watchVideoListForUser),
-    fork(watchUpdatePlaytime)
+    fork(watchUpdatePlaytime),
+    fork(watchLoginTest)
   ]);
 }
 
@@ -548,7 +613,8 @@ const INIT_STATE = {
     day3: [],
     day4: []
   },
-  status: "default"
+  status: "default",
+  statusTest: "default",
 };
 
 function updateObjectInArray(array, action) {
@@ -598,7 +664,8 @@ export function reducer(state = INIT_STATE, action) {
           day3: [],
           day4: []
         },
-        status: "default"
+        status: "default",
+        statusTest: "default"
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
@@ -610,6 +677,21 @@ export function reducer(state = INIT_STATE, action) {
             { index: action.payload.video_number, item: action.payload.newVideo }
           )
         }
+      };
+    case types.LOGIN_TEST_NO_USER:
+      return {
+        ...state,
+        statusTest: "no_user"
+      };
+    case types.LOGIN_TEST_HAVE_USER_HAVE_PASSWORD:
+      return {
+        ...state,
+        statusTest: "have_user_have_password"
+      };
+    case types.LOGIN_TEST_HAVE_USER_NO_PASSWORD:
+      return {
+        ...state,
+        statusTest: "have_user_no_password"
       };
     default:
       return { ...state };

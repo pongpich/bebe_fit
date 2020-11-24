@@ -56,6 +56,9 @@ class Login extends Component {
         </a>
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
+            <li className="nav-item">
+                <a className="nav-link" href="/login_test">Test-เข้าสู่ระบบ</a>
+              </li>
               <li className="nav-item">
                 <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
               </li>

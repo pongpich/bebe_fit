@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import Login from "./views/login";
+import LoginTest from "./views/loginTest";
 import TrialRegister from "./views/trial_register";
 import Signup from "./views/signup";
 import VideoList from "./views/videoList";
@@ -39,6 +40,7 @@ function App() {
       </nav> */}
       <Switch>
         <Route path='/login' component={Login} />
+        <Route path='/login_test' component={LoginTest} />
         <Route path='/trial_register' component={TrialRegister} />
         <Route path='/signup' component={Signup} />
         <Route path='/VideoList' component={VideoList} />
