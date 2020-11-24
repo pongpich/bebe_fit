@@ -38,6 +38,12 @@ class LoginTest extends Component {
     }
   }
 
+  /* onUserAddPassword(event) {
+    const { email, password } = this.state;
+    this.props.signupUser(password);
+    this.props.loginUser(this.state.email, this.state.password);
+  } */
+
   onUserRegister(event) {
     const { email, password } = this.state;
     this.props.signupUser(email, password);
@@ -153,7 +159,45 @@ class LoginTest extends Component {
     )
   }
 
-
+  /* renderAddPassword() {
+    return (
+      <Form>
+        <Label className="form-group2 has-float-label mb-2">
+          {"Password"}
+          <Input
+            type="password"
+            id="password"
+            value={this.state.password} onChange={(event) => this.handleChange(event)}
+          />
+        </Label>
+        <Label className="form-group2 has-float-label mb-3">
+          {"ยืนยัน Password"}
+          <Input
+            type="password"
+            name="confirm-password" required
+            id="comfirm-password"
+            validate={{
+              required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
+              match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
+            }}
+          />
+        </Label>
+        <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
+          <Button
+            color="danger"
+            className="btn-shadow"
+            size="lg"
+            onClick={() => this.onUserAddPassword()}
+            block
+          >
+            <span className="h6 text-one">
+              {"LOGIN"}
+            </span>
+          </Button>
+        </div>
+      </Form>
+    )
+  } */
 
   render() {
     return (
@@ -198,7 +242,7 @@ class LoginTest extends Component {
               <Form> 
                 { (this.props.statusTest === "default") && (this.renderEmailInput()) }
                 { (this.props.statusTest === "no_user") && (this.renderRegister()) }
-                { (this.props.statusTest === "have_user_no_password") && (this.renderRegister()) }
+                {/* { (this.props.statusTest === "have_user_no_password") && (this.renderAddPassword()) } */}
                 { (this.props.statusTest === "have_user_have_password") && (this.renderPasswordInput()) }
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <Button

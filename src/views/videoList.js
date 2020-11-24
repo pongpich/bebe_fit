@@ -38,19 +38,19 @@ class VideoList extends Component {
   }
 
   async componentDidMount() {
-    var video = this.refs.videoPlayer;
-    var videoList = this.refs.videoPlayerList;
-    video.ontimeupdate = () => this.onVideoTimeUpdate("video");
-    videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
-    videoList.onended = () => this.onVideoEnd();
-
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
-        this.props.user.user_id, 
+        this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
         this.props.user.offset
-        );
+      );
+
+      var video = this.refs.videoPlayer;
+      var videoList = this.refs.videoPlayerList;
+      video.ontimeupdate = () => this.onVideoTimeUpdate("video");
+      videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
+      videoList.onended = () => this.onVideoEnd();
     }
   }
 
@@ -61,11 +61,19 @@ class VideoList extends Component {
         other_attributes: user.other_attributes
       })
       this.props.videoListForUser(
-        this.props.user.user_id, 
+        this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
         this.props.user.offset
-        );
+      );
+      if (this.props.user.other_attributes) {
+        console.log("if active!!!");
+        var video = this.refs.videoPlayer;
+        var videoList = this.refs.videoPlayerList;
+        video.ontimeupdate = () => this.onVideoTimeUpdate("video");
+        videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
+        videoList.onended = () => this.onVideoEnd();
+      }
     }
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/Login');
@@ -399,14 +407,14 @@ class VideoList extends Component {
     todayExercise.map((item) => (allSecond.push(Number(String(item.duration).split(".")[1]))));
     let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
     let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
-    let minute2 = Math.floor(sumSecond/60);
+    let minute2 = Math.floor(sumSecond / 60);
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if (totalSecond < 10){
+    if (totalSecond < 10) {
       timesExercise = `${totalMinute}.0${totalSecond}`;
     } else {
-      timesExercise = `${totalMinute}.${totalSecond}`; 
+      timesExercise = `${totalMinute}.${totalSecond}`;
     }
 
     return (
@@ -440,11 +448,11 @@ class VideoList extends Component {
           <div className="">
             <div className="trailer" id={`popupVDO`}>
               <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
-              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.toggle()}></img>
+              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
               <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
-              <img src="../assets/img/thumb/close.png" class="close" onClick={() => this.closeList()}></img>
+              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table">
               <thead>
@@ -454,17 +462,17 @@ class VideoList extends Component {
                     {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <h7><i class="fa fa-play-circle fa-1x"  style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i></h7>
+                    <h7><i class="fa fa-play-circle fa-1x" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i></h7>
 
 
                   </th>
                 </tr>
               </thead>
               <br></br>
-              {
-                todayExercise.map((item) => (
-                  <tbody>
-                    <tr>
+              <tbody>
+                {
+                  todayExercise.map((item, index) => (
+                    <tr key={index}>
                       <td className="videoItem mt-5">
                         <div className="videoThumb mr-3">
                           <div className="containerThumb">
@@ -488,9 +496,10 @@ class VideoList extends Component {
                         }
                       </td>
                     </tr>
-                  </tbody>
-                ))
-              }
+
+                  ))
+                }
+              </tbody>
             </table>
           </div>
         </form>
