@@ -243,49 +243,49 @@ class VideoList extends Component {
 
   renderOtherAttribute() {
     return (
-      <div class="card-body">
+      <div className="card-body">
 
         <form>
           <h2>ข้อมูลพื้นฐาน</h2>
-          <div class="row">
-            <div class="col-md-3" style={{ paddingTop: "20px" }}>
-              <div class="form-check" onChange={this.onChangeValue}>
+          <div className="row">
+            <div className="col-md-3" style={{ paddingTop: "20px" }}>
+              <div className="form-check" onChange={this.onChangeValue}>
                 <span>เพศ : </span>
-                <label class="form-check-label" style={{ marginLeft: "20px" }}>
+                <label className="form-check-label" style={{ marginLeft: "20px" }}>
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     value="male"
                     name="sex"
                     checked={this.state.sex === "male"}
                     onChange={this.onChange}
                   /> ชาย
-                          <span class="circle">
-                    <span class="check"></span>
+                          <span className="circle">
+                    <span className="check"></span>
                   </span>
                 </label>
-                <label class="form-check-label" style={{ marginLeft: "20px" }}>
+                <label className="form-check-label" style={{ marginLeft: "20px" }}>
                   <input
-                    class="form-check-input"
+                    className="form-check-input"
                     type="radio"
                     value="female"
                     name="sex"
                     checked={this.state.sex === "female"}
                     onChange={this.onChange}
                   /> หญิง
-                          <span class="circle">
-                    <span class="check"></span>
+                          <span className="circle">
+                    <span className="check"></span>
                   </span>
                 </label>
               </div>
             </div>
 
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="age" class="bmd-label-floating">อายุ</label>
+            <div className="col-md-3">
+              <div className="form-group">
+                <label for="age" className="bmd-label-floating">อายุ</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="age"
                   name="age"
                   step=".01"
@@ -294,12 +294,12 @@ class VideoList extends Component {
                 />
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="weight" class="bmd-label-floating">น้ำหนัก (กก.)</label>
+            <div className="col-md-3">
+              <div className="form-group">
+                <label for="weight" className="bmd-label-floating">น้ำหนัก (กก.)</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="weight"
                   name="weight"
                   step=".01"
@@ -308,12 +308,12 @@ class VideoList extends Component {
                 />
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="height" class="bmd-label-floating">ส่วนสูง (ซม.)</label>
+            <div className="col-md-3">
+              <div className="form-group">
+                <label for="height" className="bmd-label-floating">ส่วนสูง (ซม.)</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="height"
                   name="height"
                   step=".01"
@@ -324,27 +324,27 @@ class VideoList extends Component {
             </div>
           </div>
 
-          <div class="space-70"></div>
+          <div className="space-70"></div>
           <h2>สัดส่วน</h2>
-          <div class="row">
-            <div class="col-md-4">
+          <div className="row">
+            <div className="col-md-4">
               <h6>กรุณาวัดสัดส่วนของท่าน <br></br> โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h6>
-              <div class="form-group">
-                <label for="chest" class="bmd-label-floating">รอบอก (นิ้ว)</label>
+              <div className="form-group">
+                <label for="chest" className="bmd-label-floating">รอบอก (นิ้ว)</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="chest"
                   name="chest"
                   step=".01"
                   value={this.state.chest}
                   onChange={(event) => this.handleChange(event)} />
               </div>
-              <div class="form-group">
-                <label for="waist" class="bmd-label-floating">รอบเอว (นิ้ว)</label>
+              <div className="form-group">
+                <label for="waist" className="bmd-label-floating">รอบเอว (นิ้ว)</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="waist"
                   name="waist"
                   step=".01"
@@ -352,11 +352,11 @@ class VideoList extends Component {
                   onChange={(event) => this.handleChange(event)}
                 />
               </div>
-              <div class="form-group">
-                <label for="hip" class="bmd-label-floating">สะโพก (นิ้ว)</label>
+              <div className="form-group">
+                <label for="hip" className="bmd-label-floating">สะโพก (นิ้ว)</label>
                 <input
                   type="number"
-                  class="form-control"
+                  className="form-control"
                   id="hip"
                   name="hip"
                   step=".01"
@@ -365,21 +365,21 @@ class VideoList extends Component {
               </div>
             </div>
 
-            <div class="col-md-4" style={{ marginTop: "15px" }}>
-              <div class="card-header card-header-image">
+            <div className="col-md-4" style={{ marginTop: "15px" }}>
+              <div className="card-header card-header-image">
                 <img src="../assets/img/man.png" width="375px" alt="" />
               </div>
             </div>
-            <div class="col-md-4" style={{ marginTop: "15px" }}>
-              <div class="card-header card-header-image">
+            <div className="col-md-4" style={{ marginTop: "15px" }}>
+              <div className="card-header card-header-image">
                 <img src="../assets/img/woman.png" width="375px" alt="" />
               </div>
             </div>
           </div>
 
-          <div class="space-70 mb-5"></div>
-          <div class="form-group mb-5">
-            <div class="text-center">
+          <div className="space-70 mb-5"></div>
+          <div className="form-group mb-5">
+            <div className="text-center">
               <Button
                 color="danger"
                 className="btn-shadow"
@@ -462,13 +462,10 @@ class VideoList extends Component {
                     {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <h7><i class="fa fa-play-circle fa-1x" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i></h7>
-
-
+                    <i className="fa fa-play-circle fa-1x" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i>
                   </th>
                 </tr>
               </thead>
-              <br></br>
               <tbody>
                 {
                   todayExercise.map((item, index) => (
@@ -477,8 +474,8 @@ class VideoList extends Component {
                         <div className="videoThumb mr-3">
                           <div className="containerThumb">
                             <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
-                            <div class="overlay" onClick={() => this.toggle(item)}>
-                              <i class="fa fa-play fa-4x" aria-hidden="true"></i>
+                            <div className="overlay" onClick={() => this.toggle(item)}>
+                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                             </div>
                           </div>
                         </div>
@@ -491,7 +488,7 @@ class VideoList extends Component {
                         </div>
                         {(item.play_time === item.duration) &&
                           <div className="videoEnd">
-                            <h6 style={{ color: "green" }}><i class="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
                           </div>
                         }
                       </td>
