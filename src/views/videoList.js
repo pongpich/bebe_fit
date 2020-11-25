@@ -403,8 +403,8 @@ class VideoList extends Component {
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
-    todayExercise.map((item) => (allMinute.push(Number(String(item.duration).split(".")[0]))));
-    todayExercise.map((item) => (allSecond.push(Number(String(item.duration).split(".")[1]))));
+    todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
+    todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
     let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
     let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
     let minute2 = Math.floor(sumSecond / 60);

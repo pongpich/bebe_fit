@@ -48,11 +48,19 @@ class LoginTest extends Component {
 
   onUserRegister(event) {
     const { email, password, comfirmPassword } = this.state;
-    if (password == comfirmPassword) {
+    if ((password === comfirmPassword) && ((password.length >= 8) || (comfirmPassword.length >= 8))) {
       this.props.signupUser(email, password);
       /* this.props.loginUser(this.state.email, this.state.password); */
       this.setState({
         statusRegister: "success"
+      })
+    } else if (((password.length < 8) || (comfirmPassword.length < 8)) && (password === comfirmPassword)) {
+      this.setState({
+        statusRegister: "fail2"
+      })
+    } else if ((password !== comfirmPassword)) {
+      this.setState({
+        statusRegister: "fail"
       })
     }
   }
@@ -102,7 +110,7 @@ class LoginTest extends Component {
             block
           >
             <span className="text-one">
-              {"เปลี่ยนรหัสผ่าน?"}
+              {"ลืมรหัสผ่าน?"}
             </span>
           </Button>
         </div>
@@ -150,6 +158,7 @@ class LoginTest extends Component {
   }
 
   renderRegister() {
+    const { statusRegister } = this.state;
     return (
       <Form>
         <Label className="form-group2 has-float-label mb-2">
@@ -160,7 +169,7 @@ class LoginTest extends Component {
             value={this.state.password} onChange={(event) => this.handleChange(event)}
           />
         </Label>
-        <Label className="form-group2 has-float-label mb-3">
+        <Label className="form-group2 has-float-label mb-1">
           {"ยืนยัน Password"}
           <Input
             type="password"
@@ -169,6 +178,8 @@ class LoginTest extends Component {
             value={this.state.comfirmPassword} onChange={(event) => this.handleChange(event)}
           />
         </Label>
+        {(statusRegister === "fail") && <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านไม่ตรงกัน</h6></small>}
+        {(statusRegister === "fail2") && <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านต้องมากกว่า 8 ตัวขึ้นไป</h6></small>}
         <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
           <Button
             color="danger"
@@ -291,7 +302,7 @@ class LoginTest extends Component {
                 {"TEST-เข้าสู่ระบบ"}
               </CardTitle>
               {(this.props.statusTest === "default") && (this.renderEmailInput())}
-              {(this.props.statusTest === "no_user" && statusRegister === "default") && (this.renderRegister())}
+              {(this.props.statusTest === "no_user" && (statusRegister === "default" || statusRegister === "fail" || statusRegister === "fail2")) && (this.renderRegister())}
               {(statusRegister === "success") && (this.renderRegisterSuccess())}
               {/* { (this.props.statusTest === "have_user_no_password") && (this.renderAddPassword()) } */}
               {(this.props.statusTest === "have_user_have_password") && (this.renderPasswordInput())}
