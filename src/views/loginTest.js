@@ -21,7 +21,9 @@ class LoginTest extends Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      comfirmPassword: "",
+      statusRegister: "default"
     };
   }
 
@@ -45,9 +47,14 @@ class LoginTest extends Component {
   } */
 
   onUserRegister(event) {
-    const { email, password } = this.state;
-    this.props.signupUser(email, password);
-    this.props.loginUser(this.state.email, this.state.password);
+    const { email, password, comfirmPassword } = this.state;
+    if (password == comfirmPassword) {
+      this.props.signupUser(email, password);
+      /* this.props.loginUser(this.state.email, this.state.password); */
+      this.setState({
+        statusRegister: "success"
+      })
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -85,6 +92,29 @@ class LoginTest extends Component {
             <span className="h6 text-one">
               {"LOGIN"}
             </span>
+          </Button>
+        </div>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <Button
+            className="btn-link"
+            href="/forgot-password"
+            color="empty"
+            block
+          >
+            <span className="text-one">
+              {"เปลี่ยนรหัสผ่าน?"}
+            </span>
+          </Button>
+        </div>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <Button
+            color="light"
+            className="btn-shadow"
+            size="lg"
+            href="/register"
+            block
+          >
+            {"สมัครสมาชิก"}
           </Button>
         </div>
       </Form>
@@ -134,12 +164,9 @@ class LoginTest extends Component {
           {"ยืนยัน Password"}
           <Input
             type="password"
-            name="confirm-password" required
-            id="comfirm-password"
-            validate={{
-              required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
-              match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
-            }}
+            name="comfirmPassword" required
+            id="comfirmPassword"
+            value={this.state.comfirmPassword} onChange={(event) => this.handleChange(event)}
           />
         </Label>
         <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
@@ -148,6 +175,29 @@ class LoginTest extends Component {
             className="btn-shadow"
             size="lg"
             onClick={() => this.onUserRegister()}
+            block
+          >
+            <span className="h6 text-one">
+              {"ตั้งรหัสผ่าน"}
+            </span>
+          </Button>
+        </div>
+      </Form>
+    )
+  }
+
+  renderRegisterSuccess() {
+    return (
+      <Form>
+        <Label className="form-group2 has-float-label mb-2">
+          <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > สร้างรหัสผ่านสำเร็จ</i></h6>
+        </Label>
+        <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
+          <Button
+            color="danger"
+            className="btn-shadow"
+            size="lg"
+            onClick={() => this.onUserLogin()}
             block
           >
             <span className="h6 text-one">
@@ -200,6 +250,7 @@ class LoginTest extends Component {
   } */
 
   render() {
+    const { statusRegister } = this.state;
     return (
       <div className="h-100 all-row">
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -239,35 +290,11 @@ class LoginTest extends Component {
               <CardTitle className="h3 mb-4">
                 {"TEST-เข้าสู่ระบบ"}
               </CardTitle>
-              <Form> 
-                { (this.props.statusTest === "default") && (this.renderEmailInput()) }
-                { (this.props.statusTest === "no_user") && (this.renderRegister()) }
-                {/* { (this.props.statusTest === "have_user_no_password") && (this.renderAddPassword()) } */}
-                { (this.props.statusTest === "have_user_have_password") && (this.renderPasswordInput()) }
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <Button
-                    className="btn-link"
-                    href="/forgot-password"
-                    color="empty"
-                    block
-                  >
-                    <span className="text-one">
-                      {"เปลี่ยนรหัสผ่าน?"}
-                    </span>
-                  </Button>
-                </div>
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <Button
-                    color="light"
-                    className="btn-shadow"
-                    size="lg"
-                    href="/register"
-                    block
-                  >
-                    {"สมัครสมาชิก"}
-                  </Button>
-                </div>
-              </Form>
+              {(this.props.statusTest === "default") && (this.renderEmailInput())}
+              {(this.props.statusTest === "no_user" && statusRegister === "default") && (this.renderRegister())}
+              {(statusRegister === "success") && (this.renderRegisterSuccess())}
+              {/* { (this.props.statusTest === "have_user_no_password") && (this.renderAddPassword()) } */}
+              {(this.props.statusTest === "have_user_have_password") && (this.renderPasswordInput())}
             </div>
           </div>
         </div>

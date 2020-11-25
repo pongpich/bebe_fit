@@ -124,7 +124,7 @@ class Signup extends Component {
                     id="email"
                     value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
                   />
-                  <small id="emailHelp" className="form-text text-muted">Email นี้มีอยู่แล้วในระบบ</small>
+                  {/* <small id="emailHelp" className="form-text text-muted">Email นี้มีอยู่แล้วในระบบ</small> */}
                 </Label>
                 <Label className="form-group2 has-float-label mb-2">
                   {"Password"}
