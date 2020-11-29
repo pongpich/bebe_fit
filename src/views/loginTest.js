@@ -272,11 +272,11 @@ class LoginTest extends Component {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link" href="/login_test">Test-เข้าสู่ระบบ</a>
+                <a className="nav-link" href="/login_test">เข้าสู่ระบบ</a>
               </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
-              </li>
+              {/* <li className="nav-item">
+                <a className="nav-link" href="/login">เข้าสู่ระบบ (เก่า)</a>
+              </li> */}
               <li className="nav-item">
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
               </li>
@@ -299,7 +299,7 @@ class LoginTest extends Component {
 
             <div className="form-side">
               <CardTitle className="h3 mb-4">
-                {"TEST-เข้าสู่ระบบ"}
+                {"เข้าสู่ระบบ"}
               </CardTitle>
               {(this.props.statusTest === "default") && (this.renderEmailInput())}
               {(this.props.statusTest === "no_user" && (statusRegister === "default" || statusRegister === "fail" || statusRegister === "fail2")) && (this.renderRegister())}

@@ -60,7 +60,7 @@ class Login extends Component {
                 <a className="nav-link" href="/login_test">Test-เข้าสู่ระบบ</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
+                <a className="nav-link" href="/login">เข้าสู่ระบบ (เก่า)</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
@@ -84,7 +84,7 @@ class Login extends Component {
 
             <div className="form-side">
               <CardTitle className="h3 mb-4">
-                {"เข้าสู่ระบบ"}
+                {"เข้าสู่ระบบ (เก่า)"}
               </CardTitle>
               <Form>
                 <Label className="form-group2 has-float-label mb-4">

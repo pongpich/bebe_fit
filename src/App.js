@@ -2,7 +2,8 @@ import React from 'react';
 import Amplify from 'aws-amplify';
 import {
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 
 import Login from "./views/login";
@@ -39,6 +40,9 @@ function App() {
         </div>
       </nav> */}
       <Switch>
+        <Route exact path="/">
+          <Redirect to="/login_test"/>
+        </Route>
         <Route path='/login' component={Login} />
         <Route path='/login_test' component={LoginTest} />
         <Route path='/trial_register' component={TrialRegister} />
