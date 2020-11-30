@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { loginUser, loginTest, signupUser } from "../redux/auth";
+import { loginUser, loginTest, signupUser, setPassword } from "../redux/auth";
 //import IntlMessages from "../helpers/IntlMessages";
 //import "./login.scss";
 
@@ -23,8 +23,11 @@ class LoginTest extends Component {
       email: "",
       password: "",
       comfirmPassword: "",
-      statusRegister: "default"
+      statusRegister: "default",
+      emailFormat: "default"
     };
+
+    this.checkEmailFormat = this.checkEmailFormat.bind(this);
   }
 
 
@@ -33,6 +36,20 @@ class LoginTest extends Component {
       this.props.loginTest(this.state.email);
     }
   }
+
+  async checkEmailFormat(event) {
+    const { value } = event.target;
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+      this.setState({
+        emailFormat: "true"
+      })
+      this.onLoginTest();
+    } else {
+      this.setState({
+        emailFormat: "false"
+      })
+    }
+  };
 
   onUserLogin() {
     if (this.state.email !== "") {
@@ -49,7 +66,7 @@ class LoginTest extends Component {
   onUserRegister(event) {
     const { email, password, comfirmPassword } = this.state;
     if ((password === comfirmPassword) && ((password.length >= 8) || (comfirmPassword.length >= 8))) {
-      this.props.signupUser(email, password);
+      this.props.setPassword(email, password);
       /* this.props.loginUser(this.state.email, this.state.password); */
       this.setState({
         statusRegister: "success"
@@ -79,8 +96,12 @@ class LoginTest extends Component {
   }
 
   renderEmailInput() {
+    const { emailFormat } = this.state;
     return (
       <Form>
+        <CardTitle className="h3 mb-4">
+          {"เข้าสู่ระบบ"}
+        </CardTitle>
         <Label className="form-group2 has-float-label mb-4">
           {"Email"}
           <Input
@@ -89,12 +110,20 @@ class LoginTest extends Component {
             value={this.state.email} onChange={(event) => this.handleChange(event)}
           />
         </Label>
+        {
+          (emailFormat === "false") &&
+          <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลไม่ถูกต้อง</h6></small>
+        }
+        {
+          (emailFormat === "true" && this.props.statusTest === "no_user") &&
+          <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลนี้ไม่มีอยู่ในระบบ</h6></small>
+        }
         <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
           <Button
             color="danger"
             className="btn-shadow"
             size="lg"
-            onClick={() => this.onLoginTest()}
+            value={this.state.email} onClick={(event) => this.checkEmailFormat(event)}
             block
           >
             <span className="h6 text-one">
@@ -130,8 +159,12 @@ class LoginTest extends Component {
   }
 
   renderPasswordInput() {
+    const { status } = this.props;
     return (
       <Form>
+        <CardTitle className="h3 mb-4">
+          {"เข้าสู่ระบบ"}
+        </CardTitle>
         <Label className="form-group2 has-float-label mb-4">
           {"Password"}
           <Input
@@ -140,6 +173,10 @@ class LoginTest extends Component {
             value={this.state.password} onChange={(event) => this.handleChange(event)}
           />
         </Label>
+        {
+          (status === "fail") &&
+          <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านไม่ถูกต้อง</h6></small>
+        }
         <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
           <Button
             color="danger"
@@ -161,6 +198,9 @@ class LoginTest extends Component {
     const { statusRegister } = this.state;
     return (
       <Form>
+        <CardTitle className="h3 mb-4">
+          {"ตั้งรหัสผ่าน"}
+        </CardTitle>
         <Label className="form-group2 has-float-label mb-2">
           {"Password"}
           <Input
@@ -200,6 +240,9 @@ class LoginTest extends Component {
   renderRegisterSuccess() {
     return (
       <Form>
+        <CardTitle className="h3 mb-4">
+          {"เข้าสู่ระบบ"}
+        </CardTitle>
         <Label className="form-group2 has-float-label mb-2">
           <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > สร้างรหัสผ่านสำเร็จ</i></h6>
         </Label>
@@ -219,46 +262,6 @@ class LoginTest extends Component {
       </Form>
     )
   }
-
-  /* renderAddPassword() {
-    return (
-      <Form>
-        <Label className="form-group2 has-float-label mb-2">
-          {"Password"}
-          <Input
-            type="password"
-            id="password"
-            value={this.state.password} onChange={(event) => this.handleChange(event)}
-          />
-        </Label>
-        <Label className="form-group2 has-float-label mb-3">
-          {"ยืนยัน Password"}
-          <Input
-            type="password"
-            name="confirm-password" required
-            id="comfirm-password"
-            validate={{
-              required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
-              match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
-            }}
-          />
-        </Label>
-        <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
-          <Button
-            color="danger"
-            className="btn-shadow"
-            size="lg"
-            onClick={() => this.onUserAddPassword()}
-            block
-          >
-            <span className="h6 text-one">
-              {"LOGIN"}
-            </span>
-          </Button>
-        </div>
-      </Form>
-    )
-  } */
 
   render() {
     const { statusRegister } = this.state;
@@ -298,14 +301,14 @@ class LoginTest extends Component {
             </div>
 
             <div className="form-side">
-              <CardTitle className="h3 mb-4">
+              {/* <CardTitle className="h3 mb-4">
                 {"เข้าสู่ระบบ"}
-              </CardTitle>
+              </CardTitle> */}
               {(this.props.statusTest === "default") && (this.renderEmailInput())}
-              {(this.props.statusTest === "no_user" && (statusRegister === "default" || statusRegister === "fail" || statusRegister === "fail2")) && (this.renderRegister())}
-              {(statusRegister === "success") && (this.renderRegisterSuccess())}
-              {/* { (this.props.statusTest === "have_user_no_password") && (this.renderAddPassword()) } */}
+              {(this.props.statusTest === "no_user") && (this.renderEmailInput())}
               {(this.props.statusTest === "have_user_have_password") && (this.renderPasswordInput())}
+              {(this.props.statusTest === "have_user_no_password" && (statusRegister === "default" || statusRegister === "fail" || statusRegister === "fail2")) && (this.renderRegister())}
+              {(statusRegister === "success") && (this.renderRegisterSuccess())}
             </div>
           </div>
         </div>
@@ -318,7 +321,7 @@ const mapStateToProps = ({ authUser }) => {
   return { user, status, statusTest };
 };
 
-const mapActionsToProps = { loginUser, loginTest, signupUser };
+const mapActionsToProps = { loginUser, loginTest, signupUser, setPassword };
 
 export default connect(
   mapStateToProps,

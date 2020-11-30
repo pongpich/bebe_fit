@@ -23,8 +23,17 @@ export const types = {
   LOGIN_TEST: "LOGIN_TEST",
   LOGIN_TEST_NO_USER: "LOGIN_TEST_NO_USER",
   LOGIN_TEST_HAVE_USER_HAVE_PASSWORD: "LOGIN_TEST_HAVE_USER_HAVE_PASSWORD",
-  LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD"
+  LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD",
+  SET_PASSWORD: "SET_PASSWORD"
 }
+
+export const setPassword = (email, password) => ({
+  type: types.SET_PASSWORD,
+  payload: {
+    email,
+    password
+  }
+})
 
 export const loginTest = (email) => ({
   type: types.LOGIN_TEST,
@@ -161,6 +170,23 @@ const checkUserSagaAsync = async (
     return { error, messsage: error.message }
   }
 }
+
+const setPasswordSagaAsync = async (
+  email,
+  password
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/setPassword", {
+      body: {
+        email: email,
+        password: password,
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+};
 
 const trialRegisterSagaAsync = async (
   email,
@@ -468,6 +494,24 @@ function* signupUserSaga({ payload }) {
   }
 }
 
+function* setPasswordSaga({ payload }) {
+  const {
+    email,
+    password
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      setPasswordSagaAsync,
+      email,
+      password
+    );
+    console.log("setPasswordSaga : ", apiResult);
+  } catch (error) {
+    console.log("error from setPasswordSaga :", error);
+  }
+}
+
 function* trialRegisterSaga({ payload }) {
   const {
     email,
@@ -545,6 +589,12 @@ function* loginUserSaga({ payload }) {
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user
       })
+    } else if (loginResult.results.message === "fail") {
+      console.log("user :", loginResult.results.user);
+      yield put({
+        type: types.LOGIN_USER_FAIL,
+        payload: loginResult.results.user
+      })
     }
   } catch (error) {
     console.log("error form login", error);
@@ -587,6 +637,10 @@ export function* watchLoginTest() {
   yield takeEvery(types.LOGIN_TEST, loginTestSaga)
 }
 
+export function* watchSetPassword() {
+  yield takeEvery(types.SET_PASSWORD, setPasswordSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -597,7 +651,8 @@ export function* saga() {
     fork(watchCreateCustomWeekForUser),
     fork(watchVideoListForUser),
     fork(watchUpdatePlaytime),
-    fork(watchLoginTest)
+    fork(watchLoginTest),
+    fork(watchSetPassword)
   ]);
 }
 
@@ -640,6 +695,12 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         user: action.payload,
         status: "success"
+      };
+    case types.LOGIN_USER_FAIL:
+      return {
+        ...state,
+        user: action.payload,
+        status: "fail"
       };
     case types.UPDATE_PROFILE_SUCCESS:
       return {

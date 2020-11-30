@@ -59,7 +59,7 @@ class Signup extends Component {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
+                <a className="nav-link" href="/login_test">เข้าสู่ระบบ</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
@@ -77,11 +77,11 @@ class Signup extends Component {
 
             <div className="form-side">
               <CardTitle className="h3 mb-4">
-                {"สมัครสมาชิก"}
+                {"สมัครสมาชิกโดยการซื้อ Platform"}
               </CardTitle>
 
               <Form>
-                <Label className="form-group1 has-float-label mb-2 mr-4">
+                {/* <Label className="form-group1 has-float-label mb-2 mr-4">
                   {"ชื่อ"}
                   <Input
                     name="firstname"
@@ -124,7 +124,6 @@ class Signup extends Component {
                     id="email"
                     value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
                   />
-                  {/* <small id="emailHelp" className="form-text text-muted">Email นี้มีอยู่แล้วในระบบ</small> */}
                 </Label>
                 <Label className="form-group2 has-float-label mb-2">
                   {"Password"}
@@ -145,7 +144,7 @@ class Signup extends Component {
                       match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
                     }}
                   />
-                </Label>
+                </Label> */}
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <Button
@@ -156,7 +155,7 @@ class Signup extends Component {
                     block
                   >
                     <span className="text-one">
-                      {"ลงทะเบียน"}
+                      {"สมัครคอร์สออนไลน์"}
                     </span>
                   </Button>
                 </div>
