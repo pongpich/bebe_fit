@@ -277,9 +277,9 @@ class LoginTest extends Component {
               <li className="nav-item">
                 <a className="nav-link" href="/login_test">เข้าสู่ระบบ</a>
               </li>
-              {/* <li className="nav-item">
+              <li className="nav-item">
                 <a className="nav-link" href="/login">เข้าสู่ระบบ (เก่า)</a>
-              </li> */}
+              </li>
               <li className="nav-item">
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
               </li>

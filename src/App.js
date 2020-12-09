@@ -41,12 +41,12 @@ function App() {
       </nav> */}
       <Switch>
         <Route exact path="/">
-          <Redirect to="/login_test" />
+          <Redirect to="/login" />
         </Route>
-        <Route exact path='/login'>
-          <Redirect to="/login_test" />
+        <Route exact path='/login_test'>
+          <Redirect to="/login" />
         </Route>
-        <Route path='/login_test' component={LoginTest} />
+        <Route path='/login' component={Login} />
         <Route path='/trial_register' component={TrialRegister} />
         <Route path='/signup' component={Signup} />
         <Route path='/VideoList' component={VideoList} />

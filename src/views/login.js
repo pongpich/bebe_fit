@@ -21,17 +21,45 @@ class Login extends Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      statusLogin: "default"
     };
+
+    this.checkEmailFormat = this.checkEmailFormat.bind(this);
   }
-
-
 
   onUserLogin() {
     if (this.state.email !== "" && this.state.password !== "") {
       this.props.loginUser(this.state.email, this.state.password);
+      if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && !(this.props.status === "success")) {
+        this.setState({
+          statusLogin: "fail"
+        });
+      } else if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email))) {
+        this.setState({
+          statusLogin: "fail"
+        });
+      }
+    } else if (this.state.email === "" || this.state.password === "") {
+      this.setState({
+        statusLogin: "fail"
+      });
     }
   }
+
+  async checkEmailFormat(event) {
+    const { value } = event.target;
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+      this.setState({
+        emailFormat: "true"
+      })
+      this.onLoginTest();
+    } else {
+      this.setState({
+        emailFormat: "false"
+      })
+    }
+  };
 
   componentDidUpdate(prevProps) {
     const { status } = this.props;
@@ -47,6 +75,7 @@ class Login extends Component {
   }
 
   render() {
+    const { statusLogin } = this.state;
     return (
       <div className="h-100 all-row">
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -56,11 +85,11 @@ class Login extends Component {
         </a>
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
-            <li className="nav-item">
+              {/* <li className="nav-item">
                 <a className="nav-link" href="/login_test">Test-เข้าสู่ระบบ</a>
-              </li>
+              </li> */}
               <li className="nav-item">
-                <a className="nav-link" href="/login">เข้าสู่ระบบ (เก่า)</a>
+                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
@@ -84,7 +113,7 @@ class Login extends Component {
 
             <div className="form-side">
               <CardTitle className="h3 mb-4">
-                {"เข้าสู่ระบบ (เก่า)"}
+                {"เข้าสู่ระบบ"}
               </CardTitle>
               <Form>
                 <Label className="form-group2 has-float-label mb-4">
@@ -103,6 +132,14 @@ class Login extends Component {
                     value={this.state.password} onChange={(event) => this.handleChange(event)}
                   />
                 </Label>
+                {
+                  (statusLogin == "fail") &&
+                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลหรือรหัสผ่านไม่ถูกต้อง</h6></small>
+                }
+                {/* {
+                  (statusLogin == "fail2") &&
+                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลไม่ถูกต้อง</h6></small>
+                } */}
 
                 <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
                   <Button
@@ -125,7 +162,7 @@ class Login extends Component {
                     block
                   >
                     <span className="text-one">
-                      {"เปลี่ยนรหัสผ่าน?"}
+                      {"ลืมรหัสผ่าน"}
                     </span>
                   </Button>
                 </div>

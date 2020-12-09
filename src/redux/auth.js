@@ -589,7 +589,7 @@ function* loginUserSaga({ payload }) {
         type: types.LOGIN_USER_SUCCESS,
         payload: loginResult.results.user
       })
-    } else if (loginResult.results.message === "fail") {
+    } else if (loginResult.results.message === "fail" || loginResult.results.message === "no_user") {
       console.log("user :", loginResult.results.user);
       yield put({
         type: types.LOGIN_USER_FAIL,

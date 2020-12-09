@@ -76,7 +76,7 @@ class VideoList extends Component {
       }
     }
     if (prevProps.user !== user && user === null) {
-      this.props.history.push('/login_test');
+      this.props.history.push('/login');
     }
   }
 
