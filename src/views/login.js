@@ -13,9 +13,6 @@ import { loginUser } from "../redux/auth";
 //import "./login.scss";
 
 
-
-
-
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -24,8 +21,6 @@ class Login extends Component {
       password: "",
       statusLogin: "default"
     };
-
-    this.checkEmailFormat = this.checkEmailFormat.bind(this);
   }
 
   onUserLogin() {
@@ -46,20 +41,6 @@ class Login extends Component {
       });
     }
   }
-
-  async checkEmailFormat(event) {
-    const { value } = event.target;
-    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
-      this.setState({
-        emailFormat: "true"
-      })
-      this.onLoginTest();
-    } else {
-      this.setState({
-        emailFormat: "false"
-      })
-    }
-  };
 
   componentDidUpdate(prevProps) {
     const { status } = this.props;
