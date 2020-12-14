@@ -20,7 +20,8 @@ class Signup extends Component {
       password: "",
       firstname: "",
       lastname: "",
-      phone: ""
+      phone: "",
+      statusRegister: "default"
     };
 
     this.onUserRegister = this.onUserRegister.bind(this);
@@ -77,11 +78,11 @@ class Signup extends Component {
 
             <div className="form-side">
               <CardTitle className="h3 mb-4">
-                {"สมัครสมาชิกโดยการซื้อ Platform"}
+                {"สมัครสมาชิกผ่านอีเมล"}
               </CardTitle>
 
               <Form>
-                {/* <Label className="form-group1 has-float-label mb-2 mr-4">
+                <Label className="form-group1 has-float-label mb-2 mr-4">
                   {"ชื่อ"}
                   <Input
                     name="firstname"
@@ -144,7 +145,7 @@ class Signup extends Component {
                       match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
                     }}
                   />
-                </Label> */}
+                </Label>
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <Button
@@ -155,7 +156,7 @@ class Signup extends Component {
                     block
                   >
                     <span className="text-one">
-                      {"สมัครคอร์สออนไลน์"}
+                      {"สมัครสมาชิก"}
                     </span>
                   </Button>
                 </div>
