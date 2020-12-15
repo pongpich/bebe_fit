@@ -26,7 +26,8 @@ class VideoList extends Component {
       hip: "",
       focusDay: 0,
       other_attributes: "",
-      selectedVDO: null
+      selectedVDO: null,
+      editVDO_click: "default"
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -120,6 +121,21 @@ class VideoList extends Component {
 
   onUserLogout(event) {
     this.props.logoutUser();
+  }
+  coloseEditVDO() {
+    const { editVDO_click } = this.state;
+    this.setState({
+      editVDO_click: "default"
+    })
+    console.log("editVDO :", editVDO_click)
+  }
+
+  editVDO() {
+    const { editVDO_click } = this.state;
+    this.setState({
+      editVDO_click: "show"
+    })
+    console.log("editVDO :", editVDO_click)
   }
 
   toggleList() {
@@ -240,6 +256,128 @@ class VideoList extends Component {
       this.props.user.offset
     );
   };
+
+  renderEditVDO() {
+    const { focusDay, selectedVDO } = this.state;
+    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const todayExercise = this.exerciseDaySelection(focusDay);
+    let allMinute = [];
+    let allSecond = [];
+    todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
+    todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
+    let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let minute2 = Math.floor(sumSecond / 60);
+    let totalMinute = Number(sumMinute) + Number(minute2);
+    let totalSecond = sumSecond % 60;
+    let timesExercise;
+    if (totalSecond < 10) {
+      timesExercise = `${totalMinute}.0${totalSecond}`;
+    } else {
+      timesExercise = `${totalMinute}.${totalSecond}`;
+    }
+
+    return (
+      <div className="card-body">
+
+        <form>
+          <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
+          <div className="tab-content mt-3 mb-2" id="myTabContent">
+            <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <nav className="nav">
+                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}>DAY1</a>
+                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY2</a>
+                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY3</a>
+                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY4</a>
+              </nav>
+            </div>
+            <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
+            <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
+          </div>
+
+          <div className="">
+            <div className="trailer" id={`popupVDO`}>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
+              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+            </div>
+            <div className="trailer" id={`popupVDOList`}>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+            </div>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th className="tabletitle">
+                    {
+                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
+                    }
+
+                    <button type="button" style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "250px" }}> ยืนยันการแก้ไข </button>
+                    <button
+                      className="mr-4" type="button"
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "130px" }}
+                      onClick={() => this.coloseEditVDO()}
+                    >
+                      ยกเลิก
+                    </button>
+
+                    {/* <i className="fa fa-play-circle fa-1x" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> ยกเลิก</i>
+                    <i className="fa fa-circle fa-1x mr-5" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.editVDO()} aria-hidden="true"> บันทึกการแก้ไข</i> */}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  todayExercise.map((item, index) => (
+                    <tr key={index}>
+                      <td className="videoItem mt-5">
+                        <div className="videoThumb mr-3">
+                          <div className="containerThumb">
+                            <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                            <div className="overlay" onClick={() => this.toggle(item)}>
+                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="videoName">
+                          <h3> {item.name} </h3>
+                          <h6> {item.category} </h6>
+                        </div>
+                        <div className="videoDuration">
+                          <h6> {item.duration} นาที </h6>
+                        </div>
+                        <i
+                          className="fa fa-circle fa-1x mr-5"
+                          style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                          onClick={() => this.editVDO()} aria-hidden="true"
+                        >
+                          เปลี่ยนคลิปวีดีโอ
+                        </i>
+                        <i
+                          className="fa fa-circle fa-1x mr-5"
+                          style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                          onClick={() => this.editVDO()} aria-hidden="true"
+                        >
+                          สุ่มคลิปวีดีโอ
+                        </i>
+                        {(item.play_time === item.duration) &&
+                          <div className="videoEnd">
+                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          </div>
+                        }
+                      </td>
+                    </tr>
+
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </form>
+
+      </div>
+    )
+  }
 
   renderOtherAttribute() {
     return (
@@ -420,6 +558,10 @@ class VideoList extends Component {
     return (
       <div className="card-body">
 
+        <video width="100%" height="300" controls autoPlay muted >
+          <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+        </video>
+
         <form>
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">
@@ -462,7 +604,18 @@ class VideoList extends Component {
                     {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <i className="fa fa-play-circle fa-1x" style={{ fontSize: "20px", cursor: "pointer", float: "right" }} onClick={() => this.toggleList()} aria-hidden="true"> เล่นต่อเนื่อง</i>
+                    <i
+                      className="fa fa-play-circle fa-1x"
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                      onClick={() => this.toggleList()} aria-hidden="true">
+                      เล่นต่อเนื่อง
+                    </i>
+                    <i
+                      className="fa fa-circle fa-1x mr-5"
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                      onClick={() => this.editVDO()} aria-hidden="true">
+                      แก้ไขคลิปออกกำลังกาย
+                    </i>
                   </th>
                 </tr>
               </thead>
@@ -506,6 +659,7 @@ class VideoList extends Component {
   }
 
   render() {
+    const { editVDO_click } = this.state;
     return (
       < div >
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -513,6 +667,20 @@ class VideoList extends Component {
             <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
           BEBE FIT ROUTINE
         </a>
+          <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/signup">อุปกรณ์ฟิตเนส</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/VideoList">Platform</a>
+              </li>
+            </ul>
+          </div>
+
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
@@ -547,9 +715,13 @@ class VideoList extends Component {
             <div className="card card-plain">
               {
                 (this.props.user && this.props.user.other_attributes)
-                  ? this.renderVideoList()
+                  ?
+                  (editVDO_click === "show")
+                    ? this.renderEditVDO()
+                    : this.renderVideoList()
                   : this.renderOtherAttribute()
               }
+
             </div>
           </div>
         </div>
