@@ -24,8 +24,31 @@ export const types = {
   LOGIN_TEST_NO_USER: "LOGIN_TEST_NO_USER",
   LOGIN_TEST_HAVE_USER_HAVE_PASSWORD: "LOGIN_TEST_HAVE_USER_HAVE_PASSWORD",
   LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD",
-  SET_PASSWORD: "SET_PASSWORD"
+  SET_PASSWORD: "SET_PASSWORD",
+  UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
+  UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS"
 }
+
+export const updatePlaylist = (user_id, start_date, day_number, video_number, video_id, name, thumbnail, rep, play_set, rest_time , duration, type, category, clip_gen, newVideo) => ({
+  type: types.UPDATE_PLAYLIST,
+  payload: {
+    user_id,
+    start_date,
+    day_number,
+    video_number,
+    video_id,
+    name,
+    thumbnail,
+    rep,
+    play_set,
+    rest_time,
+    duration,
+    type,
+    category,
+    clip_gen,
+    newVideo
+  }
+})
 
 export const setPassword = (email, password) => ({
   type: types.SET_PASSWORD,
@@ -249,6 +272,47 @@ const createCustomWeekForUserSagaAsync = async (
   }
 }
 
+const updatePlaylistSagaAsync = async (
+  user_id,
+  start_date,
+  day_number,
+  video_number,
+  video_id,
+  name,
+  thumbnail,
+  rep,
+  play_set,
+  rest_time,
+  duration,
+  type,
+  category,
+  clip_gen
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/playlist", {
+      body: {
+        user_id,
+        start_date,
+        day_number,
+        video_number,
+        video_id,
+        name,
+        thumbnail,
+        rep,
+        play_set,
+        rest_time,
+        duration,
+        type,
+        category,
+        clip_gen
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const updatePlaytimeSagaAsync = async (
   user_id,
   start_date,
@@ -326,6 +390,73 @@ const loginUserSagaAsync = async (
     return { error, messsage: error.message };
   }
 };
+
+function* updatePlaylistSaga({ payload }) {
+  const {
+    user_id,
+    start_date,
+    day_number,
+    video_number,
+    video_id,
+    name,
+    thumbnail,
+    rep,
+    play_set,
+    rest_time,
+    duration,
+    type,
+    category,
+    clip_gen,
+    newVideo
+  } = payload
+  try {
+    const apiResult = yield call(
+      updatePlaylistSagaAsync,
+      user_id,
+      start_date,
+      day_number,
+      video_number,
+      video_id,
+      name,
+      thumbnail,
+      rep,
+      play_set,
+      rest_time,
+      duration,
+      type,
+      category,
+      clip_gen
+    );
+    let keyDay = "";
+    switch (day_number) {
+      case 0:
+        keyDay = "day1";
+        break;
+      case 1:
+        keyDay = "day2";
+        break;
+      case 2:
+        keyDay = "day3";
+        break;
+      case 3:
+        keyDay = "day4";
+        break;
+      default:
+        break;
+    }
+    yield put({
+      type: types.UPDATE_PLAYLIST_SUCCESS,
+      payload: {
+        keyDay,
+        video_number,
+        newVideo
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 function* updatePlaytimeSaga({ payload }) {
   const {
@@ -641,6 +772,10 @@ export function* watchSetPassword() {
   yield takeEvery(types.SET_PASSWORD, setPasswordSaga)
 }
 
+export function* watchUpdatePlaylist() {
+  yield takeEvery(types.UPDATE_PLAYLIST, updatePlaylistSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -652,7 +787,8 @@ export function* saga() {
     fork(watchVideoListForUser),
     fork(watchUpdatePlaytime),
     fork(watchLoginTest),
-    fork(watchSetPassword)
+    fork(watchSetPassword),
+    fork(watchUpdatePlaylist)
   ]);
 }
 
@@ -727,6 +863,17 @@ export function reducer(state = INIT_STATE, action) {
         },
         status: "default",
         statusTest: "default"
+      };
+    case types.UPDATE_PLAYLIST_SUCCESS:
+      return {
+        ...state,
+        exerciseVideo: {
+          ...state.exerciseVideo,
+          [action.payload.keyDay]: updateObjectInArray(
+            state.exerciseVideo[action.payload.keyDay],
+            { index: action.payload.video_number, item: action.payload.newVideo }
+          )
+        }
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {

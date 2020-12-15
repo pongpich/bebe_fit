@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 
 
-import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -122,7 +122,8 @@ class VideoList extends Component {
   onUserLogout(event) {
     this.props.logoutUser();
   }
-  coloseEditVDO() {
+
+  closeEditVDO() {
     const { editVDO_click } = this.state;
     this.setState({
       editVDO_click: "default"
@@ -199,6 +200,33 @@ class VideoList extends Component {
       })
     }
 
+  }
+
+  onVideoListUpdate(compName = "video") {
+    var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
+    const { selectedVDO, focusDay } = this.state;
+    const user_id = this.props.user.user_id;
+    const start_date = this.props.user.start_date;
+    const day_number = focusDay;
+    const video_number = selectedVDO.order;
+    const video_id = selectedVDO.video_id;
+    const name = selectedVDO.name;
+    const thumbnail = selectedVDO.thumbnail;
+    const rep = selectedVDO.rep;
+    const play_set = selectedVDO.play_set;
+    const rest_time = selectedVDO.rest_time;
+    const duration = selectedVDO.duration;
+    const type = selectedVDO.type;
+    const category = selectedVDO.category;
+    const clip_gen = selectedVDO.clip_gen;
+    //const { video_number, video_id, name, thumbnail, rep, play_set, rest_time, duration, type, category, clip_gen } = selectedVDO; 
+    const newVideo = { ...selectedVDO }
+    this.setState({
+      selectedVDO: newVideo
+    });
+    this.props.updatePlaylist( 
+      user_id, start_date, day_number, video_number, video_id, name, thumbnail, rep, play_set, rest_time, duration, type, category, clip_gen, newVideo
+    );
   }
 
   onVideoTimeUpdate(compName = "video") {
@@ -316,7 +344,7 @@ class VideoList extends Component {
                     <button
                       className="mr-4" type="button"
                       style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "130px" }}
-                      onClick={() => this.coloseEditVDO()}
+                      onClick={() => this.closeEditVDO()}
                     >
                       ยกเลิก
                     </button>
@@ -351,14 +379,14 @@ class VideoList extends Component {
                           style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
                           onClick={() => this.editVDO()} aria-hidden="true"
                         >
-                          เปลี่ยนคลิปวีดีโอ
+                          สุ่มคลิปวีดีโอ
                         </i>
                         <i
                           className="fa fa-circle fa-1x mr-5"
                           style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
                           onClick={() => this.editVDO()} aria-hidden="true"
                         >
-                          สุ่มคลิปวีดีโอ
+                          เปลี่ยนคลิปวีดีโอ
                         </i>
                         {(item.play_time === item.duration) &&
                           <div className="videoEnd">
@@ -735,7 +763,7 @@ const mapStateToProps = ({ authUser }) => {
   return { user, exerciseVideo, status };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist };
 
 export default connect(
   mapStateToProps,
