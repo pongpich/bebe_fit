@@ -26,27 +26,27 @@ export const types = {
   LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD",
   SET_PASSWORD: "SET_PASSWORD",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
-  UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS"
+  UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
+  RANDOM_VIDEO: "RANDOM_VIDEO",
+  RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
+  RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL"
 }
 
-export const updatePlaylist = (user_id, start_date, day_number, video_number, video_id, name, thumbnail, rep, play_set, rest_time , duration, type, category, clip_gen, newVideo) => ({
+export const randomVideo = (video_id, category) => ({
+  type: types.RANDOM_VIDEO,
+  payload: {
+    video_id,
+    category
+  }
+})
+
+export const updatePlaylist = (user_id, start_date, day_number, playlist) => ({
   type: types.UPDATE_PLAYLIST,
   payload: {
     user_id,
     start_date,
     day_number,
-    video_number,
-    video_id,
-    name,
-    thumbnail,
-    rep,
-    play_set,
-    rest_time,
-    duration,
-    type,
-    category,
-    clip_gen,
-    newVideo
+    playlist
   }
 })
 
@@ -276,17 +276,7 @@ const updatePlaylistSagaAsync = async (
   user_id,
   start_date,
   day_number,
-  video_number,
-  video_id,
-  name,
-  thumbnail,
-  rep,
-  play_set,
-  rest_time,
-  duration,
-  type,
-  category,
-  clip_gen
+  playlist
 ) => {
   try {
     const apiResult = await API.put("bebe", "/playlist", {
@@ -294,17 +284,7 @@ const updatePlaylistSagaAsync = async (
         user_id,
         start_date,
         day_number,
-        video_number,
-        video_id,
-        name,
-        thumbnail,
-        rep,
-        play_set,
-        rest_time,
-        duration,
-        type,
-        category,
-        clip_gen
+        playlist
       }
     });
     return apiResult;
@@ -359,6 +339,23 @@ const signupUserSagaAsync = async (
   }
 };
 
+const randomVideoSagaAsync = async (
+  video_id,
+  category
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/randomVideo", {
+      queryStringParameters: {
+        video_id,
+        category
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const loginTestSagaAsync = async (
   email
 ) => {
@@ -396,18 +393,8 @@ function* updatePlaylistSaga({ payload }) {
     user_id,
     start_date,
     day_number,
-    video_number,
-    video_id,
-    name,
-    thumbnail,
-    rep,
-    play_set,
-    rest_time,
-    duration,
-    type,
-    category,
-    clip_gen,
-    newVideo
+    playlist,
+    exerciseVideo
   } = payload
   try {
     const apiResult = yield call(
@@ -415,17 +402,7 @@ function* updatePlaylistSaga({ payload }) {
       user_id,
       start_date,
       day_number,
-      video_number,
-      video_id,
-      name,
-      thumbnail,
-      rep,
-      play_set,
-      rest_time,
-      duration,
-      type,
-      category,
-      clip_gen
+      playlist
     );
     let keyDay = "";
     switch (day_number) {
@@ -446,11 +423,7 @@ function* updatePlaylistSaga({ payload }) {
     }
     yield put({
       type: types.UPDATE_PLAYLIST_SUCCESS,
-      payload: {
-        keyDay,
-        video_number,
-        newVideo
-      }
+      payload: exerciseVideo
     });
     return apiResult;
   } catch (error) {
@@ -524,18 +497,9 @@ function* videoListForUserSaga({ payload }) {
     );
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
-      const day1 = activities[0];
-      const day2 = activities[1];
-      const day3 = activities[2];
-      const day4 = activities[3];
       yield put({
         type: types.VIDEO_LIST_FOR_USER_SUCCESS,
-        payload: {
-          day1,
-          day2,
-          day3,
-          day4
-        }
+        payload: activities
       })
     }
   } catch (error) {
@@ -667,6 +631,33 @@ function* trialRegisterSaga({ payload }) {
   }
 }
 
+function* randomVideoSaga({ payload }) {
+  const {
+    video_id,
+    category
+  } = payload
+  try {
+    const apiResult = yield call(
+      randomVideoSagaAsync,
+      video_id,
+      category
+    );
+    if (apiResult.results.message === "no_video") {
+      console.log("user :", apiResult.results);
+      yield put({
+        type: types.RANDOM_VIDEO_FAIL,
+      })
+    } else {
+      yield put({
+        type: types.RANDOM_VIDEO_SUCCESS,
+        payload: apiResult.results.video
+      })
+    }
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* loginTestSaga({ payload }) {
   const {
     email
@@ -776,6 +767,10 @@ export function* watchUpdatePlaylist() {
   yield takeEvery(types.UPDATE_PLAYLIST, updatePlaylistSaga)
 }
 
+export function* watchRandomVideo() {
+  yield takeEvery(types.RANDOM_VIDEO, randomVideoSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -788,7 +783,8 @@ export function* saga() {
     fork(watchUpdatePlaytime),
     fork(watchLoginTest),
     fork(watchSetPassword),
-    fork(watchUpdatePlaylist)
+    fork(watchUpdatePlaylist),
+    fork(watchRandomVideo)
   ]);
 }
 
@@ -798,14 +794,10 @@ export function* saga() {
 
 const INIT_STATE = {
   user: null,
-  exerciseVideo: {
-    day1: [],
-    day2: [],
-    day3: [],
-    day4: []
-  },
+  exerciseVideo: [[], [], [], []],
   status: "default",
   statusTest: "default",
+  video: {}
 };
 
 function updateObjectInArray(array, action) {
@@ -852,28 +844,11 @@ export function reducer(state = INIT_STATE, action) {
         exerciseVideo: action.payload
       };
     case types.LOGOUT_USER:
-      return {
-        ...state,
-        user: null,
-        exerciseVideo: {
-          day1: [],
-          day2: [],
-          day3: [],
-          day4: []
-        },
-        status: "default",
-        statusTest: "default"
-      };
+      return INIT_STATE;
     case types.UPDATE_PLAYLIST_SUCCESS:
       return {
         ...state,
-        exerciseVideo: {
-          ...state.exerciseVideo,
-          [action.payload.keyDay]: updateObjectInArray(
-            state.exerciseVideo[action.payload.keyDay],
-            { index: action.payload.video_number, item: action.payload.newVideo }
-          )
-        }
+        exerciseVideo: action.payload
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
@@ -885,6 +860,11 @@ export function reducer(state = INIT_STATE, action) {
             { index: action.payload.video_number, item: action.payload.newVideo }
           )
         }
+      };
+    case types.RANDOM_VIDEO_SUCCESS:
+      return {
+        ...state,
+        video: action.payload
       };
     case types.LOGIN_TEST_NO_USER:
       return {
