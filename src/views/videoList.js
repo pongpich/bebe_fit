@@ -312,7 +312,65 @@ class VideoList extends Component {
             <div className="content">
               <div className="close-btn" onClick={() => this.togglePopupSelectEditVideo()}>&times;</div>
               <h5>เลือกคลิปวีดีโอ</h5>
-              <p>ประเภทการออกกำลังกาย category</p>
+              {/* <p>ประเภทการออกกำลังกาย category</p> */}
+
+              <tr>
+                <td className="videoItem mt-5">
+                  <div className="videoThumb mr-3">
+                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
+                      <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+                    </video>
+                  </div>
+                  <div className="videoName ml-3">
+                    <h6> ลุกนั่ง </h6>
+                  </div>
+                  <i
+                    className="fa fa-circle fa-1x mr-5"
+                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
+                  >
+                    เลือกคลิปวีดีโอนี้
+                  </i>
+                </td>
+              </tr>
+
+              <tr>
+                <td className="videoItem mt-5">
+                  <div className="videoThumb mr-3">
+                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
+                      <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+                    </video>
+                  </div>
+                  <div className="videoName ml-3">
+                    <h6> วิดพื้น </h6>
+                  </div>
+                  <i
+                    className="fa fa-circle fa-1x mr-5"
+                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
+                  >
+                    เลือกคลิปวีดีโอนี้
+                  </i>
+                </td>
+              </tr>
+
+              <tr>
+                <td className="videoItem mt-5">
+                  <div className="videoThumb mr-3">
+                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
+                      <source  src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+                    </video>
+                  </div>
+                  <div className="videoName ml-3">
+                    <h6> วิ่ง </h6>
+                  </div>
+                  <i
+                    className="fa fa-circle fa-1x mr-5"
+                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
+                  >
+                    เลือกคลิปวีดีโอนี้
+                  </i>
+                </td>
+              </tr>
+
             </div>
           </div>
 
