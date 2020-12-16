@@ -89,7 +89,6 @@ class VideoList extends Component {
       // ...this.props.video เพื่อเอาAttribute ต่างๆของ video ใหม่ที่สุ่มได้นั้น นำมา assigned ทับ ...playlist[indexPlaylist]
       // play_time: 0 เพื่อให้Attribute play_time เท่ากับ 0 เสมอเมื่อสุ่ม video มา
       playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...this.props.video , play_time: 0}; 
-      console.log("playlist2 : ", playlist);
       this.setState({
         tempPlaylist: playlist
       })
