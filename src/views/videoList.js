@@ -35,6 +35,7 @@ class VideoList extends Component {
     this.onDayChange = this.onDayChange.bind(this);
     this.onVideoTimeUpdate = this.onVideoTimeUpdate.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.togglePopupSelectEditVideo = this.togglePopupSelectEditVideo.bind(this);
     this.close = this.close.bind(this);
     this.exerciseDaySelection = this.exerciseDaySelection.bind(this);
     this.closeList = this.closeList.bind(this);
@@ -81,18 +82,22 @@ class VideoList extends Component {
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/login');
     }
-    if (prevProps.video.video_id !== this.props.video.video_id ) {
+    if (prevProps.video.video_id !== this.props.video.video_id) {
       const { indexPlaylist } = this.state;
       // playlist เป็น Array ที่เก็บ Object ของ video หลายๆอันไว้ข้างใน
       let playlist = [...this.state.tempPlaylist];
       // ...playlist[indexPlaylist] เพื่อเอาAttribute (order, play_time) ซึ่งไม่มีใน database
       // ...this.props.video เพื่อเอาAttribute ต่างๆของ video ใหม่ที่สุ่มได้นั้น นำมา assigned ทับ ...playlist[indexPlaylist]
       // play_time: 0 เพื่อให้Attribute play_time เท่ากับ 0 เสมอเมื่อสุ่ม video มา
-      playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...this.props.video , play_time: 0}; 
+      playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...this.props.video, play_time: 0 };
       this.setState({
         tempPlaylist: playlist
       })
     }
+  }
+
+  togglePopupSelectEditVideo() {
+    document.getElementById("popupSelectEditVideo").classList.toggle("active");
   }
 
   exerciseDaySelection(focusDay) {
@@ -130,12 +135,12 @@ class VideoList extends Component {
     this.setState({
       indexPlaylist: index
     });
-    this.props.randomVideo(video_id,category);
+    this.props.randomVideo(video_id, category);
   }
 
   editVDO() {
     const { editVDO_click, focusDay } = this.state;
-    const todayExercise =  this.exerciseDaySelection(focusDay);
+    const todayExercise = this.exerciseDaySelection(focusDay);
     const tempPlaylist = [...todayExercise];
     /* const tempExerciseVideo = [ this.props.exerciseVideo ];
     tempExerciseVideo[focusDay] = tempPlaylist; */
@@ -213,10 +218,10 @@ class VideoList extends Component {
     const user_id = this.props.user.user_id;
     const start_date = this.props.user.start_date;
     const day_number = focusDay;
-    const playlist =  [...tempPlaylist];
+    const playlist = [...tempPlaylist];
     const exerciseVideo = [...this.props.exerciseVideo];
     exerciseVideo[focusDay] = tempPlaylist;
-    this.props.updatePlaylist( 
+    this.props.updatePlaylist(
       user_id, start_date, day_number, playlist, exerciseVideo
     );
   }
@@ -278,7 +283,7 @@ class VideoList extends Component {
   };
 
   renderEditVDO() {
-    const { focusDay, selectedVDO, tempPlaylist} = this.state;
+    const { focusDay, selectedVDO, tempPlaylist } = this.state;
     const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     let allMinute = [];
     let allSecond = [];
@@ -301,6 +306,16 @@ class VideoList extends Component {
 
         <form>
           <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
+
+          <div className="popup" id="popupSelectEditVideo">
+            <div className="overlay"></div>
+            <div className="content">
+              <div className="close-btn" onClick={() => this.togglePopupSelectEditVideo()}>&times;</div>
+              <h5>เลือกคลิปวีดีโอ</h5>
+              <p>ประเภทการออกกำลังกาย category</p>
+            </div>
+          </div>
+
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
@@ -330,8 +345,12 @@ class VideoList extends Component {
                     {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-
-                    <button type="button" style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "250px" }}> ยืนยันการแก้ไข </button>
+                    <button
+                      type="button"
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "250px" }}
+                    >
+                      ยืนยันการแก้ไข
+                    </button>
                     <button
                       className="mr-4" type="button"
                       style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "130px" }}
@@ -372,7 +391,7 @@ class VideoList extends Component {
                         <i
                           className="fa fa-circle fa-1x mr-5"
                           style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.editVDO()} aria-hidden="true"
+                          onClick={() => this.togglePopupSelectEditVideo()} aria-hidden="true"
                         >
                           เปลี่ยนคลิปวีดีโอ
                         </i>
