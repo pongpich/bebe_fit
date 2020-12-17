@@ -101,6 +101,9 @@ class VideoList extends Component {
         selectChangeVideoList: videos
       })
     }
+    if (prevProps.exerciseVideo !== this.props.exerciseVideo) {
+      this.closeEditVDO();
+    }
   }
 
   togglePopupSelectEditVideo(video_id, category, index) {
@@ -130,7 +133,9 @@ class VideoList extends Component {
   }
 
   exerciseDaySelection(focusDay) {
-    return this.props.exerciseVideo[focusDay];
+    if ( this.props.exerciseVideo ) {
+      return this.props.exerciseVideo[focusDay];
+    }
   }
 
   handleChange(event) {
@@ -154,9 +159,9 @@ class VideoList extends Component {
   }
 
   closeEditVDO() {
-    this.setState({
-      editVDO_click: "default"
-    })
+      this.setState({
+        editVDO_click: "default"
+      })
   }
 
   randomVideo(video_id, category, index) {
@@ -165,13 +170,6 @@ class VideoList extends Component {
     });
     this.props.randomVideo(video_id, category);
   }
-
-  /* selectChangeVideo(video_id, category, index) {
-    this.setState({
-      indexPlaylist: index
-    });
-    this.props.selectChangeVideo(video_id, category);
-  } */
 
   editVDO() {
     const { focusDay } = this.state;
@@ -245,17 +243,16 @@ class VideoList extends Component {
     }
   }
 
-  onVideoListUpdate(compName = "video") {
-    var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
-    const { selectedVDO, focusDay, tempPlaylist } = this.state;
+  onVideoListUpdate() {
+    const { focusDay, tempPlaylist } = this.state;
     const user_id = this.props.user.user_id;
     const start_date = this.props.user.start_date;
     const day_number = focusDay;
     const playlist = [...tempPlaylist];
-    const exerciseVideo = [...this.props.exerciseVideo];
-    exerciseVideo[focusDay] = tempPlaylist;
+    const tempExerciseVideo = [...this.props.exerciseVideo];
+    tempExerciseVideo[focusDay] = tempPlaylist;
     this.props.updatePlaylist(
-      user_id, start_date, day_number, playlist, exerciseVideo
+      user_id, start_date, day_number, playlist, tempExerciseVideo
     );
   }
 
@@ -408,6 +405,7 @@ class VideoList extends Component {
                     <button
                       type="button"
                       style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "250px" }}
+                      onClick={() => this.onVideoListUpdate()}
                     >
                       ยืนยันการแก้ไข
                     </button>
@@ -636,8 +634,10 @@ class VideoList extends Component {
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
-    todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
-    todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
+    if ( this.props.exerciseVideo ) {
+      todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
+      todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
+    }
     let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
     let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
     let minute2 = Math.floor(sumSecond / 60);
@@ -716,7 +716,8 @@ class VideoList extends Component {
               </thead>
               <tbody>
                 {
-                  todayExercise.map((item, index) => (
+                  (this.props.exerciseVideo) && 
+                  (todayExercise.map((item, index) => (
                     <tr key={index}>
                       <td className="videoItem mt-5">
                         <div className="videoThumb mr-3">
@@ -742,7 +743,7 @@ class VideoList extends Component {
                       </td>
                     </tr>
 
-                  ))
+                  )))
                 }
               </tbody>
             </table>
@@ -813,7 +814,7 @@ class VideoList extends Component {
                   ?
                   (editVDO_click === "show")
                     ? this.renderEditVDO()
-                    : this.renderVideoList()
+                    : (this.renderVideoList())
                   : this.renderOtherAttribute()
               }
 
