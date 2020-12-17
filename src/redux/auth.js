@@ -29,8 +29,19 @@ export const types = {
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
   RANDOM_VIDEO: "RANDOM_VIDEO",
   RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
-  RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL"
+  RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
+  SELECT_CHANGE_VIDEO: "SELECT_CHANGE_VIDEO",
+  SELECT_CHANGE_VIDEO_SUCCESS: "SELECT_CHANGE_VIDEO_SUCCESS",
+  SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL"
 }
+
+export const selectChangeVideo = (video_id, category) => ({
+  type: types.SELECT_CHANGE_VIDEO,
+  payload: {
+    video_id,
+    category
+  }
+})
 
 export const randomVideo = (video_id, category) => ({
   type: types.RANDOM_VIDEO,
@@ -339,6 +350,23 @@ const signupUserSagaAsync = async (
   }
 };
 
+const selectChangeVideoSagaAsync = async (
+  video_id,
+  category
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/selectChangeVideo", {
+      queryStringParameters: {
+        video_id,
+        category
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    
+  }
+}
+
 const randomVideoSagaAsync = async (
   video_id,
   category
@@ -631,6 +659,32 @@ function* trialRegisterSaga({ payload }) {
   }
 }
 
+function* selectChangeVideoSaga({ payload }) {
+  const {
+    video_id,
+    category
+  } = payload
+  try {
+    const apiResult = yield call(
+      selectChangeVideoSagaAsync,
+      video_id,
+      category
+    );
+    if (apiResult.results.message === "no_video") {
+      yield put({
+        type: types.SELECT_CHANGE_VIDEO_FAIL
+      })
+    } else {
+      yield put({
+        type: types.SELECT_CHANGE_VIDEO_SUCCESS,
+        payload: apiResult.results.videos
+      })
+    }
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* randomVideoSaga({ payload }) {
   const {
     video_id,
@@ -771,6 +825,10 @@ export function* watchRandomVideo() {
   yield takeEvery(types.RANDOM_VIDEO, randomVideoSaga)
 }
 
+export function* watchSelectChangeVideo() {
+  yield takeEvery(types.SELECT_CHANGE_VIDEO, selectChangeVideoSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -784,7 +842,8 @@ export function* saga() {
     fork(watchLoginTest),
     fork(watchSetPassword),
     fork(watchUpdatePlaylist),
-    fork(watchRandomVideo)
+    fork(watchRandomVideo),
+    fork(watchSelectChangeVideo)
   ]);
 }
 
@@ -797,7 +856,8 @@ const INIT_STATE = {
   exerciseVideo: [[], [], [], []],
   status: "default",
   statusTest: "default",
-  video: {}
+  video: {},
+  videos: []
 };
 
 function updateObjectInArray(array, action) {
@@ -865,6 +925,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         video: action.payload
+      };
+    case types.SELECT_CHANGE_VIDEO_SUCCESS:
+      return {
+        ...state,
+        videos: action.payload
       };
     case types.LOGIN_TEST_NO_USER:
       return {

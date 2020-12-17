@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 
 
-import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -29,7 +29,8 @@ class VideoList extends Component {
       selectedVDO: null,
       editVDO_click: "default",
       tempPlaylist: [],
-      indexPlaylist: 0
+      indexPlaylist: 0,
+      selectChangeVideoList: []
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -94,10 +95,24 @@ class VideoList extends Component {
         tempPlaylist: playlist
       })
     }
+    if (prevProps.videos !== this.props.videos) {
+      const videos = this.props.videos;
+      this.setState({
+        selectChangeVideoList: videos
+      })
+    }
   }
 
-  togglePopupSelectEditVideo() {
+  togglePopupSelectEditVideo(video_id, category) {
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
+    this.props.selectChangeVideo(video_id, category);
+  }
+
+  closeTogglePopupSelectEditVideo() {
+    document.getElementById("popupSelectEditVideo").classList.toggle("active");
+    this.setState({
+      selectChangeVideoList: []
+    })
   }
 
   exerciseDaySelection(focusDay) {
@@ -125,7 +140,6 @@ class VideoList extends Component {
   }
 
   closeEditVDO() {
-    const { editVDO_click } = this.state;
     this.setState({
       editVDO_click: "default"
     })
@@ -138,12 +152,17 @@ class VideoList extends Component {
     this.props.randomVideo(video_id, category);
   }
 
+  /* selectChangeVideo(video_id, category, index) {
+    this.setState({
+      indexPlaylist: index
+    });
+    this.props.selectChangeVideo(video_id, category);
+  } */
+
   editVDO() {
-    const { editVDO_click, focusDay } = this.state;
+    const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
     const tempPlaylist = [...todayExercise];
-    /* const tempExerciseVideo = [ this.props.exerciseVideo ];
-    tempExerciseVideo[focusDay] = tempPlaylist; */
     this.setState({
       editVDO_click: "show",
       tempPlaylist: tempPlaylist
@@ -283,7 +302,7 @@ class VideoList extends Component {
   };
 
   renderEditVDO() {
-    const { focusDay, selectedVDO, tempPlaylist } = this.state;
+    const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList } = this.state;
     const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     let allMinute = [];
     let allSecond = [];
@@ -310,67 +329,36 @@ class VideoList extends Component {
           <div className="popup" id="popupSelectEditVideo">
             <div className="overlay"></div>
             <div className="content">
-              <div className="close-btn" onClick={() => this.togglePopupSelectEditVideo()}>&times;</div>
+              <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
               <h5>เลือกคลิปวีดีโอ</h5>
               {/* <p>ประเภทการออกกำลังกาย category</p> */}
 
-              <tr>
-                <td className="videoItem mt-5">
-                  <div className="videoThumb mr-3">
-                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
-                      <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
-                    </video>
-                  </div>
-                  <div className="videoName ml-3">
-                    <h6> ลุกนั่ง </h6>
-                  </div>
-                  <i
-                    className="fa fa-circle fa-1x mr-5"
-                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
-                  >
-                    เลือกคลิปวีดีโอนี้
-                  </i>
-                </td>
-              </tr>
-
-              <tr>
-                <td className="videoItem mt-5">
-                  <div className="videoThumb mr-3">
-                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
-                      <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
-                    </video>
-                  </div>
-                  <div className="videoName ml-3">
-                    <h6> วิดพื้น </h6>
-                  </div>
-                  <i
-                    className="fa fa-circle fa-1x mr-5"
-                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
-                  >
-                    เลือกคลิปวีดีโอนี้
-                  </i>
-                </td>
-              </tr>
-
-              <tr>
-                <td className="videoItem mt-5">
-                  <div className="videoThumb mr-3">
-                    <video className="ml-3" width="30%" height="30%" controls autoPlay muted >
-                      <source  src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
-                    </video>
-                  </div>
-                  <div className="videoName ml-3">
-                    <h6> วิ่ง </h6>
-                  </div>
-                  <i
-                    className="fa fa-circle fa-1x mr-5"
-                    style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
-                  >
-                    เลือกคลิปวีดีโอนี้
-                  </i>
-                </td>
-              </tr>
-
+              <tbody>
+                {
+                  selectChangeVideoList.map((item, index) => (
+                    <tr>
+                      <td className="videoItem mt-5">
+                        <div className="videoThumb mr-3">
+                          <video className="ml-3" width="30%" height="30%" controls muted >
+                            <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
+                          </video>
+                        </div>
+                        <div className="videoName ml-3">
+                          <h6> {item.name} </h6>
+                        </div>
+                        <i
+                          className="fa fa-circle fa-1x mr-5"
+                          style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
+                          onClick={() => console.log("selectChangeVideoList :", this.state.selectChangeVideoList)}
+                        >
+                          เลือกคลิปวีดีโอนี้
+                        </i>
+                      </td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+              <div className="close-btn2" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times; CLOSE</div>
             </div>
           </div>
 
@@ -449,7 +437,7 @@ class VideoList extends Component {
                         <i
                           className="fa fa-circle fa-1x mr-5"
                           style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.togglePopupSelectEditVideo()} aria-hidden="true"
+                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category)} aria-hidden="true"
                         >
                           เปลี่ยนคลิปวีดีโอ
                         </i>
@@ -824,11 +812,11 @@ class VideoList extends Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user, exerciseVideo, status, video } = authUser;
-  return { user, exerciseVideo, status, video };
+  const { user, exerciseVideo, status, video, videos } = authUser;
+  return { user, exerciseVideo, status, video, videos };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo };
 
 export default connect(
   mapStateToProps,
