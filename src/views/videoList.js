@@ -264,12 +264,13 @@ class VideoList extends Component {
       const day_number = focusDay;
       const video_number = selectedVDO.order;
       const play_time = selectedVDO.duration;
+      const tempExerciseVideo = [...this.props.exerciseVideo];
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time:  play_time} ;
       const newVideo = { ...selectedVDO, play_time };
       this.setState({
         selectedVDO: newVideo
       });
-
-      this.props.updatePlaytime(user_id, start_date, day_number, video_number, play_time, newVideo);
+      this.props.updatePlaytime(user_id, start_date, day_number, video_number, play_time, tempExerciseVideo);
     }
   }
 

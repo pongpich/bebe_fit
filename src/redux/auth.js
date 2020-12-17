@@ -81,7 +81,7 @@ export const loginTest = (email) => ({
   }
 })
 
-export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, newVideo) => ({
+export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
@@ -89,7 +89,7 @@ export const updatePlaytime = (user_id, start_date, day_number, video_number, pl
     day_number,
     video_number,
     play_time,
-    newVideo
+    exerciseVideo
   }
 })
 
@@ -471,7 +471,7 @@ function* updatePlaytimeSaga({ payload }) {
     day_number,
     video_number,
     play_time,
-    newVideo
+    exerciseVideo
   } = payload
   try {
     const apiResult = yield call(
@@ -501,11 +501,7 @@ function* updatePlaytimeSaga({ payload }) {
     }
     yield put({
       type: types.UPDATE_PLAYTIME_SUCCESS,
-      payload: {
-        keyDay,
-        video_number,
-        newVideo
-      }
+      payload: exerciseVideo
     });
     return apiResult;
   } catch (error) {
@@ -926,13 +922,7 @@ export function reducer(state = INIT_STATE, action) {
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
         ...state,
-        exerciseVideo: {
-          ...state.exerciseVideo,
-          [action.payload.keyDay]: updateObjectInArray(
-            state.exerciseVideo[action.payload.keyDay],
-            { index: action.payload.video_number, item: action.payload.newVideo }
-          )
-        }
+        exerciseVideo: action.payload
       };
     case types.RANDOM_VIDEO_SUCCESS:
       return {
