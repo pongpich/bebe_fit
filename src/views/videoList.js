@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 
 
 
-import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/auth";
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -72,7 +72,6 @@ class VideoList extends Component {
         this.props.user.offset
       );
       if (this.props.user.other_attributes) {
-        console.log("if active!!!");
         var video = this.refs.videoPlayer;
         var videoList = this.refs.videoPlayerList;
         video.ontimeupdate = () => this.onVideoTimeUpdate("video");
@@ -101,7 +100,7 @@ class VideoList extends Component {
         selectChangeVideoList: videos
       })
     }
-    if (prevProps.exerciseVideo !== this.props.exerciseVideo) {
+    if (prevProps.status === "processing" && this.props.status === "success") {
       this.closeEditVDO();
     }
   }
@@ -112,6 +111,7 @@ class VideoList extends Component {
       indexPlaylist: index
     });
     this.props.selectChangeVideo(video_id, category);
+    this.props.resetStatus();
   }
 
   closeTogglePopupSelectEditVideo() {
@@ -227,7 +227,6 @@ class VideoList extends Component {
   onVideoEnd() {
     const { focusDay, selectedVDO } = this.state;
     var todayExercise = this.exerciseDaySelection(focusDay)
-    console.log("todayExercise : ", todayExercise)
     const nextVDO = todayExercise.find(
       element => (element.duration !== element.play_time) && (element.order > selectedVDO.order)
     );
@@ -831,7 +830,7 @@ const mapStateToProps = ({ authUser }) => {
   return { user, exerciseVideo, status, video, videos };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus };
 
 export default connect(
   mapStateToProps,

@@ -32,8 +32,12 @@ export const types = {
   RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
   SELECT_CHANGE_VIDEO: "SELECT_CHANGE_VIDEO",
   SELECT_CHANGE_VIDEO_SUCCESS: "SELECT_CHANGE_VIDEO_SUCCESS",
-  SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL"
+  SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL",
+  RESET_STATUS: "RESET_STATUS"
 }
+export const resetStatus = () => ({
+  type: types.RESET_STATUS
+})
 
 export const selectChangeVideo = (video_id, category) => ({
   type: types.SELECT_CHANGE_VIDEO,
@@ -51,13 +55,14 @@ export const randomVideo = (video_id, category) => ({
   }
 })
 
-export const updatePlaylist = (user_id, start_date, day_number, playlist) => ({
+export const updatePlaylist = (user_id, start_date, day_number, playlist, exerciseVideo) => ({
   type: types.UPDATE_PLAYLIST,
   payload: {
     user_id,
     start_date,
     day_number,
-    playlist
+    playlist,
+    exerciseVideo
   }
 })
 
@@ -877,6 +882,8 @@ function updateObjectInArray(array, action) {
 
 
 export function reducer(state = INIT_STATE, action) {
+  if(action.type === types.UPDATE_PLAYLIST_SUCCESS) {
+  }
   switch (action.type) {
     case types.LOGIN_USER_SUCCESS:
       return {
@@ -905,10 +912,16 @@ export function reducer(state = INIT_STATE, action) {
       };
     case types.LOGOUT_USER:
       return INIT_STATE;
+    case types.UPDATE_PLAYLIST:
+      return {
+        ...state,
+        status: "processing"
+      }
     case types.UPDATE_PLAYLIST_SUCCESS:
       return {
         ...state,
-        exerciseVideo: action.payload
+        exerciseVideo: action.payload,
+        status: "success"
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
@@ -945,6 +958,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         statusTest: "have_user_no_password"
+      };
+    case types.RESET_STATUS:
+      return {
+        ...state,
+        status: "default"
       };
     default:
       return { ...state };
