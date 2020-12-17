@@ -103,16 +103,30 @@ class VideoList extends Component {
     }
   }
 
-  togglePopupSelectEditVideo(video_id, category) {
+  togglePopupSelectEditVideo(video_id, category, index) {
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
+    this.setState({
+      indexPlaylist: index
+    });
     this.props.selectChangeVideo(video_id, category);
   }
 
   closeTogglePopupSelectEditVideo() {
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
     this.setState({
-      selectChangeVideoList: []
+      selectChangeVideoList: [],
+      indexPlaylist: 0
     })
+  }
+
+  selectEditVideo(video) {
+    const { indexPlaylist } = this.state;
+    let playlist = [...this.state.tempPlaylist];
+    playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...video, play_time: 0 };
+    this.setState({
+      tempPlaylist: playlist
+    })
+    document.getElementById("popupSelectEditVideo").classList.toggle("active");
   }
 
   exerciseDaySelection(focusDay) {
@@ -349,7 +363,7 @@ class VideoList extends Component {
                         <i
                           className="fa fa-circle fa-1x mr-5"
                           style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
-                          onClick={() => console.log("selectChangeVideoList :", this.state.selectChangeVideoList)}
+                          onClick={() => this.selectEditVideo(item)}
                         >
                           เลือกคลิปวีดีโอนี้
                         </i>
@@ -437,7 +451,7 @@ class VideoList extends Component {
                         <i
                           className="fa fa-circle fa-1x mr-5"
                           style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category)} aria-hidden="true"
+                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true"
                         >
                           เปลี่ยนคลิปวีดีโอ
                         </i>
