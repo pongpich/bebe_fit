@@ -354,15 +354,15 @@ class VideoList extends Component {
                         </video>
                       </div>
                       <div className="mt-1 ml-3 mb-4">
-                        <h6> {item.name} </h6>
+                        <h6><b> {item.name} </b></h6>
                       </div>
                       <button
-                        className="btn btn-danger border-secondary mb-3"
+                        className="btn btn-danger border-secondary mb-3 mt-5"
                         type="button"
                         style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%" }}
                         onClick={() => this.selectEditVideo(item)}
                       >
-                        เลือกคลิปวีดีโอนี้
+                        <b>เลือกคลิปวีดีโอนี้</b>
                       </button>
                     </div>
                   ))
@@ -407,14 +407,14 @@ class VideoList extends Component {
                       style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px" }}
                       onClick={() => this.onVideoListUpdate()}
                     >
-                      ยืนยันการแก้ไข
+                      <b>ยืนยันการแก้ไข</b>
                     </button>
                     <button
                       className="btn btn-light border-dark mr-4" type="button"
                       style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "14%" }}
                       onClick={() => this.closeEditVDO()}
                     >
-                      ยกเลิก
+                      <b>ยกเลิก</b>
                     </button>
                   </th>
                 </tr>
