@@ -342,7 +342,7 @@ class VideoList extends Component {
             <div className="overlay"></div>
             <div className="content">
               <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
-              <h4 className="mb-5">เลือกคลิปวีดีโอ</h4>
+              <h4 className="mb-5"><b>เลือกคลิปวีดีโอ</b></h4>
               <div className="selectEditPlaylist" style={{ }} >
                 {
                   selectChangeVideoList.map((item, index) => (
@@ -368,7 +368,7 @@ class VideoList extends Component {
                   ))
                 }
               </div>
-              <div className="close-btn2 mt-3" style={{ cursor: "pointer" }} onClick={() => this.closeTogglePopupSelectEditVideo()}>&times; CLOSE</div>
+              <div className="close-btn2 mt-3" style={{ cursor: "pointer" }} onClick={() => this.closeTogglePopupSelectEditVideo()}><b>&times; CLOSE</b></div>
             </div>
           </div>
 
