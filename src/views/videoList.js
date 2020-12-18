@@ -127,13 +127,14 @@ class VideoList extends Component {
     let playlist = [...this.state.tempPlaylist];
     playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...video, play_time: 0 };
     this.setState({
-      tempPlaylist: playlist
+      tempPlaylist: playlist,
+      selectChangeVideoList: []
     })
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
   }
 
   exerciseDaySelection(focusDay) {
-    if ( this.props.exerciseVideo ) {
+    if (this.props.exerciseVideo) {
       return this.props.exerciseVideo[focusDay];
     }
   }
@@ -159,9 +160,9 @@ class VideoList extends Component {
   }
 
   closeEditVDO() {
-      this.setState({
-        editVDO_click: "default"
-      })
+    this.setState({
+      editVDO_click: "default"
+    })
   }
 
   randomVideo(video_id, category, index) {
@@ -265,7 +266,7 @@ class VideoList extends Component {
       const video_number = selectedVDO.order;
       const play_time = selectedVDO.duration;
       const tempExerciseVideo = [...this.props.exerciseVideo];
-      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time:  play_time} ;
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
       const newVideo = { ...selectedVDO, play_time };
       this.setState({
         selectedVDO: newVideo
@@ -341,35 +342,33 @@ class VideoList extends Component {
             <div className="overlay"></div>
             <div className="content">
               <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
-              <h5>เลือกคลิปวีดีโอ</h5>
-              {/* <p>ประเภทการออกกำลังกาย category</p> */}
-
-              <tbody>
+              <h4 className="mb-5">เลือกคลิปวีดีโอ</h4>
+              <div className="selectEditPlaylist" style={{ }} >
                 {
                   selectChangeVideoList.map((item, index) => (
-                    <tr>
-                      <td className="videoItem mt-5">
-                        <div className="videoThumb mr-3">
-                          <video className="ml-3" width="30%" height="30%" controls muted >
-                            <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
-                          </video>
-                        </div>
-                        <div className="videoName ml-3">
-                          <h6> {item.name} </h6>
-                        </div>
-                        <i
-                          className="fa fa-circle fa-1x mr-5"
-                          style={{ fontSize: "15px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.selectEditVideo(item)}
-                        >
-                          เลือกคลิปวีดีโอนี้
-                        </i>
-                      </td>
-                    </tr>
+
+                    <div className="mt-3 shadow-lg" style={{ borderRadius: "10px", border: "1px solid black", width: "50%", marginLeft: "auto", marginRight: "auto", display: "block" }}>
+                      <div className="">
+                        <video className="" width="100%" height="50%" controls muted >
+                          <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
+                        </video>
+                      </div>
+                      <div className="mt-1 ml-3 mb-4">
+                        <h6> {item.name} </h6>
+                      </div>
+                      <button
+                        className="btn btn-danger border-secondary mb-2"
+                        type="button"
+                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block" }}
+                        onClick={() => this.selectEditVideo(item)}
+                      >
+                        เลือกคลิปวีดีโอนี้
+                      </button>
+                    </div>
                   ))
                 }
-              </tbody>
-              <div className="close-btn2" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times; CLOSE</div>
+              </div>
+              <div className="close-btn2 mt-3" style={{ cursor: "pointer" }} onClick={() => this.closeTogglePopupSelectEditVideo()}>&times; CLOSE</div>
             </div>
           </div>
 
@@ -403,15 +402,16 @@ class VideoList extends Component {
                       <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
                     <button
+                      className="btn btn-primary border-secondary"
                       type="button"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "250px" }}
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px" }}
                       onClick={() => this.onVideoListUpdate()}
                     >
                       ยืนยันการแก้ไข
                     </button>
                     <button
-                      className="mr-4" type="button"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "130px" }}
+                      className="btn btn-light border-dark mr-4" type="button"
+                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "14%" }}
                       onClick={() => this.closeEditVDO()}
                     >
                       ยกเลิก
@@ -453,11 +453,6 @@ class VideoList extends Component {
                         >
                           เปลี่ยนคลิปวีดีโอ
                         </i>
-                        {(item.play_time === item.duration) &&
-                          <div className="videoEnd">
-                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
-                          </div>
-                        }
                       </td>
                     </tr>
 
@@ -634,7 +629,7 @@ class VideoList extends Component {
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
-    if ( this.props.exerciseVideo ) {
+    if (this.props.exerciseVideo) {
       todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
       todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
     }
@@ -660,13 +655,13 @@ class VideoList extends Component {
         <form>
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">
-              <a className="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">รวมคลิปออกกำลังกาย</a>
+              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="fale">รวมคลิปออกกำลังกาย</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
+              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
             </li>
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
@@ -701,14 +696,16 @@ class VideoList extends Component {
                     }
                     <i
                       className="fa fa-play-circle fa-1x"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                      onClick={() => this.toggleList()} aria-hidden="true">
+                      style={{ fontSize: "22px", cursor: "pointer", float: "right" }}
+                      onClick={() => this.toggleList()} aria-hidden="true"
+                    >
                       เล่นต่อเนื่อง
                     </i>
                     <i
-                      className="fa fa-circle fa-1x mr-5"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                      onClick={() => this.editVDO()} aria-hidden="true">
+                      className="fa fa-pencil-square-o fa-1x mr-5"
+                      style={{ fontSize: "22px", cursor: "pointer", float: "right" }}
+                      onClick={() => this.editVDO()} aria-hidden="true"
+                    >
                       แก้ไขคลิปออกกำลังกาย
                     </i>
                   </th>
@@ -716,7 +713,7 @@ class VideoList extends Component {
               </thead>
               <tbody>
                 {
-                  (this.props.exerciseVideo) && 
+                  (this.props.exerciseVideo) &&
                   (todayExercise.map((item, index) => (
                     <tr key={index}>
                       <td className="videoItem mt-5">

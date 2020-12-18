@@ -179,7 +179,9 @@
   left:50%;
   transform:translate(-50%,-50%) scale(0);
   background:#fff;
-  width:500px;
+  width:50%;
+  height:40%;
+  overflow: auto;
   z-index:2;
   padding:20px;
   box-sizing:border-box;
