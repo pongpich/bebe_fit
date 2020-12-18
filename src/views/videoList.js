@@ -343,11 +343,11 @@ class VideoList extends Component {
             <div className="content">
               <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
               <h4 className="mb-5"><b>เลือกคลิปวีดีโอ</b></h4>
-              <div className="selectEditPlaylist" style={{ }} >
+              <div className="selectEditPlaylist">
                 {
                   selectChangeVideoList.map((item, index) => (
 
-                    <div className="mt-3 shadow-lg" style={{ borderRadius: "10px", border: "0.5px solid grey", width: "50%", marginLeft: "auto", marginRight: "auto", display: "block" }}>
+                    <div className="playlistWrapper shadow-lg">
                       <div className="">
                         <video className="" width="100%" height="50%" controls muted >
                           <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>

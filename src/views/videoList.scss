@@ -163,10 +163,11 @@
 }
 
 .popup .overlay {
+  text-align: center;
   position:fixed;
   top:0px;
   left:0px;
-  width:100vw;
+  width:100%;
   height:100vh;
   background:rgba(0,0,0,0.7);
   z-index:1;
@@ -179,7 +180,7 @@
   left:50%;
   transform:translate(-50%,-50%) scale(0);
   background:#fff;
-  width:50%;
+  width:90%;
   height:40%;
   overflow: auto;
   z-index:2;
@@ -224,3 +225,23 @@ button {
   background:#fff;
 }
 
+.selectEditPlaylist {
+  display: flex; 
+  flex-wrap: wrap; 
+  justify-content: center;
+}
+
+.playlistWrapper {
+  border-radius: 10px; 
+  border: 0.5px solid grey; 
+  width: 30%;
+  margin-top: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+@media (max-width: 640px) {
+  .playlistWrapper {
+    width: 60%;
+  }
+}
