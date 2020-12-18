@@ -347,7 +347,7 @@ class VideoList extends Component {
                 {
                   selectChangeVideoList.map((item, index) => (
 
-                    <div className="mt-3 shadow-lg" style={{ borderRadius: "10px", border: "1px solid black", width: "50%", marginLeft: "auto", marginRight: "auto", display: "block" }}>
+                    <div className="mt-3 shadow-lg" style={{ borderRadius: "10px", border: "0.5px solid grey", width: "50%", marginLeft: "auto", marginRight: "auto", display: "block" }}>
                       <div className="">
                         <video className="" width="100%" height="50%" controls muted >
                           <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
@@ -357,9 +357,9 @@ class VideoList extends Component {
                         <h6> {item.name} </h6>
                       </div>
                       <button
-                        className="btn btn-danger border-secondary mb-2"
+                        className="btn btn-danger border-secondary mb-3"
                         type="button"
-                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block" }}
+                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%" }}
                         onClick={() => this.selectEditVideo(item)}
                       >
                         เลือกคลิปวีดีโอนี้
