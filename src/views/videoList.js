@@ -333,7 +333,7 @@ class VideoList extends Component {
     }
 
     return (
-      <div className="card-body">
+      <div className="card-body d-flex justify-content-center">
 
         <form>
           <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
@@ -362,7 +362,7 @@ class VideoList extends Component {
                         style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%" }}
                         onClick={() => this.selectEditVideo(item)}
                       >
-                        <b>เลือกคลิปวีดีโอนี้</b>
+                        <b>เลือกวีดีโอนี้</b>
                       </button>
                     </div>
                   ))
@@ -394,68 +394,70 @@ class VideoList extends Component {
               <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
               <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
-            <table className="table">
+            <table className="table table-responsive">
               <thead>
                 <tr>
-                  <th className="tabletitle">
+                  <th className="tabletitle row">
                     {
-                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
+                      <span className="col-lg-8 col-md-4 col-12" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <button
-                      className="btn btn-primary border-secondary"
-                      type="button"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px" }}
-                      onClick={() => this.onVideoListUpdate()}
-                    >
-                      <b>ยืนยันการแก้ไข</b>
-                    </button>
-                    <button
-                      className="btn btn-light border-dark mr-4" type="button"
-                      style={{ fontSize: "20px", cursor: "pointer", float: "right", borderRadius: "12px", padding: "10px 24px", width: "14%" }}
-                      onClick={() => this.closeEditVDO()}
-                    >
-                      <b>ยกเลิก</b>
-                    </button>
+                    <div className="col-lg-2 col-md-4 col-6">
+                      <button
+                        className="btn btn-light border-dark " type="button"
+                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px",  width: "100%", padding: "10px"}}
+                        onClick={() => this.closeEditVDO()}
+                      >
+                        <b>ยกเลิก</b>
+                      </button>
+                    </div>
+                    <div className="col-lg-2 col-md-4 col-6">
+                      <button
+                        className="btn btn-primary border-secondary "
+                        type="button"
+                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px",  float: "right", width: "100%", padding: "10px" }}
+                        onClick={() => this.onVideoListUpdate()}
+                      >
+                        <b>ยืนยันการแก้ไข</b>
+                      </button>
+                    </div>
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {
                   tempPlaylist.map((item, index) => (
-                    <tr key={index}>
-                      <td className="videoItem mt-5">
-                        <div className="videoThumb mr-3">
+                    <div className="row ml-1" key={index}>
+                      <div className="videoItem mt-3 col col-lg-8 col-md-9 shadow-lg">
+                        <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="Responsive image" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                <h6> {item.duration} นาที </h6>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className="videoName">
-                          <h3> {item.name} </h3>
-                          <h6> {item.category} </h6>
+                        <div className="videoName mt-3">
+                          <h5> {item.name} </h5>
+                          <p> {item.category} </p>
+                          <br></br>
                         </div>
-                        <div className="videoDuration">
-                          <h6> {item.duration} นาที </h6>
-                        </div>
+                      </div>
+                      <div className="col col-lg-4 d-flex align-items-center mt-3">
                         <i
-                          className="fa fa-circle fa-1x mr-5"
-                          style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.randomVideo(item.video_id, item.category, index)} aria-hidden="true"
-                        >
-                          สุ่มคลิปวีดีโอ
+                          className="changeVideoBtn fa fa-circle fa-1x"
+                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true">
+                          เปลี่ยนวีดีโอ
                         </i>
                         <i
-                          className="fa fa-circle fa-1x mr-5"
-                          style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true"
-                        >
-                          เปลี่ยนคลิปวีดีโอ
+                          className="randomVideoBtn fa fa-circle fa-1x"
+                          onClick={() => this.randomVideo(item.video_id, item.category, index)} aria-hidden="true">
+                          สุ่มวีดีโอ
                         </i>
-                      </td>
-                    </tr>
-
+                      </div>
+                    </div>
                   ))
                 }
               </tbody>
@@ -646,12 +648,7 @@ class VideoList extends Component {
     }
 
     return (
-      <div className="card-body">
-
-        <video width="100%" height="300" controls autoPlay muted >
-          <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
-        </video>
-
+      <div className="card-body d-flex justify-content-center">
         <form>
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">
@@ -686,7 +683,7 @@ class VideoList extends Component {
               <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
               <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
-            <table className="table">
+            <table className="table table-responsive">
               <thead>
                 <tr>
                   <th className="tabletitle">
@@ -788,8 +785,14 @@ class VideoList extends Component {
             </ul>
           </div>
         </nav>
-        <div className="page-header header-small" data-parallax="true"
+        <div className="page-header header-small mt-5" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
+          <div className="overlay">
+            <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
+              <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+            </video>
+          </div>
+
           <div className="container" >
             <div className="row mt-5" style={{ color: "black" }} >
               <div className="col-md-8 ml-auto mr-auto text-center mt-5">
@@ -803,7 +806,7 @@ class VideoList extends Component {
           </div>
         </div>
 
-        <div className="main main-raised">
+        <div className="main main-raised" style={{ backgroundColor: "white" }}>
           <div className="container">
             <div className="card card-plain">
               {
