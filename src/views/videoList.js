@@ -375,10 +375,10 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}>DAY1</a>
-                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY2</a>
-                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY3</a>
-                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY4</a>
+                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}><b>DAY1</b></a>
+                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}><b>DAY2</b></a>
+                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}><b>DAY3</b></a>
+                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}><b>DAY4</b></a>
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -404,7 +404,7 @@ class VideoList extends Component {
                     <div className="col-lg-2 col-md-4 col-6">
                       <button
                         className="btn btn-light border-dark " type="button"
-                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px",  width: "100%", padding: "10px"}}
+                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
                         onClick={() => this.closeEditVDO()}
                       >
                         <b>ยกเลิก</b>
@@ -414,7 +414,7 @@ class VideoList extends Component {
                       <button
                         className="btn btn-primary border-secondary "
                         type="button"
-                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px",  float: "right", width: "100%", padding: "10px" }}
+                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
                         onClick={() => this.onVideoListUpdate()}
                       >
                         <b>ยืนยันการแก้ไข</b>
@@ -434,7 +434,7 @@ class VideoList extends Component {
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6> {item.duration} นาที </h6>
+                                <h6> <b>{item.duration} นาที</b> </h6>
                               </div>
                             </div>
                           </div>
@@ -444,6 +444,11 @@ class VideoList extends Component {
                           <p> {item.category} </p>
                           <br></br>
                         </div>
+                        {(item.play_time === item.duration) &&
+                          <div className="videoEnd">
+                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          </div>
+                        }
                       </div>
                       <div className="col col-lg-4 d-flex align-items-center mt-3">
                         <i
@@ -664,10 +669,10 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}>DAY1</a>
-                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}>DAY2</a>
-                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}>DAY3</a>
-                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}>DAY4</a>
+                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}><b>DAY1</b></a>
+                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}><b>DAY2</b></a>
+                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}><b>DAY3</b></a>
+                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}><b>DAY4</b></a>
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -686,25 +691,26 @@ class VideoList extends Component {
             <table className="table table-responsive">
               <thead>
                 <tr>
-                  <th className="tabletitle">
-                    <span className="mr-5" style={{ fontSize: "15px" }}> รายการออกกำลังกาย </span>
+                  <th className="tabletitle row">
                     {
-                      <span className="mr-5" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
+                      <span className="col-lg-7 col-md-4 col-12 mb-3" style={{ fontSize: "15px", float: "left" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
-                    <i
-                      className="fa fa-play-circle fa-1x"
-                      style={{ fontSize: "22px", cursor: "pointer", float: "right" }}
-                      onClick={() => this.toggleList()} aria-hidden="true"
-                    >
-                      เล่นต่อเนื่อง
-                    </i>
-                    <i
-                      className="fa fa-pencil-square-o fa-1x mr-5"
-                      style={{ fontSize: "22px", cursor: "pointer", float: "right" }}
-                      onClick={() => this.editVDO()} aria-hidden="true"
-                    >
-                      แก้ไขคลิปออกกำลังกาย
-                    </i>
+                    <div className="col-lg-3 col-md-5 col-12">
+                      <i
+                        className="fa fa-pencil-square-o fa-1x mb-3"
+                        style={{ fontSize: "20px", cursor: "pointer", float: "right"}}
+                        onClick={() => this.editVDO()} aria-hidden="true">
+                        แก้ไขคลิปออกกำลังกาย
+                      </i>
+                    </div>
+                    <div className="col-lg-2 col-md-3 col-12">
+                      <i
+                        className="fa fa-play-circle fa-1x"
+                        style={{ fontSize: "20px", cursor: "pointer", float: "right"}}
+                        onClick={() => this.toggleList()} aria-hidden="true">
+                        เล่นต่อเนื่อง
+                      </i>
+                    </div>
                   </th>
                 </tr>
               </thead>
@@ -712,30 +718,30 @@ class VideoList extends Component {
                 {
                   (this.props.exerciseVideo) &&
                   (todayExercise.map((item, index) => (
-                    <tr key={index}>
-                      <td className="videoItem mt-5">
-                        <div className="videoThumb mr-3">
+                    <div className="row ml-1" key={index}>
+                      <div className="videoItem mt-3 col col-lg-8 col-md-9 col-11 shadow-lg">
+                        <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} width="375px" alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                <h6> <b>{item.duration} นาที</b> </h6>
+                              </div>
                             </div>
                           </div>
                         </div>
-                        <div className="videoName">
-                          <h3> {item.name} </h3>
-                          <h6> {item.category} </h6>
-                        </div>
-                        <div className="videoDuration">
-                          <h6> {item.duration} นาที </h6>
+                        <div className="videoName mt-3">
+                          <h5> {item.name} </h5>
+                          <p> {item.category} </p>
                         </div>
                         {(item.play_time === item.duration) &&
                           <div className="videoEnd">
                             <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
                           </div>
                         }
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
 
                   )))
                 }
