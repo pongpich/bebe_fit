@@ -26,7 +26,7 @@ class Login extends Component {
   onUserLogin() {
     if (this.state.email !== "" && this.state.password !== "") {
       this.props.loginUser(this.state.email, this.state.password);
-      if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && !(this.props.status === "success")) {
+      if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && (this.props.status === "fail")) {
         this.setState({
           statusLogin: "fail"
         });
@@ -114,13 +114,9 @@ class Login extends Component {
                   />
                 </Label>
                 {
-                  (statusLogin == "fail") &&
+                  (statusLogin === "fail" && !(this.props.status === "success")) &&
                   <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลหรือรหัสผ่านไม่ถูกต้อง</h6></small>
                 }
-                {/* {
-                  (statusLogin == "fail2") &&
-                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลไม่ถูกต้อง</h6></small>
-                } */}
 
                 <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
                   <Button
