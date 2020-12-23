@@ -431,7 +431,7 @@ class VideoList extends Component {
                 {
                   tempPlaylist.map((item, index) => (
                     <div className="row ml-1" key={index}>
-                      <div className="videoItem mt-3 col col-lg-8 col-md-9 shadow-lg">
+                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
                             <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="Responsive image" />
@@ -723,7 +723,7 @@ class VideoList extends Component {
                   (this.props.exerciseVideo) &&
                   (todayExercise.map((item, index) => (
                     <div className="row ml-1" key={index}>
-                      <div className="videoItem mt-3 col col-lg-8 col-md-9 col-11 shadow-lg">
+                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
                             <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="" />
