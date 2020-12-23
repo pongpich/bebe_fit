@@ -42,6 +42,13 @@ class Login extends Component {
     }
   }
 
+  componentDidMount() {
+    const { user } = this.props;
+    if (user !== null) {
+      this.props.history.push('/VideoList');
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { status } = this.props;
     if (prevProps.status !== status && status === "success") {

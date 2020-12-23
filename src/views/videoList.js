@@ -44,6 +44,7 @@ class VideoList extends Component {
   }
 
   async componentDidMount() {
+    const { user } = this.props;
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
         this.props.user.user_id,
@@ -51,8 +52,10 @@ class VideoList extends Component {
         this.props.user.start_date,
         this.props.user.offset
       );
-
       this.addEventToVideo();
+    }
+    if (user === null) {
+      this.props.history.push('/login');
     }
   }
 
