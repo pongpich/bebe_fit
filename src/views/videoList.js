@@ -40,6 +40,7 @@ class VideoList extends Component {
     this.close = this.close.bind(this);
     this.exerciseDaySelection = this.exerciseDaySelection.bind(this);
     this.closeList = this.closeList.bind(this);
+    this.addEventToVideo = this.addEventToVideo.bind(this);
   }
 
   async componentDidMount() {
@@ -51,15 +52,11 @@ class VideoList extends Component {
         this.props.user.offset
       );
 
-      var video = this.refs.videoPlayer;
-      var videoList = this.refs.videoPlayerList;
-      video.ontimeupdate = () => this.onVideoTimeUpdate("video");
-      videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
-      videoList.onended = () => this.onVideoEnd();
+      this.addEventToVideo();
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const { user } = this.props;
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
       this.setState({
@@ -72,11 +69,7 @@ class VideoList extends Component {
         this.props.user.offset
       );
       if (this.props.user.other_attributes) {
-        var video = this.refs.videoPlayer;
-        var videoList = this.refs.videoPlayerList;
-        video.ontimeupdate = () => this.onVideoTimeUpdate("video");
-        videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
-        videoList.onended = () => this.onVideoEnd();
+        this.addEventToVideo();
       }
     }
     if (prevProps.user !== user && user === null) {
@@ -103,6 +96,17 @@ class VideoList extends Component {
     if (prevProps.status === "processing" && this.props.status === "success") {
       this.closeEditVDO();
     }
+    if(prevState.editVDO_click === "show" && this.state.editVDO_click !== "show") {
+      this.addEventToVideo();
+    }
+  }
+
+  addEventToVideo() {
+    var video = this.refs.videoPlayer;
+    var videoList = this.refs.videoPlayerList;
+    video.ontimeupdate = () => this.onVideoTimeUpdate("video");
+    videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
+    videoList.onended = () => this.onVideoEnd();
   }
 
   togglePopupSelectEditVideo(video_id, category, index) {
@@ -698,7 +702,7 @@ class VideoList extends Component {
                     <div className="col-lg-3 col-md-5 col-12">
                       <i
                         className="fa fa-pencil-square-o fa-1x mb-3"
-                        style={{ fontSize: "20px", cursor: "pointer", float: "right"}}
+                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
                         onClick={() => this.editVDO()} aria-hidden="true">
                         แก้ไขคลิปออกกำลังกาย
                       </i>
@@ -706,7 +710,7 @@ class VideoList extends Component {
                     <div className="col-lg-2 col-md-3 col-12">
                       <i
                         className="fa fa-play-circle fa-1x"
-                        style={{ fontSize: "20px", cursor: "pointer", float: "right"}}
+                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
                         onClick={() => this.toggleList()} aria-hidden="true">
                         เล่นต่อเนื่อง
                       </i>
