@@ -769,8 +769,7 @@ function* loginUserSaga({ payload }) {
     } else if (loginResult.results.message === "fail" || loginResult.results.message === "no_user") {
       console.log("user :", loginResult.results.user);
       yield put({
-        type: types.LOGIN_USER_FAIL,
-        payload: loginResult.results.user
+        type: types.LOGIN_USER_FAIL
       })
     }
   } catch (error) {
@@ -890,7 +889,6 @@ export function reducer(state = INIT_STATE, action) {
     case types.LOGIN_USER_FAIL:
       return {
         ...state,
-        user: action.payload,
         status: "fail"
       };
     case types.UPDATE_PROFILE_SUCCESS:
