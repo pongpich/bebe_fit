@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 
 
 
-import { updateProfile, createCustomWeekForUser, logoutUser } from "../redux/auth";
-import { videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/exerciseVideos";
+import { updateProfile, logoutUser } from "../redux/auth";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/exerciseVideos";
 
 
 import bghead from "../assets/img/bghead.jpg";

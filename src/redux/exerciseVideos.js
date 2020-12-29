@@ -4,6 +4,7 @@ import { API } from "aws-amplify";
 /* ACTION Section */
 
 export const types = {
+  CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
   UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
   UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
@@ -18,6 +19,16 @@ export const types = {
   SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL",
   RESET_STATUS: "RESET_STATUS"
 }
+
+export const createCustomWeekForUser = (user_id, weight, startDate, offset) => ({
+  type: types.CREATE_CUSTOM_WEEK_FOR_USER,
+  payload: {
+    user_id,
+    weight,
+    startDate,
+    offset
+  }
+});
 
 export const resetStatus = () => ({
   type: types.RESET_STATUS
@@ -172,6 +183,27 @@ const randomVideoSagaAsync = async (
       queryStringParameters: {
         video_id,
         category
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const createCustomWeekForUserSagaAsync = async (
+  user_id,
+  weight,
+  startDate,
+  offset
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/createCustomWeekForUser", {
+      body: {
+        user_id,
+        weight,
+        startDate,
+        offset
       }
     });
     return apiResult;
@@ -348,6 +380,28 @@ function* videoListForUserSaga({ payload }) {
   }
 }
 
+function* createCustomWeekForUserSaga({ payload }) {
+  const {
+    user_id,
+    weight,
+    startDate,
+    offset
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      createCustomWeekForUserSagaAsync,
+      user_id,
+      weight,
+      startDate,
+      offset
+    );
+    console.log("createCustomWeekForUser : ", apiResult);
+  } catch (error) {
+    console.log("error from createCustomWeekForUser :", error);
+  }
+}
+
 export function* watchUpdatePlaytime() {
   yield takeEvery(types.UPDATE_PLAYTIME, updatePlaytimeSaga)
 }
@@ -368,13 +422,18 @@ export function* watchSelectChangeVideo() {
   yield takeEvery(types.SELECT_CHANGE_VIDEO, selectChangeVideoSaga)
 }
 
+export function* watchCreateCustomWeekForUser() {
+  yield takeEvery(types.CREATE_CUSTOM_WEEK_FOR_USER, createCustomWeekForUserSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
     fork(watchUpdatePlaylist),
     fork(watchVideoListForUser),
     fork(watchRandomVideo),
-    fork(watchSelectChangeVideo)
+    fork(watchSelectChangeVideo),
+    fork(watchCreateCustomWeekForUser)
   ]);
 }
 

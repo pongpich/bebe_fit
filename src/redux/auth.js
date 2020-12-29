@@ -14,7 +14,6 @@ export const types = {
   CHECK_USER: "CHECK_USER",
   UPDATE_PROFILE: "UPDATE_PROFILE",
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
-  CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
   LOGOUT_USER: "LOGOUT_USER",
   SET_PASSWORD: "SET_PASSWORD"
 }
@@ -75,16 +74,6 @@ export const signupUser = (email, password, firstname, lastname, phone) => ({
     firstname,
     lastname,
     phone
-  }
-});
-
-export const createCustomWeekForUser = (user_id, weight, startDate, offset) => ({
-  type: types.CREATE_CUSTOM_WEEK_FOR_USER,
-  payload: {
-    user_id,
-    weight,
-    startDate,
-    offset
   }
 });
 
@@ -157,27 +146,6 @@ const updateProfileSagaAsync = async (
       body: {
         email: email,
         other_attributes
-      }
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
-const createCustomWeekForUserSagaAsync = async (
-  user_id,
-  weight,
-  startDate,
-  offset
-) => {
-  try {
-    const apiResult = await API.post("bebe", "/createCustomWeekForUser", {
-      body: {
-        user_id,
-        weight,
-        startDate,
-        offset
       }
     });
     return apiResult;
@@ -263,28 +231,6 @@ function* updateProfileSaga({ payload }) {
     })
   } catch (error) {
     console.log("error from updateProfile :", error);
-  }
-}
-
-function* createCustomWeekForUserSaga({ payload }) {
-  const {
-    user_id,
-    weight,
-    startDate,
-    offset
-  } = payload
-
-  try {
-    const apiResult = yield call(
-      createCustomWeekForUserSagaAsync,
-      user_id,
-      weight,
-      startDate,
-      offset
-    );
-    console.log("createCustomWeekForUser : ", apiResult);
-  } catch (error) {
-    console.log("error from createCustomWeekForUser :", error);
   }
 }
 
@@ -405,10 +351,6 @@ export function* watchUpdateProfile() {
   yield takeEvery(types.UPDATE_PROFILE, updateProfileSaga)
 }
 
-export function* watchCreateCustomWeekForUser() {
-  yield takeEvery(types.CREATE_CUSTOM_WEEK_FOR_USER, createCustomWeekForUserSaga)
-}
-
 export function* watchSetPassword() {
   yield takeEvery(types.SET_PASSWORD, setPasswordSaga)
 }
@@ -420,7 +362,6 @@ export function* saga() {
     fork(watchCheckUser),
     fork(watchSignupUser),
     fork(watchUpdateProfile),
-    fork(watchCreateCustomWeekForUser),
     fork(watchSetPassword)
   ]);
 }
