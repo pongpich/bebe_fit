@@ -8,7 +8,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { loginUser, loginTest, signupUser, setPassword } from "../redux/auth";
+import { loginUser, signupUser, setPassword } from "../redux/auth";
 //import IntlMessages from "../helpers/IntlMessages";
 //import "./login.scss";
 
@@ -33,7 +33,7 @@ class LoginTest extends Component {
 
   onLoginTest() {
     if (this.state.email !== "") {
-      this.props.loginTest(this.state.email);
+      //this.props.loginTest(this.state.email);
     }
   }
 
@@ -317,11 +317,11 @@ class LoginTest extends Component {
   }
 }
 const mapStateToProps = ({ authUser }) => {
-  const { user, status, statusTest } = authUser;
-  return { user, status, statusTest };
+  const { user, status } = authUser;
+  return { user, status };
 };
 
-const mapActionsToProps = { loginUser, loginTest, signupUser, setPassword };
+const mapActionsToProps = { loginUser, signupUser, setPassword };
 
 export default connect(
   mapStateToProps,
