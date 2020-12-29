@@ -15,81 +15,15 @@ export const types = {
   UPDATE_PROFILE: "UPDATE_PROFILE",
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
-  VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
-  VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
   LOGOUT_USER: "LOGOUT_USER",
-  UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
-  UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
-  LOGIN_TEST: "LOGIN_TEST",
-  LOGIN_TEST_NO_USER: "LOGIN_TEST_NO_USER",
-  LOGIN_TEST_HAVE_USER_HAVE_PASSWORD: "LOGIN_TEST_HAVE_USER_HAVE_PASSWORD",
-  LOGIN_TEST_HAVE_USER_NO_PASSWORD: "LOGIN_TEST_HAVE_USER_NO_PASSWORD",
-  SET_PASSWORD: "SET_PASSWORD",
-  UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
-  UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
-  RANDOM_VIDEO: "RANDOM_VIDEO",
-  RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
-  RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
-  SELECT_CHANGE_VIDEO: "SELECT_CHANGE_VIDEO",
-  SELECT_CHANGE_VIDEO_SUCCESS: "SELECT_CHANGE_VIDEO_SUCCESS",
-  SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL",
-  RESET_STATUS: "RESET_STATUS"
+  SET_PASSWORD: "SET_PASSWORD"
 }
-export const resetStatus = () => ({
-  type: types.RESET_STATUS
-})
-
-export const selectChangeVideo = (video_id, category) => ({
-  type: types.SELECT_CHANGE_VIDEO,
-  payload: {
-    video_id,
-    category
-  }
-})
-
-export const randomVideo = (video_id, category) => ({
-  type: types.RANDOM_VIDEO,
-  payload: {
-    video_id,
-    category
-  }
-})
-
-export const updatePlaylist = (user_id, start_date, day_number, playlist, exerciseVideo) => ({
-  type: types.UPDATE_PLAYLIST,
-  payload: {
-    user_id,
-    start_date,
-    day_number,
-    playlist,
-    exerciseVideo
-  }
-})
 
 export const setPassword = (email, password) => ({
   type: types.SET_PASSWORD,
   payload: {
     email,
     password
-  }
-})
-
-export const loginTest = (email) => ({
-  type: types.LOGIN_TEST,
-  payload: {
-    email
-  }
-})
-
-export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, exerciseVideo) => ({
-  type: types.UPDATE_PLAYTIME,
-  payload: {
-    user_id,
-    start_date,
-    day_number,
-    video_number,
-    play_time,
-    exerciseVideo
   }
 })
 
@@ -154,45 +88,9 @@ export const createCustomWeekForUser = (user_id, weight, startDate, offset) => (
   }
 });
 
-export const videoListForUser = (
-  user_id,
-  weight,
-  start_date,
-  offset) => ({
-    type: types.VIDEO_LIST_FOR_USER,
-    payload: {
-      user_id,
-      weight,
-      start_date,
-      offset
-    }
-  });
-
 /* END OF ACTION Section */
 
 /* SAGA Section */
-
-const videoListForUserSagaAsync = async (
-  user_id,
-  weight,
-  start_date,
-  offset
-) => {
-  try {
-    const apiResult = await API.get("bebe", "/videoListForUser", {
-      queryStringParameters: {
-        user_id,
-        weight,
-        start_date,
-        offset
-      }
-    });
-    return apiResult
-  } catch (error) {
-    console.log("error :", error);
-    return { error, messsage: error.message }
-  }
-}
 
 const checkUserSagaAsync = async (
   email
@@ -288,50 +186,6 @@ const createCustomWeekForUserSagaAsync = async (
   }
 }
 
-const updatePlaylistSagaAsync = async (
-  user_id,
-  start_date,
-  day_number,
-  playlist
-) => {
-  try {
-    const apiResult = await API.put("bebe", "/playlist", {
-      body: {
-        user_id,
-        start_date,
-        day_number,
-        playlist
-      }
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
-const updatePlaytimeSagaAsync = async (
-  user_id,
-  start_date,
-  day_number,
-  video_number,
-  play_time
-) => {
-  try {
-    const apiResult = await API.put("bebe", "/play_time", {
-      body: {
-        user_id,
-        start_date,
-        day_number,
-        video_number,
-        play_time
-      }
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
 const signupUserSagaAsync = async (
   email,
   password,
@@ -355,55 +209,6 @@ const signupUserSagaAsync = async (
   }
 };
 
-const selectChangeVideoSagaAsync = async (
-  video_id,
-  category
-) => {
-  try {
-    const apiResult = await API.get("bebe", "/selectChangeVideo", {
-      queryStringParameters: {
-        video_id,
-        category
-      }
-    });
-    return apiResult;
-  } catch (error) {
-    
-  }
-}
-
-const randomVideoSagaAsync = async (
-  video_id,
-  category
-) => {
-  try {
-    const apiResult = await API.get("bebe", "/randomVideo", {
-      queryStringParameters: {
-        video_id,
-        category
-      }
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
-const loginTestSagaAsync = async (
-  email
-) => {
-  try {
-    const apiResult = await API.get("bebe", "/login_test", {
-      queryStringParameters: {
-        email: email
-      }
-    });
-    return apiResult
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
 const loginUserSagaAsync = async (
   email,
   password
@@ -421,120 +226,9 @@ const loginUserSagaAsync = async (
   }
 };
 
-function* updatePlaylistSaga({ payload }) {
-  const {
-    user_id,
-    start_date,
-    day_number,
-    playlist,
-    exerciseVideo
-  } = payload
-  try {
-    const apiResult = yield call(
-      updatePlaylistSagaAsync,
-      user_id,
-      start_date,
-      day_number,
-      playlist
-    );
-    let keyDay = "";
-    switch (day_number) {
-      case 0:
-        keyDay = "day1";
-        break;
-      case 1:
-        keyDay = "day2";
-        break;
-      case 2:
-        keyDay = "day3";
-        break;
-      case 3:
-        keyDay = "day4";
-        break;
-      default:
-        break;
-    }
-    yield put({
-      type: types.UPDATE_PLAYLIST_SUCCESS,
-      payload: exerciseVideo
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
 
-function* updatePlaytimeSaga({ payload }) {
-  const {
-    user_id,
-    start_date,
-    day_number,
-    video_number,
-    play_time,
-    exerciseVideo
-  } = payload
-  try {
-    const apiResult = yield call(
-      updatePlaytimeSagaAsync,
-      user_id,
-      start_date,
-      day_number,
-      video_number,
-      play_time
-    );
-    let keyDay = "";
-    switch (day_number) {
-      case 0:
-        keyDay = "day1";
-        break;
-      case 1:
-        keyDay = "day2";
-        break;
-      case 2:
-        keyDay = "day3";
-        break;
-      case 3:
-        keyDay = "day4";
-        break;
-      default:
-        break;
-    }
-    yield put({
-      type: types.UPDATE_PLAYTIME_SUCCESS,
-      payload: exerciseVideo
-    });
-    return apiResult;
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
 
-function* videoListForUserSaga({ payload }) {
-  const {
-    user_id,
-    weight,
-    start_date,
-    offset
-  } = payload
-  try {
-    const apiResult = yield call(
-      videoListForUserSagaAsync,
-      user_id,
-      weight,
-      start_date,
-      offset
-    );
-    if (apiResult.results.length > 0) {
-      const activities = JSON.parse(apiResult.results[0].activities);
-      yield put({
-        type: types.VIDEO_LIST_FOR_USER_SUCCESS,
-        payload: activities
-      })
-    }
-  } catch (error) {
-    console.log("error form videoListForUserSaga", error);
-  }
-}
+
 
 function* checkUserSaga({ payload }) {
   const {
@@ -660,92 +354,6 @@ function* trialRegisterSaga({ payload }) {
   }
 }
 
-function* selectChangeVideoSaga({ payload }) {
-  const {
-    video_id,
-    category
-  } = payload
-  try {
-    const apiResult = yield call(
-      selectChangeVideoSagaAsync,
-      video_id,
-      category
-    );
-    if (apiResult.results.message === "no_video") {
-      yield put({
-        type: types.SELECT_CHANGE_VIDEO_FAIL
-      })
-    } else {
-      yield put({
-        type: types.SELECT_CHANGE_VIDEO_SUCCESS,
-        payload: apiResult.results.videos
-      })
-    }
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
-function* randomVideoSaga({ payload }) {
-  const {
-    video_id,
-    category
-  } = payload
-  try {
-    const apiResult = yield call(
-      randomVideoSagaAsync,
-      video_id,
-      category
-    );
-    if (apiResult.results.message === "no_video") {
-      console.log("user :", apiResult.results);
-      yield put({
-        type: types.RANDOM_VIDEO_FAIL,
-      })
-    } else {
-      yield put({
-        type: types.RANDOM_VIDEO_SUCCESS,
-        payload: apiResult.results.video
-      })
-    }
-  } catch (error) {
-    return { error, messsage: error.message };
-  }
-}
-
-function* loginTestSaga({ payload }) {
-  const {
-    email
-  } = payload
-  try {
-    const apiResult = yield call(
-      loginTestSagaAsync,
-      email
-    );
-    console.log(apiResult);
-    if (apiResult.results.message === "no_user") {
-      console.log("user :", apiResult.results.user);
-      yield put({
-        type: types.LOGIN_TEST_NO_USER,
-        payload: apiResult.results.user
-      })
-    } else if (apiResult.results.message === "have_user_have_password") {
-      console.log("user :", apiResult.results.user);
-      yield put({
-        type: types.LOGIN_TEST_HAVE_USER_HAVE_PASSWORD,
-        payload: apiResult.results.user
-      })
-    } else if (apiResult.results.message === "have_user_no_password") {
-      console.log("user :", apiResult.results.user);
-      yield put({
-        type: types.LOGIN_TEST_HAVE_USER_NO_PASSWORD,
-        payload: apiResult.results.user
-      })
-    }
-  } catch (error) {
-    console.log("error form loginTest", error);
-  }
-}
 
 function* loginUserSaga({ payload }) {
   const {
@@ -801,32 +409,8 @@ export function* watchCreateCustomWeekForUser() {
   yield takeEvery(types.CREATE_CUSTOM_WEEK_FOR_USER, createCustomWeekForUserSaga)
 }
 
-export function* watchVideoListForUser() {
-  yield takeEvery(types.VIDEO_LIST_FOR_USER, videoListForUserSaga)
-}
-
-export function* watchUpdatePlaytime() {
-  yield takeEvery(types.UPDATE_PLAYTIME, updatePlaytimeSaga)
-}
-
-export function* watchLoginTest() {
-  yield takeEvery(types.LOGIN_TEST, loginTestSaga)
-}
-
 export function* watchSetPassword() {
   yield takeEvery(types.SET_PASSWORD, setPasswordSaga)
-}
-
-export function* watchUpdatePlaylist() {
-  yield takeEvery(types.UPDATE_PLAYLIST, updatePlaylistSaga)
-}
-
-export function* watchRandomVideo() {
-  yield takeEvery(types.RANDOM_VIDEO, randomVideoSaga)
-}
-
-export function* watchSelectChangeVideo() {
-  yield takeEvery(types.SELECT_CHANGE_VIDEO, selectChangeVideoSaga)
 }
 
 export function* saga() {
@@ -837,13 +421,7 @@ export function* saga() {
     fork(watchSignupUser),
     fork(watchUpdateProfile),
     fork(watchCreateCustomWeekForUser),
-    fork(watchVideoListForUser),
-    fork(watchUpdatePlaytime),
-    fork(watchLoginTest),
-    fork(watchSetPassword),
-    fork(watchUpdatePlaylist),
-    fork(watchRandomVideo),
-    fork(watchSelectChangeVideo)
+    fork(watchSetPassword)
   ]);
 }
 
@@ -853,32 +431,10 @@ export function* saga() {
 
 const INIT_STATE = {
   user: null,
-  exerciseVideo: [[], [], [], []],
-  status: "default",
-  statusTest: "default",
-  video: {},
-  videos: []
+  status: "default"
 };
 
-function updateObjectInArray(array, action) {
-  return array.map((item, index) => {
-    if (index !== action.index) {
-      // This isn't the item we care about - keep it as-is
-      return item
-    }
-
-    // Otherwise, this is the one we want - return an updated value
-    return {
-      ...item,
-      ...action.item
-    }
-  })
-}
-
-
 export function reducer(state = INIT_STATE, action) {
-  if(action.type === types.UPDATE_PLAYLIST_SUCCESS) {
-  }
   switch (action.type) {
     case types.LOGIN_USER_SUCCESS:
       return {
@@ -899,59 +455,8 @@ export function reducer(state = INIT_STATE, action) {
           other_attributes: action.payload
         }
       }
-    case types.VIDEO_LIST_FOR_USER_SUCCESS:
-      return {
-        ...state,
-        exerciseVideo: action.payload
-      };
     case types.LOGOUT_USER:
       return INIT_STATE;
-    case types.UPDATE_PLAYLIST:
-      return {
-        ...state,
-        status: "processing"
-      }
-    case types.UPDATE_PLAYLIST_SUCCESS:
-      return {
-        ...state,
-        exerciseVideo: action.payload,
-        status: "success"
-      };
-    case types.UPDATE_PLAYTIME_SUCCESS:
-      return {
-        ...state,
-        exerciseVideo: action.payload
-      };
-    case types.RANDOM_VIDEO_SUCCESS:
-      return {
-        ...state,
-        video: action.payload
-      };
-    case types.SELECT_CHANGE_VIDEO_SUCCESS:
-      return {
-        ...state,
-        videos: action.payload
-      };
-    case types.LOGIN_TEST_NO_USER:
-      return {
-        ...state,
-        statusTest: "no_user"
-      };
-    case types.LOGIN_TEST_HAVE_USER_HAVE_PASSWORD:
-      return {
-        ...state,
-        statusTest: "have_user_have_password"
-      };
-    case types.LOGIN_TEST_HAVE_USER_NO_PASSWORD:
-      return {
-        ...state,
-        statusTest: "have_user_no_password"
-      };
-    case types.RESET_STATUS:
-      return {
-        ...state,
-        status: "default"
-      };
     default:
       return { ...state };
   }

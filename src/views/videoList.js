@@ -6,7 +6,9 @@ import { connect } from "react-redux";
 
 
 
-import { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/auth";
+import { updateProfile, createCustomWeekForUser, logoutUser } from "../redux/auth";
+import { videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/exerciseVideos";
+
 
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
@@ -839,8 +841,9 @@ class VideoList extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { user, exerciseVideo, status, video, videos } = authUser;
+const mapStateToProps = ({ authUser, exerciseVideos }) => {
+  const { user } = authUser;
+  const { exerciseVideo, status, video, videos } = exerciseVideos;
   return { user, exerciseVideo, status, video, videos };
 };
 
