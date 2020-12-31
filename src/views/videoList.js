@@ -771,14 +771,14 @@ class VideoList extends Component {
           <a className="navbar-brand" href="/">
             <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
           BEBE FIT ROUTINE
-        </a>
+          </a>
           <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/signup">อุปกรณ์ฟิตเนส</a>
+                <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="/VideoList">Platform</a>
@@ -789,13 +789,10 @@ class VideoList extends Component {
           <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
+                <a className="nav-link" href="/signup">ตะกร้าสินค้า</a>
+              </li>
+              <li className="nav-item">
                 <a className="nav-link" onClick={() => this.onUserLogout()}>ออกจากระบบ</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/signup">สมัครสมาชิก</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/trial_register">ทดลองใช้ฟรี</a>
               </li>
             </ul>
           </div>

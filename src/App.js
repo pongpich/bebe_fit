@@ -20,25 +20,39 @@ Amplify.configure(awsConfig);
 function App() {
   return (
     <div className="App" style={{ backgroundImage: `url(${backgroundImg})` }}>
-      {/* <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a className="navbar-brand" href="/">
-          <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+          <a className="navbar-brand" href="/">
+            <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
           BEBE FIT ROUTINE
-        </a>
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/signup">สมัครสมาชิก</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/trial_register">ทดลองใช้ฟรี</a>
-            </li>
-          </ul>
-        </div>
-      </nav> */}
+          </a>
+          <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/VideoList">Platform</a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <a className="nav-link" onClick={() => this.onUserLogout()}>ตะกร้าสินค้า</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/login">เข้าสู่ระบบ</a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link" href="/trial_register">สมัครสมาชิก</a>
+              </li>
+            </ul>
+          </div>
+        </nav>
       <Switch>
         <Route exact path="/">
           <Redirect to="/login" />
