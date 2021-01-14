@@ -48,21 +48,13 @@ class Register extends Component {
     }
   }
 
-  render() {
+  renderRegister() {
     return (
-      <div className="h-100 all-row">
-        <div className="mx-auto my-auto">
-          <div className="auth-card">
-            <div className="position-relative image-side-register">
-            </div>
-
-            <div className="form-side">
-              <CardTitle className="h6 mb-4">
-                {"กรอกข้อมูลเพื่อทดลองใช้โปรแกรม"}
-              </CardTitle>
-
-              <Form>
-                <Label className="form-group1 has-float-label mb-2 mr-4">
+      <div className="auth-card">
+        <div className="position-relative image-side-register"></div>
+        <div className="form-side">
+          <Form>
+            {/* <Label className="form-group1 has-float-label mb-2 mr-4">
                   {"ชื่อ"}
                   <Input
                     name="firstname"
@@ -97,63 +89,60 @@ class Register extends Component {
                       required: { value: true, errorMessage: 'อย่าลืมกรอกเบอร์โทรศัพท์' }
                     }}
                   />
-                </Label>
-                <Label className="form-group2 has-float-label mb-2">
-                  {"Email"}
-                  <Input
-                    type="email"
-                    id="email"
-                    value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
-                  />
-                </Label>
-                <Label className="form-group2 has-float-label mb-2">
-                  {"Password"}
-                  <Input
-                    type="password"
-                    id="password"
-                    value={this.state.password} onChange={(event) => this.handleChange(event)}
-                  />
-                </Label>
-                <Label className="form-group2 has-float-label mb-3">
-                  {"ยืนยัน Password"}
-                  <Input
-                    type="password"
-                    name="confirm-password" required
-                    id="comfirm-password"
-                    validate={{
-                      required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
-                      match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
-                    }}
-                  />
-                </Label>
+                </Label> */}
+            <Label className="form-group2 has-float-label mb-2">
+              {"Email Address"}
+              <Input
+                type="email"
+                id="email"
+                value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
+              />
+            </Label>
+            <Label className="form-group2 has-float-label mb-2">
+              {"Password"}
+              <Input
+                type="password"
+                id="password"
+                value={this.state.password} onChange={(event) => this.handleChange(event)}
+              />
+            </Label>
+            <Label className="form-group2 has-float-label mb-3">
+              {"Confirm password"}
+              <Input
+                type="password"
+                name="confirm-password" required
+                id="comfirm-password"
+                validate={{
+                  required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
+                  match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
+                }}
+              />
+            </Label>
 
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <Button
-                    color="danger"
-                    className="btn-shadow"
-                    size="lg"
-                    onClick={() => this.onUserRegister()}
-                    block
-                  >
-                    <span className="text-one">
-                      {"ลงทะเบียน"}
-                    </span>
-                  </Button>
-                </div>
-                <div className="d-flex justify-content-between align-items-center mb-3">
-                  <Button
-                    color="light"
-                    className="btn-shadow"
-                    size="lg"
-                    href="/login"
-                    block
-                  >
-                    {"เข้าใช้งาน"}
-                  </Button>
-                </div>
-              </Form>
+            <div className="d-flex justify-content-between align-items-center mb-4">
+              <Button
+                color="danger"
+                className="btn-shadow"
+                size="lg"
+                onClick={() => this.onUserRegister()}
+                block
+              >
+                <span className="text-one">
+                  {"สมัครสมาชิก"}
+                </span>
+              </Button>
             </div>
-          </div>
+          </Form>
+        </div>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div className="h-100 all-row">
+        <div className="mx-auto my-auto">
+          {this.renderRegister()}
         </div>
       </div>
     );

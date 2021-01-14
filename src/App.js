@@ -7,10 +7,10 @@ import {
 } from "react-router-dom";
 
 import Login from "./views/login";
-import LoginTest from "./views/loginTest";
 import TrialRegister from "./views/trial_register";
 import Signup from "./views/signup";
 import VideoList from "./views/videoList";
+import Platform from "./views/platform";
 
 import backgroundImg from "./assets/img/mainbg.jpg";
 
@@ -34,7 +34,7 @@ function App() {
                 <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/VideoList">Platform</a>
+                <a className="nav-link" href="/platform">Platform</a>
               </li>
             </ul>
           </div>
@@ -55,15 +55,16 @@ function App() {
         </nav>
       <Switch>
         <Route exact path="/">
-          <Redirect to="/login" />
+          <Redirect to="/platform" />
         </Route>
         <Route exact path='/login_test'>
-          <Redirect to="/login" />
+          <Redirect to="/platform" />
         </Route>
         <Route path='/login' component={Login} />
         <Route path='/trial_register' component={TrialRegister} />
         <Route path='/signup' component={Signup} />
         <Route path='/VideoList' component={VideoList} />
+        <Route path='/platform' component={Platform} />
       </Switch>
     </div>
   );

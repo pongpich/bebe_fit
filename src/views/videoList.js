@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 
 import { updateProfile, logoutUser } from "../redux/auth";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList } from "../redux/exerciseVideos";
 
 
 import bghead from "../assets/img/bghead.jpg";
@@ -166,6 +166,7 @@ class VideoList extends Component {
 
   onUserLogout(event) {
     this.props.logoutUser();
+    this.props.clearVideoList();
   }
 
   closeEditVDO() {
@@ -781,7 +782,7 @@ class VideoList extends Component {
                 <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/VideoList">Platform</a>
+                <a className="nav-link" href="/platform">Platform</a>
               </li>
             </ul>
           </div>
@@ -844,7 +845,7 @@ const mapStateToProps = ({ authUser, exerciseVideos }) => {
   return { user, exerciseVideo, status, video, videos };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList };
 
 export default connect(
   mapStateToProps,

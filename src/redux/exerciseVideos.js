@@ -17,7 +17,8 @@ export const types = {
   SELECT_CHANGE_VIDEO: "SELECT_CHANGE_VIDEO",
   SELECT_CHANGE_VIDEO_SUCCESS: "SELECT_CHANGE_VIDEO_SUCCESS",
   SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL",
-  RESET_STATUS: "RESET_STATUS"
+  RESET_STATUS: "RESET_STATUS",
+  CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST"
 }
 
 export const createCustomWeekForUser = (user_id, weight, startDate, offset) => ({
@@ -29,6 +30,10 @@ export const createCustomWeekForUser = (user_id, weight, startDate, offset) => (
     offset
   }
 });
+
+export const clearVideoList = () => ({
+  type: types.CLEAR_VIDEO_LIST
+})
 
 export const resetStatus = () => ({
   type: types.RESET_STATUS
@@ -486,6 +491,8 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         status: "default"
       };
+    case types.CLEAR_VIDEO_LIST:
+      return INIT_STATE;
     default:
       return { ...state };
   }

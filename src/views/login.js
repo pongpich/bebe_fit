@@ -9,8 +9,7 @@ import {
 import { connect } from "react-redux";
 
 import { loginUser } from "../redux/auth";
-//import IntlMessages from "../helpers/IntlMessages";
-//import "./login.scss";
+import "./login.scss";
 
 
 class Login extends Component {
