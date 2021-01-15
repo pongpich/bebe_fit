@@ -7,20 +7,137 @@ import {
   Input,
   Button
 } from "reactstrap";
+import { trialRegister, checkUser, logoutUser } from "../redux/auth";
+import { clearVideoList } from "../redux/exerciseVideos";
+import backgroundImg from "../assets/img/mainbg.jpg";
+
 
 class Platform extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      program_id: ""
     };
   }
 
   componentDidMount() {
     const { user } = this.props;
-    if (user !== null) {
+    if (user !== null && user.expire_date !== null) {
       this.props.history.push('/VideoList');
     }
+  }
+
+  onUserRegister(event) {
+    const { email, password } = this.state;
+    this.props.trialRegister(email, password);
+  }
+
+  onUserLogout(event) {
+    this.props.logoutUser();
+    this.props.clearVideoList();
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  }
+
+  async checkExistedEmail(event) {
+    const { value } = event.target;
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) {
+      this.props.checkUser(value);
+      console.log(value);
+    }
+  }
+
+  renderNavbarLogoutMenu() {
+    return (
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a className="navbar-brand" href="/">
+          <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
+          BEBE FIT ROUTINE
+          </a>
+        <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" href="/platform">Platform</a>
+            </li>
+          </ul>
+        </div>
+
+        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a className="nav-link" href="/signup">ตะกร้าสินค้า</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link" onClick={() => this.onUserLogout()}>ออกจากระบบ</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    )
+  }
+
+  renderTrialRegister() {
+    return (
+      <div className="form-side">
+        <Form>
+          <Label className="form-group2 has-float-label mb-2">
+            {"Email Address"}
+            <Input
+              type="email"
+              id="email"
+              value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
+            />
+          </Label>
+          <Label className="form-group2 has-float-label mb-2">
+            {"Password"}
+            <Input
+              type="password"
+              id="password"
+              value={this.state.password} onChange={(event) => this.handleChange(event)}
+            />
+          </Label>
+          <Label className="form-group2 has-float-label mb-3">
+            {"Confirm password"}
+            <Input
+              type="password"
+              name="confirm-password" required
+              id="comfirm-password"
+              validate={{
+                required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
+                match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
+              }}
+            />
+          </Label>
+
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <Button
+              color="danger"
+              className="btn-shadow mt-3"
+              size="lg"
+              onClick={() => this.onUserRegister()}
+              block
+            >
+              <span className="text-one">
+                {"สมัครสมาชิก"}
+              </span>
+            </Button>
+          </div>
+        </Form>
+      </div>
+    )
   }
 
   renderRegister() {
@@ -71,14 +188,13 @@ class Platform extends Component {
           </div>
         </Form>
       </div>
-
-
     )
   }
 
   render() {
     return (
-      <div className="center">
+      <div className="center" style={{ backgroundImage: `url(${backgroundImg})` }}>
+        {this.props.user !== null && this.renderNavbarLogoutMenu()}
         <h1>.</h1>
         <h1>.</h1>
         <h1>.</h1>
@@ -89,26 +205,34 @@ class Platform extends Component {
         <h1>.</h1>
         <h1>.</h1>
         <h1>.</h1>
-        <input type="checkbox" id="show"></input>
+
         <div style={{ float: "right" }}>
-          <button type="button" className="btn btn-light mr-4"> สมัคร Platform </button>
+          {
+            this.props.user !== null ?
+              <button type="button" className="btn btn-light border mr-4"> ซื้อแพ็คเกจ </button>
+              :
+              <button type="button" className="btn btn-light border mr-4"> สมัคร Platform </button>
+          }
           <button className="show-btn btn btn-dark mr-5">
             <label className="mb-0" for="show" style={{ cursor: "pointer" }}>ใช้ฟรี 14วัน</label>
           </button>
         </div>
-        <div className="overlay"></div>
-        <div className="containerPopup" style={{ marginTop: "10%" }}>
+
+        <input type="checkbox" id="show"></input>
+        <div className="overlay overlayContainerPopup"></div>
+        <div className="containerPopup popupTrialRegister" style={{ marginTop: "10%" }}>
           <label for="show" className="close-btn fa fa-times" style={{ float: "right" }}></label>
           <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
               <a class="nav-link active" href="#"><b>สมัครสมาชิก</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/login">เข้าสู่ระบบ</a>
+              <a class="nav-link disabled" href="/login">เข้าสู่ระบบ</a>
             </li>
           </ul>
-          {this.renderRegister()}
+          {this.renderTrialRegister()}
         </div>
+
         <h1>.</h1>
         <h1>.</h1>
         <h1>.</h1>
@@ -117,21 +241,17 @@ class Platform extends Component {
   }
 }
 
-{/* 
-  <div style={{ float: "right" }}>
-<button type="button" className="btn btn-light mr-4"> สมัคร Platform </button>
-<a href="/trial_register">
-  <button className="btn btn-dark mr-5" > ใช้ฟรี 14วัน </button>
-</a>
-</div> 
-*/}
-
 const mapStateToProps = ({ authUser }) => {
   const { user } = authUser;
   return { user };
 };
 
-const mapActionsToProps = {};
+const mapActionsToProps = {
+  trialRegister,
+  checkUser,
+  logoutUser,
+  clearVideoList
+};
 
 export default connect(
   mapStateToProps,

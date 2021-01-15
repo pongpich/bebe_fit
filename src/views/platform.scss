@@ -18,7 +18,7 @@
     };
 }
 
-.overlay {
+.overlayContainerPopup {
   position:fixed;
   top:0px;
   left:0px;
@@ -34,7 +34,7 @@ input[type="checkbox"]{
   display: none;
 }
 
-#show:checked ~ .overlay {
+#show:checked ~ .overlayContainerPopup {
   display: block;
 }
 

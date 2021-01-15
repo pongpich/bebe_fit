@@ -59,6 +59,9 @@ class VideoList extends Component {
     if (user === null) {
       this.props.history.push('/login');
     }
+    if (user.expire_date === null) {
+      this.props.history.push('/platform');
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {

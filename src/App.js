@@ -11,15 +11,14 @@ import TrialRegister from "./views/trial_register";
 import Signup from "./views/signup";
 import VideoList from "./views/videoList";
 import Platform from "./views/platform";
-
-import backgroundImg from "./assets/img/mainbg.jpg";
+import Package from "./views/package";
 
 import { awsConfig } from "./constants/defaultValues";
 
 Amplify.configure(awsConfig);
 function App() {
   return (
-    <div className="App" style={{ backgroundImage: `url(${backgroundImg})` }}>
+    <div className="App">
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
           <a className="navbar-brand" href="/">
             <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
@@ -65,6 +64,7 @@ function App() {
         <Route path='/signup' component={Signup} />
         <Route path='/VideoList' component={VideoList} />
         <Route path='/platform' component={Platform} />
+        <Route path='/package' component={Package} />
       </Switch>
     </div>
   );
