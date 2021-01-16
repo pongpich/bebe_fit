@@ -15,8 +15,18 @@ export const types = {
   UPDATE_PROFILE: "UPDATE_PROFILE",
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   LOGOUT_USER: "LOGOUT_USER",
-  SET_PASSWORD: "SET_PASSWORD"
+  SET_PASSWORD: "SET_PASSWORD",
+  TRIAL_PACKAGE: "TRIAL_PACKAGE",
+  TRIAL_PACKAGE_SUCCESS: "TRIAL_PACKAGE_SUCCESS"
 }
+
+export const trialPackage = (email, expire_date) => ({
+  type: types.TRIAL_PACKAGE,
+  payload: {
+    email,
+    expire_date
+  }
+})
 
 export const setPassword = (email, password) => ({
   type: types.SET_PASSWORD,
@@ -113,6 +123,21 @@ const setPasswordSagaAsync = async (
     return { error, messsage: error.message };
   }
 };
+
+const trialPackageSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/trialPackage", {
+      body: {
+        email: email,
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 const trialRegisterSagaAsync = async (
   email,
@@ -276,6 +301,26 @@ function* setPasswordSaga({ payload }) {
   }
 }
 
+function* trialPackageSaga({ payload }) {
+  const {
+    email,
+    expire_date
+  } = payload
+
+  try {
+    const apiResult = yield call (
+      trialPackageSagaAsync,
+      email
+    );
+    yield put({
+      type: types.TRIAL_PACKAGE_SUCCESS,
+      payload: expire_date
+    })
+  } catch (error) {
+    console.log("error from trialPackageSaga :", error);
+  }
+}
+
 function* trialRegisterSaga({ payload }) {
   const {
     email,
@@ -355,6 +400,10 @@ export function* watchSetPassword() {
   yield takeEvery(types.SET_PASSWORD, setPasswordSaga)
 }
 
+export function* watchTrialPackage() {
+  yield takeEvery(types.TRIAL_PACKAGE, trialPackageSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -362,7 +411,8 @@ export function* saga() {
     fork(watchCheckUser),
     fork(watchSignupUser),
     fork(watchUpdateProfile),
-    fork(watchSetPassword)
+    fork(watchSetPassword),
+    fork(watchTrialPackage)
   ]);
 }
 
@@ -396,6 +446,14 @@ export function reducer(state = INIT_STATE, action) {
           other_attributes: action.payload
         }
       }
+    case types.TRIAL_PACKAGE_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          expire_date: action.payload
+        }
+      };
     case types.LOGOUT_USER:
       return INIT_STATE;
     default:

@@ -7,7 +7,7 @@ import {
   Input,
   Button
 } from "reactstrap";
-import { trialRegister, checkUser, logoutUser } from "../redux/auth";
+import { trialRegister, checkUser, logoutUser, loginUser} from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
 import backgroundImg from "../assets/img/mainbg.jpg";
 
@@ -27,9 +27,17 @@ class Platform extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { status } = this.props;
+    if (prevProps.status !== status && status === "success") {
+      this.props.history.push('/package');
+    }
+  }
+
   onUserRegister(event) {
     const { email, password } = this.state;
     this.props.trialRegister(email, password);
+    this.props.loginUser(email, password);
   }
 
   onUserLogout(event) {
@@ -242,15 +250,16 @@ class Platform extends Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user } = authUser;
-  return { user };
+  const { user, status } = authUser;
+  return { user, status };
 };
 
 const mapActionsToProps = {
   trialRegister,
   checkUser,
   logoutUser,
-  clearVideoList
+  clearVideoList,
+  loginUser
 };
 
 export default connect(
