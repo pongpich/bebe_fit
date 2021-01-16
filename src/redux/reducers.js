@@ -5,6 +5,7 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 
 import { reducer as authUser} from './auth';
 import { reducer as exerciseVideos} from './exerciseVideos';
+import { reducer as exerciseProgram} from './exerciseProgram';
 
 
 const persistConfig = {
@@ -15,7 +16,8 @@ const persistConfig = {
 
 const reducers = combineReducers({
   authUser,
-  exerciseVideos
+  exerciseVideos,
+  exerciseProgram
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers)

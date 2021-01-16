@@ -98,7 +98,9 @@ class Package extends Component {
           </div>
           <div className="col-lg-11 mt-4">
             <div style={{ float: "right" }}>
-              <button type="button" class="btn btn-light border mr-4">ยกเลิก</button>
+              <a href="/platform">
+                <button type="button" class="btn btn-light border mr-4">ยกเลิก</button>
+              </a>
               <button type="button" class="btn btn-danger" onClick={() => this.onSelectedTrialPackage()}>
                 ทดลองใช้
               </button>
@@ -135,9 +137,9 @@ class Package extends Component {
             </div>
           </div>
           <div className="col-lg-11 mt-4">
-              <a href="/videolist">
-                <button type="button" class="btn btn-danger" style={{ width: "100%" }}>ใช้งาน Platform</button>
-              </a>
+            <a href="/videolist">
+              <button type="button" class="btn btn-danger" style={{ width: "100%" }}>ใช้งาน Platform</button>
+            </a>
           </div>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>

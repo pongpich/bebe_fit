@@ -7,8 +7,9 @@ import {
   Input,
   Button
 } from "reactstrap";
-import { trialRegister, checkUser, logoutUser, loginUser} from "../redux/auth";
+import { trialRegister, checkUser, logoutUser, loginUser } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
+import { selectProgram } from "../redux/exerciseProgram";
 import backgroundImg from "../assets/img/mainbg.jpg";
 
 
@@ -217,9 +218,13 @@ class Platform extends Component {
         <div style={{ float: "right" }}>
           {
             this.props.user !== null ?
-              <button type="button" className="btn btn-light border mr-4"> ซื้อแพ็คเกจ </button>
+              <button type="button" className="btn btn-light border mr-4" onClick={() => this.props.selectProgram("fit60days")}>
+                ซื้อแพ็คเกจ
+              </button>
               :
-              <button type="button" className="btn btn-light border mr-4"> สมัคร Platform </button>
+              <button type="button" className="btn btn-light border mr-4" onClick={() => this.props.selectProgram("fit60days")}>
+                สมัคร Platform
+              </button>
           }
           <button className="show-btn btn btn-dark mr-5">
             <label className="mb-0" for="show" style={{ cursor: "pointer" }}>ใช้ฟรี 14วัน</label>
@@ -250,8 +255,8 @@ class Platform extends Component {
 }
 
 const mapStateToProps = ({ authUser }) => {
-  const { user, status } = authUser;
-  return { user, status };
+  const { user, status, program } = authUser;
+  return { user, status, program };
 };
 
 const mapActionsToProps = {
@@ -259,7 +264,8 @@ const mapActionsToProps = {
   checkUser,
   logoutUser,
   clearVideoList,
-  loginUser
+  loginUser,
+  selectProgram
 };
 
 export default connect(
