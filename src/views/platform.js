@@ -25,25 +25,31 @@ class Platform extends Component {
     const { user } = this.props;
     this.props.clearProgram();
     if (user !== null && user.expire_date !== null) {
-      this.props.history.push('/VideoList');
+      var curr = new Date().getTime();
+      var expire_date = new Date(user.expire_date).getTime();
+      if (curr < expire_date) { //curr < expire_date คือ ยังไม่หมดอายุ
+        this.props.history.push('/VideoList');
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { status } = this.props;
+    const { status, program } = this.props;
     if (prevProps.status !== status && status === "success") {
       this.props.history.push('/package');
+    }
+    if (prevProps.program !== program && program !== null) {
+      if (this.props.user === null) {
+        document.getElementById("popupRegister").classList.toggle("active");
+        document.getElementById("overlayPopupRegister").classList.toggle("active");
+      } else {
+        this.props.history.push('/package');
+      }
     }
   }
 
   selectProgram(program_id) {
     this.props.selectProgram(program_id);
-    if(this.props.user === null){
-      document.getElementById("popupRegister").classList.toggle("active");
-      document.getElementById("overlayPopupRegister").classList.toggle("active");
-    } else {
-      this.props.history.push('/package');
-    }
   }
 
   closePopupRegister() {
@@ -115,7 +121,7 @@ class Platform extends Component {
     )
   }
 
-  renderTrialRegister() {
+  renderRegister() {
     return (
       <div className="form-side">
         <Form>
@@ -184,17 +190,20 @@ class Platform extends Component {
         <div style={{ float: "right" }}>
           {
             this.props.user !== null ?
-              <button type="button" className="btn btn-light border mr-4" onClick={() => this.selectProgram("fit60days")}>
+              <button type="button" className="btn btn-light border mr-5" onClick={() => this.selectProgram("fit60days")}>
                 ซื้อแพ็คเกจ
               </button>
               :
-              <button type="button" className="btn btn-light border mr-4" onClick={() => this.selectProgram("fit60days")}>
+              <button type="button" className="btn btn-light border mr-5" onClick={() => this.selectProgram("fit60days")}>
                 สมัคร Platform
               </button>
           }
-          <button className="show-btn btn btn-dark mr-5" onClick={() => this.selectProgram("trial14")}>
-            ใช้ฟรี 14วัน
-          </button>
+          {
+            ((this.props.user === null) || (this.props.user !== null && this.props.user.expire_date === null)) &&
+            <button className="show-btn btn btn-dark mr-5" onClick={() => this.selectProgram("trial14")}>
+              ใช้ฟรี 14วัน
+            </button>
+          }
         </div>
 
         <div className="overlay overlayContainerPopup" id="overlayPopupRegister"></div>
@@ -212,7 +221,7 @@ class Platform extends Component {
               <a class="nav-link disabled" href="/login">เข้าสู่ระบบ</a>
             </li>
           </ul>
-          {this.renderTrialRegister()}
+          {this.renderRegister()}
         </div>
 
         <h1>.</h1>
@@ -223,8 +232,9 @@ class Platform extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
-  const { user, status, program } = authUser;
+const mapStateToProps = ({ authUser, exerciseProgram }) => {
+  const { user, status, } = authUser;
+  const { program } = exerciseProgram;
   return { user, status, program };
 };
 

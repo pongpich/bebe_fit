@@ -13,6 +13,7 @@ import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlayli
 import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
 
+
 class VideoList extends Component {
 
   constructor(props) {
@@ -61,6 +62,12 @@ class VideoList extends Component {
     }
     if (user.expire_date === null) {
       this.props.history.push('/platform');
+    } else if (user.expire_date !== null) {
+      var curr = new Date().getTime();
+      var expire_date = new Date(user.expire_date).getTime();
+      if (curr > expire_date) { //curr > expire_date คือ หมดอายุ
+        this.props.history.push('/platform');
+      }
     }
   }
 
@@ -104,7 +111,7 @@ class VideoList extends Component {
     if (prevProps.status === "processing" && this.props.status === "success") {
       this.closeEditVDO();
     }
-    if(prevState.editVDO_click === "show" && this.state.editVDO_click !== "show") {
+    if (prevState.editVDO_click === "show" && this.state.editVDO_click !== "show") {
       this.addEventToVideo();
     }
   }

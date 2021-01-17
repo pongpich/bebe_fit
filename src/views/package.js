@@ -15,8 +15,8 @@ class Package extends Component {
   }
 
   componentDidMount() {
-    const { user } = this.props;
-    if (user === null) {
+    const { user, program } = this.props;
+    if (user === null || program === null) {
       this.props.history.push('/platform');
     }
   }
@@ -155,14 +155,17 @@ class Package extends Component {
 
   render() {
     const { statusTrial } = this.state;
+    const { program } = this.props;
     return (
       <div className="center">
         {this.renderNavbarLogoutMenu()}
         {
-          (statusTrial === "success") ?
-            this.renderTrialPackageSuccess()
-            :
-            this.renderTrialPackage()
+          (program !== null && program.program_id === "trial14") && (
+            (statusTrial === "success") ?
+              this.renderTrialPackageSuccess()
+              :
+              this.renderTrialPackage()
+          )
         }
       </div>
     )
@@ -170,9 +173,10 @@ class Package extends Component {
 
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, exerciseProgram }) => {
   const { user } = authUser;
-  return { user };
+  const { program } = exerciseProgram;
+  return { user, program };
 };
 
 const mapActionsToProps = {
