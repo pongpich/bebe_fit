@@ -21,12 +21,12 @@ class Package extends Component {
     }
   }
 
-  /*  componentDidUpdate(prevProps, prevState) {
-     const { user } = this.props;
-     if (prevProps.user.expire_date !== user.expire_date && user.expire_date !== null) {
-       this.props.history.push('/VideoList');
-     }
-   } */
+  componentDidUpdate(prevProps, prevState) {
+    const { user } = this.props;
+    if (prevProps.user !== user && user === null) {
+      this.props.history.push('/login');
+    }
+  }
 
   onSelectedTrialPackage(event) {
     const { user } = this.props;

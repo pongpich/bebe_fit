@@ -9,7 +9,7 @@ import {
 } from "reactstrap";
 import { trialRegister, checkUser, logoutUser, loginUser } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
-import { selectProgram } from "../redux/exerciseProgram";
+import { selectProgram, clearProgram } from "../redux/exerciseProgram";
 import backgroundImg from "../assets/img/mainbg.jpg";
 
 
@@ -23,6 +23,7 @@ class Platform extends Component {
 
   componentDidMount() {
     const { user } = this.props;
+    this.props.clearProgram();
     if (user !== null && user.expire_date !== null) {
       this.props.history.push('/VideoList');
     }
@@ -33,6 +34,22 @@ class Platform extends Component {
     if (prevProps.status !== status && status === "success") {
       this.props.history.push('/package');
     }
+  }
+
+  selectProgram(program_id) {
+    this.props.selectProgram(program_id);
+    if(this.props.user === null){
+      document.getElementById("popupRegister").classList.toggle("active");
+      document.getElementById("overlayPopupRegister").classList.toggle("active");
+    } else {
+      this.props.history.push('/package');
+    }
+  }
+
+  closePopupRegister() {
+    document.getElementById("popupRegister").classList.toggle("active");
+    document.getElementById("overlayPopupRegister").classList.toggle("active");
+    this.props.clearProgram();
   }
 
   onUserRegister(event) {
@@ -149,57 +166,6 @@ class Platform extends Component {
     )
   }
 
-  renderRegister() {
-    return (
-      <div className="form-side">
-        <Form>
-          <Label className="form-group2 has-float-label mb-2">
-            {"Email Address"}
-            <Input
-              type="email"
-              id="email"
-              value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
-            />
-          </Label>
-          <Label className="form-group2 has-float-label mb-2">
-            {"Password"}
-            <Input
-              type="password"
-              id="password"
-              value={this.state.password} onChange={(event) => this.handleChange(event)}
-            />
-          </Label>
-          <Label className="form-group2 has-float-label mb-3">
-            {"Confirm password"}
-            <Input
-              type="password"
-              name="confirm-password" required
-              id="comfirm-password"
-              validate={{
-                required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
-                match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
-              }}
-            />
-          </Label>
-
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <Button
-              color="danger"
-              className="btn-shadow mt-3"
-              size="lg"
-              onClick={() => this.onUserRegister()}
-              block
-            >
-              <span className="text-one">
-                {"สมัครสมาชิก"}
-              </span>
-            </Button>
-          </div>
-        </Form>
-      </div>
-    )
-  }
-
   render() {
     return (
       <div className="center" style={{ backgroundImage: `url(${backgroundImg})` }}>
@@ -218,23 +184,26 @@ class Platform extends Component {
         <div style={{ float: "right" }}>
           {
             this.props.user !== null ?
-              <button type="button" className="btn btn-light border mr-4" onClick={() => this.props.selectProgram("fit60days")}>
+              <button type="button" className="btn btn-light border mr-4" onClick={() => this.selectProgram("fit60days")}>
                 ซื้อแพ็คเกจ
               </button>
               :
-              <button type="button" className="btn btn-light border mr-4" onClick={() => this.props.selectProgram("fit60days")}>
+              <button type="button" className="btn btn-light border mr-4" onClick={() => this.selectProgram("fit60days")}>
                 สมัคร Platform
               </button>
           }
-          <button className="show-btn btn btn-dark mr-5">
-            <label className="mb-0" for="show" style={{ cursor: "pointer" }}>ใช้ฟรี 14วัน</label>
+          <button className="show-btn btn btn-dark mr-5" onClick={() => this.selectProgram("trial14")}>
+            ใช้ฟรี 14วัน
           </button>
         </div>
 
-        <input type="checkbox" id="show"></input>
-        <div className="overlay overlayContainerPopup"></div>
-        <div className="containerPopup popupTrialRegister" style={{ marginTop: "10%" }}>
-          <label for="show" className="close-btn fa fa-times" style={{ float: "right" }}></label>
+        <div className="overlay overlayContainerPopup" id="overlayPopupRegister"></div>
+        <div className="containerPopup popupTrialRegister" id="popupRegister" style={{ marginTop: "10%" }}>
+          <label
+            className="close-btn fa fa-times" style={{ float: "right" }}
+            onClick={() => this.closePopupRegister()}
+          >
+          </label>
           <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
               <a class="nav-link active" href="#"><b>สมัครสมาชิก</b></a>
@@ -265,7 +234,8 @@ const mapActionsToProps = {
   logoutUser,
   clearVideoList,
   loginUser,
-  selectProgram
+  selectProgram,
+  clearProgram
 };
 
 export default connect(

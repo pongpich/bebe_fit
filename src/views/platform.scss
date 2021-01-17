@@ -29,16 +29,11 @@
   display:none;
 }
 
-
-input[type="checkbox"]{
-  display: none;
-}
-
-#show:checked ~ .overlayContainerPopup {
+.overlayContainerPopup.active {
   display: block;
 }
 
-#show:checked ~ .containerPopup {
+.containerPopup.active {
   display: block;
 }
 

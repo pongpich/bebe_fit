@@ -5,7 +5,8 @@ import { API } from "aws-amplify";
 
 export const types = {
   SELECT_PROGRAM: "SELECT_PROGRAM",
-  SELECT_PROGRAM_SUCCESS: "SELECT_PROGRAM_SUCCESS"
+  SELECT_PROGRAM_SUCCESS: "SELECT_PROGRAM_SUCCESS",
+  CLEAR_PROGRAM: "CLEAR_PROGRAM"
 }
 
 export const selectProgram = (program_id) => ({
@@ -14,6 +15,10 @@ export const selectProgram = (program_id) => ({
     program_id
   }
 });
+
+export const clearProgram= () => ({
+  type: types.CLEAR_PROGRAM
+})
 
 /* END OF ACTION Section */
 
@@ -77,6 +82,8 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         program: action.payload
       };
+    case types.CLEAR_PROGRAM:
+      return INIT_STATE;
     default:
       return { ...state };
   }
