@@ -153,6 +153,51 @@ class Package extends Component {
     )
   }
 
+  renderFit60DaysPackage() {
+    return (
+      <div className="row mt-5">
+        <div className="col-lg-4 mt-5">
+          <div className="container" style={{ backgroundColor: "grey", height: "100%", width: "90%", marginTop: "15%" }}>
+          </div>
+        </div>
+        <div className="col-lg-8 mt-5">
+          <h1 className="mt-5 ml-2">แพ็คเกจแบบเสียเงิน (ทดสอบ)</h1>
+          <div className="card col-lg-11 mt-3 shadow-sm">
+            <div className="card-body">
+              <h5 class="card-title mb-4">Platform X เดือน</h5>
+              <p class="card-text">- Benefit 1</p>
+              <p class="card-text">- Benefit 2</p>
+              <p class="card-text">- Benefit 3</p>
+              <h5 class="card-title" style={{ float: "right" }}>ราคา XXX บาท</h5>
+            </div>
+            <div className="card-body">
+              <h5 class="card-title mb-4">เลือกช่องทางการชำระเงิน</h5>
+              <p class="card-text">โอนเงิน</p>
+              <p class="card-text">Treepay</p>
+            </div>
+          </div>
+          <div className="col-lg-11 mt-4">
+            <div style={{ float: "right" }}>
+              <a href="/platform">
+                <button type="button" class="btn btn-light border mr-4">ยกเลิก</button>
+              </a>
+              <button type="button" class="btn btn-danger" onClick={() => this.onSelectedTrialPackage()}>
+                ถัดไป
+              </button>
+            </div>
+          </div>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     const { statusTrial } = this.state;
     const { program } = this.props;
@@ -165,6 +210,11 @@ class Package extends Component {
               this.renderTrialPackageSuccess()
               :
               this.renderTrialPackage()
+          )
+        }
+        {
+          (program !== null && program.program_id === "fit60days") && (
+            this.renderFit60DaysPackage()
           )
         }
       </div>
