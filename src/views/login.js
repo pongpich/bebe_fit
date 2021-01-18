@@ -22,25 +22,6 @@ class Login extends Component {
     };
   }
 
-  onUserLogin() {
-    if (this.state.email !== "" && this.state.password !== "") {
-      this.props.loginUser(this.state.email, this.state.password);
-      if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && (this.props.status === "fail")) {
-        this.setState({
-          statusLogin: "fail"
-        });
-      } else if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email))) {
-        this.setState({
-          statusLogin: "fail"
-        });
-      }
-    } else if (this.state.email === "" || this.state.password === "") {
-      this.setState({
-        statusLogin: "fail"
-      });
-    }
-  }
-
   componentDidMount() {
     const { user } = this.props;
     if (user !== null) {
@@ -50,8 +31,30 @@ class Login extends Component {
 
   componentDidUpdate(prevProps) {
     const { status } = this.props;
-    if (prevProps.status !== status && status === "success") {
-      this.props.history.push('/VideoList');
+    if (prevProps.status !== status) {
+      if (status === "success") {
+        this.props.history.push('/VideoList');
+      }
+      if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && (status === "fail")) {
+        this.setState({
+          statusLogin: "fail"
+        });
+      }
+    }
+  }
+
+  onUserLogin() {
+    if (this.state.email !== "" && this.state.password !== "") {
+      this.props.loginUser(this.state.email, this.state.password);
+      if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email))) {
+        this.setState({
+          statusLogin: "fail"
+        });
+      }
+    } else if (this.state.email === "" || this.state.password === "") {
+      this.setState({
+        statusLogin: "fail"
+      });
     }
   }
 

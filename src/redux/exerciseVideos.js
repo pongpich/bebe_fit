@@ -401,7 +401,6 @@ function* createCustomWeekForUserSaga({ payload }) {
       startDate,
       offset
     );
-    console.log("createCustomWeekForUser : ", apiResult);
   } catch (error) {
     console.log("error from createCustomWeekForUser :", error);
   }

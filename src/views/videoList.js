@@ -114,6 +114,23 @@ class VideoList extends Component {
     if (prevState.editVDO_click === "show" && this.state.editVDO_click !== "show") {
       this.addEventToVideo();
     }
+    if (user && prevProps.user && (prevProps.user.other_attributes === null && user.other_attributes !== null)) {
+      this.setState({
+        other_attributes: user.other_attributes
+      })
+      this.props.createCustomWeekForUser(
+        this.props.user.user_id,
+        user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+      );
+      this.props.videoListForUser(
+        this.props.user.user_id,
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+      );
+    }
   }
 
   addEventToVideo() {
@@ -320,17 +337,6 @@ class VideoList extends Component {
       this.props.user.email,
       other_attributes
     );
-
-    this.setState({
-      other_attributes: other_attributes
-    })
-
-    this.props.createCustomWeekForUser(
-      this.props.user.user_id,
-      other_attributes.weight,
-      this.props.user.start_date,
-      this.props.user.offset
-    );
   };
 
   renderEditVDO() {
@@ -450,7 +456,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="Responsive image" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="Responsive image" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -742,7 +748,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.split(" ").join("")}.jpg`} alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -803,12 +809,13 @@ class VideoList extends Component {
           <div className="container">
             <div className="card card-plain">
               {
-                (this.props.user && this.props.user.other_attributes)
-                  ?
-                  (editVDO_click === "show")
-                    ? this.renderEditVDO()
-                    : (this.renderVideoList())
-                  : this.renderOtherAttribute()
+                (this.props.user && this.props.user.other_attributes) ?
+                  (editVDO_click === "show") ?
+                    this.renderEditVDO()
+                    :
+                    (this.renderVideoList())
+                  :
+                  this.renderOtherAttribute()
               }
 
             </div>
