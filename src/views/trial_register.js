@@ -9,7 +9,7 @@ import {
 
 import { connect } from "react-redux";
 
-import { trialRegister, checkUser } from "../redux/auth";
+import { trialRegister, checkUser, loginUser } from "../redux/auth";
 import "./trial_register.scss";
 
 class Register extends Component {
@@ -24,6 +24,17 @@ class Register extends Component {
     };
 
     this.onUserRegister = this.onUserRegister.bind(this);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { email, password } = this.state;
+    const { status, statusRegister } = this.props;
+    if (prevProps.statusRegister !== statusRegister && statusRegister === "success") {
+      this.props.loginUser(email, password);
+    }
+    if (prevProps.status !== status && status === "success") {
+      this.props.history.push('/package');
+    }
   }
 
   onUserRegister(event) {
@@ -149,13 +160,14 @@ class Register extends Component {
   }
 }
 const mapStateToProps = ({ authUser }) => {
-  const { user } = authUser;
-  return { user };
+  const { user, statusRegister, status } = authUser;
+  return { user, statusRegister, status };
 };
 
 const mapActionsToProps = {
   trialRegister,
-  checkUser
+  checkUser,
+  loginUser
 };
 
 export default connect(
