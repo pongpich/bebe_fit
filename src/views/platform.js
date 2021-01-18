@@ -34,7 +34,11 @@ class Platform extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { status, program } = this.props;
+    const { email, password } = this.state;
+    const { status, program, statusRegister } = this.props;
+    if (prevProps.statusRegister !== statusRegister && statusRegister === "success") {
+      this.props.loginUser(email, password);
+    }
     if (prevProps.status !== status && status === "success") {
       this.props.history.push('/package');
     }
@@ -61,7 +65,6 @@ class Platform extends Component {
   onUserRegister(event) {
     const { email, password } = this.state;
     this.props.trialRegister(email, password);
-    this.props.loginUser(email, password);
   }
 
   onUserLogout(event) {
@@ -197,9 +200,9 @@ class Platform extends Component {
 }
 
 const mapStateToProps = ({ authUser, exerciseProgram }) => {
-  const { user, status, } = authUser;
+  const { user, status, statusRegister } = authUser;
   const { program } = exerciseProgram;
-  return { user, status, program };
+  return { user, status, program, statusRegister };
 };
 
 const mapActionsToProps = {

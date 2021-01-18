@@ -5,6 +5,7 @@ import { API } from "aws-amplify";
 
 export const types = {
   TRIAL_REGISTER: "TRIAL_REGISTER",
+  TRIAL_REGISTER_SUCCESS: "TRIAL_REGISTER_SUCCESS",
   SIGNUP_USER: "SIGNUP_USER",
   LOGIN_USER: "LOGIN_USER",
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
@@ -337,7 +338,9 @@ function* trialRegisterSaga({ payload }) {
       lastname,
       phone
     );
-    console.log("trialRegister : ", apiResult);
+    yield put({
+      type: types.TRIAL_REGISTER_SUCCESS
+    })
   } catch (error) {
     console.log("error from trialRegister :", error);
   }
@@ -420,7 +423,8 @@ export function* saga() {
 
 const INIT_STATE = {
   user: null,
-  status: "default"
+  status: "default",
+  statusRegister: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -429,13 +433,20 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         user: action.payload,
-        status: "success"
+        status: "success",
+        statusRegister: "default"
       };
     case types.LOGIN_USER_FAIL:
       return {
         ...state,
-        status: "fail"
+        status: "fail",
+        statusRegister: "default"
       };
+    case types.TRIAL_REGISTER_SUCCESS:
+      return {
+        ...state,
+        statusRegister: "success"
+      }
     case types.UPDATE_PROFILE_SUCCESS:
       return {
         ...state,
