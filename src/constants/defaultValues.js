@@ -31,7 +31,7 @@ const dev = {
           {
               name: "bebe",
               endpoint: process.env.REACT_APP_STAGE === 'dev' 
-                ? "https://c64bzu1l5d.execute-api.ap-southeast-1.amazonaws.com/dev" 
+                ? "https://api.planforfit.com/bebedev" 
                 : "http://localhost:3003",
               region: "ap-southeast-1"
           }
@@ -44,7 +44,7 @@ const prod = {
       endpoints: [
           {
               name: "bebe",
-              endpoint: "https://r3ls8n3jrl.execute-api.ap-southeast-1.amazonaws.com/prod",
+              endpoint: "https://api.planforfit.com/bebe",
               region: "ap-southeast-1"
           }
       ]

@@ -778,36 +778,6 @@ class VideoList extends Component {
     const { editVDO_click } = this.state;
     return (
       < div >
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-          <a className="navbar-brand" href="/">
-            <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
-          BEBE FIT ROUTINE
-          </a>
-          <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="/platform">Platform</a>
-              </li>
-            </ul>
-          </div>
-
-          <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul className="navbar-nav">
-              <li className="nav-item">
-                <a className="nav-link" href="/signup">ตะกร้าสินค้า</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" onClick={() => this.onUserLogout()}>ออกจากระบบ</a>
-              </li>
-            </ul>
-          </div>
-        </nav>
         <div className="page-header header-small mt-5" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">

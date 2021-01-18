@@ -43,41 +43,6 @@ class Package extends Component {
     this.props.clearVideoList();
   }
 
-  renderNavbarLogoutMenu() {
-    return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a className="navbar-brand" href="/">
-          <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
-          BEBE FIT ROUTINE
-          </a>
-        <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/platform">Platform</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" href="/signup">ตะกร้าสินค้า</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" onClick={() => this.onUserLogout()}>ออกจากระบบ</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    )
-  }
-
   renderTrialPackage() {
     return (
       <div className="row mt-5">
@@ -98,9 +63,9 @@ class Package extends Component {
           </div>
           <div className="col-lg-11 mt-4">
             <div style={{ float: "right" }}>
-              <a href="/platform">
-                <button type="button" class="btn btn-light border mr-4">ยกเลิก</button>
-              </a>
+              <button type="button" class="btn btn-light border mr-4" onClick={() => this.props.history.push('/platform')}>
+                ยกเลิก
+              </button>
               <button type="button" class="btn btn-danger" onClick={() => this.onSelectedTrialPackage()}>
                 ทดลองใช้
               </button>
@@ -137,9 +102,9 @@ class Package extends Component {
             </div>
           </div>
           <div className="col-lg-11 mt-4">
-            <a href="/videolist">
-              <button type="button" class="btn btn-danger" style={{ width: "100%" }}>ใช้งาน Platform</button>
-            </a>
+            <button type="button" class="btn btn-danger" style={{ width: "100%" }} onClick={() => this.props.history.push('/videolist')}>
+              ใช้งาน Platform
+            </button>
           </div>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
@@ -178,9 +143,9 @@ class Package extends Component {
           </div>
           <div className="col-lg-11 mt-4">
             <div style={{ float: "right" }}>
-              <a href="/platform">
-                <button type="button" class="btn btn-light border mr-4">ยกเลิก</button>
-              </a>
+              <button type="button" class="btn btn-light border mr-4" onClick={() => this.props.history.push('/platform')}>
+                ยกเลิก
+              </button>
               <button type="button" class="btn btn-danger" onClick={() => this.onSelectedTrialPackage()}>
                 ถัดไป
               </button>
@@ -203,7 +168,6 @@ class Package extends Component {
     const { program } = this.props;
     return (
       <div className="center">
-        {this.renderNavbarLogoutMenu()}
         {
           (program !== null && program.program_id === "trial14") && (
             (statusTrial === "success") ?

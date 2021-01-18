@@ -86,41 +86,6 @@ class Platform extends Component {
     }
   }
 
-  renderNavbarLogoutMenu() {
-    return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a className="navbar-brand" href="/">
-          <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
-          BEBE FIT ROUTINE
-          </a>
-        <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" onClick={() => this.onUserLogout()}>บทความ</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/signup">อุปกรณ์ออกกำลังกาย</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/platform">Platform</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <a className="nav-link" href="/signup">ตะกร้าสินค้า</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" onClick={() => this.onUserLogout()}>ออกจากระบบ</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    )
-  }
-
   renderRegister() {
     return (
       <div className="form-side">
@@ -175,7 +140,6 @@ class Platform extends Component {
   render() {
     return (
       <div className="center" style={{ backgroundImage: `url(${backgroundImg})` }}>
-        {this.props.user !== null && this.renderNavbarLogoutMenu()}
         <h1>.</h1>
         <h1>.</h1>
         <h1>.</h1>
@@ -218,7 +182,7 @@ class Platform extends Component {
               <a class="nav-link active" href="#"><b>สมัครสมาชิก</b></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link disabled" href="/login">เข้าสู่ระบบ</a>
+              <a class="nav-link disabled" onClick={() => this.props.history.push('/login')}>เข้าสู่ระบบ</a>
             </li>
           </ul>
           {this.renderRegister()}

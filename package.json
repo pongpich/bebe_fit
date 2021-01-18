@@ -27,7 +27,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:local": "export REACT_APP_STAGE=local && npm start",
+    "start:dev": "export REACT_APP_STAGE=dev && npm start",
+    "start:prod": "export REACT_APP_STAGE=prod && npm start",
+    "deploy:staging": "REACT_APP_STAGE=dev npm run build && scp -i wpKeyPair.pem -r build/* nc-user@139.5.147.76:/var/www/staging.platform.bebefitroutine.com/html",
+    "deploy:prod": "REACT_APP_STAGE=prod npm run build && scp -i wpKeyPair.pem -r build/* nc-user@139.5.147.76:/var/www/platform.bebefitroutine.com/html",
+    "deploy:all": "npm run deploy:staging && npm run deploy:prod"
   },
   "eslintConfig": {
     "extends": "react-app"
