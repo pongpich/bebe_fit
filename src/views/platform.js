@@ -199,7 +199,7 @@ class Platform extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseProgram }) => {
+const mapStateToProps = ({ authUser, exerciseProgram, payment }) => {
   const { user, status, statusRegister } = authUser;
   const { program } = exerciseProgram;
   return { user, status, program, statusRegister };
