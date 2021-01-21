@@ -169,23 +169,61 @@ class Package extends Component {
               <p class="card-text">- Benefit 3</p>
               <h5 class="card-title" style={{ float: "right" }}>ราคา {this.props.program.price} บาท</h5>
             </div>
-            <div className="card-body">
-              <h5 class="card-title mb-4">เลือกช่องทางการชำระเงิน</h5>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" />
-                <p class="card-text">โอนเงิน</p>
+            <div className="card-body row">
+              <h5 class="card-title mb-4 col-lg-12">เลือกช่องทางการชำระเงิน</h5>
+              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6">
+                <input
+                  class="paymentRadioButton form-check-input ml-2"
+                  type="radio"
+                  name="inlineRadioOptions"
+                />
+                <div className="paymentLabel">
+                <span>โอนเงิน<b> (รอยืนยัน 48 ชม.)</b></span>
+                </div>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PABK")} />
-                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PABK)</a>
+              <div className="col-lg-1">
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PACA")} />
-                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PACA)</a>
+              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6" onClick={() => this.onSelectedPayTypeTreepay("PACA")}>
+                <input
+                  class="paymentRadioButton form-check-input ml-2"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  checked={(this.state.pay_type === "PACA")? 'check': ''}
+                  onClick={() => this.onSelectedPayTypeTreepay("PACA")}
+                />
+                <div className="paymentLabel">
+                  <h5 class="card-text">บัตรเดบิต/เครดิต</h5>
+                </div>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PAIN")} />
-                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PAIN)</a>
+              <div className="col-lg-1">
+              </div>
+              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6" onClick={() => this.onSelectedPayTypeTreepay("PABK")}>
+                <input
+                  class="paymentRadioButton form-check-input ml-2"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  checked={(this.state.pay_type === "PABK")? 'check': ''}
+                  onClick={() => this.onSelectedPayTypeTreepay("PABK")}
+                />
+                <div className="paymentLabel">
+                  <h5 class="card-text">E-banking</h5 >
+                </div>
+              </div>
+              <div className="col-lg-1">
+              </div>
+              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6" onClick={() => this.onSelectedPayTypeTreepay("PAIN")}>
+                <input
+                  class="paymentRadioButton form-check-input ml-2"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  checked={(this.state.pay_type === "PAIN")? 'check': ''}
+                  onClick={() => this.onSelectedPayTypeTreepay("PAIN")}
+                />
+                <div className="paymentLabel">
+                  <h5 class="card-text">ผ่อนชำระ</h5 >
+                </div>
+              </div>
+              <div className="col-lg-1">
               </div>
             </div>
           </div>
