@@ -52,7 +52,7 @@ class Package extends Component {
     }
 
     var order_no = year + "" + month + "" + date + "" + time;
-    var trade_mony = this.props.program.price;
+    var trade_mony = this.props.program.price * 100; // * 100 เพราะ Treepay จะขยับทศนิยมเข้า 2ตำแหน่ง
     var user_id = this.props.user.user_id;
     this.props.getTreepayHash(pay_type, order_no, trade_mony, user_id)
 
@@ -167,7 +167,7 @@ class Package extends Component {
               <p class="card-text">- Benefit 1</p>
               <p class="card-text">- Benefit 2</p>
               <p class="card-text">- Benefit 3</p>
-              <h5 class="card-title" style={{ float: "right" }}>ราคา XXX บาท</h5>
+              <h5 class="card-title" style={{ float: "right" }}>ราคา {this.props.program.price} บาท</h5>
             </div>
             <div className="card-body">
               <h5 class="card-title mb-4">เลือกช่องทางการชำระเงิน</h5>
@@ -211,7 +211,7 @@ class Package extends Component {
               <input type="hidden" name="user_id" value={this.props.user.user_id} /><br></br>
               <input type="hidden" name="order_no" value={this.state.order_no} /><br></br>
               <input type="hidden" name="good_name" value={this.props.program.program_id} /><br></br>
-              <input type="hidden" name="trade_mony" value={this.props.program.price} /><br></br>
+              <input type="hidden" name="trade_mony" value={this.props.program.price * 100} /><br></br>
               <input type="hidden" name="order_first_name" value={this.props.user.first_name} /><br></br>
               <input type="hidden" name="order_last_name" value={this.props.user.last_name} /><br></br>
               <input type="hidden" name="order_addr" value="" /><br></br>
