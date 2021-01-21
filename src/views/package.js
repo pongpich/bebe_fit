@@ -34,9 +34,14 @@ class Package extends Component {
       var hash_input = document.createElement("input");
       hash_input.setAttribute("type", "hidden");
       hash_input.setAttribute("name", "hash_data");
+      hash_input.setAttribute("id", "hash_data");
       hash_input.setAttribute("value", hash_data);
-      document.getElementById("treepay_form").appendChild(hash_input);
-      console.log("hash_data :", hash_data);
+      if (!document.getElementById("hash_data")) {
+        document.getElementById("treepay_form").appendChild(hash_input);
+      } else if (document.getElementById("hash_data")) {
+        document.getElementById("treepay_form").removeChild(document.getElementById("hash_data"));
+        document.getElementById("treepay_form").appendChild(hash_input);
+      }
     }
   }
 
@@ -70,11 +75,6 @@ class Package extends Component {
     this.setState({
       statusTrial: "success"
     })
-  }
-
-  onUserLogout(event) {
-    this.props.logoutUser();
-    this.props.clearVideoList();
   }
 
   renderTrialPackage() {
@@ -171,22 +171,22 @@ class Package extends Component {
             </div>
             <div className="card-body">
               <h5 class="card-title mb-4">เลือกช่องทางการชำระเงิน</h5>
-              <p class="card-text">โอนเงิน</p>
-              <p>
-                <a class="card-text" onClick={() => this.onSelectedPayTypeTreepay("PABK")} style={{ cursor: "pointer" }}>
-                  Treepay (PABK)
-                </a>
-              </p>
-              <p>
-                <a class="card-text" onClick={() => this.onSelectedPayTypeTreepay("PACA")} style={{ cursor: "pointer" }}>
-                  Treepay (PACA)
-                </a>
-              </p>
-              <p>
-                <a class="card-text" onClick={() => this.onSelectedPayTypeTreepay("PAIN")} style={{ cursor: "pointer" }}>
-                  Treepay (PAIN)
-                </a>
-              </p>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" />
+                <p class="card-text">โอนเงิน</p>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PABK")} />
+                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PABK)</a>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PACA")} />
+                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PACA)</a>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" onClick={() => this.onSelectedPayTypeTreepay("PAIN")} />
+                <a class="card-text" style={{ cursor: "pointer" }}>Treepay (PAIN)</a>
+              </div>
             </div>
           </div>
           <div className="col-lg-11 mt-4">
@@ -221,7 +221,7 @@ class Package extends Component {
             </form>
 
           </div>
-          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 hidden-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
