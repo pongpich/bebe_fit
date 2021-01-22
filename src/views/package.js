@@ -312,10 +312,10 @@ class Package extends Component {
           </div>
           <div className="col-lg-11 mt-4">
             <div style={{ float: "right" }}>
-              <button type="button" class="btn btn-light border mr-4" onClick={() => this.setState({manualPayment:""})}>
+              <button type="button" class="btn btn-light border mr-4" onClick={() => this.setState({ manualPayment: "" })}>
                 ย้อนกลับ
               </button>
-              <button class="btn btn-danger" >
+              <button class="btn btn-danger" onClick={() => this.setState({ statusMaualPayment: "success" })}>
                 ส่งหลักฐาน
               </button>
             </div>
@@ -332,8 +332,45 @@ class Package extends Component {
     )
   }
 
+  renderManualPaymentSuccess() {
+    return (
+      <div className="row mt-5">
+        <div className="col-lg-4 mt-5">
+          <div className="container" style={{ backgroundColor: "grey", height: "100%", width: "90%", marginTop: "15%" }}>
+          </div>
+        </div>
+        <div className="col-lg-8 mt-5">
+          <h1 className="mt-5 ml-2">รอการตรวจสอบชำระเงิน</h1>
+          <center>
+            <h5 className="ml-2">Thank you</h5>
+            <h5 className="ml-2">หลังจากเจ้าหน้าที่ตรวจสอบ จะมีอีเมล์ตอบกลับภายใน 48 ชม.</h5>
+            <h5 className="ml-2">จึงจะสามารถใช้งาน Platform ได้</h5>
+            <h5 className="ml-2">หากมีข้อสงสัยสามารถติดต่อเข้ามาได้ที่ 02XXXXXXX หรือ bebe@XXX.com</h5>
+          </center>
+          <div className="card col-lg-11 mt-3 shadow-sm">
+            <div className="card-body">
+              <h5 class="card-title mb-4">แพ็คเกจ</h5>
+              <p class="card-text">Platform X เดือน</p>
+              <h5 class="card-title" style={{ float: "right" }}>ราคา {this.props.program.price} บาท</h5>
+            </div>
+          </div>
+          <button type="button" class="btn btn-danger border col-lg-11 mt-4 mr-4 ml-2" onClick={() => this.props.history.push('/platform')}>
+            กลับหน้าหลัก
+          </button>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+        </div>
+      </div>
+    )
+  }
+
   render() {
-    const { statusTrial, manualPayment } = this.state;
+    const { statusTrial, manualPayment, statusMaualPayment } = this.state;
     const { program } = this.props;
     return (
       <div className="center">
@@ -348,7 +385,10 @@ class Package extends Component {
         {
           (program !== null && program.program_id === "fit60days") && (
             (manualPayment === "show") ?
-              this.renderManualPayment()
+              (statusMaualPayment === "success") ?
+                this.renderManualPaymentSuccess()
+                :
+                this.renderManualPayment()
               :
               this.renderFit60DaysPackage()
           )
