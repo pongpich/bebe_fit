@@ -13,7 +13,9 @@ class Package extends Component {
     this.state = {
       statusTrial: "default",
       pay_type: "",
-      order_no: ""
+      order_no: "",
+      manualPayment: "",
+      statusMaualPayment: "default"
     }
   }
 
@@ -43,6 +45,12 @@ class Package extends Component {
         document.getElementById("treepay_form").appendChild(hash_input);
       }
     }
+  }
+
+  onSelectedManualPayment(pay_type) {
+    this.setState({
+      pay_type: pay_type
+    })
   }
 
   onSelectedPayTypeTreepay(pay_type) {
@@ -171,14 +179,16 @@ class Package extends Component {
             </div>
             <div className="card-body row">
               <h5 class="card-title mb-4 col-lg-12">เลือกช่องทางการชำระเงิน</h5>
-              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6">
+              <div class="paymentCard form-check card row shadow-sm ml-1 mb-4 col-lg-6" onClick={() => this.onSelectedManualPayment("Maual")}>
                 <input
                   class="paymentRadioButton form-check-input ml-2"
                   type="radio"
                   name="inlineRadioOptions"
+                  checked={(this.state.pay_type === "Maual") ? 'check' : ''}
+                  onClick={() => this.onSelectedManualPayment("Maual")}
                 />
                 <div className="paymentLabel">
-                <span>โอนเงิน<b> (รอยืนยัน 48 ชม.)</b></span>
+                  <span>โอนเงิน<b> (รอยืนยัน 48 ชม.)</b></span>
                 </div>
               </div>
               <div className="col-lg-1">
@@ -188,7 +198,7 @@ class Package extends Component {
                   class="paymentRadioButton form-check-input ml-2"
                   type="radio"
                   name="inlineRadioOptions"
-                  checked={(this.state.pay_type === "PACA")? 'check': ''}
+                  checked={(this.state.pay_type === "PACA") ? 'check' : ''}
                   onClick={() => this.onSelectedPayTypeTreepay("PACA")}
                 />
                 <div className="paymentLabel">
@@ -202,7 +212,7 @@ class Package extends Component {
                   class="paymentRadioButton form-check-input ml-2"
                   type="radio"
                   name="inlineRadioOptions"
-                  checked={(this.state.pay_type === "PABK")? 'check': ''}
+                  checked={(this.state.pay_type === "PABK") ? 'check' : ''}
                   onClick={() => this.onSelectedPayTypeTreepay("PABK")}
                 />
                 <div className="paymentLabel">
@@ -216,7 +226,7 @@ class Package extends Component {
                   class="paymentRadioButton form-check-input ml-2"
                   type="radio"
                   name="inlineRadioOptions"
-                  checked={(this.state.pay_type === "PAIN")? 'check': ''}
+                  checked={(this.state.pay_type === "PAIN") ? 'check' : ''}
                   onClick={() => this.onSelectedPayTypeTreepay("PAIN")}
                 />
                 <div className="paymentLabel">
@@ -237,15 +247,22 @@ class Package extends Component {
                 <button type="button" class="btn btn-light border mr-4" onClick={() => this.props.history.push('/platform')}>
                   ยกเลิก
                 </button>
-                <button type="submit" name="submit" class="btn btn-danger" alt="">
-                  ถัดไป
-                </button>
+                {
+                  (this.state.pay_type === "Maual") ?
+                    <button class="btn btn-danger" onClick={() => this.setState({ manualPayment: "show" })}>
+                      ถัดไป {/* ของ pay_type === Maual */}
+                    </button>
+                    :
+                    <button type="submit" name="submit" class="btn btn-danger" alt="">
+                      ถัดไป
+                     </button>
+                }
               </div>
               <input type="hidden" name="pay_type" value={this.state.pay_type} /><br></br>
               <input type="hidden" name="currency" value="764" /><br></br>
               <input type="hidden" name="tp_langFlag" value="en" /><br></br>
               <input type="hidden" name="site_cd" value={this.props.site_cd} /><br></br>
-              <input type="hidden" name="ret_url" value="http://localhost:3002/execute_paytree" /><br></br>
+              <input type="hidden" name="ret_url" value="http://localhost:3000/package" /><br></br>
               <input type="hidden" name="user_id" value={this.props.user.user_id} /><br></br>
               <input type="hidden" name="order_no" value={this.state.order_no} /><br></br>
               <input type="hidden" name="good_name" value={this.props.program.program_id} /><br></br>
@@ -259,7 +276,51 @@ class Package extends Component {
             </form>
 
           </div>
-          <h1 className="mt-5 hidden-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+          <h1 className="mt-5 text-light">.</h1>
+        </div>
+      </div>
+    )
+  }
+
+  renderManualPayment() {
+    return (
+      <div className="row mt-5">
+        <div className="col-lg-4 mt-5">
+          <div className="container" style={{ backgroundColor: "grey", height: "100%", width: "90%", marginTop: "15%" }}>
+          </div>
+        </div>
+        <div className="col-lg-8 mt-5">
+          <h1 className="mt-5 ml-2">ข้อมูลการชำระเงิน</h1>
+          <div className="card col-lg-11 mt-3 shadow-sm">
+            <div className="card-body">
+              <h5 class="card-title mb-4">แพ็คเกจ</h5>
+              <p class="card-text">Platform X เดือน</p>
+              <h5 class="card-title" style={{ float: "right" }}>ราคา {this.props.program.price} บาท</h5>
+            </div>
+            <div className="card-body">
+              <h5 class="card-title mb-4">ข้อมูลบัญชีผู้รับโอน</h5>
+              <p class="card-text">- ชื่อ xxxxxx xxxxxxx</p>
+              <p class="card-text">- เลขที่บัญชี xxxxxx xxxxxxx</p>
+              <p class="card-text">- อัพโหลด หลักฐาน</p>
+            </div>
+          </div>
+          <div className="col-lg-11 mt-4">
+            <div style={{ float: "right" }}>
+              <button type="button" class="btn btn-light border mr-4" onClick={() => this.setState({manualPayment:""})}>
+                ย้อนกลับ
+              </button>
+              <button class="btn btn-danger" >
+                ส่งหลักฐาน
+              </button>
+            </div>
+          </div>
+          <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
           <h1 className="mt-5 text-light">.</h1>
@@ -272,7 +333,7 @@ class Package extends Component {
   }
 
   render() {
-    const { statusTrial } = this.state;
+    const { statusTrial, manualPayment } = this.state;
     const { program } = this.props;
     return (
       <div className="center">
@@ -286,7 +347,10 @@ class Package extends Component {
         }
         {
           (program !== null && program.program_id === "fit60days") && (
-            this.renderFit60DaysPackage()
+            (manualPayment === "show") ?
+              this.renderManualPayment()
+              :
+              this.renderFit60DaysPackage()
           )
         }
       </div>
