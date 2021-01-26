@@ -6,8 +6,13 @@ import { API } from "aws-amplify";
 export const types = {
   GET_TREEPAY_HASH: "GET_TREEPAY_HASH",
   GET_TREEPAY_HASH_SUCCESS: "GET_TREEPAY_HASH_SUCCESS",
-  CLEAR_PAYMENT: "CLEAR_PAYMENT"
+  CLEAR_PAYMENT: "CLEAR_PAYMENT",
+  EXECUTE_PAYTREE: "EXECUTE_PAYTREE"
 }
+
+export const executePaytree = () => ({
+  type: types.EXECUTE_PAYTREE
+})
 
 export const clearPayment = () => ({
   type: types.CLEAR_PAYMENT
@@ -32,6 +37,21 @@ export const getTreepayHash = (
 
 /* SAGA Section */
 
+const executePaytreeSagaAsync = async (
+
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/execute_paytree", {
+      body: {
+
+      }
+    });
+    return apiResult;
+  } catch (error) {
+        return { error, messsage: error.message };
+  }
+}
+
 const getTreepayHashSagaAsync = async (
   pay_type,
   order_no,
@@ -48,6 +68,19 @@ const getTreepayHashSagaAsync = async (
       }
     });
     return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* executePaytreeSaga({ payload }) {
+  const {
+   
+  } = payload
+  try {
+    const apiResult = yield call(
+      executePaytreeSagaAsync
+    );
   } catch (error) {
     return { error, messsage: error.message };
   }
@@ -81,9 +114,14 @@ export function* watchGetTreepayHash() {
   yield takeEvery(types.GET_TREEPAY_HASH, getTreepayHashSaga)
 }
 
+export function* watchExecutePaytree() {
+  yield takeEvery(types.EXECUTE_PAYTREE, executePaytreeSaga)
+}
+
 export function* saga() {
   yield all([
-    fork(watchGetTreepayHash)
+    fork(watchGetTreepayHash),
+    fork(watchExecutePaytree)
   ]);
 }
 

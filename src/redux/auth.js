@@ -11,6 +11,7 @@ export const types = {
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
   LOGIN_USER_FAIL: "LOGIN_USER_FAIL",
   CHECK_USER: "CHECK_USER",
+  CHECK_USER_SUCCESS: "CHECK_USER_SUCCESS",
   UPDATE_PROFILE: "UPDATE_PROFILE",
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   LOGOUT_USER: "LOGOUT_USER",
@@ -232,6 +233,10 @@ function* checkUserSaga({ payload }) {
       checkUserSagaAsync,
       email
     );
+    yield put ({
+      type: types.CHECK_USER_SUCCESS,
+      payload: apiResult.results.message
+    })
   } catch (error) {
     console.log("error from checkUserSaga :", error);
   }
@@ -429,6 +434,11 @@ const INIT_STATE = {
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.CHECK_USER_SUCCESS:
+      return {
+        ...state,
+        statusRegister: action.payload
+      }
     case types.LOGIN_USER_SUCCESS:
       return {
         ...state,

@@ -29,7 +29,7 @@ class Signup extends Component {
 
   onUserRegister(event) {
     const { email, password, firstname, lastname, phone } = this.state;
-    this.props.signupUser(email, password, firstname, lastname, phone);
+    //this.props.signupUser(email, password, firstname, lastname, phone);
   }
 
   handleChange(event) {

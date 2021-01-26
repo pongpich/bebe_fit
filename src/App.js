@@ -32,6 +32,7 @@ class App extends Component {
   onUserLogout(event) {
     this.props.logoutUser();
     this.props.clearVideoList();
+    this.props.history.push('/platform');
   }
 
   renderNavbar() {
@@ -105,7 +106,7 @@ class App extends Component {
           </Route>
           <Route path='/login' component={Login} />
           <Route path='/trial_register' component={TrialRegister} />
-          <Route path='/signup' component={Signup} />
+          {/* <Route path='/signup' component={Signup} /> */}
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} />
