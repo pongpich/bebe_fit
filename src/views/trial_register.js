@@ -20,7 +20,10 @@ class Register extends Component {
       password: "",
       firstname: "",
       lastname: "",
-      phone: ""
+      phone: "",
+      confirmPassword: "",
+      statusRegister_email: "default",
+      statusRegister_password: "default"
     };
 
     this.onUserRegister = this.onUserRegister.bind(this);
@@ -33,13 +36,55 @@ class Register extends Component {
       this.props.loginUser(email, password);
     }
     if (prevProps.status !== status && status === "success") {
-      this.props.history.push('/package');
+      this.props.history.push('/platform');
     }
   }
 
   onUserRegister(event) {
-    const { email, password, firstname, lastname, phone } = this.state;
-    this.props.trialRegister(email, password, firstname, lastname, phone);
+    const { email, password, firstname, lastname, phone, confirmPassword } = this.state;
+    const { statusRegister } = this.props;
+    this.setState({
+      statusRegister_email: "default",
+      statusRegister_password: "default"
+    })
+    if (email !== "" && password !== "") {
+      if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        if (statusRegister === "new") {
+          if (password.length >= 8) {
+            if (password === confirmPassword) {
+              this.props.trialRegister(email, password, firstname, lastname, phone);
+            } else {
+              this.setState({
+                statusRegister_password: "passwordNotMatch"
+              })
+            }
+          } else {
+            this.setState({
+              statusRegister_password: "password8plus"
+            })
+          }
+        } else {
+          this.setState({
+            statusRegister_email: "emailExist"
+          })
+        }
+      } else {
+        this.setState({
+          statusRegister_email: "emailFormat"
+        })
+      }
+    } else {
+      if (email === "") {
+        this.setState({
+          statusRegister_email: "emailFormat"
+        })
+      }
+      if (password === "") {
+        this.setState({
+          statusRegister_password: "password8plus"
+        })
+      }
+    }  
   }
 
   handleChange(event) {
@@ -60,6 +105,7 @@ class Register extends Component {
   }
 
   renderRegister() {
+    const { statusRegister_email, statusRegister_password } = this.state;
     return (
       <div className="auth-card">
         <div className="position-relative image-side-register"></div>
@@ -109,6 +155,14 @@ class Register extends Component {
                 value={this.state.email} onChange={(event) => this.checkExistedEmail(event)}
               />
             </Label>
+            {
+              (statusRegister_email === "emailFormat") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกรูปแบบอีเมลให้ถูกต้อง เช่น aa@example.com</h6></small>
+            }
+            {
+              (statusRegister_email === "emailExist") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลนี้ถูกใช้ในการสมัครแล้ว กรุณาเข้าสู่ระบบ</h6></small>
+            }
             <Label className="form-group2 has-float-label mb-2">
               {"Password"}
               <Input
@@ -117,23 +171,27 @@ class Register extends Component {
                 value={this.state.password} onChange={(event) => this.handleChange(event)}
               />
             </Label>
+            {
+              (statusRegister_password === "password8plus") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านต้องมากกว่า 8 ตัวขึ้นไป</h6></small>
+            }
             <Label className="form-group2 has-float-label mb-3">
               {"Confirm password"}
               <Input
                 type="password"
-                name="confirm-password" required
-                id="comfirm-password"
-                validate={{
-                  required: { value: true, errorMessage: 'อย่าลืมกรอกยืนยันพาสเวิร์ด' },
-                  match: { value: 'password', errorMessage: 'พาสเวิร์ดไม่ตรงกัน' }
-                }}
+                id="confirmPassword"
+                value={this.state.confirmPassword} onChange={(event) => this.handleChange(event)}
               />
             </Label>
+            {
+              (statusRegister_password === "passwordNotMatch") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านไม่ตรงกัน</h6></small>
+            }
 
             <div className="d-flex justify-content-between align-items-center mb-4">
               <Button
                 color="danger"
-                className="btn-shadow"
+                className="btn-shadow mt-3"
                 size="lg"
                 onClick={() => this.onUserRegister()}
                 block
