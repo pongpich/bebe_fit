@@ -6,6 +6,7 @@ import { clearVideoList } from "../redux/exerciseVideos";
 import { getTreepayHash, clearPayment } from "../redux/payment";
 import moment from 'moment';
 import { s3Upload, s3Remove } from "../helpers/awsLib";
+import FormFileInput from "react-bootstrap/esm/FormFileInput";
 
 
 class Package extends Component {
@@ -17,7 +18,8 @@ class Package extends Component {
       order_no: "",
       manualPayment: "",
       statusMaualPayment: "default",
-      selectedFile: null
+      selectedFile: null,
+      urlPaySlip: null
     }
   }
 
@@ -56,24 +58,19 @@ class Package extends Component {
   }
 
   fileSelectedHandler = event => {
-    console.log(event.target.files[0]);
     const file = event.target.files[0];
-    const fileType = file.name.substring(file.name.lastIndexOf('.'));
-    const customPrefixName = `images/${this.props.user.email}/type${fileType}`;
-    s3Upload(file, customPrefixName);
-  }
-
-  fileUploadHandler = () => {
-    /* const fd = new FormData();
-    fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
-    axios.post('https://dsdsadsadsadsadasd.cdfdafsafafs', fd, {
-      onUploadProgress: progressEvent => {
-        console.log('Upload Progress: ' + Math.round(progressEvent.loaded / progressEvent.total* 100) + '%')
-      }
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var date = today.getDate();
+    var addPrefix = year + "-" + month + "-" + date;
+    const customPrefixName = `images/pay_slip/${this.props.user.email}/${addPrefix}`;
+    const urlPaySlip = `https://bebe-platform.s3-ap-southeast-1.amazonaws.com/public/${customPrefixName}`;
+    this.setState({
+      selectedFile: event.target.files[0],
+      urlPaySlip: urlPaySlip
     })
-      .then(res => {
-        console.log(res);
-      }); */
+    s3Upload(file, customPrefixName);
   }
 
   onSelectedPayTypeTreepay(pay_type) {
@@ -331,8 +328,30 @@ class Package extends Component {
               <p class="card-text">- ชื่อ xxxxxx xxxxxxx</p>
               <p class="card-text">- เลขที่บัญชี ธนาคารxxx xxxxxxx</p>
               <p class="card-text">- อัพโหลดหลักฐานการชำระเงิน</p>
-              <input type="file" onChange={this.fileSelectedHandler} />
-              <button onClick={this.fileUploadHandler}>Upload</button>
+              <input
+                type="file"
+                onChange={this.fileSelectedHandler}
+                ref={fileInput => this.fileInput = fileInput}
+                style={{ display: "none" }}
+              />
+              <div class="col-lg-8">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <button
+                      onClick={() => this.fileInput.click()}
+                      style={{ background: "#333333", color: "white"}}
+                    >
+                      อัปโหลดหลักฐาน
+                    </button>
+                  </div>
+                  <input type="text" class="form-control" value={(this.state.selectedFile) ? this.state.selectedFile.name : ""} />
+                  <img class="col-lg-8" src={this.state.urlPaySlip}></img>
+                </div>
+                {
+                  ((this.state.statusMaualPayment === "fail") && !(this.state.selectedFile)) &&
+                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณาอัพโหลดหลักฐานการชำระเงิน</h6></small>
+                }
+              </div>
             </div>
           </div>
           <div className="col-lg-11 mt-4">
@@ -340,7 +359,14 @@ class Package extends Component {
               <button type="button" class="btn btn-light border mr-4" onClick={() => this.setState({ manualPayment: "" })}>
                 ย้อนกลับ
               </button>
-              <button class="btn btn-danger" onClick={() => this.setState({ statusMaualPayment: "success" })}>
+              <button
+                class="btn btn-danger"
+                onClick={() => (this.state.selectedFile) ?
+                  this.setState({ statusMaualPayment: "success" })
+                  :
+                  this.setState({ statusMaualPayment: "fail" })
+                }
+              >
                 ส่งหลักฐาน
               </button>
             </div>

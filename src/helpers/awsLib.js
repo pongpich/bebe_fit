@@ -56,7 +56,7 @@ export async function s3Upload(file, customPrefix) {
    
   // From the image and a canvas (for the resize), 
   // generate a blob to be uploaded
-  const canvas = createCanvas(img, 960);
+  const canvas = createCanvas(img, 500);
 
   const imgBlob = await imgToBlobAsync(img, canvas);
   const stored = await Storage.put(filename, imgBlob, {
