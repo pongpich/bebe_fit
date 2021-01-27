@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import "./package.scss";
 import { trialPackage, logoutUser } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
 import { getTreepayHash, clearPayment } from "../redux/payment";
 import moment from 'moment';
+import { s3Upload, s3Remove } from "../helpers/awsLib";
 
 
 class Package extends Component {
@@ -15,7 +16,8 @@ class Package extends Component {
       pay_type: "",
       order_no: "",
       manualPayment: "",
-      statusMaualPayment: "default"
+      statusMaualPayment: "default",
+      selectedFile: null
     }
   }
 
@@ -51,6 +53,27 @@ class Package extends Component {
     this.setState({
       pay_type: pay_type
     })
+  }
+
+  fileSelectedHandler = event => {
+    console.log(event.target.files[0]);
+    const file = event.target.files[0];
+    const fileType = file.name.substring(file.name.lastIndexOf('.'));
+    const customPrefixName = `images/${this.props.user.email}/type${fileType}`;
+    s3Upload(file, customPrefixName);
+  }
+
+  fileUploadHandler = () => {
+    /* const fd = new FormData();
+    fd.append('image', this.state.selectedFile, this.state.selectedFile.name);
+    axios.post('https://dsdsadsadsadsadasd.cdfdafsafafs', fd, {
+      onUploadProgress: progressEvent => {
+        console.log('Upload Progress: ' + Math.round(progressEvent.loaded / progressEvent.total* 100) + '%')
+      }
+    })
+      .then(res => {
+        console.log(res);
+      }); */
   }
 
   onSelectedPayTypeTreepay(pay_type) {
@@ -262,7 +285,7 @@ class Package extends Component {
               <input type="hidden" name="currency" value="764" /><br></br>
               <input type="hidden" name="tp_langFlag" value="en" /><br></br>
               <input type="hidden" name="site_cd" value={this.props.site_cd} /><br></br>
-              <input type="hidden" name="ret_url" value="http://localhost:3003/execute_paytree"/><br></br>
+              <input type="hidden" name="ret_url" value="http://localhost:3003/execute_paytree" /><br></br>
               <input type="hidden" name="user_id" value={this.props.user.user_id} /><br></br>
               <input type="hidden" name="order_no" value={this.state.order_no} /><br></br>
               <input type="hidden" name="good_name" value={this.props.program.program_id} /><br></br>
@@ -306,8 +329,10 @@ class Package extends Component {
             <div className="card-body">
               <h5 class="card-title mb-4">ข้อมูลบัญชีผู้รับโอน</h5>
               <p class="card-text">- ชื่อ xxxxxx xxxxxxx</p>
-              <p class="card-text">- เลขที่บัญชี xxxxxx xxxxxxx</p>
-              <p class="card-text">- อัพโหลด หลักฐาน</p>
+              <p class="card-text">- เลขที่บัญชี ธนาคารxxx xxxxxxx</p>
+              <p class="card-text">- อัพโหลดหลักฐานการชำระเงิน</p>
+              <input type="file" onChange={this.fileSelectedHandler} />
+              <button onClick={this.fileUploadHandler}>Upload</button>
             </div>
           </div>
           <div className="col-lg-11 mt-4">

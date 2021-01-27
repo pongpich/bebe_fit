@@ -26,28 +26,52 @@ export const defaultColor = "light.blue";
 export const productName = "bemoove";
 
 const dev = {
+  Storage: {
+    AWSS3: {
+      bucket: "bebe-platform",
+      region: "ap-southeast-1",
+    }
+  },
+  Auth: {
+    region: "ap-southeast-1",
+    userPoolId: "ap-southeast-1_yVVf1J0zR",
+    identityPoolId: "ap-southeast-1:cc1900b3-00e0-4aef-8f1b-c1c6eaa1b7a8",
+    userPoolWebClientId: "2i1b1e5sag1hvc2sr008v6hpf"
+  },
   API: {
-      endpoints: [
-          {
-              name: "bebe",
-              endpoint: process.env.REACT_APP_STAGE === 'dev' 
-                ? "https://api.planforfit.com/bebedev" 
-                : "http://localhost:3003",
-              region: "ap-southeast-1"
-          }
-      ]
+    endpoints: [
+      {
+        name: "bebe",
+        endpoint: process.env.REACT_APP_STAGE === 'dev'
+          ? "https://api.planforfit.com/bebedev"
+          : "http://localhost:3003",
+        region: "ap-southeast-1"
+      }
+    ]
   }
 }
 
 const prod = {
+  Storage: {
+    AWSS3: {
+      bucket: "bebe-platform",
+      region: "ap-southeast-1"
+    }
+  },
+  Auth: {
+    region: "ap-southeast-1",
+    userPoolId: "ap-southeast-1_yVVf1J0zR",
+    identityPoolId: "ap-southeast-1:cc1900b3-00e0-4aef-8f1b-c1c6eaa1b7a8",
+    userPoolWebClientId: "2i1b1e5sag1hvc2sr008v6hpf"
+},
   API: {
-      endpoints: [
-          {
-              name: "bebe",
-              endpoint: "https://api.planforfit.com/bebe",
-              region: "ap-southeast-1"
-          }
-      ]
+    endpoints: [
+      {
+        name: "bebe",
+        endpoint: "https://api.planforfit.com/bebe",
+        region: "ap-southeast-1"
+      }
+    ]
   }
 }
 
