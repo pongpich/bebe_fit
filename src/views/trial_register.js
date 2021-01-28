@@ -84,7 +84,7 @@ class Register extends Component {
           statusRegister_password: "password8plus"
         })
       }
-    }  
+    }
   }
 
   handleChange(event) {
@@ -108,8 +108,18 @@ class Register extends Component {
     const { statusRegister_email, statusRegister_password } = this.state;
     return (
       <div className="auth-card">
-        <div className="position-relative image-side-register"></div>
-        <div className="form-side">
+        <div className="position-relative image-side-register col-lg-6 col-12">
+          <img className="mb-4 mt-3 col-12" src="/assets/img/loginprofile.jpg" alt="" />
+          <div className="description">
+            <h3 className="mb-3"><center>BEBE FIT ROUTINE</center></h3>
+            <h6><center>คอร์สออกกำลังกายสนุกๆ ที่สามารถฝึกได้</center></h6>
+            <h6><center>จากที่บ้าน ไม่ต้องมีอุปกรณ์ก็เสียเหงื่อได้</center></h6>
+          </div>
+        </div>
+        <div className="form-side-register col-lg-6 col-12">
+          <CardTitle className="h3 mb-4 mt-5">
+            {"สมัครสมาชิก"}
+          </CardTitle>
           <Form>
             {/* <Label className="form-group1 has-float-label mb-2 mr-4">
                   {"ชื่อ"}
@@ -209,7 +219,7 @@ class Register extends Component {
 
   render() {
     return (
-      <div className="h-100 all-row">
+      <div className="all-row-register">
         <div className="mx-auto my-auto">
           {this.renderRegister()}
         </div>

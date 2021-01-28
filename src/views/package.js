@@ -6,7 +6,6 @@ import { clearVideoList } from "../redux/exerciseVideos";
 import { getTreepayHash, clearPayment } from "../redux/payment";
 import moment from 'moment';
 import { s3Upload, s3Remove } from "../helpers/awsLib";
-import FormFileInput from "react-bootstrap/esm/FormFileInput";
 
 
 class Package extends Component {
@@ -33,6 +32,7 @@ class Package extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { user, hash_data } = this.props;
+    const { selectedFile, urlPaySlip } = this.state;
     if (prevProps.user !== user && user === null) {
       this.props.history.push('/login');
     }
@@ -49,6 +49,12 @@ class Package extends Component {
         document.getElementById("treepay_form").appendChild(hash_input);
       }
     }
+    if (prevState.selectedFile !== selectedFile) {
+      this.setState({
+        selectedFile: selectedFile,
+        urlPaySlip: urlPaySlip
+      });
+    }
   }
 
   onSelectedManualPayment(pay_type) {
@@ -58,19 +64,39 @@ class Package extends Component {
   }
 
   fileSelectedHandler = event => {
+    this.setState({
+      selectedFile: null,
+      urlPaySlip: null
+    });
     const file = event.target.files[0];
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth() + 1;
     var date = today.getDate();
-    var addPrefix = year + "-" + month + "-" + date;
+    var time = today.getTime();
+    if (parseInt(month) < 10) {
+      month = "0" + month;
+    }
+    var addPrefix = year + "-" + month + "-" + date + "-" + time;
     const customPrefixName = `images/pay_slip/${this.props.user.email}/${addPrefix}`;
     const urlPaySlip = `https://bebe-platform.s3-ap-southeast-1.amazonaws.com/public/${customPrefixName}`;
+    this.onUploadImg(file, customPrefixName, urlPaySlip);
+  }
+
+  async onUploadImg(file, customPrefixName, urlPaySlip) {
+    await s3Upload(file, customPrefixName);
     this.setState({
-      selectedFile: event.target.files[0],
+      selectedFile: file,
       urlPaySlip: urlPaySlip
-    })
-    s3Upload(file, customPrefixName);
+    });
+  }
+
+  showPaySlipImg() {
+    if (document.getElementById("pay-slip-Img").style.display === "none") {
+      document.getElementById("pay-slip-Img").style.display = "block";
+    } else {
+      document.getElementById("pay-slip-Img").style.display = "none";
+    }
   }
 
   onSelectedPayTypeTreepay(pay_type) {
@@ -334,18 +360,28 @@ class Package extends Component {
                 ref={fileInput => this.fileInput = fileInput}
                 style={{ display: "none" }}
               />
-              <div class="col-lg-8">
+              <div class="col-lg-9 col-md-12">
                 <div class="input-group mb-2">
                   <div class="input-group-prepend">
                     <button
+                      class=""
                       onClick={() => this.fileInput.click()}
-                      style={{ background: "#333333", color: "white"}}
+                      style={{ background: "#333333", color: "white" }}
                     >
-                      อัปโหลดหลักฐาน
+                      อัปโหลด
                     </button>
                   </div>
-                  <input type="text" class="form-control" value={(this.state.selectedFile) ? this.state.selectedFile.name : ""} />
-                  <img class="col-lg-8" src={this.state.urlPaySlip}></img>
+                  <input type="text" class="form-control " value={(this.state.selectedFile) ? this.state.selectedFile.name : ""} />
+                  {
+                    (this.state.selectedFile) &&
+                    <i
+                      class="fa fa-info-circle ml-3 mt-4 fa-lg "
+                      style={{ cursor: "pointer" }}
+                      onClick={() => this.showPaySlipImg()}
+                      data-toggle="tooltip" data-placement="top" title="ดูรูปภาพที่อัปโหลด"
+                    ></i>
+                  }
+                  <img className="pay-slip-Img col-12" id="pay-slip-Img" src={(this.state.selectedFile) ? this.state.urlPaySlip : ""}></img>
                 </div>
                 {
                   ((this.state.statusMaualPayment === "fail") && !(this.state.selectedFile)) &&
@@ -387,11 +423,9 @@ class Package extends Component {
     return (
       <div className="row mt-5">
         <div className="col-lg-4 mt-5">
-          <div className="container" style={{ backgroundColor: "grey", height: "100%", width: "90%", marginTop: "15%" }}>
-          </div>
         </div>
         <div className="col-lg-8 mt-5">
-          <h1 className="mt-5 ml-2">รอการตรวจสอบชำระเงิน</h1>
+          <h2 className="mt-5 ml-2">รอการตรวจสอบชำระเงิน</h2>
           <center>
             <h5 className="ml-2">Thank you</h5>
             <h5 className="ml-2">หลังจากเจ้าหน้าที่ตรวจสอบ จะมีอีเมล์ตอบกลับภายใน 48 ชม.</h5>

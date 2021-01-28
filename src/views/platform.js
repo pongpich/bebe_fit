@@ -67,7 +67,10 @@ class Platform extends Component {
     this.props.clearProgram();
     this.setState({
       statusRegister_email: "default",
-      statusRegister_password: "default"
+      statusRegister_password: "default",
+      email: "",
+      password: "",
+      confirmPassword: ""
     })
   }
 

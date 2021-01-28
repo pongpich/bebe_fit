@@ -67,11 +67,11 @@ class Login extends Component {
   render() {
     const { statusLogin } = this.state;
     return (
-      <div className="h-100 all-row">
-        <div className="mx-auto my-auto">
-          <div className="auth-card">
-            <div className="position-relative image-side-login">
-              <img className="mb-4 mt-3" src="/assets/img/loginprofile.jpg" alt="" width="410" height="410" />
+      <div className="all-row-login">
+        <div className="row">
+          <div className="auth-card" >
+            <div className="position-relative image-side-login col-lg-6 col-12">
+              <img className="mb-4 mt-3 col-12" src="/assets/img/loginprofile.jpg" alt="" />
               <div className="description">
                 <h3 className="mb-3"><center>BEBE FIT ROUTINE</center></h3>
                 <h6><center>คอร์สออกกำลังกายสนุกๆ ที่สามารถฝึกได้</center></h6>
@@ -79,8 +79,8 @@ class Login extends Component {
               </div>
             </div>
 
-            <div className="form-side">
-              <CardTitle className="h3 mb-4">
+            <div className="form-side-login col-lg-6 col-12">
+              <CardTitle className="h3 mb-4 mt-5">
                 {"เข้าสู่ระบบ"}
               </CardTitle>
               <Form>
@@ -121,7 +121,6 @@ class Login extends Component {
                 <div className="d-flex justify-content-between align-items-center mb-3">
                   <Button
                     className="btn-link"
-                    href="/forgot-password"
                     color="empty"
                     block
                   >
@@ -135,7 +134,7 @@ class Login extends Component {
                     color="light"
                     className="btn-shadow"
                     size="lg"
-                    href="/register"
+                    onClick={() => this.props.history.push('/register')}
                     block
                   >
                     {"สมัครสมาชิก"}

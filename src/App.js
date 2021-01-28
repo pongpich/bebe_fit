@@ -74,7 +74,7 @@ class App extends Component {
             {
               (this.props.user === null) &&
               <li className="nav-item">
-                <a className="nav-link" onClick={() => this.props.history.push('/trial_register')} style={{ color: "white", cursor: "pointer" }}>
+                <a className="nav-link" onClick={() => this.props.history.push('/register')} style={{ color: "white", cursor: "pointer" }}>
                   สมัครสมาชิก
                 </a>
               </li>
@@ -105,7 +105,7 @@ class App extends Component {
             <Redirect to="/platform" />
           </Route>
           <Route path='/login' component={Login} />
-          <Route path='/trial_register' component={TrialRegister} />
+          <Route path='/register' component={TrialRegister} />
           {/* <Route path='/signup' component={Signup} /> */}
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />

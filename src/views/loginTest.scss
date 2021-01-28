@@ -1,22 +1,21 @@
-.all-row {
+/* .all-row {
   background: url("/assets/img/mainbg.jpg") no-repeat center bottom;
-  padding: 0px 200px 100px 200px;
-}
+} */
 
 .auth-card {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   background-color: white;
   padding: 25px;
   
-  .image-side-login {
+ /*  .image-side-login {
     width: 40%;
     background-size: cover;
     padding: 80px 40px;
-  }
+  } */
 
   .form-side {
-    width: 60%;
     padding: 100px;
   }
 
