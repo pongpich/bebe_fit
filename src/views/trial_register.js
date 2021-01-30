@@ -23,7 +23,8 @@ class Register extends Component {
       phone: "",
       confirmPassword: "",
       statusRegister_email: "default",
-      statusRegister_password: "default"
+      statusRegister_password: "default",
+      statusRegister_phone: "default"
     };
 
     this.onUserRegister = this.onUserRegister.bind(this);
@@ -45,9 +46,10 @@ class Register extends Component {
     const { statusRegister } = this.props;
     this.setState({
       statusRegister_email: "default",
-      statusRegister_password: "default"
+      statusRegister_password: "default",
+      statusRegister_phone: "default"
     })
-    if (email !== "" && password !== "") {
+    if (email !== "" && password !== "" && phone !== "") {
       if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         if (statusRegister === "new") {
           if (password.length >= 8) {
@@ -84,6 +86,11 @@ class Register extends Component {
           statusRegister_password: "password8plus"
         })
       }
+      if (phone === "") {
+        this.setState({
+          statusRegister_phone: "phoneNotNull"
+        })
+      }
     }
   }
 
@@ -105,7 +112,7 @@ class Register extends Component {
   }
 
   renderRegister() {
-    const { statusRegister_email, statusRegister_password } = this.state;
+    const { statusRegister_email, statusRegister_password, statusRegister_phone } = this.state;
     return (
       <div className="auth-card">
         <div className="position-relative image-side-register col-lg-6 col-12">
@@ -121,7 +128,7 @@ class Register extends Component {
             {"สมัครสมาชิก"}
           </CardTitle>
           <Form>
-            {/* <Label className="form-group1 has-float-label mb-2 mr-4">
+            {/*             <Label className="form-group1 has-float-label mb-2 mr-4">
                   {"ชื่อ"}
                   <Input
                     name="firstname"
@@ -142,18 +149,6 @@ class Register extends Component {
                     onChange={(event) => this.handleChange(event)}
                     validate={{
                       required: { value: true, errorMessage: 'อย่าลืมกรอกนามสกุล' }
-                    }}
-                  />
-                </Label>
-                <Label className="form-group1 has-float-label mb-2">
-                  {"เบอร์โทรศัพท์"}
-                  <Input
-                    name="phone"
-                    id="phone"
-                    value={this.state.phone}
-                    onChange={(event) => this.handleChange(event)}
-                    validate={{
-                      required: { value: true, errorMessage: 'อย่าลืมกรอกเบอร์โทรศัพท์' }
                     }}
                   />
                 </Label> */}
@@ -196,6 +191,19 @@ class Register extends Component {
             {
               (statusRegister_password === "passwordNotMatch") &&
               <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านไม่ตรงกัน</h6></small>
+            }
+            <Label className="form-group1 has-float-label mb-2">
+              {"เบอร์ติดต่อ"}
+              <Input
+                name="phone"
+                id="phone"
+                value={this.state.phone}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </Label>
+            {
+              (statusRegister_phone === "phoneNotNull") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกเบอร์ติดต่อ</h6></small>
             }
 
             <div className="d-flex justify-content-between align-items-center mb-4">

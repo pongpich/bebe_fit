@@ -20,9 +20,13 @@ class Platform extends Component {
       program_id: "",
       email: "",
       password: "",
+      firstname: "",
+      lastname: "",
+      phone: "",
       confirmPassword: "",
       statusRegister_email: "default",
-      statusRegister_password: "default"
+      statusRegister_password: "default",
+      statusRegister_phone: "default"
     };
   }
 
@@ -68,25 +72,28 @@ class Platform extends Component {
     this.setState({
       statusRegister_email: "default",
       statusRegister_password: "default",
+      statusRegister_phone: "default",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      phone: ""
     })
   }
 
   onUserRegister(event) {
-    const { email, password, confirmPassword } = this.state;
+    const { email, password, firstname, lastname, phone, confirmPassword } = this.state;
     const { statusRegister } = this.props;
     this.setState({
       statusRegister_email: "default",
-      statusRegister_password: "default"
+      statusRegister_password: "default",
+      statusRegister_phone: "default"
     })
-    if (email !== "" && password !== "") {
+    if (email !== "" && password !== "" && phone !== "") {
       if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
         if (statusRegister === "new") {
           if (password.length >= 8) {
             if (password === confirmPassword) {
-              this.props.trialRegister(email, password);
+              this.props.trialRegister(email, password, firstname, lastname, phone);
             } else {
               this.setState({
                 statusRegister_password: "passwordNotMatch"
@@ -118,6 +125,11 @@ class Platform extends Component {
           statusRegister_password: "password8plus"
         })
       }
+      if (phone === "") {
+        this.setState({
+          statusRegister_phone: "phoneNotNull"
+        })
+      }
     }
   }
 
@@ -139,7 +151,7 @@ class Platform extends Component {
   }
 
   renderRegister() {
-    const { statusRegister_email, statusRegister_password } = this.state;
+    const { statusRegister_email, statusRegister_password, statusRegister_phone } = this.state;
     return (
       <div className="form-side">
         <Form>
@@ -182,6 +194,19 @@ class Platform extends Component {
           {
             (statusRegister_password === "passwordNotMatch") &&
             <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>รหัสผ่านไม่ตรงกัน</h6></small>
+          }
+          <Label className="form-group1 has-float-label mb-2">
+            {"เบอร์ติดต่อ"}
+            <Input
+              name="phone"
+              id="phone"
+              value={this.state.phone}
+              onChange={(event) => this.handleChange(event)}
+            />
+          </Label>
+          {
+            (statusRegister_phone === "phoneNotNull") &&
+            <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกเบอร์ติดต่อ</h6></small>
           }
 
           <div className="d-flex justify-content-between align-items-center mb-4">

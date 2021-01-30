@@ -1,11 +1,11 @@
-import React, { Component, Fragment, useState, useEffect } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import "./package.scss";
 import { trialPackage, logoutUser } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
-import { getTreepayHash, clearPayment } from "../redux/payment";
+import { getTreepayHash, clearPayment, createOrder } from "../redux/payment";
 import moment from 'moment';
-import { s3Upload, s3Remove } from "../helpers/awsLib";
+import { s3Upload } from "../helpers/awsLib";
 
 
 class Package extends Component {
@@ -99,6 +99,17 @@ class Package extends Component {
     }
   }
 
+  submitPaySlip() {
+    const { selectedFile, pay_type, urlPaySlip } = this.state
+    const { user, program } = this.props;
+    if (selectedFile) {
+      this.props.createOrder(user.user_id, program.program_id, program.price, pay_type, urlPaySlip);
+      this.setState({ statusMaualPayment: "success" });
+    } else {
+      this.setState({ statusMaualPayment: "fail" });
+    }
+  }
+
   onSelectedPayTypeTreepay(pay_type) {
     var today = new Date();
     var year = today.getFullYear();
@@ -110,7 +121,7 @@ class Package extends Component {
       month = "0" + month;
     }
 
-    var order_no = year + "" + month + "" + date + "" + time;
+    var order_no = this.props.program.program_id + "-" + year + "" + month + "" + date + "" + time;
     var trade_mony = this.props.program.price * 100; // * 100 เพราะ Treepay จะขยับทศนิยมเข้า 2ตำแหน่ง
     var user_id = this.props.user.user_id;
     this.props.getTreepayHash(pay_type, order_no, trade_mony, user_id)
@@ -397,11 +408,7 @@ class Package extends Component {
               </button>
               <button
                 class="btn btn-danger"
-                onClick={() => (this.state.selectedFile) ?
-                  this.setState({ statusMaualPayment: "success" })
-                  :
-                  this.setState({ statusMaualPayment: "fail" })
-                }
+                onClick={() => this.submitPaySlip()}
               >
                 ส่งหลักฐาน
               </button>
@@ -423,6 +430,8 @@ class Package extends Component {
     return (
       <div className="row mt-5">
         <div className="col-lg-4 mt-5">
+          <div class="container" style={{backgroundColor:"grey", height:"100%", width:"90%", marginTop:"15%"}}>
+          </div>
         </div>
         <div className="col-lg-8 mt-5">
           <h2 className="mt-5 ml-2">รอการตรวจสอบชำระเงิน</h2>
@@ -496,7 +505,8 @@ const mapActionsToProps = {
   logoutUser,
   clearVideoList,
   getTreepayHash,
-  clearPayment
+  clearPayment,
+  createOrder
 };
 
 export default connect(

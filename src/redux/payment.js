@@ -7,11 +7,24 @@ export const types = {
   GET_TREEPAY_HASH: "GET_TREEPAY_HASH",
   GET_TREEPAY_HASH_SUCCESS: "GET_TREEPAY_HASH_SUCCESS",
   CLEAR_PAYMENT: "CLEAR_PAYMENT",
-  EXECUTE_PAYTREE: "EXECUTE_PAYTREE"
+  CREATE_ORDER: "CREATE_ORDER"
 }
 
-export const executePaytree = () => ({
-  type: types.EXECUTE_PAYTREE
+export const createOrder = (
+  user_id,
+  program_id,
+  price,
+  pay_type,
+  urlPaySlip
+) => ({
+  type: types.CREATE_ORDER,
+  payload: {
+    user_id,
+    program_id,
+    price,
+    pay_type,
+    urlPaySlip
+  }
 })
 
 export const clearPayment = () => ({
@@ -37,18 +50,26 @@ export const getTreepayHash = (
 
 /* SAGA Section */
 
-const executePaytreeSagaAsync = async (
-
+const getCreateOrderSagaAsync = async (
+  user_id,
+  program_id,
+  price,
+  pay_type,
+  urlPaySlip
 ) => {
   try {
-    const apiResult = await API.post("bebe", "/execute_paytree", {
+    const apiResult = await API.post("bebe", "/createOrder", {
       body: {
-
+        user_id,
+        program_id,
+        price,
+        pay_type,
+        urlPaySlip
       }
     });
     return apiResult;
   } catch (error) {
-        return { error, messsage: error.message };
+    return { error, messsage: error.message };
   }
 }
 
@@ -73,13 +94,16 @@ const getTreepayHashSagaAsync = async (
   }
 }
 
-function* executePaytreeSaga({ payload }) {
-  const {
-   
-  } = payload
+function* getCreateOrderSaga({ payload }) {
+  const { user_id, program_id, price, pay_type, urlPaySlip } = payload;
   try {
     const apiResult = yield call(
-      executePaytreeSagaAsync
+      getCreateOrderSagaAsync,
+      user_id,
+      program_id,
+      price,
+      pay_type,
+      urlPaySlip
     );
   } catch (error) {
     return { error, messsage: error.message };
@@ -114,14 +138,14 @@ export function* watchGetTreepayHash() {
   yield takeEvery(types.GET_TREEPAY_HASH, getTreepayHashSaga)
 }
 
-export function* watchExecutePaytree() {
-  yield takeEvery(types.EXECUTE_PAYTREE, executePaytreeSaga)
+export function* watchCreateOrder() {
+  yield takeEvery(types.CREATE_ORDER, getCreateOrderSaga)
 }
 
 export function* saga() {
   yield all([
     fork(watchGetTreepayHash),
-    fork(watchExecutePaytree)
+    fork(watchCreateOrder)
   ]);
 }
 
