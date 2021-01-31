@@ -17,8 +17,17 @@ export const types = {
   LOGOUT_USER: "LOGOUT_USER",
   SET_PASSWORD: "SET_PASSWORD",
   TRIAL_PACKAGE: "TRIAL_PACKAGE",
-  TRIAL_PACKAGE_SUCCESS: "TRIAL_PACKAGE_SUCCESS"
+  TRIAL_PACKAGE_SUCCESS: "TRIAL_PACKAGE_SUCCESS",
+  GET_EXPIRE_DATE: "GET_EXPIRE_DATE",
+  GET_EXPIRE_DATE_SUCCESS: "GET_EXPIRE_DATE_SUCCESS"
 }
+
+export const getExpireDate = (email) => ({
+  type: types.GET_EXPIRE_DATE,
+  payload: {
+    email
+  }
+})
 
 export const trialPackage = (email, expire_date) => ({
   type: types.TRIAL_PACKAGE,
@@ -202,6 +211,21 @@ const signupUserSagaAsync = async (
   }
 };
 
+const getExpireDateSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getExpireDate", {
+      queryStringParameters: {
+        email
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const loginUserSagaAsync = async (
   email,
   password
@@ -351,6 +375,25 @@ function* trialRegisterSaga({ payload }) {
   }
 }
 
+function* getExpireDateSaga({ payload }) {
+  const {
+    email
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      getExpireDateSagaAsync,
+      email
+    );
+    yield put({
+      type: types.GET_EXPIRE_DATE_SUCCESS,
+      payload: apiResult.results.expire_date
+    })
+  } catch (error) {
+    console.log("error from getExpireDateSaga :", error);
+
+  }
+}
 
 function* loginUserSaga({ payload }) {
   const {
@@ -410,6 +453,9 @@ export function* watchTrialPackage() {
   yield takeEvery(types.TRIAL_PACKAGE, trialPackageSaga)
 }
 
+export function* watchGetExpireDate() {
+  yield takeEvery(types.GET_EXPIRE_DATE, getExpireDateSaga)
+}
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -418,7 +464,8 @@ export function* saga() {
     fork(watchSignupUser),
     fork(watchUpdateProfile),
     fork(watchSetPassword),
-    fork(watchTrialPackage)
+    fork(watchTrialPackage),
+    fork(watchGetExpireDate)
   ]);
 }
 
@@ -434,6 +481,14 @@ const INIT_STATE = {
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.GET_EXPIRE_DATE_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          expire_date: action.payload
+        }
+      }
     case types.CHECK_USER_SUCCESS:
       return {
         ...state,

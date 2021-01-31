@@ -7,7 +7,7 @@ import {
   Input,
   Button
 } from "reactstrap";
-import { trialRegister, checkUser, logoutUser, loginUser } from "../redux/auth";
+import { trialRegister, checkUser, logoutUser, loginUser, getExpireDate } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
 import { selectProgram, clearProgram } from "../redux/exerciseProgram";
 import backgroundImg from "../assets/img/mainbg.jpg";
@@ -20,8 +20,8 @@ class Platform extends Component {
       program_id: "",
       email: "",
       password: "",
-      firstname: "",
-      lastname: "",
+      firstname: "undefined",
+      lastname: "undefined",
       phone: "",
       confirmPassword: "",
       statusRegister_email: "default",
@@ -33,18 +33,22 @@ class Platform extends Component {
   componentDidMount() {
     const { user } = this.props;
     this.props.clearProgram();
-    if (user !== null && user.expire_date !== null) {
-      var curr = new Date().getTime();
-      var expire_date = new Date(user.expire_date).getTime();
-      if (curr < expire_date) { //curr < expire_date คือ ยังไม่หมดอายุ
-        this.props.history.push('/VideoList');
+
+    if (user) {
+      this.props.getExpireDate(user.email);
+      if (user !== null && user.expire_date !== null) {
+        var curr = new Date().getTime();
+        var expire_date = new Date(user.expire_date).getTime();
+        if (curr < expire_date) { //curr < expire_date คือ ยังไม่หมดอายุ
+          this.props.history.push('/VideoList');
+        }
       }
     }
   }
 
   componentDidUpdate(prevProps) {
     const { email, password } = this.state;
-    const { status, program, statusRegister } = this.props;
+    const { status, program, statusRegister, user } = this.props;
     if (prevProps.statusRegister !== statusRegister && statusRegister === "success") {
       this.props.loginUser(email, password);
     }
@@ -57,6 +61,13 @@ class Platform extends Component {
         document.getElementById("overlayPopupRegister").classList.toggle("active");
       } else {
         this.props.history.push('/package');
+      }
+    }
+    if (user && prevProps.user && prevProps.user.expire_date !== user.expire_date && user.expire_date !== null) {
+      var curr = new Date().getTime();
+      var expire_date = new Date(user.expire_date).getTime();
+      if (curr < expire_date) { //curr < expire_date คือ ยังไม่หมดอายุ
+        this.props.history.push('/VideoList');
       }
     }
   }
@@ -299,7 +310,8 @@ const mapActionsToProps = {
   clearVideoList,
   loginUser,
   selectProgram,
-  clearProgram
+  clearProgram,
+  getExpireDate
 };
 
 export default connect(

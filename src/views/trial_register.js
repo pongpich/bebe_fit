@@ -18,8 +18,8 @@ class Register extends Component {
     this.state = {
       email: "",
       password: "",
-      firstname: "",
-      lastname: "",
+      firstname: "undefined",
+      lastname: "undefined",
       phone: "",
       confirmPassword: "",
       statusRegister_email: "default",
