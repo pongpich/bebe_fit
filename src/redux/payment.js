@@ -11,6 +11,7 @@ export const types = {
 }
 
 export const createOrder = (
+  order_no,
   user_id,
   program_id,
   price,
@@ -19,6 +20,7 @@ export const createOrder = (
 ) => ({
   type: types.CREATE_ORDER,
   payload: {
+    order_no,
     user_id,
     program_id,
     price,
@@ -51,6 +53,7 @@ export const getTreepayHash = (
 /* SAGA Section */
 
 const getCreateOrderSagaAsync = async (
+  order_no,
   user_id,
   program_id,
   price,
@@ -60,6 +63,7 @@ const getCreateOrderSagaAsync = async (
   try {
     const apiResult = await API.post("bebe", "/createOrder", {
       body: {
+        order_no,
         user_id,
         program_id,
         price,
@@ -95,10 +99,11 @@ const getTreepayHashSagaAsync = async (
 }
 
 function* getCreateOrderSaga({ payload }) {
-  const { user_id, program_id, price, pay_type, urlPaySlip } = payload;
+  const { order_no, user_id, program_id, price, pay_type, urlPaySlip } = payload;
   try {
     const apiResult = yield call(
       getCreateOrderSagaAsync,
+      order_no,
       user_id,
       program_id,
       price,

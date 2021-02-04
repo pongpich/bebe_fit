@@ -99,11 +99,28 @@ class Package extends Component {
     }
   }
 
+  submitOrder() {
+    const { order_no, pay_type } = this.state
+    const { user, program } = this.props;
+    this.props.createOrder(order_no, user.user_id, program.program_id, program.price, pay_type);
+  }
+
   submitPaySlip() {
     const { selectedFile, pay_type, urlPaySlip } = this.state
     const { user, program } = this.props;
     if (selectedFile) {
-      this.props.createOrder(user.user_id, program.program_id, program.price, pay_type, urlPaySlip);
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = today.getMonth() + 1;
+      var date = today.getDate();
+      var time = today.getTime();
+
+      if (parseInt(month) < 10) {
+        month = "0" + month;
+      }
+
+      const order_no = program.program_id + "-" + year + "" + month + "" + date + "" + time;
+      this.props.createOrder(order_no, user.user_id, program.program_id, program.price, pay_type, urlPaySlip);
       this.setState({ statusMaualPayment: "success" });
     } else {
       this.setState({ statusMaualPayment: "fail" });
@@ -296,7 +313,12 @@ class Package extends Component {
           </div>
           <div className="col-lg-11 mt-4">
             <form
-              action="https://paytest.treepay.co.th/total/hubInit.tp"
+              action={
+                (process.env.REACT_APP_STAGE === "prod") ?
+                  "https://pay.treepay.co.th/total/hubInit.tp"
+                  :
+                  "https://paytest.treepay.co.th/total/hubInit.tp"
+              }
               id="treepay_form"
               method="post"
             >
@@ -310,16 +332,27 @@ class Package extends Component {
                       ถัดไป {/* ของ pay_type === Maual */}
                     </button>
                     :
-                    <button type="submit" name="submit" class="btn btn-danger" alt="">
+                    <button type="submit" name="submit" class="btn btn-danger" alt="" onClick={() => this.submitOrder()}>
                       ถัดไป
-                     </button>
+                    </button>
                 }
               </div>
               <input type="hidden" name="pay_type" value={this.state.pay_type} /><br></br>
               <input type="hidden" name="currency" value="764" /><br></br>
               <input type="hidden" name="tp_langFlag" value="en" /><br></br>
               <input type="hidden" name="site_cd" value={this.props.site_cd} /><br></br>
-              <input type="hidden" name="ret_url" value="http://localhost:3003/execute_paytree" /><br></br>
+              <input
+                type="hidden"
+                name="ret_url"
+                value={
+                  (process.env.REACT_APP_STAGE === "prod") ?
+                    `https://api.planforfit.com/bebe/execute_paytree`
+                    :
+                    (process.env.REACT_APP_STAGE === "dev") ?
+                      "https://api.planforfit.com/bebedev/execute_paytree"
+                      :
+                      "http://localhost:3003/execute_paytree"
+                } /><br></br>
               <input type="hidden" name="user_id" value={this.props.user.user_id} /><br></br>
               <input type="hidden" name="order_no" value={this.state.order_no} /><br></br>
               <input type="hidden" name="good_name" value={this.props.program.program_id} /><br></br>
@@ -430,7 +463,7 @@ class Package extends Component {
     return (
       <div className="row mt-5">
         <div className="col-lg-4 mt-5">
-          <div class="container" style={{backgroundColor:"grey", height:"100%", width:"90%", marginTop:"15%"}}>
+          <div class="container" style={{ backgroundColor: "grey", height: "100%", width: "90%", marginTop: "15%" }}>
           </div>
         </div>
         <div className="col-lg-8 mt-5">
