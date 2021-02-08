@@ -9,8 +9,8 @@ import {
 
 import { connect } from "react-redux";
 
-import { trialRegister, checkUser, loginUser } from "../redux/auth";
-import "./trial_register.scss";
+import { register, checkUser, loginUser } from "../redux/auth";
+import "./register.scss";
 
 class Register extends Component {
   constructor(props) {
@@ -54,7 +54,7 @@ class Register extends Component {
         if (statusRegister === "new") {
           if (password.length >= 8) {
             if (password === confirmPassword) {
-              this.props.trialRegister(email, password, firstname, lastname, phone);
+              this.props.register(email, password, firstname, lastname, phone);
             } else {
               this.setState({
                 statusRegister_password: "passwordNotMatch"
@@ -241,7 +241,7 @@ const mapStateToProps = ({ authUser }) => {
 };
 
 const mapActionsToProps = {
-  trialRegister,
+  register,
   checkUser,
   loginUser
 };

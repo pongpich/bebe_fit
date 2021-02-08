@@ -4,8 +4,8 @@ import { API } from "aws-amplify";
 /* ACTION Section */
 
 export const types = {
-  TRIAL_REGISTER: "TRIAL_REGISTER",
-  TRIAL_REGISTER_SUCCESS: "TRIAL_REGISTER_SUCCESS",
+  REGISTER: "REGISTER",
+  REGISTER_SUCCESS: "REGISTER_SUCCESS",
   SIGNUP_USER: "SIGNUP_USER",
   LOGIN_USER: "LOGIN_USER",
   LOGIN_USER_SUCCESS: "LOGIN_USER_SUCCESS",
@@ -74,8 +74,8 @@ export const updateProfile = (
     }
   });
 
-export const trialRegister = (email, password, firstname, lastname, phone) => ({
-  type: types.TRIAL_REGISTER,
+export const register = (email, password, firstname, lastname, phone) => ({
+  type: types.REGISTER,
   payload: {
     email,
     password,
@@ -148,7 +148,7 @@ const trialPackageSagaAsync = async (
   }
 }
 
-const trialRegisterSagaAsync = async (
+const registerSagaAsync = async (
   email,
   password,
   firstname,
@@ -156,7 +156,7 @@ const trialRegisterSagaAsync = async (
   phone
 ) => {
   try {
-    const apiResult = await API.post("bebe", "/trial_signup", {
+    const apiResult = await API.post("bebe", "/register", {
       body: {
         email: email,
         password: password,
@@ -349,7 +349,7 @@ function* trialPackageSaga({ payload }) {
   }
 }
 
-function* trialRegisterSaga({ payload }) {
+function* registerSaga({ payload }) {
   const {
     email,
     password,
@@ -360,7 +360,7 @@ function* trialRegisterSaga({ payload }) {
 
   try {
     const apiResult = yield call(
-      trialRegisterSagaAsync,
+      registerSagaAsync,
       email,
       password,
       firstname,
@@ -368,10 +368,10 @@ function* trialRegisterSaga({ payload }) {
       phone
     );
     yield put({
-      type: types.TRIAL_REGISTER_SUCCESS
+      type: types.REGISTER_SUCCESS
     })
   } catch (error) {
-    console.log("error from trialRegister :", error);
+    console.log("error from register :", error);
   }
 }
 
@@ -437,8 +437,8 @@ export function* watchSignupUser() {
   yield takeEvery(types.SIGNUP_USER, signupUserSaga);
 }
 
-export function* watchTrialRegister() {
-  yield takeEvery(types.TRIAL_REGISTER, trialRegisterSaga)
+export function* watchRegister() {
+  yield takeEvery(types.REGISTER, registerSaga)
 }
 
 export function* watchUpdateProfile() {
@@ -459,7 +459,7 @@ export function* watchGetExpireDate() {
 export function* saga() {
   yield all([
     fork(watchLoginUser),
-    fork(watchTrialRegister),
+    fork(watchRegister),
     fork(watchCheckUser),
     fork(watchSignupUser),
     fork(watchUpdateProfile),
@@ -507,7 +507,7 @@ export function reducer(state = INIT_STATE, action) {
         status: "fail",
         statusRegister: "default"
       };
-    case types.TRIAL_REGISTER_SUCCESS:
+    case types.REGISTER_SUCCESS:
       return {
         ...state,
         statusRegister: "success"

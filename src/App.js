@@ -11,7 +11,7 @@ import { clearVideoList } from "./redux/exerciseVideos";
 
 
 import Login from "./views/login";
-import TrialRegister from "./views/trial_register";
+import Register from "./views/register";
 import Signup from "./views/signup";
 import VideoList from "./views/videoList";
 import Platform from "./views/platform";
@@ -105,7 +105,7 @@ class App extends Component {
             <Redirect to="/platform" />
           </Route>
           <Route path='/login' component={Login} />
-          <Route path='/register' component={TrialRegister} />
+          <Route path='/register' component={Register} />
           {/* <Route path='/signup' component={Signup} /> */}
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />

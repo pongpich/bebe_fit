@@ -284,7 +284,7 @@ class LoginTest extends Component {
                 <a className="nav-link" href="/signup">สมัครสมาชิก</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="/trial_register">ทดลองใช้ฟรี</a>
+                <a className="nav-link" href="/register">ทดลองใช้ฟรี</a>
               </li>
             </ul>
           </div>

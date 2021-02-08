@@ -7,7 +7,7 @@ import {
   Input,
   Button
 } from "reactstrap";
-import { trialRegister, checkUser, logoutUser, loginUser, getExpireDate } from "../redux/auth";
+import { register, checkUser, logoutUser, loginUser, getExpireDate } from "../redux/auth";
 import { clearVideoList } from "../redux/exerciseVideos";
 import { selectProgram, clearProgram } from "../redux/exerciseProgram";
 import backgroundImg from "../assets/img/mainbg.jpg";
@@ -104,7 +104,7 @@ class Platform extends Component {
         if (statusRegister === "new") {
           if (password.length >= 8) {
             if (password === confirmPassword) {
-              this.props.trialRegister(email, password, firstname, lastname, phone);
+              this.props.register(email, password, firstname, lastname, phone);
             } else {
               this.setState({
                 statusRegister_password: "passwordNotMatch"
@@ -304,7 +304,7 @@ const mapStateToProps = ({ authUser, exerciseProgram, payment }) => {
 };
 
 const mapActionsToProps = {
-  trialRegister,
+  register,
   checkUser,
   logoutUser,
   clearVideoList,
