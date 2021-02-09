@@ -101,15 +101,15 @@ class App extends Component {
           <Route exact path="/">
             <Redirect to="/platform" />
           </Route>
-          <Route exact path='/login_test'>
-            <Redirect to="/platform" />
-          </Route>
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
           {/* <Route path='/signup' component={Signup} /> */}
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} />
+          <Route path='*'>
+            <Redirect to="/platform" />
+          </Route>
         </Switch>
       </div>
     );

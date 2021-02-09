@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, HashRouter } from 'react-router-dom'; // HashRouter = serve static file, BrowserRouter = serve พวก url
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -13,11 +13,11 @@ const {store, persister} = configureStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <PersistGate persistor={persister}>
         <Route path="/" component={ App } />
       </PersistGate>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>,
   document.getElementById('root')
 );
