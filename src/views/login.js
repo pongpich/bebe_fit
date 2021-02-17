@@ -24,8 +24,8 @@ class Login extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user !== null) {
-      this.props.history.push('/VideoList');
+    if (user !== null && user.password !== null) {
+      this.props.history.push('/platform');
     }
   }
 
@@ -122,6 +122,7 @@ class Login extends Component {
                   <Button
                     className="btn-link"
                     color="empty"
+                    onClick={() => this.props.history.push('/forgot-password')}
                     block
                   >
                     <span className="text-one">

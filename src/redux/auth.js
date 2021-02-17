@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { API } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 
 /* ACTION Section */
 
@@ -16,11 +16,34 @@ export const types = {
   UPDATE_PROFILE_SUCCESS: "UPDATE_PROFILE_SUCCESS",
   LOGOUT_USER: "LOGOUT_USER",
   SET_PASSWORD: "SET_PASSWORD",
+  SET_PASSWORD_SUCCESS: "SET_PASSWORD_SUCCESS",
   TRIAL_PACKAGE: "TRIAL_PACKAGE",
   TRIAL_PACKAGE_SUCCESS: "TRIAL_PACKAGE_SUCCESS",
   GET_EXPIRE_DATE: "GET_EXPIRE_DATE",
-  GET_EXPIRE_DATE_SUCCESS: "GET_EXPIRE_DATE_SUCCESS"
+  GET_EXPIRE_DATE_SUCCESS: "GET_EXPIRE_DATE_SUCCESS",
+  FORGOT_PASSWORD: "FORGOT_PASSWORD",
+  RESET_PASSWORD: "RESET_PASSWORD",
+  RESET_PASSWORD_SUCCESS: "RESET_PASSWORD_SUCCESS",
+  RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL"
 }
+
+export const resetPassword = (
+  email,
+  user_id,
+  expire_time
+) => ({
+  type: types.RESET_PASSWORD,
+  payload: {
+    email,
+    user_id,
+    expire_time
+  }
+})
+
+export const forgotPassword = (email) => ({
+  type: types.FORGOT_PASSWORD,
+  payload: { email }
+});
 
 export const getExpireDate = (email) => ({
   type: types.GET_EXPIRE_DATE,
@@ -226,6 +249,40 @@ const getExpireDateSagaAsync = async (
   }
 }
 
+const resetPasswordSagaAsync = async (
+  email,
+  user_id,
+  expire_time
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/resetPassword", {
+      body: {
+        email,
+        user_id,
+        expire_time
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const forgotPasswordSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/forgotPassword", {
+      queryStringParameters: {
+        email
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const loginUserSagaAsync = async (
   email,
   password
@@ -243,10 +300,6 @@ const loginUserSagaAsync = async (
   }
 };
 
-
-
-
-
 function* checkUserSaga({ payload }) {
   const {
     email
@@ -257,7 +310,7 @@ function* checkUserSaga({ payload }) {
       checkUserSagaAsync,
       email
     );
-    yield put ({
+    yield put({
       type: types.CHECK_USER_SUCCESS,
       payload: apiResult.results.message
     })
@@ -323,7 +376,9 @@ function* setPasswordSaga({ payload }) {
       email,
       password
     );
-    console.log("setPasswordSaga : ", apiResult);
+    yield put({
+      type: types.SET_PASSWORD_SUCCESS
+    })
   } catch (error) {
     console.log("error from setPasswordSaga :", error);
   }
@@ -336,7 +391,7 @@ function* trialPackageSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call (
+    const apiResult = yield call(
       trialPackageSagaAsync,
       email
     );
@@ -391,7 +446,46 @@ function* getExpireDateSaga({ payload }) {
     })
   } catch (error) {
     console.log("error from getExpireDateSaga :", error);
+  }
+}
 
+function* resetPasswordSaga({ payload }) {
+  const {
+    email,
+    user_id,
+    expire_time
+  } = payload;
+  try {
+    const apiResult = yield call(
+      resetPasswordSagaAsync,
+      email,
+      user_id,
+      expire_time
+    )
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.RESET_PASSWORD_SUCCESS,
+        payload: apiResult.results.user
+      })
+    } else if (apiResult.results.message === "fail" || apiResult.results.message === "no_user") {
+      yield put({
+        type: types.RESET_PASSWORD_FAIL
+      })
+    }
+  } catch (error) {
+    console.log("error from resetPasswordSaga :", error);
+  }
+}
+
+function* forgotPasswordSaga({ payload }) {
+  const { email } = payload;
+  try {
+    const apiResult = yield call(
+      forgotPasswordSagaAsync,
+      email
+    );
+  } catch (error) {
+    console.log("error from forgotPasswordSaga :", error);
   }
 }
 
@@ -456,6 +550,15 @@ export function* watchTrialPackage() {
 export function* watchGetExpireDate() {
   yield takeEvery(types.GET_EXPIRE_DATE, getExpireDateSaga)
 }
+
+export function* watchForgotPassword() {
+  yield takeEvery(types.FORGOT_PASSWORD, forgotPasswordSaga);
+}
+
+export function* watchResetPassword() {
+  yield takeEvery(types.RESET_PASSWORD, resetPasswordSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -465,7 +568,9 @@ export function* saga() {
     fork(watchUpdateProfile),
     fork(watchSetPassword),
     fork(watchTrialPackage),
-    fork(watchGetExpireDate)
+    fork(watchGetExpireDate),
+    fork(watchForgotPassword),
+    fork(watchResetPassword)
   ]);
 }
 
@@ -476,7 +581,9 @@ export function* saga() {
 const INIT_STATE = {
   user: null,
   status: "default",
-  statusRegister: "default"
+  loading: false,
+  statusRegister: "default",
+  statusResetPassword: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -494,18 +601,30 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         statusRegister: action.payload
       }
+    case types.RESET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        statusResetPassword: "success"
+      };
+    case types.SET_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        statusResetPassword: "default"
+      }
     case types.LOGIN_USER_SUCCESS:
       return {
         ...state,
         user: action.payload,
         status: "success",
-        statusRegister: "default"
+        statusRegister: "default",
+        statusResetPassword: "default"
       };
     case types.LOGIN_USER_FAIL:
       return {
         ...state,
         status: "fail",
-        statusRegister: "default"
+        statusRegister: "default",
+        statusResetPassword: "default"
       };
     case types.REGISTER_SUCCESS:
       return {

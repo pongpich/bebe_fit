@@ -12,7 +12,7 @@ import { clearVideoList } from "./redux/exerciseVideos";
 
 import Login from "./views/login";
 import Register from "./views/register";
-import Signup from "./views/signup";
+import ForgotPassword from "./views/forgotPassword";
 import VideoList from "./views/videoList";
 import Platform from "./views/platform";
 import Package from "./views/package";
@@ -72,7 +72,7 @@ class App extends Component {
               </li>
             }
             {
-              (this.props.user === null) &&
+              (this.props.user === null || this.props.user.password === null) && //password === null คือกรณีผู้ใช้ทำการ ResetPassword
               <li className="nav-item">
                 <a className="nav-link" onClick={() => this.props.history.push('/register')} style={{ color: "white", cursor: "pointer" }}>
                   สมัครสมาชิก
@@ -80,7 +80,7 @@ class App extends Component {
               </li>
             }
             {
-              (this.props.user !== null) &&
+              (this.props.user !== null && this.props.user.password !== null) &&
               <li className="nav-item">
                 <a className="nav-link" onClick={() => this.onUserLogout()} style={{ color: "white", cursor: "pointer" }}>
                   ออกจากระบบ
@@ -103,9 +103,11 @@ class App extends Component {
           </Route>
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
+          <Route path='/forgot-password' component={ForgotPassword} />
           {/* <Route path='/signup' component={Signup} /> */}
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />
+          <Route path='/package' component={Package} />
           <Route path='/package' component={Package} />
           <Route path='*'>
             <Redirect to="/platform" />

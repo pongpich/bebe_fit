@@ -36,7 +36,7 @@ class Platform extends Component {
 
     if (user) {
       this.props.getExpireDate(user.email);
-      if (user !== null && user.expire_date !== null) {
+      if (user !== null && user.expire_date !== null && user.password !== null) {
         var curr = new Date().getTime();
         var expire_date = new Date(user.expire_date).getTime();
         if (curr < expire_date) { //curr < expire_date คือ ยังไม่หมดอายุ
@@ -254,7 +254,7 @@ class Platform extends Component {
 
         <div style={{ float: "right" }}>
           {
-            this.props.user !== null ?
+            (this.props.user !== null && this.props.user.password !== null) ?
               <button type="button" className="btn btn-light border mr-5" onClick={() => this.selectProgram("fit60days")}>
                 ซื้อแพ็คเกจ
               </button>
@@ -264,7 +264,7 @@ class Platform extends Component {
               </button>
           }
           {
-            ((this.props.user === null) || (this.props.user !== null && this.props.user.expire_date === null)) &&
+            ((this.props.user === null) || (this.props.user !== null && this.props.user.password !== null && this.props.user.expire_date === null)) &&
             <button className="show-btn btn btn-dark mr-5" onClick={() => this.selectProgram("trial14")}>
               ใช้ฟรี 14วัน
             </button>
