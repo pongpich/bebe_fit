@@ -40,16 +40,19 @@ class ForgotPassword extends Component {
       const email = result.email;
       const user_id = result.user_id;
       const expire_time = result.expire_time;
+      const curr = new Date().getTime();
 
-      this.setState({
-        email: email
-      });
-
-      this.props.resetPassword(
-        email,
-        user_id,
-        expire_time
-      );
+      if (expire_time > curr) {
+        this.props.resetPassword(
+          email,
+          user_id,
+          expire_time
+        );
+      } else {
+        this.setState({
+          status_email: "timeout"
+        });
+      }
     }
 
     if (user !== null && user.password !== null) {
@@ -145,21 +148,26 @@ class ForgotPassword extends Component {
             {"ลืมรหัสผ่าน"}
           </CardTitle>
           <Form>
-            {(status_email === "success") ?
-              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>เราได้ส่งคำร้องลืมรหัสผ่านไปยังอีเมลของคุณ "{this.state.email}"</h6></small>
-              :
-              (statusSetPassword === "success") ?
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>การเปลี่ยนแปลงรหัสผ่านใหม่เสร็จสิ้น</h6></small>
+            {
+              (status_email === "timeout") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>คำขอเปลี่ยนรหัสผ่านของคุณหมดอายุ กรุณากรอกข้อมูลเพื่อยื่นคำขออีกครั้ง</h6></small>
+            }
+            {
+              (status_email === "success") ?
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>เราได้ส่งคำร้องลืมรหัสผ่านไปยังอีเมลของคุณ "{this.state.email}"</h6></small>
                 :
-                <Label className="form-group2 has-float-label mb-2">
-                  {"Email Address"}
-                  <Input
-                    type="email"
-                    id="email"
-                    value={this.state.email}
-                    onChange={(event) => this.checkExistedEmail(event)}
-                  />
-                </Label>
+                (statusSetPassword === "success") ?
+                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>การเปลี่ยนแปลงรหัสผ่านใหม่เสร็จสิ้น</h6></small>
+                  :
+                  <Label className="form-group2 has-float-label mb-2">
+                    {"Email Address"}
+                    <Input
+                      type="email"
+                      id="email"
+                      value={this.state.email}
+                      onChange={(event) => this.checkExistedEmail(event)}
+                    />
+                  </Label>
             }
             {
               (status_email === "emailFormat") &&
@@ -180,7 +188,7 @@ class ForgotPassword extends Component {
                   block
                 >
                   <span className="text-one">
-                    {(status_email === "success")? "ส่งอีกครั้ง" : "ยืนยัน"}
+                    {(status_email === "success") ? "ส่งอีกครั้ง" : "ยืนยัน"}
                   </span>
                 </Button>
               </div>
