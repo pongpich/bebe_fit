@@ -401,10 +401,10 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}><b>DAY1</b></a>
-                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}><b>DAY2</b></a>
-                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}><b>DAY3</b></a>
-                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}><b>DAY4</b></a>
+                {focusDay === 0  && <b>DAY1</b>}
+                {focusDay === 1  && <b>DAY2</b>}
+                {focusDay === 2  && <b>DAY3</b>}
+                {focusDay === 3  && <b>DAY4</b>}
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -414,11 +414,11 @@ class VideoList extends Component {
           <div className="">
             <div className="trailer" id={`popupVDO`}>
               <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
-              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
               <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
-              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
               <thead>
@@ -456,7 +456,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="Responsive image" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -695,10 +695,34 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                <a className={`nav-link ${focusDay === 0 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(0)}><b>DAY1</b></a>
-                <a className={`nav-link ${focusDay === 1 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(1)}><b>DAY2</b></a>
-                <a className={`nav-link ${focusDay === 2 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(2)}><b>DAY3</b></a>
-                <a className={`nav-link ${focusDay === 3 ? "active" : "disabled"}`} href="#" onClick={() => this.onDayChange(3)}><b>DAY4</b></a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 0 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(0)}
+                >
+                  <b>DAY1</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 1 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(1)}
+                >
+                  <b>DAY2</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 2 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(2)}
+                >
+                  <b>DAY3</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 3 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(3)}
+                >
+                  <b>DAY4</b>
+                </a>
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -708,11 +732,11 @@ class VideoList extends Component {
           <div className="">
             <div className="trailer" id={`popupVDO`}>
               <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
-              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
               <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
-              <img src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
               <thead>

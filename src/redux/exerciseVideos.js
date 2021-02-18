@@ -394,7 +394,7 @@ function* createCustomWeekForUserSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call(
+    yield call(
       createCustomWeekForUserSagaAsync,
       user_id,
       weight,

@@ -101,7 +101,7 @@ const getTreepayHashSagaAsync = async (
 function* getCreateOrderSaga({ payload }) {
   const { order_no, user_id, program_id, price, pay_type, urlPaySlip } = payload;
   try {
-    const apiResult = yield call(
+    yield call(
       getCreateOrderSagaAsync,
       order_no,
       user_id,

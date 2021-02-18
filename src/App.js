@@ -38,20 +38,20 @@ class App extends Component {
   renderNavbar() {
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a className="navbar-brand" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
+        <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
           <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
             BEBE FIT ROUTINE
         </a>
         <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" style={{ color: "white", cursor: "pointer" }}>บทความ</a>
+              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>บทความ</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" style={{ color: "white", cursor: "pointer" }}>อาหารเสริมและอุปกรณ์</a>
+              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>อาหารเสริมและอุปกรณ์</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" onClick={() => this.props.history.push('/platform')} style={{ color: "white", cursor: "pointer" }}>
+              <a className="nav-link" href="#/platform" onClick={() => this.props.history.push('/platform')} style={{ color: "white", cursor: "pointer" }}>
                 Platform
               </a>
             </li>
@@ -61,12 +61,12 @@ class App extends Component {
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">
-              <a className="nav-link" style={{ color: "white", cursor: "pointer" }}>ตะกร้าสินค้า</a>
+              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>ตะกร้าสินค้า</a>
             </li>
             {
               (this.props.user === null) &&
               <li className="nav-item">
-                <a className="nav-link" onClick={() => this.props.history.push('/login')} style={{ color: "white", cursor: "pointer" }}>
+                <a className="nav-link" href="#/login" onClick={() => this.props.history.push('/login')} style={{ color: "white", cursor: "pointer" }}>
                   เข้าสู่ระบบ
                 </a>
               </li>
@@ -74,7 +74,7 @@ class App extends Component {
             {
               (this.props.user === null || this.props.user.password === null) && //password === null คือกรณีผู้ใช้ทำการ ResetPassword
               <li className="nav-item">
-                <a className="nav-link" onClick={() => this.props.history.push('/register')} style={{ color: "white", cursor: "pointer" }}>
+                <a className="nav-link" href="#/register" onClick={() => this.props.history.push('/register')} style={{ color: "white", cursor: "pointer" }}>
                   สมัครสมาชิก
                 </a>
               </li>
@@ -82,7 +82,7 @@ class App extends Component {
             {
               (this.props.user !== null && this.props.user.password !== null) &&
               <li className="nav-item">
-                <a className="nav-link" onClick={() => this.onUserLogout()} style={{ color: "white", cursor: "pointer" }}>
+                <a className="nav-link" href="/#" onClick={() => this.onUserLogout()} style={{ color: "white", cursor: "pointer" }}>
                   ออกจากระบบ
                 </a>
               </li>

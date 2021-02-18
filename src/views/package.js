@@ -425,7 +425,7 @@ class Package extends Component {
                       data-toggle="tooltip" data-placement="top" title="ดูรูปภาพที่อัปโหลด"
                     ></i>
                   }
-                  <img className="pay-slip-Img col-12" id="pay-slip-Img" src={(this.state.selectedFile) ? this.state.urlPaySlip : ""}></img>
+                  <img className="pay-slip-Img col-12" id="pay-slip-Img" alt="" src={(this.state.selectedFile) ? this.state.urlPaySlip : ""}></img>
                 </div>
                 {
                   ((this.state.statusMaualPayment === "fail") && !(this.state.selectedFile)) &&

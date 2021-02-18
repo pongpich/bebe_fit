@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, HashRouter } from 'react-router-dom'; // HashRouter = serve static file, BrowserRouter = serve พวก url
+import { Route, HashRouter } from 'react-router-dom'; // HashRouter = serve static file, BrowserRouter = serve พวก url
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';

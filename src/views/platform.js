@@ -278,12 +278,12 @@ class Platform extends Component {
             onClick={() => this.closePopupRegister()}
           >
           </label>
-          <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-              <a class="nav-link active" href="#"><b>สมัครสมาชิก</b></a>
+          <ul className="nav nav-tabs mb-4">
+            <li className="nav-item">
+              <a className="nav-link active" href="/#"><b>สมัครสมาชิก</b></a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link disabled" onClick={() => this.props.history.push('/login')}>เข้าสู่ระบบ</a>
+            <li className="nav-item">
+              <a className="nav-link disabled" href="/#" onClick={() => this.props.history.push('/login')}>เข้าสู่ระบบ</a>
             </li>
           </ul>
           {this.renderRegister()}

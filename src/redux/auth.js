@@ -1,5 +1,5 @@
 import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { Auth, API } from "aws-amplify";
+import { API } from "aws-amplify";
 
 /* ACTION Section */
 
@@ -326,7 +326,7 @@ function* updateProfileSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call(
+    yield call(
       updateProfileSagaAsync,
       email,
       other_attributes
@@ -371,11 +371,11 @@ function* setPasswordSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call(
-      setPasswordSagaAsync,
-      email,
-      password
-    );
+     yield call(
+       setPasswordSagaAsync,
+       email,
+       password
+     );
     yield put({
       type: types.SET_PASSWORD_SUCCESS
     })
@@ -391,7 +391,7 @@ function* trialPackageSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call(
+    yield call(
       trialPackageSagaAsync,
       email
     );
@@ -414,14 +414,14 @@ function* registerSaga({ payload }) {
   } = payload
 
   try {
-    const apiResult = yield call(
-      registerSagaAsync,
-      email,
-      password,
-      firstname,
-      lastname,
-      phone
-    );
+     yield call(
+       registerSagaAsync,
+       email,
+       password,
+       firstname,
+       lastname,
+       phone
+     );
     yield put({
       type: types.REGISTER_SUCCESS
     })
@@ -480,7 +480,7 @@ function* resetPasswordSaga({ payload }) {
 function* forgotPasswordSaga({ payload }) {
   const { email } = payload;
   try {
-    const apiResult = yield call(
+    yield call(
       forgotPasswordSagaAsync,
       email
     );

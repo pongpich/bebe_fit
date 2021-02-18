@@ -43,6 +43,9 @@ class ForgotPassword extends Component {
       const curr = new Date().getTime();
 
       if (expire_time > curr) {
+        this.setState({
+          email: email
+        });
         this.props.resetPassword(
           email,
           user_id,
