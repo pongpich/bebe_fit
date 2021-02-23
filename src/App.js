@@ -16,6 +16,7 @@ import ForgotPassword from "./views/forgotPassword";
 import VideoList from "./views/videoList";
 import Platform from "./views/platform";
 import Package from "./views/package";
+import ImportMembers from "./views/importMembers";
 
 import { awsConfig } from "./constants/defaultValues";
 
@@ -104,7 +105,7 @@ class App extends Component {
           <Route path='/login' component={Login} />
           <Route path='/register' component={Register} />
           <Route path='/forgot-password' component={ForgotPassword} />
-          {/* <Route path='/signup' component={Signup} /> */}
+          <Route path='/import-Members' component={ImportMembers} />
           <Route path='/VideoList' component={VideoList} />
           <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} />

@@ -24,7 +24,8 @@ export const types = {
   FORGOT_PASSWORD: "FORGOT_PASSWORD",
   RESET_PASSWORD: "RESET_PASSWORD",
   RESET_PASSWORD_SUCCESS: "RESET_PASSWORD_SUCCESS",
-  RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL"
+  RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL",
+  IMPORT_MEMBERS: "IMPORT_MEMBERS"
 }
 
 export const resetPassword = (
@@ -97,6 +98,16 @@ export const updateProfile = (
     }
   });
 
+export const importMembers = (emails, start_date, expire_date) => ({
+  type: types.IMPORT_MEMBERS,
+  payload: {
+    emails,
+    start_date,
+    expire_date
+  }
+})
+
+
 export const register = (email, password, firstname, lastname, phone) => ({
   type: types.REGISTER,
   payload: {
@@ -163,6 +174,25 @@ const trialPackageSagaAsync = async (
     const apiResult = await API.put("bebe", "/trialPackage", {
       body: {
         email: email,
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const importMembersSagaAsync = async (
+  emails,
+  start_date,
+  expire_date
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/import_members", {
+      body: {
+        emails,
+        start_date,
+        expire_date
       }
     });
     return apiResult;
@@ -371,11 +401,11 @@ function* setPasswordSaga({ payload }) {
   } = payload
 
   try {
-     yield call(
-       setPasswordSagaAsync,
-       email,
-       password
-     );
+    yield call(
+      setPasswordSagaAsync,
+      email,
+      password
+    );
     yield put({
       type: types.SET_PASSWORD_SUCCESS
     })
@@ -404,6 +434,25 @@ function* trialPackageSaga({ payload }) {
   }
 }
 
+function* importMembersSaga({ payload }) {
+  const {
+    emails,
+    start_date,
+    expire_date
+  } = payload
+
+  try {
+    yield call(
+      importMembersSagaAsync,
+      emails,
+      start_date,
+      expire_date
+    )
+  } catch (error) {
+    console.log("error from register :", error);
+  }
+}
+
 function* registerSaga({ payload }) {
   const {
     email,
@@ -414,14 +463,14 @@ function* registerSaga({ payload }) {
   } = payload
 
   try {
-     yield call(
-       registerSagaAsync,
-       email,
-       password,
-       firstname,
-       lastname,
-       phone
-     );
+    yield call(
+      registerSagaAsync,
+      email,
+      password,
+      firstname,
+      lastname,
+      phone
+    );
     yield put({
       type: types.REGISTER_SUCCESS
     })
@@ -559,6 +608,10 @@ export function* watchResetPassword() {
   yield takeEvery(types.RESET_PASSWORD, resetPasswordSaga)
 }
 
+export function* watchImportMembers() {
+  yield takeEvery(types.IMPORT_MEMBERS, importMembersSaga);
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -570,7 +623,8 @@ export function* saga() {
     fork(watchTrialPackage),
     fork(watchGetExpireDate),
     fork(watchForgotPassword),
-    fork(watchResetPassword)
+    fork(watchResetPassword),
+    fork(watchImportMembers)
   ]);
 }
 
