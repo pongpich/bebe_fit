@@ -401,10 +401,10 @@ class VideoList extends Component {
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
-                {focusDay === 0  && <b>DAY1</b>}
-                {focusDay === 1  && <b>DAY2</b>}
-                {focusDay === 2  && <b>DAY3</b>}
-                {focusDay === 3  && <b>DAY4</b>}
+                {focusDay === 0 && <b>DAY1</b>}
+                {focusDay === 1 && <b>DAY2</b>}
+                {focusDay === 2 && <b>DAY3</b>}
+                {focusDay === 3 && <b>DAY4</b>}
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -477,16 +477,20 @@ class VideoList extends Component {
                         }
                       </div>
                       <div className="col col-lg-4 d-flex align-items-center mt-3">
-                        <i
-                          className="changeVideoBtn fa fa-circle fa-1x"
-                          onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true">
-                          เปลี่ยนวีดีโอ
+                        {(item.play_time !== item.duration) &&
+                          <i
+                            className="changeVideoBtn fa fa-circle fa-1x"
+                            onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true">
+                            เปลี่ยนวีดีโอ
                         </i>
-                        <i
-                          className="randomVideoBtn fa fa-circle fa-1x"
-                          onClick={() => this.randomVideo(item.video_id, item.category, index)} aria-hidden="true">
-                          สุ่มวีดีโอ
+                        }
+                        {(item.play_time !== item.duration) &&
+                          <i
+                            className="randomVideoBtn fa fa-circle fa-1x"
+                            onClick={() => this.randomVideo(item.video_id, item.category, index)} aria-hidden="true">
+                            สุ่มวีดีโอ
                         </i>
+                        }
                       </div>
                     </div>
                   ))
