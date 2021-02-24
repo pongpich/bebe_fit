@@ -11,6 +11,9 @@ export const types = {
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
+  VIDEO_LIST_FOR_USER_LASTWEEK: "VIDEO_LIST_FOR_USER_LASTWEEK",
+  VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS: "VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS",
+  VIDEO_LIST_FOR_USER_LASTWEEK_FAIL: "VIDEO_LIST_FOR_USER_LASTWEEK_FAIL",
   RANDOM_VIDEO: "RANDOM_VIDEO",
   RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
   RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
@@ -78,6 +81,20 @@ export const updatePlaytime = (user_id, start_date, day_number, video_number, pl
   }
 })
 
+export const videoListForUserLastWeek = (
+  user_id,
+  weight,
+  start_date,
+  offset) => ({
+    type: types.VIDEO_LIST_FOR_USER_LASTWEEK,
+    payload: {
+      user_id,
+      weight,
+      start_date,
+      offset
+    }
+  });
+
 export const videoListForUser = (
   user_id,
   weight,
@@ -137,6 +154,28 @@ const updatePlaytimeSagaAsync = async (
     return apiResult;
   } catch (error) {
     return { error, messsage: error.message };
+  }
+}
+
+const videoListForUserLastWeekSagaAsync = async (
+  user_id,
+  weight,
+  start_date,
+  offset
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/videoListForUserLastWeek", {
+      queryStringParameters: {
+        user_id,
+        weight,
+        start_date,
+        offset
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
   }
 }
 
@@ -358,6 +397,40 @@ function* updatePlaytimeSaga({ payload }) {
   }
 }
 
+function* videoListForUserLastWeekSaga({ payload }) {
+  const {
+    user_id,
+    weight,
+    start_date,
+    offset
+  } = payload
+  try {
+    const apiResult = yield call(
+      videoListForUserLastWeekSagaAsync,
+      user_id,
+      weight,
+      start_date,
+      offset
+    );
+    if (apiResult.results.length > 0) {
+      const activities = JSON.parse(apiResult.results[0].activities);
+      const lastweek = JSON.parse(apiResult.results[0].week_in_program);
+      if (lastweek > 0) { // lastweek > 0 คือ ไม่ใช่สัปดาห์ที่ 1
+        yield put({
+          type: types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS,
+          payload: activities
+        })
+      } else {
+        yield put({ // lastweek <= 0 กำหนด isFirstWeek = true
+          type: types.VIDEO_LIST_FOR_USER_LASTWEEK_FAIL
+        })
+      }
+    }
+  } catch (error) {
+    console.log("error form videoListForUserSaga", error);
+  }
+}
+
 function* videoListForUserSaga({ payload }) {
   const {
     user_id,
@@ -418,6 +491,10 @@ export function* watchVideoListForUser() {
   yield takeEvery(types.VIDEO_LIST_FOR_USER, videoListForUserSaga)
 }
 
+export function* watchVideoListForUserLastWeek() {
+  yield takeEvery(types.VIDEO_LIST_FOR_USER_LASTWEEK, videoListForUserLastWeekSaga)
+}
+
 export function* watchRandomVideo() {
   yield takeEvery(types.RANDOM_VIDEO, randomVideoSaga)
 }
@@ -435,6 +512,7 @@ export function* saga() {
     fork(watchUpdatePlaytime),
     fork(watchUpdatePlaylist),
     fork(watchVideoListForUser),
+    fork(watchVideoListForUserLastWeek),
     fork(watchRandomVideo),
     fork(watchSelectChangeVideo),
     fork(watchCreateCustomWeekForUser)
@@ -447,6 +525,8 @@ export function* saga() {
 
 const INIT_STATE = {
   exerciseVideo: [[], [], [], []],
+  exerciseVideoLastWeek: [[], [], [], []],
+  isFirstWeek: false,
   status: "default",
   video: {},
   videos: []
@@ -470,6 +550,16 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         exerciseVideo: action.payload
       };
+    case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
+      return {
+        ...state,
+        exerciseVideoLastWeek: action.payload
+      };
+    case types.VIDEO_LIST_FOR_USER_LASTWEEK_FAIL:
+      return {
+        ...state,
+        isFirstWeek: true
+      }
     case types.VIDEO_LIST_FOR_USER_SUCCESS:
       return {
         ...state,

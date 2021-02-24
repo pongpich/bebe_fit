@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 
 import { updateProfile, logoutUser } from "../redux/auth";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek } from "../redux/exerciseVideos";
 
 
 import bghead from "../assets/img/bghead.jpg";
@@ -31,6 +31,7 @@ class VideoList extends Component {
       other_attributes: "",
       selectedVDO: null,
       editVDO_click: "default",
+      lastWeekVDO_click: "default",
       tempPlaylist: [],
       indexPlaylist: 0,
       selectChangeVideoList: []
@@ -50,6 +51,12 @@ class VideoList extends Component {
     const { user } = this.props;
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
+        this.props.user.user_id,
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+      );
+      this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
@@ -78,6 +85,12 @@ class VideoList extends Component {
         other_attributes: user.other_attributes
       })
       this.props.videoListForUser(
+        this.props.user.user_id,
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+      );
+      this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
@@ -130,6 +143,12 @@ class VideoList extends Component {
         this.props.user.start_date,
         this.props.user.offset
       );
+      this.props.videoListForUserLastWeek(
+        this.props.user.user_id,
+        this.props.user.other_attributes.weight,
+        this.props.user.start_date,
+        this.props.user.offset
+      );
     }
   }
 
@@ -172,6 +191,12 @@ class VideoList extends Component {
   exerciseDaySelection(focusDay) {
     if (this.props.exerciseVideo) {
       return this.props.exerciseVideo[focusDay];
+    }
+  }
+
+  exerciseDaySelectionLastWeek(focusDay) {
+    if (this.props.exerciseVideoLastWeek) {
+      return this.props.exerciseVideoLastWeek[focusDay];
     }
   }
 
@@ -727,6 +752,16 @@ class VideoList extends Component {
                 >
                   <b>DAY4</b>
                 </a>
+                {
+                  (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
+                  <a
+                    className="nav-link ml-auto"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => this.setState({ lastWeekVDO_click: "show" })}
+                  >
+                    <u>ดูวีดีโอออกกำลังกายอาทิตย์ที่ผ่านมา</u>
+                  </a>
+                }
               </nav>
             </div>
             <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
@@ -808,8 +843,157 @@ class VideoList extends Component {
     )
   }
 
+  renderVideoListLastWeek() {
+    const { focusDay, selectedVDO } = this.state;
+    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+    let allMinute = [];
+    let allSecond = [];
+    if (this.props.exerciseVideo) {
+      todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
+      todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
+    }
+    let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let minute2 = Math.floor(sumSecond / 60);
+    let totalMinute = Number(sumMinute) + Number(minute2);
+    let totalSecond = sumSecond % 60;
+    let timesExercise;
+    if (totalSecond < 10) {
+      timesExercise = `${totalMinute}.0${totalSecond}`;
+    } else {
+      timesExercise = `${totalMinute}.${totalSecond}`;
+    }
+
+    return (
+      <div className="card-body d-flex justify-content-center">
+        <form>
+          <ul className="nav nav-tabs" id="myTab" role="tablist">
+            <li className="nav-item">
+              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+            </li>
+            <li className="nav-item">
+              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
+            </li>
+          </ul>
+          <div className="tab-content mt-3 mb-2" id="myTabContent">
+            <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <nav className="nav">
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 0 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(0)}
+                >
+                  <b>DAY1</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 1 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(1)}
+                >
+                  <b>DAY2</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 2 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(2)}
+                >
+                  <b>DAY3</b>
+                </a>
+                <a
+                  className="nav-link"
+                  style={{ color: `${focusDay === 3 ? "red" : ""}`, cursor: "pointer" }}
+                  onClick={() => this.onDayChange(3)}
+                >
+                  <b>DAY4</b>
+                </a>
+                <a
+                  className="nav-link ml-auto"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => this.setState({ lastWeekVDO_click: "default" })}
+                >
+                  <u>ดูวีดีโอออกกำลังกายปัจจุบัน</u>
+                </a>
+              </nav>
+            </div>
+            <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
+            <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
+          </div>
+
+          <div className="">
+            <div className="trailer" id={`popupVDO`}>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+            </div>
+            <div className="trailer" id={`popupVDOList`}>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+            </div>
+            <table className="table table-responsive">
+              <thead>
+                <tr>
+                  <th className="tabletitle row">
+                    {
+                      <span className="col-lg-7 col-md-4 col-12 mb-3" style={{ fontSize: "15px", float: "left" }}> รวมเวลาฝึก {timesExercise} นาที</span>
+                    }
+                    <div className="col-lg-3 col-md-5 col-12">
+                    </div>
+                    <div className="col-lg-2 col-md-3 col-12">
+                      <i
+                        className="fa fa-play-circle fa-1x"
+                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                        onClick={() => this.toggleList()} aria-hidden="true">
+                        เล่นต่อเนื่อง
+                      </i>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  (this.props.exerciseVideo) &&
+                  (todayExercise.map((item, index) => (
+                    <div className="row ml-1" key={index}>
+                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
+                        <div className="videoThumb mr-2">
+                          <div className="containerThumb">
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
+                            <div className="overlay" onClick={() => this.toggle(item)}>
+                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                <h6> <b>{item.duration} นาที</b> </h6>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="videoName mt-3">
+                          <h5> {item.name} </h5>
+                          <p> {item.category} </p>
+                        </div>
+                        {(item.play_time === item.duration) &&
+                          <div className="videoEnd">
+                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          </div>
+                        }
+                      </div>
+                    </div>
+
+                  )))
+                }
+              </tbody>
+            </table>
+          </div>
+        </form>
+
+      </div>
+    )
+  }
+
   render() {
-    const { editVDO_click } = this.state;
+    const { editVDO_click, lastWeekVDO_click } = this.state;
     return (
       < div >
         <div className="page-header header-small mt-5" data-parallax="true"
@@ -841,7 +1025,10 @@ class VideoList extends Component {
                   (editVDO_click === "show") ?
                     this.renderEditVDO()
                     :
-                    (this.renderVideoList())
+                    (lastWeekVDO_click === "show") ?
+                      this.renderVideoListLastWeek()
+                      :
+                      this.renderVideoList()
                   :
                   this.renderOtherAttribute()
               }
@@ -856,11 +1043,11 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user } = authUser;
-  const { exerciseVideo, status, video, videos } = exerciseVideos;
-  return { user, exerciseVideo, status, video, videos };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek };
 
 export default connect(
   mapStateToProps,
