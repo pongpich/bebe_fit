@@ -54,12 +54,14 @@ class VideoList extends Component {
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       this.addEventToVideo();
@@ -67,13 +69,14 @@ class VideoList extends Component {
     if (user === null) {
       this.props.history.push('/login');
     }
-    if (user.expire_date === null) {
+    if (user.expire_date === null) { // expire_date = null คือ สมัครแล้ว แต่ยังไม่ซื้อ package
       this.props.history.push('/platform');
     } else if (user.expire_date !== null) {
       var curr = new Date().getTime();
       var expire_date = new Date(user.expire_date).getTime();
       if (curr > expire_date) { //curr > expire_date คือ หมดอายุ
-        this.props.history.push('/platform');
+        //this.props.history.push('/platform'); (requirements เก่า)
+        //เปลี่ยน requirements ใหม่ เป็นดู VDO สัปดาห์สุดท้ายได้
       }
     }
   }
@@ -88,12 +91,14 @@ class VideoList extends Component {
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       if (this.props.user.other_attributes) {
@@ -141,12 +146,14 @@ class VideoList extends Component {
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         this.props.user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
     }

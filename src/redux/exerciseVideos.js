@@ -85,12 +85,14 @@ export const videoListForUserLastWeek = (
   user_id,
   weight,
   start_date,
+  expire_date,
   offset) => ({
     type: types.VIDEO_LIST_FOR_USER_LASTWEEK,
     payload: {
       user_id,
       weight,
       start_date,
+      expire_date,
       offset
     }
   });
@@ -99,12 +101,14 @@ export const videoListForUser = (
   user_id,
   weight,
   start_date,
+  expire_date,
   offset) => ({
     type: types.VIDEO_LIST_FOR_USER,
     payload: {
       user_id,
       weight,
       start_date,
+      expire_date,
       offset
     }
   });
@@ -161,6 +165,7 @@ const videoListForUserLastWeekSagaAsync = async (
   user_id,
   weight,
   start_date,
+  expire_date,
   offset
 ) => {
   try {
@@ -169,6 +174,7 @@ const videoListForUserLastWeekSagaAsync = async (
         user_id,
         weight,
         start_date,
+        expire_date,
         offset
       }
     });
@@ -183,6 +189,7 @@ const videoListForUserSagaAsync = async (
   user_id,
   weight,
   start_date,
+  expire_date,
   offset
 ) => {
   try {
@@ -191,6 +198,7 @@ const videoListForUserSagaAsync = async (
         user_id,
         weight,
         start_date,
+        expire_date,
         offset
       }
     });
@@ -402,6 +410,7 @@ function* videoListForUserLastWeekSaga({ payload }) {
     user_id,
     weight,
     start_date,
+    expire_date,
     offset
   } = payload
   try {
@@ -410,6 +419,7 @@ function* videoListForUserLastWeekSaga({ payload }) {
       user_id,
       weight,
       start_date,
+      expire_date,
       offset
     );
     if (apiResult.results.length > 0) {
@@ -436,6 +446,7 @@ function* videoListForUserSaga({ payload }) {
     user_id,
     weight,
     start_date,
+    expire_date,
     offset
   } = payload
   try {
@@ -444,6 +455,7 @@ function* videoListForUserSaga({ payload }) {
       user_id,
       weight,
       start_date,
+      expire_date,
       offset
     );
     if (apiResult.results.length > 0) {
