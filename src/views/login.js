@@ -17,7 +17,6 @@ class Login extends Component {
     super(props);
     this.state = {
       email: "",
-      password: "",
       statusLogin: "default"
     };
   }
@@ -44,14 +43,14 @@ class Login extends Component {
   }
 
   onUserLogin() {
-    if (this.state.email !== "" && this.state.password !== "") {
+    if (this.state.email !== "") {
       this.props.loginUser(this.state.email, this.state.password);
       if (!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email))) {
         this.setState({
           statusLogin: "fail"
         });
       }
-    } else if (this.state.email === "" || this.state.password === "") {
+    } else if (this.state.email === "") {
       this.setState({
         statusLogin: "fail"
       });
@@ -92,17 +91,9 @@ class Login extends Component {
                     value={this.state.email} onChange={(event) => this.handleChange(event)}
                   />
                 </Label>
-                <Label className="form-group2 has-float-label mb-4">
-                  {"Password"}
-                  <Input
-                    type="password"
-                    id="password"
-                    value={this.state.password} onChange={(event) => this.handleChange(event)}
-                  />
-                </Label>
                 {
                   (statusLogin === "fail" && !(this.props.status === "success")) &&
-                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลหรือรหัสผ่านไม่ถูกต้อง</h6></small>
+                  <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลไม่ถูกต้อง</h6></small>
                 }
 
                 <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
