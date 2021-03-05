@@ -719,13 +719,13 @@ class VideoList extends Component {
         <form>
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">
-              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
+              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
             </li>
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
@@ -877,13 +877,13 @@ class VideoList extends Component {
         <form>
           <ul className="nav nav-tabs" id="myTab" role="tablist">
             <li className="nav-item">
-              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
+              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
             </li>
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
