@@ -46,7 +46,7 @@ class App extends Component {
         </a>
         <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>บทความ</a>
             </li>
             <li className="nav-item">
@@ -56,28 +56,44 @@ class App extends Component {
               <a className="nav-link" href="#/platform" onClick={() => this.props.history.push('/platform')} style={{ color: "white", cursor: "pointer" }}>
                 Platform
               </a>
-            </li>
+            </li> */}
+            {
+              (this.props.user !== null && this.props.user.authorization === "admin") &&
+              <li className="nav-item">
+                <a className="nav-link" href="#/videolist" onClick={() => this.props.history.push('/videolist')} style={{ color: "white", cursor: "pointer" }}>
+                  Platform
+                </a>
+              </li>
+            }
           </ul>
         </div>
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>ตะกร้าสินค้า</a>
-            </li>
-            {
+            </li> */}
+            {/* {
               (this.props.user === null) &&
               <li className="nav-item">
                 <a className="nav-link" href="#/login" onClick={() => this.props.history.push('/login')} style={{ color: "white", cursor: "pointer" }}>
                   เข้าสู่ระบบ
                 </a>
               </li>
-            }
-            {
+            } */}
+            {/* {
               (this.props.user === null || this.props.user.password === null) && //password === null คือกรณีผู้ใช้ทำการ ResetPassword
               <li className="nav-item">
                 <a className="nav-link" href="#/register" onClick={() => this.props.history.push('/register')} style={{ color: "white", cursor: "pointer" }}>
                   สมัครสมาชิก
+                </a>
+              </li>
+            } */}
+            {
+              (this.props.user !== null && this.props.user.authorization === "admin") &&
+              <li className="nav-item">
+                <a className="nav-link" href="#/import-members" onClick={() => this.props.history.push('/import-members')} style={{ color: "white", cursor: "pointer" }}>
+                  เพิ่มสมาชิก
                 </a>
               </li>
             }
@@ -101,19 +117,18 @@ class App extends Component {
         {this.renderNavbar()}
         <Switch>
           <Route exact path="/">
-            <Redirect to="/platform" />
+            <Redirect to="/login" />
           </Route>
           <Route path='/login' component={Login} />
-          <Route path='/register' component={Register} />
-          <Route path='/forgot-password' component={ForgotPassword} />
+          {/* <Route path='/register' component={Register} />
+          <Route path='/forgot-password' component={ForgotPassword} /> */}
           <Route path='/import-Members' component={ImportMembers} />
-          <Route path='/Challenges' component={Challenges} />
+          {/* <Route path='/Challenges' component={Challenges} /> */}
           <Route path='/VideoList' component={VideoList} />
-          <Route path='/platform' component={Platform} />
-          <Route path='/package' component={Package} />
-          <Route path='/package' component={Package} />
+          {/* <Route path='/platform' component={Platform} />
+          <Route path='/package' component={Package} /> */}
           <Route path='*'>
-            <Redirect to="/platform" />
+            <Redirect to="/login" />
           </Route>
         </Switch>
       </div>

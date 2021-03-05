@@ -445,11 +445,11 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture ></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
@@ -721,12 +721,12 @@ class VideoList extends Component {
             <li className="nav-item">
               <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li>
             <li className="nav-item">
               <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
-            </li>
+            </li> */}
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -777,11 +777,11 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
@@ -879,12 +879,12 @@ class VideoList extends Component {
             <li className="nav-item">
               <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li>
             <li className="nav-item">
               <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">เข้าร่วมชาเลนจ์</a>
-            </li>
+            </li> */}
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -932,11 +932,11 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls></video>
+              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls></video>
+              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
@@ -1006,7 +1006,7 @@ class VideoList extends Component {
         <div className="page-header header-small mt-5" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">
-            <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
+            <video className="mt-4" width="100%" height="100%" controls controlsList="nodownload" disablePictureInPicture autoPlay muted >
               <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
             </video>
           </div>

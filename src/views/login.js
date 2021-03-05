@@ -24,7 +24,7 @@ class Login extends Component {
   componentDidMount() {
     const { user } = this.props;
     if (user !== null && user.password !== null) {
-      this.props.history.push('/platform');
+      this.props.history.push('/videolist');
     }
   }
 
@@ -109,7 +109,7 @@ class Login extends Component {
                     </span>
                   </Button>
                 </div>
-                <div className="d-flex justify-content-between align-items-center mb-3">
+                {/* <div className="d-flex justify-content-between align-items-center mb-3">
                   <Button
                     className="btn-link"
                     color="empty"
@@ -131,7 +131,7 @@ class Login extends Component {
                   >
                     {"สมัครสมาชิก"}
                   </Button>
-                </div>
+                </div> */}
               </Form>
             </div>
           </div>
