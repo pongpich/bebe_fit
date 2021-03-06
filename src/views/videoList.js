@@ -82,7 +82,7 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user } = this.props;
+    const { user, exerciseVideo } = this.props;
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
       this.setState({
         other_attributes: user.other_attributes
@@ -120,6 +120,14 @@ class VideoList extends Component {
         tempPlaylist: playlist
       })
     }
+    if (prevProps.exerciseVideo !== exerciseVideo) { //เพื่อ update playtime ของ renderEditVDO 
+      const { focusDay } = this.state;
+      const todayExercise = this.exerciseDaySelection(focusDay);
+      const tempPlaylist = [...todayExercise];
+      this.setState({
+        tempPlaylist: tempPlaylist
+      })
+    }
     if (prevProps.videos !== this.props.videos) {
       const videos = this.props.videos;
       this.setState({
@@ -132,6 +140,9 @@ class VideoList extends Component {
     if (prevState.editVDO_click === "show" && this.state.editVDO_click !== "show") {
       this.addEventToVideo();
     }
+    if (prevState.editVDO_click !== "show" && this.state.editVDO_click === "show") {
+      this.addEventToVideo();
+    }
     if (user && prevProps.user && (prevProps.user.other_attributes === null && user.other_attributes !== null)) {
       this.setState({
         other_attributes: user.other_attributes
@@ -140,6 +151,7 @@ class VideoList extends Component {
         this.props.user.user_id,
         user.other_attributes.weight,
         this.props.user.start_date,
+        this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUser(
@@ -331,6 +343,7 @@ class VideoList extends Component {
     if (video.currentTime >= (video.duration * 0.99) && (selectedVDO.duration !== selectedVDO.play_time)) {
       const user_id = this.props.user.user_id;
       const start_date = this.props.user.start_date;
+      const expire_date = this.props.user.expire_date;
       const day_number = focusDay;
       const video_number = selectedVDO.order;
       const play_time = selectedVDO.duration;
@@ -340,7 +353,7 @@ class VideoList extends Component {
       this.setState({
         selectedVDO: newVideo
       });
-      this.props.updatePlaytime(user_id, start_date, day_number, video_number, play_time, tempExerciseVideo);
+      this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideo);
     }
   }
 

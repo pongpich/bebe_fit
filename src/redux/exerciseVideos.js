@@ -24,12 +24,13 @@ export const types = {
   CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST"
 }
 
-export const createCustomWeekForUser = (user_id, weight, startDate, offset) => ({
+export const createCustomWeekForUser = (user_id, weight, start_date, expire_date, offset) => ({
   type: types.CREATE_CUSTOM_WEEK_FOR_USER,
   payload: {
     user_id,
     weight,
-    startDate,
+    start_date,
+    expire_date,
     offset
   }
 });
@@ -71,11 +72,12 @@ export const updatePlaylist = (user_id, start_date, day_number, playlist, exerci
   }
 })
 
-export const updatePlaytime = (user_id, start_date, day_number, video_number, play_time, exerciseVideo) => ({
+export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
-    start_date,
+    start_date, 
+    expire_date,
     day_number,
     video_number,
     play_time,
@@ -143,6 +145,7 @@ const updatePlaylistSagaAsync = async (
 const updatePlaytimeSagaAsync = async (
   user_id,
   start_date,
+  expire_date,
   day_number,
   video_number,
   play_time
@@ -152,6 +155,7 @@ const updatePlaytimeSagaAsync = async (
       body: {
         user_id,
         start_date,
+        expire_date,
         day_number,
         video_number,
         play_time
@@ -252,7 +256,8 @@ const randomVideoSagaAsync = async (
 const createCustomWeekForUserSagaAsync = async (
   user_id,
   weight,
-  startDate,
+  start_date, 
+  expire_date,
   offset
 ) => {
   try {
@@ -260,7 +265,8 @@ const createCustomWeekForUserSagaAsync = async (
       body: {
         user_id,
         weight,
-        startDate,
+        start_date, 
+        expire_date,
         offset
       }
     });
@@ -374,6 +380,7 @@ function* updatePlaytimeSaga({ payload }) {
   const {
     user_id,
     start_date,
+    expire_date,
     day_number,
     video_number,
     play_time,
@@ -384,6 +391,7 @@ function* updatePlaytimeSaga({ payload }) {
       updatePlaytimeSagaAsync,
       user_id,
       start_date,
+      expire_date,
       day_number,
       video_number,
       play_time
@@ -484,7 +492,8 @@ function* createCustomWeekForUserSaga({ payload }) {
   const {
     user_id,
     weight,
-    startDate,
+    start_date, 
+    expire_date,
     offset
   } = payload
 
@@ -493,7 +502,8 @@ function* createCustomWeekForUserSaga({ payload }) {
       createCustomWeekForUserSagaAsync,
       user_id,
       weight,
-      startDate,
+      start_date, 
+      expire_date,
       offset
     );
   } catch (error) {
