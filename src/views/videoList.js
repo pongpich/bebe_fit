@@ -254,7 +254,7 @@ class VideoList extends Component {
     });
     this.props.randomVideo(video_id, category, type);
     var delayInMilliseconds = 1750; //1.75 second
-    setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+    setTimeout(() => { // แสดง Spinner 1.75 วินาที 
       this.setState({
         spinnerRandomVideo: "default"
       })
