@@ -511,24 +511,23 @@ class VideoList extends Component {
                           <div className="containerThumb">
                             <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
-                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                              {
+                                (this.state.spinnerRandomVideo === "loading") ?
+                                  <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                  :
+                                  <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                              }
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
                                 <h6> <b>{item.duration} นาที</b> </h6>
                               </div>
                             </div>
                           </div>
                         </div>
-                        {
-                          (this.state.spinnerRandomVideo === "loading") ?
-                            <i className="fa fa-refresh fa-spin fa-5x"></i>
-                            :
-                            <div className="videoName mt-3">
-                              <h5> {item.name} </h5>
-                              <p> {item.category} </p>
-                              <br></br>
-                            </div>
-                        }
-
+                        <div className="videoName mt-3">
+                          <h5> {item.name} </h5>
+                          <p> {item.category} </p>
+                          <br></br>
+                        </div>
                         {(item.play_time === item.duration) &&
                           <div className="videoEnd">
                             <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
