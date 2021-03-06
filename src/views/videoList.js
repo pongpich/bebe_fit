@@ -253,8 +253,8 @@ class VideoList extends Component {
       spinnerRandomVideo: "loading"
     });
     this.props.randomVideo(video_id, category, type);
-    var delayInMilliseconds = 1750; //1.75 second
-    setTimeout(() => { // แสดง Spinner 1.75 วินาที 
+    var delayInMilliseconds = 500; //0.5 second
+    setTimeout(() => { // แสดง Spinner 0.5 วินาที 
       this.setState({
         spinnerRandomVideo: "default"
       })
