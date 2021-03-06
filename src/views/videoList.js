@@ -34,7 +34,8 @@ class VideoList extends Component {
       lastWeekVDO_click: "default",
       tempPlaylist: [],
       indexPlaylist: 0,
-      selectChangeVideoList: []
+      selectChangeVideoList: [],
+      spinnerRandomVideo: "default"
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -248,9 +249,16 @@ class VideoList extends Component {
 
   randomVideo(video_id, category, type, index) {
     this.setState({
-      indexPlaylist: index
+      indexPlaylist: index,
+      spinnerRandomVideo: "loading"
     });
     this.props.randomVideo(video_id, category, type);
+    var delayInMilliseconds = 1750; //1.75 second
+    setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+      this.setState({
+        spinnerRandomVideo: "default"
+      })
+    }, delayInMilliseconds);
   }
 
   editVDO() {
@@ -510,11 +518,17 @@ class VideoList extends Component {
                             </div>
                           </div>
                         </div>
-                        <div className="videoName mt-3">
-                          <h5> {item.name} </h5>
-                          <p> {item.category} </p>
-                          <br></br>
-                        </div>
+                        {
+                          (this.state.spinnerRandomVideo === "loading") ?
+                            <i className="fa fa-refresh fa-spin fa-5x"></i>
+                            :
+                            <div className="videoName mt-3">
+                              <h5> {item.name} </h5>
+                              <p> {item.category} </p>
+                              <br></br>
+                            </div>
+                        }
+
                         {(item.play_time === item.duration) &&
                           <div className="videoEnd">
                             <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
@@ -530,12 +544,17 @@ class VideoList extends Component {
                         </i>
                         }
                         {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
-                          <i
-                            className="randomVideoBtn fa fa-circle fa-1x"
-                            onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
-                            สุ่มวีดีโอ
-                        </i>
+                          (
+                            (this.state.spinnerRandomVideo === "loading") ?
+                              <i className="fa fa-refresh fa-spin fa-5x"></i>
+                              :
+                              <i
+                                className="randomVideoBtn fa fa-circle fa-1x"
+                                onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true"
+                              > สุ่มวีดีโอ </i>
+                          )
                         }
+
                       </div>
                     </div>
                   ))
