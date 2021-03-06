@@ -522,14 +522,14 @@ class VideoList extends Component {
                         }
                       </div>
                       <div className="col col-lg-4 d-flex align-items-center mt-3">
-                        {(item.play_time !== item.duration) &&
+                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
                           <i
                             className="changeVideoBtn fa fa-circle fa-1x"
                             onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
                             เปลี่ยนวีดีโอ
                         </i>
                         }
-                        {(item.play_time !== item.duration) &&
+                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
                           <i
                             className="randomVideoBtn fa fa-circle fa-1x"
                             onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
