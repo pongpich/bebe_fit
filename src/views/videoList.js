@@ -410,7 +410,7 @@ class VideoList extends Component {
           <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
-            <div className="overlay"></div>
+            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}></div>
             <div className="content">
               <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
               <h4 className="mb-5"><b>เลือกคลิปวีดีโอ</b></h4>
