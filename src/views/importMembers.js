@@ -13,15 +13,16 @@ class ImportMembers extends Component {
       emails: [],
       selectedStartDate: null,
       selectedExpireDate: null,
-      selectedFile: null
+      selectedFile: null,
+      statusSubmit: "default"
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
   }
 
   componentDidMount() {
     const { user } = this.props;
-    if (user) { // ต้องเป็น admin เท่านั้นถึงจะเข้าหน้า import-members ได้
-      if (user !== null && user.password !== null && user.authorization !== "admin") {
+    if (user) { // เช็คว่า login ยัง
+      if (user !== null && user.password !== null && user.authorization !== "admin") { // ต้องเป็น admin เท่านั้นถึงจะเข้าหน้า import-members ได้
         this.props.history.push('/login');
       }
     } else {
@@ -58,16 +59,27 @@ class ImportMembers extends Component {
   }
 
   onSubmit() {
-    const { emails, selectedStartDate, selectedExpireDate } = this.state;
+    const { emails, selectedStartDate, selectedExpireDate, selectedFile } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
-    this.props.importMembers(emails, start_date, expire_date);
-    document.getElementById("popupSuccessSubmit").classList.toggle("active");
-    document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
-    var delayInMilliseconds = 1750; //1.75 second
-    setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
-      this.closePopupSuccessSubmit();
-    }, delayInMilliseconds);
+    this.setState({
+      statusSubmit: "default"
+    })
+
+    if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
+      this.props.importMembers(emails, start_date, expire_date);
+      document.getElementById("popupSuccessSubmit").classList.toggle("active");
+      document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+      var delayInMilliseconds = 1750; //1.75 second
+      setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+        this.closePopupSuccessSubmit();
+      }, delayInMilliseconds);
+    } else {
+      this.setState({
+        statusSubmit: "fail"
+      })
+    }
+
   }
 
 
@@ -102,7 +114,7 @@ class ImportMembers extends Component {
   }
 
   render() {
-    const { selectedStartDate, selectedExpireDate } = this.state;
+    const { selectedStartDate, selectedExpireDate, statusSubmit } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -176,6 +188,10 @@ class ImportMembers extends Component {
               </div>
             </section>
           </div>
+          {
+            (statusSubmit === "fail") &&
+            <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>**กรุณากรอกข้อมูลให้ครบถ้วน</h6></small>
+          }
         </div>
 
 
@@ -185,8 +201,7 @@ class ImportMembers extends Component {
           onClick={() => this.setState({
             emails: [],
             selectedStartDate: null,
-            selectedExpireDate: null,
-            selectedFile: null
+            selectedExpireDate: null
           })}
         >
           ยกเลิก
