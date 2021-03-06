@@ -42,19 +42,21 @@ export const resetStatus = () => ({
   type: types.RESET_STATUS
 })
 
-export const selectChangeVideo = (video_id, category) => ({
+export const selectChangeVideo = (video_id, category, type) => ({
   type: types.SELECT_CHANGE_VIDEO,
   payload: {
     video_id,
-    category
+    category,
+    type
   }
 })
 
-export const randomVideo = (video_id, category) => ({
+export const randomVideo = (video_id, category, type) => ({
   type: types.RANDOM_VIDEO,
   payload: {
     video_id,
-    category
+    category,
+    type
   }
 })
 
@@ -211,13 +213,15 @@ const videoListForUserSagaAsync = async (
 
 const selectChangeVideoSagaAsync = async (
   video_id,
-  category
+  category,
+  type
 ) => {
   try {
     const apiResult = await API.get("bebe", "/selectChangeVideo", {
       queryStringParameters: {
         video_id,
-        category
+        category,
+        type
       }
     });
     return apiResult;
@@ -228,13 +232,15 @@ const selectChangeVideoSagaAsync = async (
 
 const randomVideoSagaAsync = async (
   video_id,
-  category
+  category,
+  type
 ) => {
   try {
     const apiResult = await API.get("bebe", "/randomVideo", {
       queryStringParameters: {
         video_id,
-        category
+        category,
+        type
       }
     });
     return apiResult;
@@ -267,13 +273,15 @@ const createCustomWeekForUserSagaAsync = async (
 function* selectChangeVideoSaga({ payload }) {
   const {
     video_id,
-    category
+    category,
+    type
   } = payload
   try {
     const apiResult = yield call(
       selectChangeVideoSagaAsync,
       video_id,
-      category
+      category,
+      type
     );
     if (apiResult.results.message === "no_video") {
       yield put({
@@ -293,13 +301,15 @@ function* selectChangeVideoSaga({ payload }) {
 function* randomVideoSaga({ payload }) {
   const {
     video_id,
-    category
+    category,
+    type
   } = payload
   try {
     const apiResult = yield call(
       randomVideoSagaAsync,
       video_id,
-      category
+      category,
+      type
     );
     if (apiResult.results.message === "no_video") {
       console.log("user :", apiResult.results);

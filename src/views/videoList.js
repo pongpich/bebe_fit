@@ -167,12 +167,12 @@ class VideoList extends Component {
     videoList.onended = () => this.onVideoEnd();
   }
 
-  togglePopupSelectEditVideo(video_id, category, index) {
+  togglePopupSelectEditVideo(video_id, category, type, index) {
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
     this.setState({
       indexPlaylist: index
     });
-    this.props.selectChangeVideo(video_id, category);
+    this.props.selectChangeVideo(video_id, category, type);
     this.props.resetStatus();
   }
 
@@ -234,11 +234,11 @@ class VideoList extends Component {
     })
   }
 
-  randomVideo(video_id, category, index) {
+  randomVideo(video_id, category, type, index) {
     this.setState({
       indexPlaylist: index
     });
-    this.props.randomVideo(video_id, category);
+    this.props.randomVideo(video_id, category, type);
   }
 
   editVDO() {
@@ -512,14 +512,14 @@ class VideoList extends Component {
                         {(item.play_time !== item.duration) &&
                           <i
                             className="changeVideoBtn fa fa-circle fa-1x"
-                            onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, index)} aria-hidden="true">
+                            onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
                             เปลี่ยนวีดีโอ
                         </i>
                         }
                         {(item.play_time !== item.duration) &&
                           <i
                             className="randomVideoBtn fa fa-circle fa-1x"
-                            onClick={() => this.randomVideo(item.video_id, item.category, index)} aria-hidden="true">
+                            onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
                             สุ่มวีดีโอ
                         </i>
                         }
