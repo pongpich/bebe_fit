@@ -32,7 +32,11 @@ class Login extends Component {
     const { status } = this.props;
     if (prevProps.status !== status) {
       if (status === "success") {
-        this.props.history.push('/VideoList');
+        if (this.props.user.authorization === "admin") {
+          this.props.history.push('/import-members');
+        } else {
+          this.props.history.push('/VideoList');
+        }
       }
       if ((/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) && (status === "fail")) {
         this.setState({

@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { importMembers } from "../redux/auth";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "./importMembers.scss";
 
 
 class ImportMembers extends Component {
@@ -21,10 +22,10 @@ class ImportMembers extends Component {
     const { user } = this.props;
     if (user) { // ต้องเป็น admin เท่านั้นถึงจะเข้าหน้า import-members ได้
       if (user !== null && user.password !== null && user.authorization !== "admin") {
-        this.props.history.push('/platform');
+        this.props.history.push('/login');
       }
     } else {
-      this.props.history.push('/platform');
+      this.props.history.push('/login');
     }
   }
 
@@ -56,12 +57,19 @@ class ImportMembers extends Component {
     }
   }
 
-  onUpload() {
+  onSubmit() {
     const { emails, selectedStartDate, selectedExpireDate } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.props.importMembers(emails, start_date, expire_date);
+    document.getElementById("popupSuccessSubmit").classList.toggle("active");
+    document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+    var delayInMilliseconds = 1750; //1.75 second
+    setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+      this.closePopupSuccessSubmit();
+    }, delayInMilliseconds);
   }
+
 
   formatDate(date) {
     var d = new Date(date),
@@ -77,10 +85,27 @@ class ImportMembers extends Component {
     return [year, month, day].join('-');
   }
 
+  closePopupSuccessSubmit() {
+    document.getElementById("popupSuccessSubmit").classList.toggle("active");
+    document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+  }
+
+  renderPopupSuccessSubmit() {
+    return (
+      <div>
+        <div className="overlay overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
+        <div className="containerPopup popupTrialRegister" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
+          <center><h2 style={{ color: "green" }}><i className="fa fa-check fa-lg" > Success</i></h2></center>
+        </div>
+      </div>
+    )
+  }
+
   render() {
     const { selectedStartDate, selectedExpireDate } = this.state;
     return (
       <div className="row">
+        {this.renderPopupSuccessSubmit()}
         <h1>.</h1>
         <div className="card mt-5 mb-3 col-lg-12">
           <div className="card-body">
@@ -169,12 +194,10 @@ class ImportMembers extends Component {
         <button
           type="button"
           className="btn btn-success col-lg-1 col-md-6 "
-          onClick={() => this.onUpload()}
+          onClick={() => this.onSubmit()}
         >
           ยืนยัน
         </button>
-
-
       </div>
     )
   }

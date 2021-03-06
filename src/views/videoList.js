@@ -70,7 +70,7 @@ class VideoList extends Component {
       this.props.history.push('/login');
     }
     if (user.expire_date === null) { // expire_date = null คือ สมัครแล้ว แต่ยังไม่ซื้อ package
-      this.props.history.push('/platform');
+      this.props.history.push('/login');
     } else if (user.expire_date !== null) {
       var curr = new Date().getTime();
       var expire_date = new Date(user.expire_date).getTime();
