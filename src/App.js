@@ -39,7 +39,7 @@ class App extends Component {
 
   renderNavbar() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <nav className="navbar navbar-expand navbar-dark bg-dark fixed-top">
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
           <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
             BEBE FIT ROUTINE
