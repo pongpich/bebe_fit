@@ -53,14 +53,16 @@ class VideoList extends Component {
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+        JSON.parse(this.props.user.other_attributes).weight,
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+        JSON.parse(this.props.user.other_attributes).weight,
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
@@ -90,14 +92,14 @@ class VideoList extends Component {
       })
       this.props.videoListForUser(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
@@ -150,21 +152,21 @@ class VideoList extends Component {
       })
       this.props.createCustomWeekForUser(
         this.props.user.user_id,
-        user.other_attributes.weight,
+        user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUser(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
       );
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
-        this.props.user.other_attributes.weight,
+        user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
@@ -547,10 +549,10 @@ class VideoList extends Component {
                         }
                         {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
                           (
-                              <i
-                                className="randomVideoBtn fa fa-circle fa-1x"
-                                onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true"
-                              > สุ่มวีดีโอ </i>
+                            <i
+                              className="randomVideoBtn fa fa-circle fa-1x"
+                              onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true"
+                            > สุ่มวีดีโอ </i>
                           )
                         }
 
