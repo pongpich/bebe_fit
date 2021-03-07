@@ -513,7 +513,10 @@ class VideoList extends Component {
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               {
                                 (this.state.spinnerRandomVideo === "loading") ?
-                                  <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                  (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
+                                    <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                    :
+                                    <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                   :
                                   <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               }
@@ -544,9 +547,6 @@ class VideoList extends Component {
                         }
                         {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
                           (
-                            (this.state.spinnerRandomVideo === "loading") ?
-                              <i className="fa fa-refresh fa-spin fa-5x"></i>
-                              :
                               <i
                                 className="randomVideoBtn fa fa-circle fa-1x"
                                 onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true"
