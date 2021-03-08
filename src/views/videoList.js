@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 
 import { updateProfile, logoutUser } from "../redux/auth";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo } from "../redux/exerciseVideos";
 
 
 import bghead from "../assets/img/bghead.jpg";
@@ -87,7 +87,7 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, exerciseVideo, statusVideoList } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusUpdateBodyInfo } = this.props;
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
       this.setState({
         other_attributes: user.other_attributes
@@ -148,10 +148,10 @@ class VideoList extends Component {
     if (prevState.editVDO_click !== "show" && this.state.editVDO_click === "show") {
       this.addEventToVideo();
     }
-    if (user && prevProps.user && ((prevProps.user.other_attributes !==  user.other_attributes))) {
-      this.setState({
+    if (user && prevProps.user && (prevProps.user.other_attributes !== user.other_attributes)) {
+      /* this.setState({
         other_attributes: user.other_attributes
-      })
+      }) */
       this.props.createCustomWeekForUser(
         this.props.user.user_id,
         user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
@@ -161,6 +161,12 @@ class VideoList extends Component {
       );
     }
     if (prevProps.statusVideoList === "no_video" && statusVideoList !== "no_video") {
+      this.props.updateBodyInfo(
+        this.props.user.user_id,
+        this.props.user.start_date,
+        this.props.user.expire_date,
+        this.state.other_attributes
+      );
       this.props.videoListForUser(
         this.props.user.user_id,
         user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
@@ -393,10 +399,25 @@ class VideoList extends Component {
       hip: Number(hip)
     }
 
-    this.props.updateProfile(
-      this.props.user.email,
-      other_attributes
-    );
+    this.setState({
+      other_attributes: other_attributes
+    })
+
+    if (this.props.user && this.props.user.other_attributes) {
+      // ให้จัดตารางVDO และ updateBodyInfo (ที่ componentDidUpdate)
+      this.props.createCustomWeekForUser(
+        this.props.user.user_id,
+        JSON.parse(this.props.user.other_attributes).weight,
+        this.props.user.start_date,
+        this.props.user.expire_date,
+        this.props.user.offset
+      );
+    } else { //ถ้า other_attributes = NULL ให้ update ฟิลด์ other_attributes ของ member
+      this.props.updateProfile(
+        this.props.user.email,
+        other_attributes
+      );
+    }
   };
 
   renderEditVDO() {
@@ -1085,11 +1106,11 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user } = authUser;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo };
 
 export default connect(
   mapStateToProps,

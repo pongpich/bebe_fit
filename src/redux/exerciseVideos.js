@@ -10,6 +10,8 @@ export const types = {
   UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
+  UPDATE_BODY_INFO: "UPDATE_BODY_INFO",
+  UPDATE_BODY_INFO_SUCCESS: "UPDATE_BODY_INFO_SUCCESS",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
   VIDEO_LIST_FOR_USER_FAIL: "VIDEO_LIST_FOR_USER_FAIL",
@@ -63,6 +65,16 @@ export const randomVideo = (video_id, category, type) => ({
   }
 })
 
+export const updateBodyInfo = (user_id, start_date, expire_date, other_attributes) => ({
+  type: types.UPDATE_BODY_INFO,
+  payload: {
+    user_id,
+    start_date,
+    expire_date,
+    other_attributes
+  }
+})
+
 export const updatePlaylist = (user_id, start_date, day_number, playlist, exerciseVideo) => ({
   type: types.UPDATE_PLAYLIST,
   payload: {
@@ -78,7 +90,7 @@ export const updatePlaytime = (user_id, start_date, expire_date, day_number, vid
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
-    start_date, 
+    start_date,
     expire_date,
     day_number,
     video_number,
@@ -255,10 +267,31 @@ const randomVideoSagaAsync = async (
   }
 }
 
+const updateBodyInfoSagaAsync = async (
+  user_id,
+  start_date,
+  expire_date,
+  other_attributes
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/updateBodyInfo", {
+      body: {
+        user_id,
+        start_date,
+        expire_date,
+        other_attributes
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const createCustomWeekForUserSagaAsync = async (
   user_id,
   weight,
-  start_date, 
+  start_date,
   expire_date,
   offset
 ) => {
@@ -267,7 +300,7 @@ const createCustomWeekForUserSagaAsync = async (
       body: {
         user_id,
         weight,
-        start_date, 
+        start_date,
         expire_date,
         offset
       }
@@ -375,6 +408,29 @@ function* updatePlaylistSaga({ payload }) {
     return apiResult;
   } catch (error) {
     return { error, messsage: error.message };
+  }
+}
+
+function* updateBodyInfoSaga({ payload }) {
+  const {
+    user_id,
+    start_date,
+    expire_date,
+    other_attributes
+  } = payload
+  try {
+    yield call(
+      updateBodyInfoSagaAsync,
+      user_id,
+      start_date,
+      expire_date,
+      other_attributes
+    );
+    yield put({
+      type: types.UPDATE_BODY_INFO_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from updateBodyInfo :", error);
   }
 }
 
@@ -498,7 +554,7 @@ function* createCustomWeekForUserSaga({ payload }) {
   const {
     user_id,
     weight,
-    start_date, 
+    start_date,
     expire_date,
     offset
   } = payload
@@ -508,11 +564,11 @@ function* createCustomWeekForUserSaga({ payload }) {
       createCustomWeekForUserSagaAsync,
       user_id,
       weight,
-      start_date, 
+      start_date,
       expire_date,
       offset
     );
-    yield put ({
+    yield put({
       type: types.CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS
     })
   } catch (error) {
@@ -548,6 +604,10 @@ export function* watchCreateCustomWeekForUser() {
   yield takeEvery(types.CREATE_CUSTOM_WEEK_FOR_USER, createCustomWeekForUserSaga)
 }
 
+export function* watchUpdateBodyInfo() {
+  yield takeEvery(types.UPDATE_BODY_INFO, updateBodyInfoSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
@@ -556,7 +616,8 @@ export function* saga() {
     fork(watchVideoListForUserLastWeek),
     fork(watchRandomVideo),
     fork(watchSelectChangeVideo),
-    fork(watchCreateCustomWeekForUser)
+    fork(watchCreateCustomWeekForUser),
+    fork(watchUpdateBodyInfo)
   ]);
 }
 
@@ -571,15 +632,22 @@ const INIT_STATE = {
   status: "default",
   video: {},
   videos: [],
-  statusVideoList: "default"
+  statusVideoList: "default",
+  statusUpdateBodyInfo: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.UPDATE_BODY_INFO_SUCCESS:
+      return {
+        ...state,
+        statusUpdateBodyInfo: "success"
+      }
     case types.CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS:
       return {
         ...state,
-        statusVideoList: "default"
+        statusVideoList: "default",
+        statusUpdateBodyInfo: "default"
       }
     case types.UPDATE_PLAYLIST:
       return {
