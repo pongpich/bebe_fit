@@ -5,12 +5,14 @@ import { API } from "aws-amplify";
 
 export const types = {
   CREATE_CUSTOM_WEEK_FOR_USER: "CREATE_CUSTOM_WEEK_FOR_USER",
+  CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS: "CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS",
   UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
   UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
+  VIDEO_LIST_FOR_USER_FAIL: "VIDEO_LIST_FOR_USER_FAIL",
   VIDEO_LIST_FOR_USER_LASTWEEK: "VIDEO_LIST_FOR_USER_LASTWEEK",
   VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS: "VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS",
   VIDEO_LIST_FOR_USER_LASTWEEK_FAIL: "VIDEO_LIST_FOR_USER_LASTWEEK_FAIL",
@@ -482,6 +484,10 @@ function* videoListForUserSaga({ payload }) {
         type: types.VIDEO_LIST_FOR_USER_SUCCESS,
         payload: activities
       })
+    } else if (apiResult.results.message === 'no_video') {
+      yield put({
+        type: types.VIDEO_LIST_FOR_USER_FAIL
+      })
     }
   } catch (error) {
     console.log("error form videoListForUserSaga", error);
@@ -506,6 +512,9 @@ function* createCustomWeekForUserSaga({ payload }) {
       expire_date,
       offset
     );
+    yield put ({
+      type: types.CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS
+    })
   } catch (error) {
     console.log("error from createCustomWeekForUser :", error);
   }
@@ -561,11 +570,17 @@ const INIT_STATE = {
   isFirstWeek: false,
   status: "default",
   video: {},
-  videos: []
+  videos: [],
+  statusVideoList: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS:
+      return {
+        ...state,
+        statusVideoList: "default"
+      }
     case types.UPDATE_PLAYLIST:
       return {
         ...state,
@@ -597,6 +612,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         exerciseVideo: action.payload
       };
+    case types.VIDEO_LIST_FOR_USER_FAIL:
+      return {
+        ...state,
+        statusVideoList: "no_video"
+      }
     case types.RANDOM_VIDEO_SUCCESS:
       return {
         ...state,

@@ -20,7 +20,7 @@ class VideoList extends Component {
     super(props);
     this.state = {
       email: "",
-      sex: "male",
+      sex: "female",
       age: "",
       weight: "",
       height: "",
@@ -67,7 +67,9 @@ class VideoList extends Component {
         this.props.user.expire_date,
         this.props.user.offset
       );
-      this.addEventToVideo();
+      if (this.props.statusVideoList !== "no_video") {
+        this.addEventToVideo();
+      }
     }
     if (user === null) {
       this.props.history.push('/login');
@@ -85,7 +87,7 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, exerciseVideo } = this.props;
+    const { user, exerciseVideo, statusVideoList } = this.props;
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
       this.setState({
         other_attributes: user.other_attributes
@@ -104,7 +106,7 @@ class VideoList extends Component {
         this.props.user.expire_date,
         this.props.user.offset
       );
-      if (this.props.user.other_attributes) {
+      if (this.props.user.other_attributes && this.props.statusVideoList !== "no_video") {
         this.addEventToVideo();
       }
     }
@@ -146,7 +148,7 @@ class VideoList extends Component {
     if (prevState.editVDO_click !== "show" && this.state.editVDO_click === "show") {
       this.addEventToVideo();
     }
-    if (user && prevProps.user && (prevProps.user.other_attributes === null && user.other_attributes !== null)) {
+    if (user && prevProps.user && ((prevProps.user.other_attributes !==  user.other_attributes))) {
       this.setState({
         other_attributes: user.other_attributes
       })
@@ -157,6 +159,8 @@ class VideoList extends Component {
         this.props.user.expire_date,
         this.props.user.offset
       );
+    }
+    if (prevProps.statusVideoList === "no_video" && statusVideoList !== "no_video") {
       this.props.videoListForUser(
         this.props.user.user_id,
         user.other_attributes.weight, //ไม่ต้อง JSON.parse เพราะผ่านการ UPDATE_PROFILE_SUCCESS
@@ -171,6 +175,7 @@ class VideoList extends Component {
         this.props.user.expire_date,
         this.props.user.offset
       );
+      this.addEventToVideo();
     }
   }
 
@@ -694,15 +699,12 @@ class VideoList extends Component {
             </div>
 
             <div className="col-md-4" style={{ marginTop: "15px" }}>
-              <div className="card-header card-header-image">
-                <img src="../assets/img/man.png" width="375px" alt="" />
+              <div className="d-flex ">
+                <img src="../assets/img/man.png" width="100%" alt="" />
+                <img src="../assets/img/woman.png" width="100%" alt="" />
               </div>
             </div>
-            <div className="col-md-4" style={{ marginTop: "15px" }}>
-              <div className="card-header card-header-image">
-                <img src="../assets/img/woman.png" width="375px" alt="" />
-              </div>
-            </div>
+
           </div>
 
           <div className="space-70 mb-5"></div>
@@ -715,7 +717,7 @@ class VideoList extends Component {
                 onClick={() => this.onUpdateProfile()}
                 block
               >
-                ลงทะเบียน
+                ยืนยัน
                       </Button>
             </div>
           </div>
@@ -1061,7 +1063,7 @@ class VideoList extends Component {
           <div className="container">
             <div className="card card-plain">
               {
-                (this.props.user && this.props.user.other_attributes) ?
+                ((this.props.user && this.props.user.other_attributes) && (this.props.statusVideoList !== "no_video")) ?
                   (editVDO_click === "show") ?
                     this.renderEditVDO()
                     :
@@ -1083,8 +1085,8 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user } = authUser;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList };
 };
 
 const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek };
