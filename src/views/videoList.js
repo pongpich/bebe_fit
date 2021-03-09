@@ -27,6 +27,7 @@ class VideoList extends Component {
       chest: "",
       waist: "",
       hip: "",
+      statusOtherAttributes: "default",
       focusDay: 0,
       other_attributes: "",
       selectedVDO: null,
@@ -389,34 +390,45 @@ class VideoList extends Component {
       hip
     } = this.state;
 
-    const other_attributes = {
-      sex,
-      age: Number(age),
-      weight: Number(weight),
-      height: Number(height),
-      chest: Number(chest),
-      waist: Number(waist),
-      hip: Number(hip)
-    }
-
     this.setState({
-      other_attributes: other_attributes
+      statusOtherAttributes: "default"
     })
 
-    if (this.props.user && this.props.user.other_attributes) {
-      // ให้จัดตารางVDO และ updateBodyInfo (ที่ componentDidUpdate)
-      this.props.createCustomWeekForUser(
-        this.props.user.user_id,
-        JSON.parse(this.props.user.other_attributes).weight,
-        this.props.user.start_date,
-        this.props.user.expire_date,
-        this.props.user.offset
-      );
-    } else { //ถ้า other_attributes = NULL ให้ update ฟิลด์ other_attributes ของ member
-      this.props.updateProfile(
-        this.props.user.email,
-        other_attributes
-      );
+    if (sex !== "" && age !== "" && weight !== "" && height !== "" && chest !== "" && waist !== "" && hip !== "") {
+      const other_attributes = {
+        sex,
+        age: Number(age),
+        weight: Number(weight),
+        height: Number(height),
+        chest: Number(chest),
+        waist: Number(waist),
+        hip: Number(hip)
+      }
+
+      this.setState({
+        other_attributes: other_attributes
+      })
+
+      if (this.props.user && this.props.user.other_attributes) {
+        // ให้จัดตารางVDO และ updateBodyInfo (ที่ componentDidUpdate)
+        this.props.createCustomWeekForUser(
+          this.props.user.user_id,
+          JSON.parse(this.props.user.other_attributes).weight,
+          this.props.user.start_date,
+          this.props.user.expire_date,
+          this.props.user.offset
+        );
+      } else { //ถ้า other_attributes = NULL ให้ update ฟิลด์ other_attributes ของ member
+        this.props.updateProfile(
+          this.props.user.email,
+          other_attributes
+        );
+      }
+
+    } else {
+      this.setState({
+        statusOtherAttributes: "fail"
+      })
     }
   };
 
@@ -596,6 +608,7 @@ class VideoList extends Component {
   }
 
   renderOtherAttribute() {
+    const { statusOtherAttributes } = this.state;
     return (
       <div className="card-body">
 
@@ -647,6 +660,10 @@ class VideoList extends Component {
                   onChange={(event) => this.handleChange(event)}
                 />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.age === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
             </div>
             <div className="col-md-3">
               <div className="form-group">
@@ -661,6 +678,10 @@ class VideoList extends Component {
                   onChange={(event) => this.handleChange(event)}
                 />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.weight === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
             </div>
             <div className="col-md-3">
               <div className="form-group">
@@ -675,6 +696,10 @@ class VideoList extends Component {
                   onChange={(event) => this.handleChange(event)}
                 />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.height === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
             </div>
           </div>
 
@@ -694,6 +719,10 @@ class VideoList extends Component {
                   value={this.state.chest}
                   onChange={(event) => this.handleChange(event)} />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.chest === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
               <div className="form-group">
                 <label for="waist" className="bmd-label-floating">รอบเอว (นิ้ว)</label>
                 <input
@@ -706,6 +735,10 @@ class VideoList extends Component {
                   onChange={(event) => this.handleChange(event)}
                 />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.waist === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
               <div className="form-group">
                 <label for="hip" className="bmd-label-floating">สะโพก (นิ้ว)</label>
                 <input
@@ -717,6 +750,10 @@ class VideoList extends Component {
                   value={this.state.hip} onChange={(event) => this.handleChange(event)}
                 />
               </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.hip === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
             </div>
 
             <div className="col-md-4" style={{ marginTop: "15px" }}>
