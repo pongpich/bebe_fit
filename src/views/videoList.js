@@ -75,16 +75,6 @@ class VideoList extends Component {
     if (user === null) {
       this.props.history.push('/login');
     }
-    if (user.expire_date === null) { // expire_date = null คือ สมัครแล้ว แต่ยังไม่ซื้อ package
-      this.props.history.push('/login');
-    } else if (user.expire_date !== null) {
-      var curr = new Date().getTime();
-      var expire_date = new Date(user.expire_date).getTime();
-      if (curr > expire_date) { //curr > expire_date คือ หมดอายุ
-        //this.props.history.push('/platform'); (requirements เก่า)
-        //เปลี่ยน requirements ใหม่ เป็นดู VDO สัปดาห์สุดท้ายได้
-      }
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -578,14 +568,14 @@ class VideoList extends Component {
                         }
                       </div>
                       <div className="col col-lg-4 d-flex align-items-center mt-3">
-                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
+                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
                           <i
                             className="changeVideoBtn fa fa-circle fa-1x"
                             onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
                             เปลี่ยนวีดีโอ
                         </i>
                         }
-                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down") &&
+                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
                           (
                             <i
                               className="randomVideoBtn fa fa-circle fa-1x"
