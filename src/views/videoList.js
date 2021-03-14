@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 
 
 import { updateProfile, logoutUser } from "../redux/auth";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 
 
 import bghead from "../assets/img/bghead.jpg";
@@ -342,7 +342,7 @@ class VideoList extends Component {
     } else {
       todayExercise = this.exerciseDaySelection(focusDay);
     }
-    
+
     const nextVDO = todayExercise.find(
       element => (element.duration !== element.play_time) && (element.order > selectedVDO.order)
     );
@@ -373,7 +373,7 @@ class VideoList extends Component {
 
   onVideoTimeUpdate(compName = "video") {
     var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
-    const { selectedVDO, focusDay } = this.state;
+    const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
     if (video.currentTime >= (video.duration * 0.99) && (selectedVDO.duration !== selectedVDO.play_time)) {
       const user_id = this.props.user.user_id;
       const start_date = this.props.user.start_date;
@@ -381,13 +381,22 @@ class VideoList extends Component {
       const day_number = focusDay;
       const video_number = selectedVDO.order;
       const play_time = selectedVDO.duration;
+      const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
       const tempExerciseVideo = [...this.props.exerciseVideo];
-      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
+      if (lastWeekVDO_click === "show") {
+        tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time };
+      } else {
+        tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
+      }
       const newVideo = { ...selectedVDO, play_time };
       this.setState({
         selectedVDO: newVideo
       });
-      this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideo);
+      if (lastWeekVDO_click === "show") {
+        this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideoLastWeek);
+      } else {
+        this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideo);
+      }
     }
   }
 
@@ -1159,7 +1168,7 @@ const mapStateToProps = ({ authUser, exerciseVideos }) => {
   return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek };
 
 export default connect(
   mapStateToProps,

@@ -8,6 +8,8 @@ export const types = {
   CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS: "CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS",
   UPDATE_PLAYTIME: "UPDATE_PLAYTIME",
   UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
+  UPDATE_PLAYTIME_LASTWEEK: "UPDATE_PLAYTIME_LASTWEEK",
+  UPDATE_PLAYTIME_LASTWEEK_SUCCESS: "UPDATE_PLAYTIME_LASTWEEK_SUCCESS",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
   UPDATE_BODY_INFO: "UPDATE_BODY_INFO",
@@ -99,6 +101,19 @@ export const updatePlaytime = (user_id, start_date, expire_date, day_number, vid
   }
 })
 
+export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, exerciseVideo) => ({
+  type: types.UPDATE_PLAYTIME_LASTWEEK,
+  payload: {
+    user_id,
+    start_date,
+    expire_date,
+    day_number,
+    video_number,
+    play_time,
+    exerciseVideo
+  }
+})
+
 export const videoListForUserLastWeek = (
   user_id,
   weight,
@@ -166,6 +181,31 @@ const updatePlaytimeSagaAsync = async (
 ) => {
   try {
     const apiResult = await API.put("bebe", "/play_time", {
+      body: {
+        user_id,
+        start_date,
+        expire_date,
+        day_number,
+        video_number,
+        play_time
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const updatePlaytimeLastWeekSagaAsync = async (
+  user_id,
+  start_date,
+  expire_date,
+  day_number,
+  video_number,
+  play_time
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/play_time_lastweek", {
       body: {
         user_id,
         start_date,
@@ -481,6 +521,54 @@ function* updatePlaytimeSaga({ payload }) {
   }
 }
 
+function* updatePlaytimeLastWeekSaga({ payload }) {
+  const {
+    user_id,
+    start_date,
+    expire_date,
+    day_number,
+    video_number,
+    play_time,
+    exerciseVideo
+  } = payload
+  try {
+    const apiResult = yield call(
+      updatePlaytimeLastWeekSagaAsync,
+      user_id,
+      start_date,
+      expire_date,
+      day_number,
+      video_number,
+      play_time
+    );
+    let keyDay = "";
+    switch (day_number) {
+      case 0:
+        keyDay = "day1";
+        break;
+      case 1:
+        keyDay = "day2";
+        break;
+      case 2:
+        keyDay = "day3";
+        break;
+      case 3:
+        keyDay = "day4";
+        break;
+      default:
+        break;
+    }
+    yield put({
+      type: types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS,
+      payload: exerciseVideo
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+
 function* videoListForUserLastWeekSaga({ payload }) {
   const {
     user_id,
@@ -580,6 +668,10 @@ export function* watchUpdatePlaytime() {
   yield takeEvery(types.UPDATE_PLAYTIME, updatePlaytimeSaga)
 }
 
+export function* watchUpdatePlaytimeLastWeek() {
+  yield takeEvery(types.UPDATE_PLAYTIME_LASTWEEK, updatePlaytimeLastWeekSaga)
+}
+
 export function* watchUpdatePlaylist() {
   yield takeEvery(types.UPDATE_PLAYLIST, updatePlaylistSaga)
 }
@@ -611,6 +703,7 @@ export function* watchUpdateBodyInfo() {
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
+    fork(watchUpdatePlaytimeLastWeek),
     fork(watchUpdatePlaylist),
     fork(watchVideoListForUser),
     fork(watchVideoListForUserLastWeek),
@@ -664,6 +757,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         exerciseVideo: action.payload
+      };
+    case types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS:
+      return {
+        ...state,
+        exerciseVideoLastWeek: action.payload
       };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {
