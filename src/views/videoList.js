@@ -291,6 +291,22 @@ class VideoList extends Component {
     }
   }
 
+  toggleListLastWeek() {
+    const { focusDay } = this.state;
+    const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+    const selectedVDO = todayExercise.find(element => (element.duration !== element.play_time));
+    if (selectedVDO) {
+      this.setState({
+        selectedVDO
+      }, () => {
+        var trailer = document.getElementById(`popupVDOList`);
+        var video = document.getElementById(`videoPlayerList`);
+        trailer.classList.add("active_list");
+        video.play();
+      })
+    }
+  }
+
   closeList() {
     var trailer = document.getElementById(`popupVDOList`);
     var video = document.getElementById(`videoPlayerList`);
@@ -319,8 +335,14 @@ class VideoList extends Component {
   }
 
   onVideoEnd() {
-    const { focusDay, selectedVDO } = this.state;
-    var todayExercise = this.exerciseDaySelection(focusDay)
+    const { focusDay, selectedVDO, lastWeekVDO_click } = this.state;
+    var todayExercise;
+    if (lastWeekVDO_click === "show") {
+      todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+    } else {
+      todayExercise = this.exerciseDaySelection(focusDay);
+    }
+    
     const nextVDO = todayExercise.find(
       element => (element.duration !== element.play_time) && (element.order > selectedVDO.order)
     );
@@ -939,7 +961,7 @@ class VideoList extends Component {
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     let allMinute = [];
     let allSecond = [];
-    if (this.props.exerciseVideo) {
+    if (this.props.exerciseVideoLastWeek) {
       todayExercise.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
       todayExercise.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
     }
@@ -1035,7 +1057,7 @@ class VideoList extends Component {
                       <i
                         className="fa fa-play-circle fa-1x"
                         style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                        onClick={() => this.toggleList()} aria-hidden="true">
+                        onClick={() => this.toggleListLastWeek()} aria-hidden="true">
                         เล่นต่อเนื่อง
                       </i>
                     </div>
@@ -1044,7 +1066,7 @@ class VideoList extends Component {
               </thead>
               <tbody>
                 {
-                  (this.props.exerciseVideo) &&
+                  (this.props.exerciseVideoLastWeek) &&
                   (todayExercise.map((item, index) => (
                     <div className="row ml-1" key={index}>
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
