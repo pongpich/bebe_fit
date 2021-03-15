@@ -17,9 +17,11 @@ export const types = {
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
   VIDEO_LIST_FOR_USER_FAIL: "VIDEO_LIST_FOR_USER_FAIL",
+  SELECT_WEEK: "SELECT_WEEK",
   VIDEO_LIST_FOR_USER_LASTWEEK: "VIDEO_LIST_FOR_USER_LASTWEEK",
   VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS: "VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS",
   VIDEO_LIST_FOR_USER_LASTWEEK_FAIL: "VIDEO_LIST_FOR_USER_LASTWEEK_FAIL",
+  SELECT_LASTWEEK: "SELECT_LASTWEEK",
   RANDOM_VIDEO: "RANDOM_VIDEO",
   RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
   RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
@@ -594,6 +596,11 @@ function* videoListForUserLastWeekSaga({ payload }) {
           type: types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS,
           payload: activities
         })
+        yield put({
+          type: types.SELECT_LASTWEEK,
+          payload: lastweek
+        })
+        
       } else {
         yield put({ // lastweek <= 0 กำหนด isFirstWeek = true
           type: types.VIDEO_LIST_FOR_USER_LASTWEEK_FAIL
@@ -624,9 +631,14 @@ function* videoListForUserSaga({ payload }) {
     );
     if (apiResult.results.length > 0) {
       const activities = JSON.parse(apiResult.results[0].activities);
+      const week = JSON.parse(apiResult.results[0].week_in_program);
       yield put({
         type: types.VIDEO_LIST_FOR_USER_SUCCESS,
         payload: activities
+      })
+      yield put({
+        type: types.SELECT_WEEK,
+        payload: week
       })
     } else if (apiResult.results.message === 'no_video') {
       yield put({
@@ -721,6 +733,8 @@ export function* saga() {
 const INIT_STATE = {
   exerciseVideo: [[], [], [], []],
   exerciseVideoLastWeek: [[], [], [], []],
+  week: 0,
+  lastweek: 0,
   isFirstWeek: false,
   status: "default",
   video: {},
@@ -768,6 +782,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         exerciseVideoLastWeek: action.payload
       };
+    case types.SELECT_LASTWEEK:
+      return {
+        ...state,
+        lastweek: action.payload
+      };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_FAIL:
       return {
         ...state,
@@ -777,6 +796,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         exerciseVideo: action.payload
+      };
+    case types.SELECT_WEEK:
+      return {
+        ...state,
+        week: action.payload
       };
     case types.VIDEO_LIST_FOR_USER_FAIL:
       return {

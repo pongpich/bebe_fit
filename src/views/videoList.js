@@ -844,6 +844,7 @@ class VideoList extends Component {
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <h3 className="ml-3">WEEK {this.props.week}</h3>
               <nav className="nav">
                 <a
                   className="nav-link"
@@ -1002,6 +1003,7 @@ class VideoList extends Component {
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <h3 className="ml-3">WEEK {this.props.lastweek}</h3>
               <nav className="nav">
                 <a
                   className="nav-link"
@@ -1164,8 +1166,8 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user } = authUser;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek };
 };
 
 const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek };
