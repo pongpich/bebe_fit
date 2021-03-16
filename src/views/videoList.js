@@ -844,7 +844,7 @@ class VideoList extends Component {
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h3 className="ml-3">WEEK {this.props.week}</h3>
+              <h4 className="ml-3">โปรแกรมปัจจุบัน</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
@@ -881,7 +881,7 @@ class VideoList extends Component {
                     style={{ cursor: "pointer" }}
                     onClick={() => this.setState({ lastWeekVDO_click: "show" })}
                   >
-                    <u>ดูวีดีโอออกกำลังกายอาทิตย์ที่ผ่านมา</u>
+                    <u>ดูวีดีโอออกกำลังกายสัปดาห์ที่ผ่านมา</u>
                   </a>
                 }
               </nav>
@@ -1003,7 +1003,7 @@ class VideoList extends Component {
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <h3 className="ml-3">WEEK {this.props.lastweek}</h3>
+            <h4 className="ml-3">โปรแกรมสัปดาห์ที่ผ่านมา</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
