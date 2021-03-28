@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam } from "../redux/challenges";
 
 class Challenges extends Component {
   constructor(props) {
@@ -14,10 +14,33 @@ class Challenges extends Component {
   async componentDidMount() {
     //เช็คว่า group_id ไม่เท่ากับ null
     this.props.getRank(this.props.user.user_id, this.props.user.start_date);
+    this.props.getLogWeight(this.props.user.user_id);
+    this.props.getLogWeightTeam(this.props.user.group_id);
+    this.props.getIsReducedWeight(this.props.user.user_id);
+  }
+
+  isExerciseCompleted(activites) {
+    let isCompleted = true;
+
+    if (activites.length <= 0) isCompleted = false;
+
+    for (let dayIndex = 0; dayIndex < activites.length; dayIndex++) {
+      const dailyExercises = activites[dayIndex];
+      for (let exIndex = 0; exIndex < dailyExercises.length; exIndex++) {
+        const exercise = dailyExercises[exIndex];
+        if (parseFloat(exercise.play_time) !== parseFloat(exercise.duration)) {
+          isCompleted = false;
+          break;
+        }
+      }
+    }
+    return isCompleted;
   }
 
   render() {
-    const  rank  = this.props.rank.charAt(0).toUpperCase() + this.props.rank.substr(1).toLowerCase(); //ตัวแรกพิมพ์ใหญ่ ตัวที่เหลือพิมพ์เล็ก
+    const rank = this.props.rank.charAt(0).toUpperCase() + this.props.rank.substr(1).toLowerCase(); //ตัวแรกพิมพ์ใหญ่ ตัวที่เหลือพิมพ์เล็ก
+    const { logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers } = this.props;
+    const isExerciseCompleted = this.isExerciseCompleted(this.props.exerciseVideo);
     return (
       <div>
         <div className="page-header header-small mt-5" data-parallax="true"
@@ -49,14 +72,14 @@ class Challenges extends Component {
                   <div className="row">
                     <div className="col-lg-6  mb-3" style={{ float: "left" }}>
                       <h5 className="card-title"><b>รายการชาเลนจ์แบบทีม</b></h5>
-                      <p className="card-text">ทีมชั่งน้ำหนักครบ 20 ครั้ง <span style={{ float: "right" }}>0/20</span></p>
+                      <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
                       <p className="card-text">ในแต่ละวันมีสมาชิกชั่งน้ำหนัก <span style={{ float: "right" }}>0/7</span></p>
                     </div>
                     <div className="col-lg-6 mb-3" style={{ float: "right" }}>
                       <h5 className="card-title"><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
-                      <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right" }}>0/2</span></p>
-                      <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right" }}>0/1</span></p>
-                      <p className="card-text">ออกกำลังกายครบทั้งสัปดาห์<span style={{ float: "right" }}>0/1</span></p>
+                      <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right" }}>{logWeightCount}/2</span></p>
+                      <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right" }}>{isReducedWeight ? 1 : 0}/1</span></p>
+                      <p className="card-text">ออกกำลังกายครบทั้งสัปดาห์<span style={{ float: "right" }}>{isExerciseCompleted ? 1 : 0}/1</span></p>
                     </div>
                   </div>
                   <p className="card-text" style={{ float: "right", fontSize: "13px" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
@@ -92,13 +115,14 @@ class Challenges extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, challenges }) => {
+const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
-  const { rank } = challenges;
-  return { user, rank };
+  const { exerciseVideo } = exerciseVideos;
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight,logWeightTeamCount, numberOfMembers };
 };
 
-const mapActionsToProps = { getRank };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam };
 
 export default connect(
   mapStateToProps,

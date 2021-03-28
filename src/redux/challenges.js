@@ -5,7 +5,14 @@ import { API } from "aws-amplify";
 
 export const types = {
   GET_RANK: "GET_RANK",
-  GET_RANK_SUCCESS: "GET_RANK_SUCCESS"
+  GET_RANK_SUCCESS: "GET_RANK_SUCCESS",
+  GET_LOG_WEIGHT: "GET_LOG_WEIGHT",
+  GET_LOG_WEIGHT_SUCCESS: "GET_LOG_WEIGHT_SUCCESS",
+  GET_LOG_WEIGHT_TEAM: "GET_LOG_WEIGHT_TEAM",
+  GET_LOG_WEIGHT_TEAM_SUCCESS: "GET_LOG_WEIGHT_TEAM_SUCCESS",
+  GET_NUMBER_OF_MEMBERS_TEAM: "GET_NUMBER_OF_MEMBERS_TEAM",
+  GET_IS_REDUCED_WEIGHT: "GET_IS_REDUCED_WEIGHT",
+  GET_IS_REDUCED_WEIGHT_SUCCESS: "GET_IS_REDUCED_WEIGHT_SUCCESS",
 }
 
 export const getRank = (user_id, start_date) => ({
@@ -13,6 +20,27 @@ export const getRank = (user_id, start_date) => ({
   payload: {
     user_id,
     start_date
+  }
+});
+
+export const getLogWeight = (user_id) => ({
+  type: types.GET_LOG_WEIGHT,
+  payload: {
+    user_id
+  }
+});
+
+export const getLogWeightTeam = (group_id) => ({
+  type: types.GET_LOG_WEIGHT_TEAM,
+  payload: {
+    group_id
+  }
+});
+
+export const getIsReducedWeight = (user_id) => ({
+  type: types.GET_IS_REDUCED_WEIGHT,
+  payload: {
+    user_id
   }
 });
 
@@ -29,6 +57,54 @@ const getRankSagaAsync = async (
       queryStringParameters: {
         user_id,
         start_date
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getLogWeightSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getLogWeight", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getLogWeightTeamSagaAsync = async (
+  group_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getLogWeightTeam", {
+      queryStringParameters: {
+        group_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getIsReducedWeightSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getIsReducedWeight", {
+      queryStringParameters: {
+        user_id
       }
     });
     return apiResult
@@ -58,13 +134,86 @@ function* getRankSaga({ payload }) {
   }
 }
 
+function* getLogWeightSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getLogWeightSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_LOG_WEIGHT_SUCCESS,
+      payload: Number(apiResult.results.logWeightCount)
+    })
+  } catch (error) {
+    console.log("error from getLogWeightSaga :", error);
+  }
+}
+
+function* getLogWeightTeamSaga({ payload }) {
+  const {
+    group_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getLogWeightTeamSagaAsync,
+      group_id
+    );
+    yield put({
+      type: types.GET_LOG_WEIGHT_TEAM_SUCCESS,
+      payload: Number(apiResult.results.logWeightTeamCount)
+    })
+    yield put({
+      type: types.GET_NUMBER_OF_MEMBERS_TEAM,
+      payload: Number(apiResult.results.numberOfMembers)
+    })
+  } catch (error) {
+    console.log("error from getLogWeightTeamSaga :", error);
+  }
+}
+
+function* getIsReducedWeightSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getIsReducedWeightSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_IS_REDUCED_WEIGHT_SUCCESS,
+      payload: (apiResult.results.isReducedWeight)
+    })
+  } catch (error) {
+    console.log("error from getLogWeightSaga :", error);
+  }
+}
+
 export function* watchGetRank() {
   yield takeEvery(types.GET_RANK, getRankSaga)
 }
 
+export function* watchGetLogWeight() {
+  yield takeEvery(types.GET_LOG_WEIGHT, getLogWeightSaga)
+}
+
+export function* watchGetLogWeightTeam() {
+  yield takeEvery(types.GET_LOG_WEIGHT_TEAM, getLogWeightTeamSaga)
+}
+
+export function* watchGetIsReducedWeight() {
+  yield takeEvery(types.GET_IS_REDUCED_WEIGHT, getIsReducedWeightSaga)
+}
+
 export function* saga() {
   yield all([
-    fork(watchGetRank)
+    fork(watchGetRank),
+    fork(watchGetLogWeight),
+    fork(watchGetLogWeightTeam),
+    fork(watchGetIsReducedWeight)
   ]);
 }
 
@@ -73,7 +222,11 @@ export function* saga() {
 /* REDUCER Section */
 
 const INIT_STATE = {
-  rank: null
+  rank: null,
+  logWeightCount: 0,
+  isReducedWeight: false,
+  logWeightTeamCount: 0,
+  numberOfMembers: 0
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -82,6 +235,26 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         rank: action.payload
+      }
+    case types.GET_LOG_WEIGHT_SUCCESS:
+      return {
+        ...state,
+        logWeightCount: action.payload
+      }
+    case types.GET_LOG_WEIGHT_TEAM_SUCCESS:
+      return {
+        ...state,
+        logWeightTeamCount: action.payload
+      }
+    case types.GET_NUMBER_OF_MEMBERS_TEAM:
+      return {
+        ...state,
+        numberOfMembers: action.payload
+      }
+    case types.GET_IS_REDUCED_WEIGHT_SUCCESS:
+      return {
+        ...state,
+        isReducedWeight: action.payload
       }
     default:
       return { ...state };
