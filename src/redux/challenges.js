@@ -13,7 +13,16 @@ export const types = {
   GET_NUMBER_OF_MEMBERS_TEAM: "GET_NUMBER_OF_MEMBERS_TEAM",
   GET_IS_REDUCED_WEIGHT: "GET_IS_REDUCED_WEIGHT",
   GET_IS_REDUCED_WEIGHT_SUCCESS: "GET_IS_REDUCED_WEIGHT_SUCCESS",
+  GET_DAILY_TEAM_WEIGHT_BONUS: "GET_DAILY_TEAM_WEIGHT_BONUS",
+  GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS: "GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS"
 }
+
+export const getDailyTeamWeightBonus = ( user_id ) => ({
+  type: types.GET_DAILY_TEAM_WEIGHT_BONUS,
+  payload: {
+    user_id
+  }
+});
 
 export const getRank = (user_id, start_date) => ({
   type: types.GET_RANK,
@@ -114,6 +123,22 @@ const getIsReducedWeightSagaAsync = async (
   }
 }
 
+const getDailyTeamWeightBonusSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getDailyTeamWeightBonus", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 function* getRankSaga({ payload }) {
   const {
     user_id,
@@ -192,6 +217,24 @@ function* getIsReducedWeightSaga({ payload }) {
   }
 }
 
+function* getDailyTeamWeightBonusSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getDailyTeamWeightBonusSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS,
+      payload: Number(apiResult.results.dailyTeamWeightBonusCount)
+    })
+  } catch (error) {
+    console.log("error from getDailyTeamWeightBonusSaga :", error);
+  }
+}
+
 export function* watchGetRank() {
   yield takeEvery(types.GET_RANK, getRankSaga)
 }
@@ -208,12 +251,17 @@ export function* watchGetIsReducedWeight() {
   yield takeEvery(types.GET_IS_REDUCED_WEIGHT, getIsReducedWeightSaga)
 }
 
+export function* watchGetDailyTeamWeightBonus() {
+  yield takeEvery(types.GET_DAILY_TEAM_WEIGHT_BONUS, getDailyTeamWeightBonusSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
     fork(watchGetLogWeight),
     fork(watchGetLogWeightTeam),
-    fork(watchGetIsReducedWeight)
+    fork(watchGetIsReducedWeight),
+    fork(watchGetDailyTeamWeightBonus)
   ]);
 }
 
@@ -226,7 +274,9 @@ const INIT_STATE = {
   logWeightCount: 0,
   isReducedWeight: false,
   logWeightTeamCount: 0,
-  numberOfMembers: 0
+  numberOfMembers: 0,
+  dailyTeamWeightBonusCount: 0,
+
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -250,6 +300,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         numberOfMembers: action.payload
+      }
+    case types.GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS:
+      return {
+        ...state,
+        dailyTeamWeightBonusCount: action.payload
       }
     case types.GET_IS_REDUCED_WEIGHT_SUCCESS:
       return {
