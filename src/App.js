@@ -123,7 +123,7 @@ class App extends Component {
           {/* <Route path='/register' component={Register} />
           <Route path='/forgot-password' component={ForgotPassword} /> */}
           <Route path='/import-Members' component={ImportMembers} />
-          {/* <Route path='/Challenges' component={Challenges} /> */}
+          <Route path='/Challenges' component={Challenges} />
           <Route path='/VideoList' component={VideoList} />
           {/* <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} /> */}

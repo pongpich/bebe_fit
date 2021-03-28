@@ -3,6 +3,7 @@ import { saga as authSagas } from './auth';
 import { saga as exerciseVideos} from './exerciseVideos';
 import { saga as exerciseProgram} from './exerciseProgram';
 import { saga as payment} from './payment';
+import { saga as challenges} from './challenges';
 
 
 export default function* rootSaga(getState) {
@@ -10,6 +11,7 @@ export default function* rootSaga(getState) {
     authSagas(),
     exerciseVideos(),
     exerciseProgram(),
-    payment()
+    payment(),
+    challenges()
   ]);
 }

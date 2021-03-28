@@ -17,11 +17,11 @@ export const types = {
   VIDEO_LIST_FOR_USER: "VIDEO_LIST_FOR_USER",
   VIDEO_LIST_FOR_USER_SUCCESS: "VIDEO_LIST_FOR_USER_SUCCESS",
   VIDEO_LIST_FOR_USER_FAIL: "VIDEO_LIST_FOR_USER_FAIL",
-  SELECT_WEEK: "SELECT_WEEK",
+  GET_WEEK: "GET_WEEK",
   VIDEO_LIST_FOR_USER_LASTWEEK: "VIDEO_LIST_FOR_USER_LASTWEEK",
   VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS: "VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS",
   VIDEO_LIST_FOR_USER_LASTWEEK_FAIL: "VIDEO_LIST_FOR_USER_LASTWEEK_FAIL",
-  SELECT_LASTWEEK: "SELECT_LASTWEEK",
+  GET_LASTWEEK: "GET_LASTWEEK",
   RANDOM_VIDEO: "RANDOM_VIDEO",
   RANDOM_VIDEO_SUCCESS: "RANDOM_VIDEO_SUCCESS",
   RANDOM_VIDEO_FAIL: "RANDOM_VIDEO_FAIL",
@@ -597,7 +597,7 @@ function* videoListForUserLastWeekSaga({ payload }) {
           payload: activities
         })
         yield put({
-          type: types.SELECT_LASTWEEK,
+          type: types.GET_LASTWEEK,
           payload: lastweek
         })
         
@@ -637,7 +637,7 @@ function* videoListForUserSaga({ payload }) {
         payload: activities
       })
       yield put({
-        type: types.SELECT_WEEK,
+        type: types.GET_WEEK,
         payload: week
       })
     } else if (apiResult.results.message === 'no_video') {
@@ -782,7 +782,7 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         exerciseVideoLastWeek: action.payload
       };
-    case types.SELECT_LASTWEEK:
+    case types.GET_LASTWEEK:
       return {
         ...state,
         lastweek: action.payload
@@ -797,7 +797,7 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         exerciseVideo: action.payload
       };
-    case types.SELECT_WEEK:
+    case types.GET_WEEK:
       return {
         ...state,
         week: action.payload

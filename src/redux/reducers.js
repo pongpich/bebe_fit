@@ -7,6 +7,7 @@ import { reducer as authUser} from './auth';
 import { reducer as exerciseVideos} from './exerciseVideos';
 import { reducer as exerciseProgram} from './exerciseProgram';
 import { reducer as payment} from './payment';
+import { reducer as challenges} from './challenges';
 
 
 
@@ -20,7 +21,8 @@ const reducers = combineReducers({
   authUser,
   exerciseVideos,
   exerciseProgram,
-  payment
+  payment,
+  challenges
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers)
