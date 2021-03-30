@@ -84,7 +84,7 @@ class Challenges extends Component {
                     <div className="col-lg-6  mb-3" style={{ float: "left" }}>
                       <h5 className="card-title"><b>รายการชาเลนจ์แบบทีม</b></h5>
                       <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
-                      <p className="card-text">ในแต่ละวันมีสมาชิกชั่งน้ำหนัก <span style={{ float: "right" }}>{dailyTeamWeightBonusCount}/7</span></p>
+                      <p className="card-text">ทีมชั่งน้ำหนักครบ 7 วัน<span style={{ float: "right" }}>{dailyTeamWeightBonusCount}/7</span></p>
                     </div>
                     <div className="col-lg-6 mb-3" style={{ float: "right" }}>
                       <h5 className="card-title"><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>

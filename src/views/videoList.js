@@ -3,10 +3,8 @@ import {
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
-
-
-
 import { updateProfile, logoutUser } from "../redux/auth";
+import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 
 
@@ -36,7 +34,8 @@ class VideoList extends Component {
       tempPlaylist: [],
       indexPlaylist: 0,
       selectChangeVideoList: [],
-      spinnerRandomVideo: "default"
+      spinnerRandomVideo: "default",
+      weightInDailyWeighChallenge: ""
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -71,6 +70,7 @@ class VideoList extends Component {
       if (this.props.statusVideoList !== "no_video") {
         this.addEventToVideo();
       }
+      this.props.getDailyWeighChallenge(user.user_id);
     }
     if (user === null) {
       this.props.history.push('/login');
@@ -78,7 +78,10 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, exerciseVideo, statusVideoList, statusUpdateBodyInfo } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge } = this.props;
+    if (prevProps.statusPostDailyWeighChallenge === "default" && statusPostDailyWeighChallenge === "success") {
+      this.props.history.push('/challenges');
+    }
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
       this.setState({
         other_attributes: user.other_attributes
@@ -797,7 +800,7 @@ class VideoList extends Component {
                 block
               >
                 ยืนยัน
-                      </Button>
+              </Button>
             </div>
           </div>
         </form>
@@ -835,7 +838,7 @@ class VideoList extends Component {
             <li className="nav-item">
               <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
             </li>
-           {/*  <li className="nav-item">
+            {/*  <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
             <li className="nav-item">
@@ -1003,7 +1006,7 @@ class VideoList extends Component {
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-            <h4 className="ml-3">โปรแกรมสัปดาห์ที่ผ่านมา</h4>
+              <h4 className="ml-3">โปรแกรมสัปดาห์ที่ผ่านมา</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
@@ -1115,10 +1118,68 @@ class VideoList extends Component {
     )
   }
 
+  renderPopupDailyWeighChallenge() {
+    return (
+      <div>
+        <div
+          className="overlay overlayContainerPopupDailyWeighChallenge"
+          id="overlayPopupDailyWeighChallenge"
+          onClick={() => this.closePopupDailyWeighChallenge()}
+        />
+        <div className="popupDailyWeighChallenge" id="popupDailyWeighChallenge">
+          <div
+            className=""
+            onClick={() => this.closePopupDailyWeighChallenge()}
+            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
+          >
+            <i class="fa fa-times fa-lg"></i>
+          </div>
+          <br></br>
+          <center><h5 className="mt-1 mb-3">กรุณากรอกน้ำหนักปัจจุบันของคุณ</h5></center>
+          <div class="input-group mb-4">
+            <input
+              type="number"
+              className="form-control"
+              style={{ textAlign: "right" }}
+              id="weightInDailyWeighChallenge"
+              value={this.state.weightInDailyWeighChallenge}
+              onChange={(event) => this.handleChange(event)}
+            />
+            <span className="input-group-text">KG</span>
+          </div>
+          <div className="row">
+            <div className="col-1"></div>
+            <button type="button" className="btn btn-secondary col-4" onClick={() => this.closePopupDailyWeighChallenge()}>ปิด</button>
+            <div className="col-2"></div>
+            <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)}>ยืนยัน</button>
+            <div className="col-1"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  closePopupDailyWeighChallenge() {
+    document.getElementById("popupDailyWeighChallenge").classList.toggle("active");
+    document.getElementById("overlayPopupDailyWeighChallenge").classList.toggle("active");
+  }
+
+  submitDailyWeighChallenge(weight) {
+    const { user } = this.props;
+    if (weight > 0 && weight < 300) {
+      this.props.postDailyWeighChallenge(user.user_id, weight)
+    }
+  }
+
   render() {
     const { editVDO_click, lastWeekVDO_click } = this.state;
+    const { dailyWeighChallenge } = this.props;
     return (
       < div >
+        {
+          (dailyWeighChallenge && (this.props.user && this.props.user.group_id)) &&
+          this.renderPopupDailyWeighChallenge()
+        }
         <div className="page-header header-small mt-5" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">
@@ -1155,7 +1216,6 @@ class VideoList extends Component {
                   :
                   this.renderOtherAttribute()
               }
-
             </div>
           </div>
         </div>
@@ -1164,13 +1224,14 @@ class VideoList extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseVideos }) => {
+const mapStateToProps = ({ authUser, exerciseVideos, challenges }) => {
   const { user } = authUser;
+  const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
   const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek };
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge };
 
 export default connect(
   mapStateToProps,

@@ -105,8 +105,8 @@ class ImportMembers extends Component {
   renderPopupSuccessSubmit() {
     return (
       <div>
-        <div className="overlay overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
-        <div className="containerPopup popupTrialRegister" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
+        <div className="overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
+        <div className="popupSuccessSubmit" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
           <center><h2 style={{ color: "green" }}><i className="fa fa-check fa-lg" > Success</i></h2></center>
         </div>
       </div>

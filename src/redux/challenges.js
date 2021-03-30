@@ -14,10 +14,29 @@ export const types = {
   GET_IS_REDUCED_WEIGHT: "GET_IS_REDUCED_WEIGHT",
   GET_IS_REDUCED_WEIGHT_SUCCESS: "GET_IS_REDUCED_WEIGHT_SUCCESS",
   GET_DAILY_TEAM_WEIGHT_BONUS: "GET_DAILY_TEAM_WEIGHT_BONUS",
-  GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS: "GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS"
+  GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS: "GET_DAILY_TEAM_WEIGHT_BONUS_SUCCESS",
+  GET_DAILY_WEIGH_CHALLENGE: "GET_DAILY_WEIGH_CHALLENGE",
+  GET_DAILY_WEIGH_CHALLENGE_SUCCESS: "GET_DAILY_WEIGH_CHALLENGE_SUCCESS",
+  POST_DAILY_WEIGH_CHALLENGE: "POST_DAILY_WEIGH_CHALLENGE",
+  POST_DAILY_WEIGH_CHALLENGE_SUCCESS: "POST_DAILY_WEIGH_CHALLENGE_SUCCESS"
 }
 
-export const getDailyTeamWeightBonus = ( user_id ) => ({
+export const postDailyWeighChallenge = (user_id, weight) => ({
+  type: types.POST_DAILY_WEIGH_CHALLENGE,
+  payload: {
+    user_id,
+    weight
+  }
+});
+
+export const getDailyWeighChallenge = (user_id) => ({
+  type: types.GET_DAILY_WEIGH_CHALLENGE,
+  payload: {
+    user_id
+  }
+});
+
+export const getDailyTeamWeightBonus = (user_id) => ({
   type: types.GET_DAILY_TEAM_WEIGHT_BONUS,
   payload: {
     user_id
@@ -123,6 +142,40 @@ const getIsReducedWeightSagaAsync = async (
   }
 }
 
+const getDailyWeighChallengeSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getDailyWeighChallenge", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const postDailyWeighChallengeSagaAsync = async (
+  user_id,
+  weight
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/daily_weight_score", {
+      body: {
+        user_id,
+        weight
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getDailyTeamWeightBonusSagaAsync = async (
   user_id
 ) => {
@@ -213,7 +266,44 @@ function* getIsReducedWeightSaga({ payload }) {
       payload: (apiResult.results.isReducedWeight)
     })
   } catch (error) {
-    console.log("error from getLogWeightSaga :", error);
+    console.log("error from getIsReducedWeightSaga :", error);
+  }
+}
+
+function* getDailyWeighChallengeSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getDailyWeighChallengeSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_DAILY_WEIGH_CHALLENGE_SUCCESS,
+      payload: (apiResult.results.dailyWeighChallenge)
+    })
+  } catch (error) {
+    console.log("error from getDailyWeighChallengeSaga :", error);
+  }
+}
+
+function* postDailyWeighChallengeSaga({ payload }) {
+  const {
+    user_id,
+    weight
+  } = payload
+  try {
+    const apiResult = yield call(
+      postDailyWeighChallengeSagaAsync,
+      user_id,
+      weight
+    );
+    yield put({
+      type: types.POST_DAILY_WEIGH_CHALLENGE_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from postDailyWeighChallengeSaga :", error);
   }
 }
 
@@ -251,6 +341,14 @@ export function* watchGetIsReducedWeight() {
   yield takeEvery(types.GET_IS_REDUCED_WEIGHT, getIsReducedWeightSaga)
 }
 
+export function* watchGetDailyWeighChallenge() {
+  yield takeEvery(types.GET_DAILY_WEIGH_CHALLENGE, getDailyWeighChallengeSaga)
+}
+
+export function* watchPostDailyWeighChallenge() {
+  yield takeEvery(types.POST_DAILY_WEIGH_CHALLENGE, postDailyWeighChallengeSaga)
+}
+
 export function* watchGetDailyTeamWeightBonus() {
   yield takeEvery(types.GET_DAILY_TEAM_WEIGHT_BONUS, getDailyTeamWeightBonusSaga)
 }
@@ -261,7 +359,9 @@ export function* saga() {
     fork(watchGetLogWeight),
     fork(watchGetLogWeightTeam),
     fork(watchGetIsReducedWeight),
-    fork(watchGetDailyTeamWeightBonus)
+    fork(watchGetDailyWeighChallenge),
+    fork(watchGetDailyTeamWeightBonus),
+    fork(watchPostDailyWeighChallenge)
   ]);
 }
 
@@ -276,7 +376,8 @@ const INIT_STATE = {
   logWeightTeamCount: 0,
   numberOfMembers: 0,
   dailyTeamWeightBonusCount: 0,
-
+  dailyWeighChallenge: false,
+  statusPostDailyWeighChallenge: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -310,6 +411,18 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         isReducedWeight: action.payload
+      }
+    case types.GET_DAILY_WEIGH_CHALLENGE_SUCCESS:
+      return {
+        ...state,
+        dailyWeighChallenge: action.payload,
+        statusPostDailyWeighChallenge: "default"
+      }
+    case types.POST_DAILY_WEIGH_CHALLENGE_SUCCESS:
+      return {
+        ...state,
+        statusPostDailyWeighChallenge: "success",
+        dailyWeighChallenge: false
       }
     default:
       return { ...state };
