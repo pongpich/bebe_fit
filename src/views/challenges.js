@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember } from "../redux/challenges";
+import { getGroupID } from "../redux/auth";
+import "./challenges.scss";
+
 
 class Challenges extends Component {
   constructor(props) {
@@ -17,9 +20,31 @@ class Challenges extends Component {
       this.props.getLogWeight(this.props.user.user_id);
       this.props.getLogWeightTeam(this.props.user.group_id);
       this.props.getIsReducedWeight(this.props.user.user_id);
-      this.props.getDailyTeamWeightBonus(this.props.user.user_id)
+      this.props.getDailyTeamWeightBonus(this.props.user.user_id);
     } else {
-      this.props.history.push('/VideoList');
+      //
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull } = this.props;
+    if (prevProps.statusGetNumberOfTeamNotFull === "default" && statusGetNumberOfTeamNotFull === "success") {
+      if (numberOfTeamNotFull > 0) {
+        this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date);
+      } else {
+        //โชว์หน้าสร้างทีม
+      }
+    }
+    //หลัง assignGroupToMember เสร็จ ให้ทำการ getGroupID
+    if (prevProps.statusGetNumberOfTeamNotFull === "success" && statusGetNumberOfTeamNotFull === "default") {
+      this.props.getGroupID(this.props.user.user_id);
+    }
+    if (user && user.group_id !== prevProps.user.group_id) {
+      this.props.getRank(this.props.user.user_id, this.props.user.start_date);
+      this.props.getLogWeight(this.props.user.user_id);
+      this.props.getLogWeightTeam(this.props.user.group_id);
+      this.props.getIsReducedWeight(this.props.user.user_id);
+      this.props.getDailyTeamWeightBonus(this.props.user.user_id);
     }
   }
 
@@ -41,8 +66,8 @@ class Challenges extends Component {
     return isCompleted;
   }
 
-  render() {
-    const rank = this.props.rank.charAt(0).toUpperCase() + this.props.rank.substr(1).toLowerCase(); //ตัวแรกพิมพ์ใหญ่ ตัวที่เหลือพิมพ์เล็ก
+  renderChallenge() {
+    const rank = (this.props.rank && this.props.rank.charAt(0).toUpperCase() + this.props.rank.substr(1).toLowerCase()); //ตัวแรกพิมพ์ใหญ่ ตัวที่เหลือพิมพ์เล็ก
     const { logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount } = this.props;
     const isExerciseCompleted = this.isExerciseCompleted(this.props.exerciseVideo);
     var { scoreInWeek } = this.state;
@@ -54,15 +79,6 @@ class Challenges extends Component {
     if (scoreInWeek > 41) { scoreInWeek = 41 }; //เพื่อไม่ให้เกินหลอด
     return (
       <div>
-        <div className="page-header header-small mt-5" data-parallax="true"
-          style={{ backgroundImage: `url(${bghead})` }}>
-          <div className="overlay">
-            <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
-              <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
-            </video>
-          </div>
-        </div>
-
         <div className="card-body d-flex justify-content-center">
           <form>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -120,7 +136,121 @@ class Challenges extends Component {
         <h1 style={{ color: "white" }}>.</h1>
         <h1 style={{ color: "white" }}>.</h1>
 
+      </div>
+    )
+  }
 
+  renderJoinChallenge() {
+    return (
+      <div>
+        {this.renderPopupDailyWeighChallenge()}
+        <div className="card-body d-flex justify-content-center">
+          <form>
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
+              <li className="nav-item">
+                <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+              </li>
+              {/*  <li className="nav-item">
+                <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+              </li> */}
+              <li className="nav-item">
+                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
+              </li>
+            </ul>
+
+            <div className="row">
+              <div className="card mt-3  col-lg-12 col-md-12  offset-lg-1" >
+                <div className="card-body">
+                  <center>
+                    <h4 className="card-title mt-3 mb-4"><b>เข้าร่วมชาเลนจ์เพื่อรับสิทธิพิเศษมากมาย</b></h4>
+                    <p className="card-text">Benefit list</p>
+                    <p className="card-text">Benefit list</p>
+                    <p className="card-text">Benefit list</p>
+                    <p className="card-text">Benefit list</p>
+                    <p className="card-text">Benefit list</p>
+                    <button
+                      type="button"
+                      class="btn btn-danger mt-4 col-12"
+                      onClick={() => this.openPopupJoinChallenge()}>เข้าร่วมชาเลนจ์</button>
+                  </center>
+                  <div className="col-5   mt-4" style={{ float: "left" }}>
+                    <center><h5 className="card-title"><b>กฎกติกา</b></h5></center>
+                  </div>
+                  <div className="col-5 mt-4" style={{ float: "right" }}>
+                    <center><h5 className="card-title"><b>ของรางวัล</b></h5></center>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  renderPopupDailyWeighChallenge() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupJoinChallenge"
+          id="overlayPopupJoinChallenge"
+          onClick={() => this.closePopupJoinChallenge()}
+        />
+        <div className="popupJoinChallenge" id="popupJoinChallenge">
+          <div
+            className=""
+            onClick={() => this.closePopupJoinChallenge()}
+            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
+          >
+            <i class="fa fa-times fa-lg"></i>
+          </div>
+          <br></br>
+          <center><h5 className="mt-1 mb-3">คุณต้องการเข้าร่วมชาเลนจ์หรือไม่</h5></center>
+          <div className="row mt-5">
+            <div className="col-1"></div>
+            <button
+              type="button"
+              className="btn btn-secondary col-4"
+              onClick={() => this.closePopupJoinChallenge()}>ยกเลิก</button>
+            <div className="col-2"></div>
+            <button
+              type="button"
+              className="btn btn-danger col-4"
+              onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
+            <div className="col-1"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  openPopupJoinChallenge() {
+    document.getElementById("popupJoinChallenge").classList.toggle("active");
+    document.getElementById("overlayPopupJoinChallenge").classList.toggle("active");
+  }
+
+  closePopupJoinChallenge() {
+    document.getElementById("popupJoinChallenge").classList.toggle("active");
+    document.getElementById("overlayPopupJoinChallenge").classList.toggle("active");
+  }
+
+  render() {
+    return (
+      <div>
+        <div className="page-header header-small mt-5" data-parallax="true"
+          style={{ backgroundImage: `url(${bghead})` }}>
+          <div className="overlay">
+            <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
+              <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+            </video>
+          </div>
+        </div>
+        {
+          (this.props.user && this.props.user.group_id) ?
+            this.renderChallenge()
+            :
+            this.renderJoinChallenge()
+        }
       </div>
     )
   }
@@ -129,11 +259,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID };
 
 export default connect(
   mapStateToProps,

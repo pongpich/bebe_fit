@@ -1122,7 +1122,7 @@ class VideoList extends Component {
     return (
       <div>
         <div
-          className="overlay overlayContainerPopupDailyWeighChallenge"
+          className="overlayContainerPopupDailyWeighChallenge"
           id="overlayPopupDailyWeighChallenge"
           onClick={() => this.closePopupDailyWeighChallenge()}
         />

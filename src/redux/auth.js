@@ -25,8 +25,19 @@ export const types = {
   RESET_PASSWORD: "RESET_PASSWORD",
   RESET_PASSWORD_SUCCESS: "RESET_PASSWORD_SUCCESS",
   RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL",
-  IMPORT_MEMBERS: "IMPORT_MEMBERS"
+  IMPORT_MEMBERS: "IMPORT_MEMBERS",
+  GET_GROUP_ID: "GET_GROUP_ID",
+  GET_GROUP_ID_SUCCESS: "GET_GROUP_ID_SUCCESS"
 }
+
+export const getGroupID = (
+  user_id
+) => ({
+  type: types.GET_GROUP_ID,
+  payload: {
+    user_id
+  }
+})
 
 export const resetPassword = (
   email,
@@ -279,6 +290,21 @@ const getExpireDateSagaAsync = async (
   }
 }
 
+const getGroupIDSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getGroupID", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const resetPasswordSagaAsync = async (
   email,
   user_id,
@@ -498,6 +524,25 @@ function* getExpireDateSaga({ payload }) {
   }
 }
 
+function* getGroupIDSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      getGroupIDSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_GROUP_ID_SUCCESS,
+      payload: apiResult.results.group_id
+    })
+  } catch (error) {
+    console.log("error from getGroupIDSaga :", error);
+  }
+}
+
 function* resetPasswordSaga({ payload }) {
   const {
     email,
@@ -612,6 +657,10 @@ export function* watchImportMembers() {
   yield takeEvery(types.IMPORT_MEMBERS, importMembersSaga);
 }
 
+export function* watchGetGroupID() {
+  yield takeEvery(types.GET_GROUP_ID, getGroupIDSaga);
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -624,7 +673,8 @@ export function* saga() {
     fork(watchGetExpireDate),
     fork(watchForgotPassword),
     fork(watchResetPassword),
-    fork(watchImportMembers)
+    fork(watchImportMembers),
+    fork(watchGetGroupID),
   ]);
 }
 
@@ -648,6 +698,14 @@ export function reducer(state = INIT_STATE, action) {
         user: {
           ...state.user,
           expire_date: action.payload
+        }
+      }
+    case types.GET_GROUP_ID_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          group_id: action.payload
         }
       }
     case types.CHECK_USER_SUCCESS:

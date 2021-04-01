@@ -18,8 +18,29 @@ export const types = {
   GET_DAILY_WEIGH_CHALLENGE: "GET_DAILY_WEIGH_CHALLENGE",
   GET_DAILY_WEIGH_CHALLENGE_SUCCESS: "GET_DAILY_WEIGH_CHALLENGE_SUCCESS",
   POST_DAILY_WEIGH_CHALLENGE: "POST_DAILY_WEIGH_CHALLENGE",
-  POST_DAILY_WEIGH_CHALLENGE_SUCCESS: "POST_DAILY_WEIGH_CHALLENGE_SUCCESS"
+  POST_DAILY_WEIGH_CHALLENGE_SUCCESS: "POST_DAILY_WEIGH_CHALLENGE_SUCCESS",
+  GET_NUMBER_OF_TEAM_NOT_FULL: "GET_NUMBER_OF_TEAM_NOT_FULL",
+  GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS: "GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS",
+  ASSIGN_GROUP_TO_MEMBER: "ASSIGN_GROUP_TO_MEMBER",
+  ASSIGN_GROUP_TO_MEMBER_SUCCESS: "ASSIGN_GROUP_TO_MEMBER_SUCCESS",
+  CLEAR_CHALLENGES: "CLEAR_CHALLENGES"
 }
+
+export const clearChallenges = () => ({
+  type: types.CLEAR_CHALLENGES
+})
+
+export const assignGroupToMember = (user_id, start_date) => ({
+  type: types.ASSIGN_GROUP_TO_MEMBER,
+  payload: {
+    user_id,
+    start_date
+  }
+})
+
+export const getNumberOfTeamNotFull = () => ({
+  type: types.GET_NUMBER_OF_TEAM_NOT_FULL
+})
 
 export const postDailyWeighChallenge = (user_id, weight) => ({
   type: types.POST_DAILY_WEIGH_CHALLENGE,
@@ -110,6 +131,21 @@ const getLogWeightSagaAsync = async (
   }
 }
 
+const getNumberOfTeamNotFullSagaAsync = async (
+
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getNumberOfTeamNotFull", {
+      queryStringParameters: {
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getLogWeightTeamSagaAsync = async (
   group_id
 ) => {
@@ -167,6 +203,24 @@ const postDailyWeighChallengeSagaAsync = async (
       body: {
         user_id,
         weight
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const assignGroupToMemberSagaAsync = async (
+  user_id,
+  start_date
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/assignGroupToMember", {
+      body: {
+        user_id,
+        start_date
       }
     });
     return apiResult
@@ -252,6 +306,20 @@ function* getLogWeightTeamSaga({ payload }) {
   }
 }
 
+function* getNumberOfTeamNotFullSaga() {
+  try {
+    const apiResult = yield call(
+      getNumberOfTeamNotFullSagaAsync
+    );
+    yield put({
+      type: types.GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS,
+      payload: Number(apiResult.results.numberOfTeamNotFull)
+    })
+  } catch (error) {
+    console.log("error from getNumberOfTeamNotFullSaga :", error);
+  }
+}
+
 function* getIsReducedWeightSaga({ payload }) {
   const {
     user_id
@@ -307,6 +375,25 @@ function* postDailyWeighChallengeSaga({ payload }) {
   }
 }
 
+function* assignGroupToMemberSaga({ payload }) {
+  const {
+    user_id,
+    start_date
+  } = payload
+  try {
+    const apiResult = yield call(
+      assignGroupToMemberSagaAsync,
+      user_id,
+      start_date
+    );
+    yield put({
+      type: types.ASSIGN_GROUP_TO_MEMBER_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from postDailyWeighChallengeSaga :", error);
+  }
+}
+
 function* getDailyTeamWeightBonusSaga({ payload }) {
   const {
     user_id
@@ -353,6 +440,14 @@ export function* watchGetDailyTeamWeightBonus() {
   yield takeEvery(types.GET_DAILY_TEAM_WEIGHT_BONUS, getDailyTeamWeightBonusSaga)
 }
 
+export function* watchGetNumberOfTeamNotFull() {
+  yield takeEvery(types.GET_NUMBER_OF_TEAM_NOT_FULL, getNumberOfTeamNotFullSaga)
+}
+
+export function* watchAssignGroupToMember() {
+  yield takeEvery(types.ASSIGN_GROUP_TO_MEMBER, assignGroupToMemberSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -361,7 +456,9 @@ export function* saga() {
     fork(watchGetIsReducedWeight),
     fork(watchGetDailyWeighChallenge),
     fork(watchGetDailyTeamWeightBonus),
-    fork(watchPostDailyWeighChallenge)
+    fork(watchPostDailyWeighChallenge),
+    fork(watchGetNumberOfTeamNotFull),
+    fork(watchAssignGroupToMember),
   ]);
 }
 
@@ -377,7 +474,9 @@ const INIT_STATE = {
   numberOfMembers: 0,
   dailyTeamWeightBonusCount: 0,
   dailyWeighChallenge: false,
-  statusPostDailyWeighChallenge: "default"
+  statusPostDailyWeighChallenge: "default",
+  numberOfTeamNotFull: 0,
+  statusGetNumberOfTeamNotFull: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -407,6 +506,17 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         dailyTeamWeightBonusCount: action.payload
       }
+    case types.GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS:
+      return {
+        ...state,
+        numberOfTeamNotFull: action.payload,
+        statusGetNumberOfTeamNotFull: "success"
+      }
+    case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
+      return {
+        ...state,
+        statusGetNumberOfTeamNotFull: "default"
+      }
     case types.GET_IS_REDUCED_WEIGHT_SUCCESS:
       return {
         ...state,
@@ -424,6 +534,8 @@ export function reducer(state = INIT_STATE, action) {
         statusPostDailyWeighChallenge: "success",
         dailyWeighChallenge: false
       }
+    case types.CLEAR_CHALLENGES:
+      return INIT_STATE;
     default:
       return { ...state };
   }

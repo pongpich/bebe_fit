@@ -8,6 +8,7 @@ import {
 import { connect } from "react-redux";
 import { logoutUser } from "./redux/auth";
 import { clearVideoList } from "./redux/exerciseVideos";
+import { clearChallenges } from "./redux/challenges"
 
 
 import Login from "./views/login";
@@ -34,6 +35,7 @@ class App extends Component {
   onUserLogout(event) {
     this.props.logoutUser();
     this.props.clearVideoList();
+    this.props.clearChallenges();
     this.props.history.push('/platform');
   }
 
@@ -144,7 +146,8 @@ const mapStateToProps = ({ authUser, exerciseVideos }) => {
 
 const mapActionsToProps = {
   logoutUser,
-  clearVideoList
+  clearVideoList,
+  clearChallenges
 };
 
 export default connect(
