@@ -23,8 +23,19 @@ export const types = {
   GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS: "GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS",
   ASSIGN_GROUP_TO_MEMBER: "ASSIGN_GROUP_TO_MEMBER",
   ASSIGN_GROUP_TO_MEMBER_SUCCESS: "ASSIGN_GROUP_TO_MEMBER_SUCCESS",
-  CLEAR_CHALLENGES: "CLEAR_CHALLENGES"
+  CLEAR_CHALLENGES: "CLEAR_CHALLENGES",
+  CREATE_CHALLENGE_GROUP: "CREATE_CHALLENGE_GROUP",
+  CREATE_CHALLENGE_GROUP_SUCCESS: "CREATE_CHALLENGE_GROUP_SUCCESS"
 }
+
+export const createChallengeGroup = (user_id, group_name, start_date) => ({
+  type: types.CREATE_CHALLENGE_GROUP,
+  payload: {
+    user_id,
+    group_name,
+    start_date
+  }
+})
 
 export const clearChallenges = () => ({
   type: types.CLEAR_CHALLENGES
@@ -230,6 +241,26 @@ const assignGroupToMemberSagaAsync = async (
   }
 }
 
+const createChallengeGroupSagaAsync = async (
+  user_id,
+  group_name,
+  start_date
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/createChallengeGroup", {
+      body: {
+        user_id,
+        group_name,
+        start_date
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getDailyTeamWeightBonusSagaAsync = async (
   user_id
 ) => {
@@ -390,7 +421,28 @@ function* assignGroupToMemberSaga({ payload }) {
       type: types.ASSIGN_GROUP_TO_MEMBER_SUCCESS
     })
   } catch (error) {
-    console.log("error from postDailyWeighChallengeSaga :", error);
+    console.log("error from assignGroupToMemberSaga :", error);
+  }
+}
+
+function* createChallengeGroupSaga({ payload }) {
+  const {
+    user_id,
+    group_name,
+    start_date
+  } = payload
+  try {
+    const apiResult = yield call(
+      createChallengeGroupSagaAsync,
+      user_id,
+      group_name,
+      start_date
+    );
+    yield put({
+      type: types.CREATE_CHALLENGE_GROUP_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from createChallengeGroupSaga :", error);
   }
 }
 
@@ -448,6 +500,10 @@ export function* watchAssignGroupToMember() {
   yield takeEvery(types.ASSIGN_GROUP_TO_MEMBER, assignGroupToMemberSaga)
 }
 
+export function* watchCreateChallengeGroup() {
+  yield takeEvery(types.CREATE_CHALLENGE_GROUP, createChallengeGroupSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -459,6 +515,7 @@ export function* saga() {
     fork(watchPostDailyWeighChallenge),
     fork(watchGetNumberOfTeamNotFull),
     fork(watchAssignGroupToMember),
+    fork(watchCreateChallengeGroup),
   ]);
 }
 
@@ -513,6 +570,11 @@ export function reducer(state = INIT_STATE, action) {
         statusGetNumberOfTeamNotFull: "success"
       }
     case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
+      return {
+        ...state,
+        statusGetNumberOfTeamNotFull: "default"
+      }
+    case types.CREATE_CHALLENGE_GROUP_SUCCESS:
       return {
         ...state,
         statusGetNumberOfTeamNotFull: "default"

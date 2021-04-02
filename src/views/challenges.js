@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -10,7 +10,8 @@ class Challenges extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scoreInWeek: 0
+      scoreInWeek: 0,
+      teamName: ""
     }
   }
 
@@ -22,7 +23,7 @@ class Challenges extends Component {
       this.props.getIsReducedWeight(this.props.user.user_id);
       this.props.getDailyTeamWeightBonus(this.props.user.user_id);
     } else {
-      //
+      this.props.clearChallenges()
     }
   }
 
@@ -140,6 +141,68 @@ class Challenges extends Component {
     )
   }
 
+  handleChange(event) {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  };
+
+  createTeam(teamName) {
+    const { user } = this.props;
+    if (teamName.length > 6) {
+      this.props.createChallengeGroup(user.user_id, teamName, user.start_date)
+    } else {
+      this.setState({
+        teamName: ""
+      })
+    }
+  }
+
+  renderCreateTeam() {
+    const { user } = this.props;
+    return (
+      <div>
+        <div className="card-body d-flex justify-content-center">
+          <form>
+            <ul className="nav nav-tabs" id="myTab" role="tablist">
+              <li className="nav-item">
+                <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+              </li>
+              {/*  <li className="nav-item">
+                <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+              </li> */}
+              <li className="nav-item">
+                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
+              </li>
+            </ul>
+
+            <div className="row">
+              <div className="card mt-3  col-lg-12 col-md-12" >
+                <center>
+                  <h4 className="card-title mt-3 mb-4"><b>ตั้งชื่อทีมของคุณ</b></h4>
+                  <input
+                    type=""
+                    className="form-control"
+                    placeholder="ชื่อทีมต้องมากกว่า 6 ตัวอักษร"
+                    id="teamName"
+                    value={this.state.teamName}
+                    onChange={(event) => this.handleChange(event)}
+                  />
+                  <button
+                    type="button"
+                    class="btn btn-danger mt-4 mb-4 col-12"
+                    onClick={() =>
+                      this.createTeam(this.state.teamName)
+                    }>ยืนยัน</button>
+                </center>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
   renderJoinChallenge() {
     return (
       <div>
@@ -235,6 +298,7 @@ class Challenges extends Component {
   }
 
   render() {
+    const { numberOfTeamNotFull, statusGetNumberOfTeamNotFull, user } = this.props;
     return (
       <div>
         <div className="page-header header-small mt-5" data-parallax="true"
@@ -246,10 +310,13 @@ class Challenges extends Component {
           </div>
         </div>
         {
-          (this.props.user && this.props.user.group_id) ?
+          (user && user.group_id) ?
             this.renderChallenge()
             :
-            this.renderJoinChallenge()
+            (statusGetNumberOfTeamNotFull === "default" || numberOfTeamNotFull > 0) ?
+              this.renderJoinChallenge()
+              :
+              this.renderCreateTeam()
         }
       </div>
     )
@@ -263,7 +330,7 @@ const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup };
 
 export default connect(
   mapStateToProps,
