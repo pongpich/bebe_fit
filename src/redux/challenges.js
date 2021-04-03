@@ -25,8 +25,17 @@ export const types = {
   ASSIGN_GROUP_TO_MEMBER_SUCCESS: "ASSIGN_GROUP_TO_MEMBER_SUCCESS",
   CLEAR_CHALLENGES: "CLEAR_CHALLENGES",
   CREATE_CHALLENGE_GROUP: "CREATE_CHALLENGE_GROUP",
-  CREATE_CHALLENGE_GROUP_SUCCESS: "CREATE_CHALLENGE_GROUP_SUCCESS"
+  CREATE_CHALLENGE_GROUP_SUCCESS: "CREATE_CHALLENGE_GROUP_SUCCESS",
+  LEAVE_TEAM: "LEAVE_TEAM",
+  LEAVE_TEAM_SUCCESS: "LEAVE_TEAM_SUCCESS",
 }
+
+export const leaveTeam = (user_id) => ({
+  type: types.LEAVE_TEAM,
+  payload: {
+    user_id
+  }
+})
 
 export const createChallengeGroup = (user_id, group_name, start_date) => ({
   type: types.CREATE_CHALLENGE_GROUP,
@@ -261,6 +270,22 @@ const createChallengeGroupSagaAsync = async (
   }
 }
 
+const leaveTeamSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/leaveTeam", {
+      body: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getDailyTeamWeightBonusSagaAsync = async (
   user_id
 ) => {
@@ -446,6 +471,23 @@ function* createChallengeGroupSaga({ payload }) {
   }
 }
 
+function* leaveTeamSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      leaveTeamSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.LEAVE_TEAM_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from leaveTeamSaga :", error);
+  }
+}
+
 function* getDailyTeamWeightBonusSaga({ payload }) {
   const {
     user_id
@@ -504,6 +546,10 @@ export function* watchCreateChallengeGroup() {
   yield takeEvery(types.CREATE_CHALLENGE_GROUP, createChallengeGroupSaga)
 }
 
+export function* watchLeaveTeam() {
+  yield takeEvery(types.LEAVE_TEAM, leaveTeamSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -516,6 +562,7 @@ export function* saga() {
     fork(watchGetNumberOfTeamNotFull),
     fork(watchAssignGroupToMember),
     fork(watchCreateChallengeGroup),
+    fork(watchLeaveTeam),
   ]);
 }
 
@@ -534,6 +581,7 @@ const INIT_STATE = {
   statusPostDailyWeighChallenge: "default",
   numberOfTeamNotFull: 0,
   statusGetNumberOfTeamNotFull: "default",
+  statusLeaveTeam: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -572,12 +620,19 @@ export function reducer(state = INIT_STATE, action) {
     case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
       return {
         ...state,
-        statusGetNumberOfTeamNotFull: "default"
+        statusGetNumberOfTeamNotFull: "default",
+        statusLeaveTeam: "default"
       }
     case types.CREATE_CHALLENGE_GROUP_SUCCESS:
       return {
         ...state,
-        statusGetNumberOfTeamNotFull: "default"
+        statusGetNumberOfTeamNotFull: "default",
+        statusLeaveTeam: "default"
+      }
+    case types.LEAVE_TEAM_SUCCESS:
+      return {
+        ...state,
+        statusLeaveTeam: "success"
       }
     case types.GET_IS_REDUCED_WEIGHT_SUCCESS:
       return {

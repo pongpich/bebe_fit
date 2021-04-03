@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -29,7 +29,7 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull } = this.props;
+    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam } = this.props;
     if (prevProps.statusGetNumberOfTeamNotFull === "default" && statusGetNumberOfTeamNotFull === "success") {
       if (numberOfTeamNotFull > 0) {
         this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date);
@@ -37,10 +37,13 @@ class Challenges extends Component {
         //โชว์หน้าสร้างทีม
       }
     }
-    //หลัง assignGroupToMember เสร็จ ให้ทำการ getGroupID
-    if (prevProps.statusGetNumberOfTeamNotFull === "success" && statusGetNumberOfTeamNotFull === "default") {
+    //หลังจาก assignGroupToMember หรือ createChallengeGroup  จะมีการ getNumberOfTeamNotFull ให้ทำการ getGroupID
+    //หรือ หลังจาก leaveTeam ให้ getGroupID (group_id ที่ได้ จะเป็น null)
+    if ((prevProps.statusGetNumberOfTeamNotFull === "success" && statusGetNumberOfTeamNotFull === "default")
+      || (prevProps.statusLeaveTeam === "default" && statusLeaveTeam === "success")) {
       this.props.getGroupID(this.props.user.user_id);
     }
+    //หลังจาก getGroupID จะมีการแก้ไขค่า user.group_id ที่ Reducer authUser
     if (user && user.group_id !== prevProps.user.group_id) {
       this.props.getRank(this.props.user.user_id, this.props.user.start_date);
       this.props.getLogWeight(this.props.user.user_id);
@@ -162,6 +165,7 @@ class Challenges extends Component {
   }
 
   renderPopupLeaveTeam() {
+    const { user } = this.props;
     return (
       <div>
         <div
@@ -197,7 +201,7 @@ class Challenges extends Component {
             <button
               type="button"
               className="btn btn-danger col-4"
-              onClick={() => this.props.getNumberOfTeamNotFull()}>ยืนยัน</button>
+              onClick={() => this.props.leaveTeam(user.user_id)}>ยืนยัน</button>
             <div className="col-1"></div>
           </div>
         </div>
@@ -481,11 +485,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam };
 
 export default connect(
   mapStateToProps,
