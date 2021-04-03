@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -23,6 +23,8 @@ class Challenges extends Component {
       this.props.getLogWeightTeam(this.props.user.group_id);
       this.props.getIsReducedWeight(this.props.user.user_id);
       this.props.getDailyTeamWeightBonus(this.props.user.user_id);
+      this.props.getMembersAndRank(this.props.user.group_id);
+      this.props.getGroupName(this.props.user.group_id);
     } else {
       this.props.clearChallenges()
     }
@@ -50,6 +52,8 @@ class Challenges extends Component {
       this.props.getLogWeightTeam(this.props.user.group_id);
       this.props.getIsReducedWeight(this.props.user.user_id);
       this.props.getDailyTeamWeightBonus(this.props.user.user_id);
+      this.props.getMembersAndRank(this.props.user.group_id);
+      this.props.getGroupName(this.props.user.group_id);
     }
   }
 
@@ -122,26 +126,28 @@ class Challenges extends Component {
   }
 
   renderTeamList() {
+    const { numberOfMembers, membersOfTeam, group_name } = this.props;
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
         <div className="card  col-lg-7 col-md-12" >
           <div className="card-body">
             <div className="row">
-              <div className="col-lg-6  mb-3" style={{ float: "left" }}>
-                <h5 className="card-title"><b>ชื่อทีมXXXXX</b></h5>
-                <p className="card-text">1. ชื่อสมาชิก<span style={{ float: "right" }}></span></p>
-                <p className="card-text">2. ชื่อสมาชิก <span style={{ float: "right" }}></span></p>
-                <p className="card-text">3. ชื่อสมาชิก<span style={{ float: "right" }}></span></p>
-                <p className="card-text">4. ชื่อสมาชิก <span style={{ float: "right" }}></span></p>
+              <div className="col-lg-12">
+                <h5 className="card-title"><b>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
               </div>
-              {/* <div className="col-lg-6 mb-3" style={{ float: "right" }}>
-                <h5 className="card-title"><b>จำนวนสมาชิก XX/10คน</b></h5>
-                <p className="card-text">Newbie<span style={{ float: "right" }}></span></p>
-                <p className="card-text">Newbie<span style={{ float: "right" }}></span></p>
-                <p className="card-text">Newbie<span style={{ float: "right" }}></span></p>
-                <p className="card-text">Newbie<span style={{ float: "right" }}></span></p>
-              </div> */}
+              <div className="col-lg-10">
+                {
+                  (membersOfTeam) &&
+                  membersOfTeam.map((item, index) =>
+                    <p className="card-text">{index + 1}. {item.first_name}
+                      <span style={{ float: "right" }}>
+                        {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
+                      </span>
+                    </p>
+                  )
+                }
+              </div>
             </div>
             <br></br>
             <hr className="w-100"></hr>
@@ -485,11 +491,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName };
 
 export default connect(
   mapStateToProps,

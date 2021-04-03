@@ -100,7 +100,7 @@ class App extends Component {
               </li>
             }
             {
-              (this.props.user !== null && this.props.user.password !== null) &&
+              (this.props.user !== null) &&
               <li className="nav-item">
                 <a className="nav-link" href="/#" onClick={() => this.onUserLogout()} style={{ color: "white", cursor: "pointer" }}>
                   ออกจากระบบ

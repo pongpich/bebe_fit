@@ -28,7 +28,25 @@ export const types = {
   CREATE_CHALLENGE_GROUP_SUCCESS: "CREATE_CHALLENGE_GROUP_SUCCESS",
   LEAVE_TEAM: "LEAVE_TEAM",
   LEAVE_TEAM_SUCCESS: "LEAVE_TEAM_SUCCESS",
+  GET_MEMBERS_AND_RANK: "GET_MEMBERS_AND_RANK",
+  GET_MEMBERS_AND_RANK_SUCCESS: "GET_MEMBERS_AND_RANK_SUCCESS",
+  GET_GROUP_NAME: "GET_GROUP_NAME",
+  GET_GROUP_NAME_SUCCESS: "GET_GROUP_NAME_SUCCESS",
 }
+
+export const getGroupName = (group_id) => ({
+  type: types.GET_GROUP_NAME,
+  payload: {
+    group_id
+  }
+})
+
+export const getMembersAndRank = (group_id) => ({
+  type: types.GET_MEMBERS_AND_RANK,
+  payload: {
+    group_id
+  }
+})
 
 export const leaveTeam = (user_id) => ({
   type: types.LEAVE_TEAM,
@@ -286,6 +304,38 @@ const leaveTeamSagaAsync = async (
   }
 }
 
+const getMembersAndRankSagaAsync = async (
+  group_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getMembersAndRank", {
+      queryStringParameters: {
+        group_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getGroupNameSagaAsync = async (
+  group_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getGroupName", {
+      queryStringParameters: {
+        group_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getDailyTeamWeightBonusSagaAsync = async (
   user_id
 ) => {
@@ -488,6 +538,42 @@ function* leaveTeamSaga({ payload }) {
   }
 }
 
+function* getMembersAndRankSaga({ payload }) {
+  const {
+    group_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getMembersAndRankSagaAsync,
+      group_id
+    );
+    yield put({
+      type: types.GET_MEMBERS_AND_RANK_SUCCESS,
+      payload: apiResult.results.members
+    })
+  } catch (error) {
+    console.log("error from getMembersAndRankSaga :", error);
+  }
+}
+
+function* getGroupNameSaga({ payload }) {
+  const {
+    group_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getGroupNameSagaAsync,
+      group_id
+    );
+    yield put({
+      type: types.GET_GROUP_NAME_SUCCESS,
+      payload: apiResult.results.group_name
+    })
+  } catch (error) {
+    console.log("error from getGroupNameSaga :", error);
+  }
+}
+
 function* getDailyTeamWeightBonusSaga({ payload }) {
   const {
     user_id
@@ -550,6 +636,14 @@ export function* watchLeaveTeam() {
   yield takeEvery(types.LEAVE_TEAM, leaveTeamSaga)
 }
 
+export function* watchGetMembersAndRank() {
+  yield takeEvery(types.GET_MEMBERS_AND_RANK, getMembersAndRankSaga)
+}
+
+export function* watchGetGroupName() {
+  yield takeEvery(types.GET_GROUP_NAME, getGroupNameSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -563,6 +657,8 @@ export function* saga() {
     fork(watchAssignGroupToMember),
     fork(watchCreateChallengeGroup),
     fork(watchLeaveTeam),
+    fork(watchGetMembersAndRank),
+    fork(watchGetGroupName),
   ]);
 }
 
@@ -581,7 +677,9 @@ const INIT_STATE = {
   statusPostDailyWeighChallenge: "default",
   numberOfTeamNotFull: 0,
   statusGetNumberOfTeamNotFull: "default",
-  statusLeaveTeam: "default"
+  statusLeaveTeam: "default",
+  membersOfTeam: [],
+  group_name: ""
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -650,6 +748,16 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         statusPostDailyWeighChallenge: "success",
         dailyWeighChallenge: false
+      }
+    case types.GET_MEMBERS_AND_RANK_SUCCESS:
+      return {
+        ...state,
+        membersOfTeam: action.payload
+      }
+    case types.GET_GROUP_NAME_SUCCESS:
+      return {
+        ...state,
+        group_name: action.payload
       }
     case types.CLEAR_CHALLENGES:
       return INIT_STATE;
