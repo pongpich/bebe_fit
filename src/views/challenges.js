@@ -198,7 +198,6 @@ class Challenges extends Component {
               Warning!</h1>
             <h5>หากออกจากทีม</h5>
             <h5 style={{ color: "red" }}>- Rank จะถูกปรับเป็น "Newbie"</h5>
-            <h5 style={{ color: "red" }}>- และต้องเริ่มทำภารกิจใหม่ทั้งหมด</h5>
             <h5><b>คุณแน่ใจหรือไม่ ?</b></h5>
           </center>
           <div className="row mt-5">
