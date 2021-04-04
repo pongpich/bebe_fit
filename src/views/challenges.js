@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -26,6 +26,7 @@ class Challenges extends Component {
       this.props.getMembersAndRank(this.props.user.group_id);
       this.props.getGroupName(this.props.user.group_id);
       this.props.getScoreOfTeam(this.props.user.group_id);
+      this.props.getLeaderboard();
     } else {
       this.props.clearChallenges()
     }
@@ -56,6 +57,7 @@ class Challenges extends Component {
       this.props.getMembersAndRank(this.props.user.group_id);
       this.props.getGroupName(this.props.user.group_id);
       this.props.getScoreOfTeam(this.props.user.group_id);
+      this.props.getLeaderboard();
     }
   }
 
@@ -228,22 +230,23 @@ class Challenges extends Component {
   }
 
   renderScoreBoard() {
+    const { leaderBoard } = this.props;
     return (
       <div className="row">
         <div className="card  col-lg-7 col-md-12" >
           <div className="card-body">
             <div className="row">
-              <div className="col-lg-6  mb-3" style={{ float: "left" }}>
-                <p className="card-text">1. ชื่อทีมXXXXXXXXXXXXX<span style={{ float: "right" }}></span></p>
-                <p className="card-text">2. ชื่อทีมXXXXXXXXXXXXX <span style={{ float: "right" }}></span></p>
-                <p className="card-text">3. ชื่อทีมXXXXXXXXXXXXX<span style={{ float: "right" }}></span></p>
-                <p className="card-text">4. ชื่อทีมXXXXXXXXXXXXX <span style={{ float: "right" }}></span></p>
-              </div>
-              <div className="col-lg-6 mb-3" style={{ float: "right" }}>
-                <p className="card-text">XXX Point<span style={{ float: "right" }}></span></p>
-                <p className="card-text">XXX Point<span style={{ float: "right" }}></span></p>
-                <p className="card-text">XXX Point<span style={{ float: "right" }}></span></p>
-                <p className="card-text">XXX Point<span style={{ float: "right" }}></span></p>
+              <div className="col-lg-10  mb-3" style={{ float: "left" }}>
+                {
+                  (leaderBoard) &&
+                  leaderBoard.map((item, index) =>
+                    <p className="card-text">{index + 1}. {item.group_name}
+                      <span style={{ float: "right" }}>
+                        {item.totalScoreOfTeam} Point
+                      </span>
+                    </p>
+                  )
+                }
               </div>
             </div>
           </div>
@@ -493,11 +496,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, leaderBoard } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, leaderBoard };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard };
 
 export default connect(
   mapStateToProps,

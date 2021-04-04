@@ -34,7 +34,13 @@ export const types = {
   GET_GROUP_NAME_SUCCESS: "GET_GROUP_NAME_SUCCESS",
   GET_SCORE_OF_TEAM: "GET_SCORE_OF_TEAM",
   GET_SCORE_OF_TEAM_SUCCESS: "GET_SCORE_OF_TEAM_SUCCESS",
+  GET_LEADER_BOARD: "GET_LEADER_BOARD",
+  GET_LEADER_BOARD_SUCCESS: "GET_LEADER_BOARD_SUCCESS"
 }
+
+export const getLeaderboard = () => ({
+  type: types.GET_LEADER_BOARD
+})
 
 export const getScoreOfTeam =  (group_id) => ({
   type: types.GET_SCORE_OF_TEAM,
@@ -183,6 +189,21 @@ const getNumberOfTeamNotFullSagaAsync = async (
 ) => {
   try {
     const apiResult = await API.get("bebe", "/getNumberOfTeamNotFull", {
+      queryStringParameters: {
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getLeaderboardSagaAsync = async (
+
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getLeaderboard", {
       queryStringParameters: {
       }
     });
@@ -451,6 +472,20 @@ function* getNumberOfTeamNotFullSaga() {
   }
 }
 
+function* getLeaderboardSaga() {
+  try {
+    const apiResult = yield call(
+      getLeaderboardSagaAsync
+    );
+    yield put({
+      type: types.GET_LEADER_BOARD_SUCCESS,
+      payload: apiResult.results.leaderBoard
+    })
+  } catch (error) {
+    console.log("error from getLeaderboardSaga :", error);
+  }
+}
+
 function* getIsReducedWeightSaga({ payload }) {
   const {
     user_id
@@ -691,6 +726,10 @@ export function* watchGetScoreOfTeam() {
   yield takeEvery(types.GET_SCORE_OF_TEAM, getScoreOfTeamSaga)
 }
 
+export function* watchGetLeaderboard() {
+  yield takeEvery(types.GET_LEADER_BOARD, getLeaderboardSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -707,6 +746,7 @@ export function* saga() {
     fork(watchGetMembersAndRank),
     fork(watchGetGroupName),
     fork(watchGetScoreOfTeam),
+    fork(watchGetLeaderboard),
   ]);
 }
 
@@ -728,7 +768,8 @@ const INIT_STATE = {
   statusLeaveTeam: "default",
   membersOfTeam: [],
   group_name: "",
-  totalScoreOfTeam: 0
+  totalScoreOfTeam: 0,
+  leaderBoard: []
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -763,6 +804,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         numberOfTeamNotFull: action.payload,
         statusGetNumberOfTeamNotFull: "success"
+      }
+    case types.GET_LEADER_BOARD_SUCCESS:
+      return {
+        ...state,
+        leaderBoard: action.payload
       }
     case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
       return {
