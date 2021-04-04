@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -25,6 +25,7 @@ class Challenges extends Component {
       this.props.getDailyTeamWeightBonus(this.props.user.user_id);
       this.props.getMembersAndRank(this.props.user.group_id);
       this.props.getGroupName(this.props.user.group_id);
+      this.props.getScoreOfTeam(this.props.user.group_id);
     } else {
       this.props.clearChallenges()
     }
@@ -54,6 +55,7 @@ class Challenges extends Component {
       this.props.getDailyTeamWeightBonus(this.props.user.user_id);
       this.props.getMembersAndRank(this.props.user.group_id);
       this.props.getGroupName(this.props.user.group_id);
+      this.props.getScoreOfTeam(this.props.user.group_id);
     }
   }
 
@@ -126,7 +128,7 @@ class Challenges extends Component {
   }
 
   renderTeamList() {
-    const { numberOfMembers, membersOfTeam, group_name } = this.props;
+    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam } = this.props;
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
@@ -162,7 +164,7 @@ class Challenges extends Component {
           <div className="card-body">
             <center>
               <h3 className="mt-4">คะแนนทีม</h3>
-              <h1>999 Point</h1>
+              <h1>{totalScoreOfTeam ? totalScoreOfTeam : 0} Point</h1>
             </center>
           </div>
         </div>
@@ -491,11 +493,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam };
 
 export default connect(
   mapStateToProps,

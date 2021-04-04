@@ -32,7 +32,16 @@ export const types = {
   GET_MEMBERS_AND_RANK_SUCCESS: "GET_MEMBERS_AND_RANK_SUCCESS",
   GET_GROUP_NAME: "GET_GROUP_NAME",
   GET_GROUP_NAME_SUCCESS: "GET_GROUP_NAME_SUCCESS",
+  GET_SCORE_OF_TEAM: "GET_SCORE_OF_TEAM",
+  GET_SCORE_OF_TEAM_SUCCESS: "GET_SCORE_OF_TEAM_SUCCESS",
 }
+
+export const getScoreOfTeam =  (group_id) => ({
+  type: types.GET_SCORE_OF_TEAM,
+  payload: {
+    group_id
+  }
+})
 
 export const getGroupName = (group_id) => ({
   type: types.GET_GROUP_NAME,
@@ -336,6 +345,22 @@ const getGroupNameSagaAsync = async (
   }
 }
 
+const getScoreOfTeamSagaAsync = async (
+  group_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getScoreOfTeam", {
+      queryStringParameters: {
+        group_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
 const getDailyTeamWeightBonusSagaAsync = async (
   user_id
 ) => {
@@ -574,6 +599,24 @@ function* getGroupNameSaga({ payload }) {
   }
 }
 
+function* getScoreOfTeamSaga({ payload }) {
+  const {
+    group_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getScoreOfTeamSagaAsync,
+      group_id
+    );
+    yield put({
+      type: types.GET_SCORE_OF_TEAM_SUCCESS,
+      payload: apiResult.results.totalScoreOfTeam
+    })
+  } catch (error) {
+    console.log("error from getScoreOfTeamSaga :", error);
+  }
+}
+
 function* getDailyTeamWeightBonusSaga({ payload }) {
   const {
     user_id
@@ -644,6 +687,10 @@ export function* watchGetGroupName() {
   yield takeEvery(types.GET_GROUP_NAME, getGroupNameSaga)
 }
 
+export function* watchGetScoreOfTeam() {
+  yield takeEvery(types.GET_SCORE_OF_TEAM, getScoreOfTeamSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -659,6 +706,7 @@ export function* saga() {
     fork(watchLeaveTeam),
     fork(watchGetMembersAndRank),
     fork(watchGetGroupName),
+    fork(watchGetScoreOfTeam),
   ]);
 }
 
@@ -679,7 +727,8 @@ const INIT_STATE = {
   statusGetNumberOfTeamNotFull: "default",
   statusLeaveTeam: "default",
   membersOfTeam: [],
-  group_name: ""
+  group_name: "",
+  totalScoreOfTeam: 0
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -758,6 +807,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         group_name: action.payload
+      }
+    case types.GET_SCORE_OF_TEAM_SUCCESS:
+      return {
+        ...state,
+        totalScoreOfTeam: action.payload
       }
     case types.CLEAR_CHALLENGES:
       return INIT_STATE;
