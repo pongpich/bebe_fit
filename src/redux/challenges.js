@@ -42,7 +42,7 @@ export const getLeaderboard = () => ({
   type: types.GET_LEADER_BOARD
 })
 
-export const getScoreOfTeam =  (group_id) => ({
+export const getScoreOfTeam = (group_id) => ({
   type: types.GET_SCORE_OF_TEAM,
   payload: {
     group_id
@@ -837,6 +837,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         dailyWeighChallenge: action.payload,
         statusPostDailyWeighChallenge: "default"
+      }
+    case types.POST_DAILY_WEIGH_CHALLENGE:
+      return {
+        ...state,
+        statusPostDailyWeighChallenge: "loading"
       }
     case types.POST_DAILY_WEIGH_CHALLENGE_SUCCESS:
       return {

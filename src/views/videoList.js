@@ -79,7 +79,7 @@ class VideoList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge } = this.props;
-    if (prevProps.statusPostDailyWeighChallenge === "default" && statusPostDailyWeighChallenge === "success") {
+    if (prevProps.statusPostDailyWeighChallenge !== statusPostDailyWeighChallenge && statusPostDailyWeighChallenge === "success") {
       this.props.history.push('/challenges');
     }
     if (user && prevProps.user && user.other_attributes !== prevProps.user.other_attributes) {
@@ -1147,13 +1147,18 @@ class VideoList extends Component {
             />
             <span className="input-group-text">KG</span>
           </div>
-          <div className="row">
-            <div className="col-1"></div>
-            <button type="button" className="btn btn-secondary col-4" onClick={() => this.closePopupDailyWeighChallenge()}>ปิด</button>
-            <div className="col-2"></div>
-            <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)}>ยืนยัน</button>
-            <div className="col-1"></div>
-          </div>
+          {
+            (this.props.statusPostDailyWeighChallenge !== "loading") ?
+              <div className="row">
+                <div className="col-1"></div>
+                <button type="button" className="btn btn-secondary col-4" onClick={() => this.closePopupDailyWeighChallenge()}>ปิด</button>
+                <div className="col-2"></div>
+                <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)}>ยืนยัน</button>
+                <div className="col-1"></div>
+              </div>
+              :
+              <div />
+          }
         </div>
       </div>
     )
