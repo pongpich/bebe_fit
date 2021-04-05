@@ -769,7 +769,8 @@ const INIT_STATE = {
   membersOfTeam: [],
   group_name: "",
   totalScoreOfTeam: 0,
-  leaderBoard: []
+  leaderBoard: [],
+  statusCreateTeam: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -799,6 +800,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         dailyTeamWeightBonusCount: action.payload
       }
+    case types.GET_NUMBER_OF_TEAM_NOT_FULL:
+      return {
+        ...state,
+        statusGetNumberOfTeamNotFull: "loading"
+      }
     case types.GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS:
       return {
         ...state,
@@ -816,9 +822,15 @@ export function reducer(state = INIT_STATE, action) {
         statusGetNumberOfTeamNotFull: "default",
         statusLeaveTeam: "default"
       }
+    case types.CREATE_CHALLENGE_GROUP:
+      return {
+        ...state,
+        statusCreateTeam: "loading"
+      }
     case types.CREATE_CHALLENGE_GROUP_SUCCESS:
       return {
         ...state,
+        statusCreateTeam: "default",
         statusGetNumberOfTeamNotFull: "default",
         statusLeaveTeam: "default"
       }

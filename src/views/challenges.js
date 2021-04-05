@@ -34,16 +34,14 @@ class Challenges extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam } = this.props;
-    if (prevProps.statusGetNumberOfTeamNotFull === "default" && statusGetNumberOfTeamNotFull === "success") {
+    if (prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "success") {
       if (numberOfTeamNotFull > 0) {
         this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date);
-      } else {
-        //โชว์หน้าสร้างทีม
       }
     }
     //หลังจาก assignGroupToMember หรือ createChallengeGroup  จะมีการ getNumberOfTeamNotFull ให้ทำการ getGroupID
     //หรือ หลังจาก leaveTeam ให้ getGroupID (group_id ที่ได้ จะเป็น null)
-    if ((prevProps.statusGetNumberOfTeamNotFull === "success" && statusGetNumberOfTeamNotFull === "default")
+    if ((prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "default")
       || (prevProps.statusLeaveTeam === "default" && statusLeaveTeam === "success")) {
       this.props.getGroupID(this.props.user.user_id);
     }
@@ -357,12 +355,17 @@ class Challenges extends Component {
                     value={this.state.teamName}
                     onChange={(event) => this.handleChange(event)}
                   />
-                  <button
-                    type="button"
-                    class="btn btn-danger mt-4 mb-4 col-12"
-                    onClick={() =>
-                      this.createTeam(this.state.teamName)
-                    }>ยืนยัน</button>
+                  {
+                    (this.props.statusCreateTeam !== "loading") ?
+                      <button
+                        type="button"
+                        class="btn btn-danger mt-4 mb-4 col-12"
+                        onClick={() =>
+                          this.createTeam(this.state.teamName)
+                        }>ยืนยัน</button>
+                      :
+                      <div />
+                  }
                 </center>
               </div>
             </div>
@@ -438,19 +441,24 @@ class Challenges extends Component {
           </div>
           <br></br>
           <center><h5 className="mt-1 mb-3">คุณต้องการเข้าร่วมชาเลนจ์หรือไม่</h5></center>
-          <div className="row mt-5">
-            <div className="col-1"></div>
-            <button
-              type="button"
-              className="btn btn-secondary col-4"
-              onClick={() => this.closePopupJoinChallenge()}>ยกเลิก</button>
-            <div className="col-2"></div>
-            <button
-              type="button"
-              className="btn btn-danger col-4"
-              onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
-            <div className="col-1"></div>
-          </div>
+          {
+            (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
+              <div className="row mt-5">
+                <div className="col-1"></div>
+                <button
+                  type="button"
+                  className="btn btn-secondary col-4"
+                  onClick={() => this.closePopupJoinChallenge()}>ยกเลิก</button>
+                <div className="col-2"></div>
+                <button
+                  type="button"
+                  className="btn btn-danger col-4"
+                  onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
+                <div className="col-1"></div>
+              </div>
+              :
+              <div />
+          }
         </div>
       </div>
     )
