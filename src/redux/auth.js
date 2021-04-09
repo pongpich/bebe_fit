@@ -109,10 +109,10 @@ export const updateProfile = (
     }
   });
 
-export const importMembers = (emails, start_date, expire_date) => ({
+export const importMembers = (members, start_date, expire_date) => ({
   type: types.IMPORT_MEMBERS,
   payload: {
-    emails,
+    members,
     start_date,
     expire_date
   }
@@ -194,14 +194,14 @@ const trialPackageSagaAsync = async (
 }
 
 const importMembersSagaAsync = async (
-  emails,
+  members,
   start_date,
   expire_date
 ) => {
   try {
     const apiResult = await API.post("bebe", "/import_members", {
       body: {
-        emails,
+        members,
         start_date,
         expire_date
       }
@@ -462,7 +462,7 @@ function* trialPackageSaga({ payload }) {
 
 function* importMembersSaga({ payload }) {
   const {
-    emails,
+    members,
     start_date,
     expire_date
   } = payload
@@ -470,7 +470,7 @@ function* importMembersSaga({ payload }) {
   try {
     yield call(
       importMembersSagaAsync,
-      emails,
+      members,
       start_date,
       expire_date
     )

@@ -10,7 +10,7 @@ class ImportMembers extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      emails: [],
+      members: [],
       selectedStartDate: null,
       selectedExpireDate: null,
       selectedFile: null,
@@ -31,7 +31,7 @@ class ImportMembers extends Component {
   }
 
   fileSelectedHandler = event => {
-    var { emails } = this.state;
+    var { members } = this.state;
     const Papa = require('papaparse');
 
     this.setState({
@@ -44,12 +44,17 @@ class ImportMembers extends Component {
         header: false,
         complete: function (results) {
           var data = results.data;
-          console.log("data : ", data);
-          for (var i = 1; i <= data.length - 1; i++) { // i = 1 เพราะว่า 0 เป็นหัวcolumn
-            emails.push(data[i][0]);
-            //console.log(`emails ${i} : `, emails);
+          //console.log("data : ", data);
+          for (var i = 1; i <= data.length - 1; i++) { // i = 1 เพราะว่า rowที่0 เป็นหัวcolumn
+            var member = { email: "", first_name: "", last_name: "", phone: "" };
+            member.email = data[i][0];
+            member.first_name = data[i][1];
+            member.last_name = data[i][2];
+            member.phone = data[i][3];
+            members.push(member);
+            //console.log(`members ${i} : `, members);
           }
-          //console.log("emails ALL :", emails);
+          //console.log("members ALL :", members);
         }
       });
       this.setState({
@@ -59,7 +64,7 @@ class ImportMembers extends Component {
   }
 
   onSubmit() {
-    const { emails, selectedStartDate, selectedExpireDate, selectedFile } = this.state;
+    const { members, selectedStartDate, selectedExpireDate, selectedFile } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
@@ -67,7 +72,7 @@ class ImportMembers extends Component {
     })
 
     if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
-      this.props.importMembers(emails, start_date, expire_date);
+      this.props.importMembers(members, start_date, expire_date);
       document.getElementById("popupSuccessSubmit").classList.toggle("active");
       document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
       var delayInMilliseconds = 1750; //1.75 second
@@ -140,7 +145,7 @@ class ImportMembers extends Component {
               <div className="input-group mb-2">
                 <div className="input-group-prepend">
                   <button
-                    class=""
+                    className=""
                     onClick={() => this.fileInput.click()}
                     style={{ background: "#333333", color: "white" }}
                   >
@@ -149,7 +154,7 @@ class ImportMembers extends Component {
                 </div>
                 <input
                   type="text"
-                  class="form-control "
+                  className="form-control "
                   value={(this.state.selectedFile) ? this.state.selectedFile.name : ""}
                 />
               </div>
@@ -199,7 +204,7 @@ class ImportMembers extends Component {
           type="button"
           className="btn btn-danger ml-auto col-lg-1 col-md-6 "
           onClick={() => this.setState({
-            emails: [],
+            members: [],
             selectedStartDate: null,
             selectedExpireDate: null
           })}
