@@ -470,9 +470,9 @@ class VideoList extends Component {
     let totalSecond = sumSecond % 60;
     let timesExercise;
     if (totalSecond < 10) {
-      timesExercise = `${totalMinute}.0${totalSecond}`;
+      timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
-      timesExercise = `${totalMinute}.${totalSecond}`;
+      timesExercise = `${totalMinute}:${totalSecond}`;
     }
 
     return (
