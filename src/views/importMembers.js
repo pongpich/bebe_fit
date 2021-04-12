@@ -44,17 +44,17 @@ class ImportMembers extends Component {
         header: false,
         complete: function (results) {
           var data = results.data;
-          //console.log("data : ", data);
+          console.log("data : ", data);
           for (var i = 1; i <= data.length - 1; i++) { // i = 1 เพราะว่า rowที่0 เป็นหัวcolumn
             var member = { email: "", first_name: "", last_name: "", phone: "" };
-            member.email = data[i][0];
-            member.first_name = data[i][1];
-            member.last_name = data[i][2];
-            member.phone = data[i][3];
+            member.email = (data[i][0])? data[i][0] : "";
+            member.first_name = (data[i][1])? data[i][1] : "";
+            member.last_name = (data[i][2])? data[i][2] : "";
+            member.phone = (data[i][3])? data[i][3] : "";
             members.push(member);
-            //console.log(`members ${i} : `, members);
+            console.log(`members ${i} : `, members);
           }
-          //console.log("members ALL :", members);
+          console.log("members ALL :", members);
         }
       });
       this.setState({

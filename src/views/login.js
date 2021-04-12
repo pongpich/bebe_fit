@@ -113,19 +113,19 @@ class Login extends Component {
                     </span>
                   </Button>
                 </div>
-                {/* <div className="d-flex justify-content-between align-items-center mb-3">
+                <div className="d-flex justify-content-between align-items-center mb-3">
                   <Button
                     className="btn-link"
                     color="empty"
-                    onClick={() => this.props.history.push('/forgot-password')}
+                    href="https://content.bebefitroutine.com/onlinecourse/" target="_blank"
                     block
                   >
                     <span className="text-one">
-                      {"ลืมรหัสผ่าน"}
+                      {"ซื้อคอร์ส Platform"}
                     </span>
                   </Button>
                 </div>
-                <div className="d-flex justify-content-between align-items-center mb-3">
+                {/* <div className="d-flex justify-content-between align-items-center mb-3">
                   <Button
                     color="light"
                     className="btn-shadow"
