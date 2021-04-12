@@ -585,7 +585,9 @@ class VideoList extends Component {
                                   <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               }
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6> <b>{item.duration} นาที</b> </h6>
+                                <h6>
+                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                </h6>
                               </div>
                             </div>
                           </div>
@@ -826,9 +828,9 @@ class VideoList extends Component {
     let totalSecond = sumSecond % 60;
     let timesExercise;
     if (totalSecond < 10) {
-      timesExercise = `${totalMinute}.0${totalSecond}`;
+      timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
-      timesExercise = `${totalMinute}.${totalSecond}`;
+      timesExercise = `${totalMinute}:${totalSecond}`;
     }
 
     return (
@@ -940,7 +942,9 @@ class VideoList extends Component {
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6> <b>{item.duration} นาที</b> </h6>
+                                <h6>
+                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                </h6>
                               </div>
                             </div>
                           </div>
@@ -985,9 +989,9 @@ class VideoList extends Component {
     let totalSecond = sumSecond % 60;
     let timesExercise;
     if (totalSecond < 10) {
-      timesExercise = `${totalMinute}.0${totalSecond}`;
+      timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
-      timesExercise = `${totalMinute}.${totalSecond}`;
+      timesExercise = `${totalMinute}:${totalSecond}`;
     }
 
     return (
@@ -1090,7 +1094,9 @@ class VideoList extends Component {
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6> <b>{item.duration} นาที</b> </h6>
+                                <h6>
+                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                </h6>
                               </div>
                             </div>
                           </div>
