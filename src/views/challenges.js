@@ -116,7 +116,7 @@ class Challenges extends Component {
         <div className="card col-lg-4 col-md-12  offset-lg-1" >
           <div className="card-body">
             <center>
-              <img src="https://homepages.cae.wisc.edu/~ece533/images/cat.png" className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" />
+              <img src={`../assets/img/rank/${rank.toLowerCase()}.png`} className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" />
               <h5 className="card-title mt-3">{rank}</h5>
               <progress id="expRank" value={scoreInWeek} max="41"> </progress>
               <p className="card-text">{scoreInWeek}/41 Point</p>
