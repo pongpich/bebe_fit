@@ -60,21 +60,23 @@ class Challenges extends Component {
   }
 
   isExerciseCompleted(activites) {
-    let isCompleted = true;
+    //let isCompleted = true;
+    let count = 4;
 
-    if (activites.length <= 0) isCompleted = false;
+    //if (activites.length <= 0) isCompleted = false;
 
     for (let dayIndex = 0; dayIndex < activites.length; dayIndex++) {
       const dailyExercises = activites[dayIndex];
       for (let exIndex = 0; exIndex < dailyExercises.length; exIndex++) {
         const exercise = dailyExercises[exIndex];
         if (parseFloat(exercise.play_time) !== parseFloat(exercise.duration)) {
-          isCompleted = false;
+          //isCompleted = false;
+          count = count - 1;
           break;
         }
       }
     }
-    return isCompleted;
+    return count;
   }
 
   renderMission() {
@@ -84,7 +86,7 @@ class Challenges extends Component {
     var { scoreInWeek } = this.state;
     if (logWeightCount >= 2) { scoreInWeek += 10 }; //ชั่งน้ำหนักครบ 2 ครั้ง
     if (isReducedWeight) { scoreInWeek += 10 }; //น้ำหนักลดลงจากสัปดาห์ก่อน
-    if (isExerciseCompleted) { scoreInWeek += 10 }; //ออกกำลังกายครบทั้งสัปดาห์
+    if (isExerciseCompleted === 4) { scoreInWeek += 10 }; //ออกกำลังกายครบทั้งสัปดาห์
     if (logWeightTeamCount >= numberOfMembers * 2) { scoreInWeek += 10 }; //ทีมชั่งน้ำหนักครบ คนละ2ครั้ง
     if (dailyTeamWeightBonusCount > 0) { scoreInWeek += dailyTeamWeightBonusCount * 10 }; //ในแต่ละวันมีสมาชิกชั่งน้ำหนัก
     if (scoreInWeek > 41) { scoreInWeek = 41 }; //เพื่อไม่ให้เกินหลอด
@@ -102,7 +104,7 @@ class Challenges extends Component {
                 <h5 className="card-title"><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
                 <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right" }}>{logWeightCount}/2</span></p>
                 <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right" }}>{isReducedWeight ? 1 : 0}/1</span></p>
-                <p className="card-text">ออกกำลังกายครบทั้งสัปดาห์<span style={{ float: "right" }}>{isExerciseCompleted ? 1 : 0}/1</span></p>
+                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right" }}>{isExerciseCompleted}/4</span></p>
               </div>
             </div>
             <p className="card-text" style={{ float: "right", fontSize: "13px" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
