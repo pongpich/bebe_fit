@@ -92,6 +92,7 @@ class Challenges extends Component {
     if (scoreInWeek > 41) { scoreInWeek = 41 }; //เพื่อไม่ให้เกินหลอด
     return (
       <div className="row">
+        {this.renderPopupRulesAndPrizes()}
         <div className="card  col-lg-7 col-md-12" >
           <div className="card-body">
             <div className="row">
@@ -110,8 +111,10 @@ class Challenges extends Component {
             <p className="card-text" style={{ float: "right", fontSize: "13px" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
             <br></br>
             <hr className="w-100"></hr>
-            <u className="nav-link" style={{ cursor: "pointer" }}>กฏและกติกา</u>
-            <u className="nav-link" style={{ cursor: "pointer" }}>ของรางวัล</u>
+            <h5
+                        className="card-title"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
           </div>
         </div>
 
@@ -380,7 +383,8 @@ class Challenges extends Component {
   renderJoinChallenge() {
     return (
       <div>
-        {this.renderPopupDailyWeighChallenge()}
+        {this.renderPopupJoinChallenge()}
+        {this.renderPopupRulesAndPrizes()}
         <div className="card-body d-flex justify-content-center">
           <form>
             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -399,22 +403,26 @@ class Challenges extends Component {
               <div className="card mt-3  col-lg-12 col-md-12  offset-lg-1" >
                 <div className="card-body">
                   <center>
-                    <h4 className="card-title mt-3 mb-4"><b>เข้าร่วมชาเลนจ์เพื่อรับสิทธิพิเศษมากมาย</b></h4>
-                    <p className="card-text">Benefit list</p>
-                    <p className="card-text">Benefit list</p>
-                    <p className="card-text">Benefit list</p>
-                    <p className="card-text">Benefit list</p>
-                    <p className="card-text">Benefit list</p>
+                    <h4 className="card-title mt-3 "><b>ชาเลนจ์น้องใหม่ เอาใจสมาชิก BEBE FIT ROUTINE</b></h4>
+                    <h4 className="card-title mb-5"><b>สนุกไปกับภารกิจพร้อมรับสิทธิพิเศษมากมาย</b></h4>
+                    <h4 className="card-title"><b>ภารกิจพิชิตตัวเลข</b></h4>
+                    <h5 className="card-text">บันทึกการชั่งน้ำหนักเพื่อดูความเปลี่ยนแปลงของร่างกาย รับ 10 คะแนน</h5>
+                    <h4 className="card-title"><b>ภารกิจฟิตเฟิร์ม</b></h4>
+                    <h5 className="card-text">ก้าวสู่เป้าหมายออกกำลังกายได้ครบทั้งสัปดาห์  รับ 10 คะแนน</h5>
+                    <h4 className="card-title"><b>ภารกิจก้าวสู่ทีมอันดับ 1</b></h4>
+                    <h5 className="card-text mb-4">สะสมคะแนนกับเพื่อนร่วมทีม อีกหนึ่งแรงผลักดันสู่เป้าหมายในการออกกำลังกาย</h5>
                     <button
                       type="button"
                       class="btn btn-danger mt-4 col-12"
                       onClick={() => this.openPopupJoinChallenge()}>เข้าร่วมชาเลนจ์</button>
                   </center>
-                  <div className="col-5   mt-4" style={{ float: "left" }}>
-                    <center><h5 className="card-title"><b>กฎกติกา</b></h5></center>
-                  </div>
-                  <div className="col-5 mt-4" style={{ float: "right" }}>
-                    <center><h5 className="card-title"><b>ของรางวัล</b></h5></center>
+                  <div className="mt-4">
+                    <center>
+                      <h5
+                        className="card-title"
+                        style={{ cursor: "pointer" }}
+                        onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
+                    </center>
                   </div>
                 </div>
               </div>
@@ -425,7 +433,7 @@ class Challenges extends Component {
     )
   }
 
-  renderPopupDailyWeighChallenge() {
+  renderPopupJoinChallenge() {
     return (
       <div>
         <div
@@ -466,6 +474,61 @@ class Challenges extends Component {
     )
   }
 
+  renderPopupRulesAndPrizes() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupRulesAndPrizes"
+          id="overlayPopupRulesAndPrizes"
+          onClick={() => this.closePopupRulesAndPrizes()}
+        />
+        <div className="popupRulesAndPrizes" id="popupRulesAndPrizes">
+          <div
+            className=""
+            onClick={() => this.closePopupRulesAndPrizes()}
+            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
+          >
+            <i class="fa fa-times fa-lg"></i>
+          </div>
+          <br></br>
+          <h4 className="mt-1 mb-4"><b>กฎและกติการ</b></h4>
+          <h5><b>• สมาชิกในทีม</b></h5>
+          <h6>1 ทีม จะมีสมาชิกจำนวน 10 ท่าน โดยระบบจะทำการจัดทีมให้อัตโนมัติ</h6>
+          <h6>หากสมาชิกหมดอายุก่อนจบ Season ระบบจะตัดออกจากกลุ่มใน 7 วัน</h6>
+          <br></br>
+          <h5><b>• การเลื่อนขั้น (Rank)</b></h5>
+          <h6>ระดับขั้นจะแบ่งออกเป็น Newbie, Bronze, Silver, Gold และ Platinum</h6>
+          <h6>ในแต่ละสัปดาห์ถ้ามีคะแนนรวมมากกว่า 40 คะแนนจะได้รับการเลื่อนขั้น</h6>
+          <h6>แต่หากคะแนนน้อยกว่าหรือเท่ากับ 40 คะแนนจะถูดลดขั้นลงมา 1 ลำดับ </h6>
+          <h6>โดยระบบจะทำการอัปเดตคะแนนทุกวันอาทิตย์เวลา 00.00 น.</h6>
+          <br></br>
+          <h5><b>• การสะสมคะแนน</b></h5>
+          <h6><b>คะแนนส่วนบุคคล</b> จะได้รับจากภารกิจ โดยจำนวนคะแนนที่ได้รับนั้น</h6>
+          <h6>จะขึ้นอยู่กับ Rank ในแต่ละสัปดาห์ ยิ่ง Rank สูงจะได้คะแนนมากขึ้น</h6>
+          <h6><b>คะแนนของทีม</b> จะเป็นคะแนนสะสมรวมของสมาชิก</h6>
+          <h6>ถ้าคนในทีมทำภารกิจสำเร็จ ผู้ร่วมทีมจะได้รับคะแนนด้วยเช่นกัน</h6>
+          <br></br>
+          <h5><b>• รายละเอียดของรางวัลประจำ Season</b></h5>
+          <h6>สามารถติดตามของรางวัลได้ทาง Facebook Group</h6>
+
+          {
+            (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
+              <div className="row mt-3">
+                <div className="col-3"></div>
+                <button
+                  type="button"
+                  className="btn btn-secondary col-6"
+                  onClick={() => this.closePopupRulesAndPrizes()}>ปิด</button>
+                <div className="col-3"></div>
+              </div>
+              :
+              <div />
+          }
+        </div>
+      </div>
+    )
+  }
+
   openPopupJoinChallenge() {
     document.getElementById("popupJoinChallenge").classList.toggle("active");
     document.getElementById("overlayPopupJoinChallenge").classList.toggle("active");
@@ -474,6 +537,16 @@ class Challenges extends Component {
   closePopupJoinChallenge() {
     document.getElementById("popupJoinChallenge").classList.toggle("active");
     document.getElementById("overlayPopupJoinChallenge").classList.toggle("active");
+  }
+
+  openPopupRulesAndPrizes() {
+    document.getElementById("popupRulesAndPrizes").classList.toggle("active");
+    document.getElementById("overlayPopupRulesAndPrizes").classList.toggle("active");
+  }
+
+  closePopupRulesAndPrizes() {
+    document.getElementById("popupRulesAndPrizes").classList.toggle("active");
+    document.getElementById("overlayPopupRulesAndPrizes").classList.toggle("active");
   }
 
   render() {
