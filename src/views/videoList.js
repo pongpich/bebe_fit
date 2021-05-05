@@ -1191,7 +1191,7 @@ class VideoList extends Component {
           (dailyWeighChallenge && (this.props.user && this.props.user.group_id)) &&
           this.renderPopupDailyWeighChallenge()
         }
-        <div className="page-header header-small mt-5" data-parallax="true"
+        <div className="page-header header-small" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">
             <video className="mt-4" width="100%" height="100%" controls controlsList="nodownload" disablePictureInPicture autoPlay muted >

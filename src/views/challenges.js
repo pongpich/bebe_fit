@@ -555,7 +555,7 @@ class Challenges extends Component {
     const { numberOfTeamNotFull, statusGetNumberOfTeamNotFull, user } = this.props;
     return (
       <div>
-        <div className="page-header header-small mt-5" data-parallax="true"
+        <div className="page-header header-small" data-parallax="true"
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">
             <video className="mt-4" width="100%" height="100%" controls autoPlay muted >

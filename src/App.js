@@ -41,24 +41,12 @@ class App extends Component {
 
   renderNavbar() {
     return (
-      <nav className="navbar navbar-expand navbar-dark bg-dark fixed-top">
+      <nav className="navbar navbar-expand" style={{ backgroundColor: "#F45197", fontFamily: "'Prompt', sans-serif" }}>
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
-          <img className="mr-3" src="/assets/img/logo.png" alt="" width="50" height="50" />
-            BEBE FIT ROUTINE
+          <img className="mr-3" src="/assets/img/logo.png" alt="" />
         </a>
         <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
           <ul className="navbar-nav">
-            {/* <li className="nav-item">
-              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>บทความ</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>อาหารเสริมและอุปกรณ์</a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="#/platform" onClick={() => this.props.history.push('/platform')} style={{ color: "white", cursor: "pointer" }}>
-                Platform
-              </a>
-            </li> */}
             {
               (this.props.user !== null && this.props.user.authorization === "admin") &&
               <li className="nav-item">
@@ -72,17 +60,6 @@ class App extends Component {
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
           <ul className="navbar-nav">
-            {/* <li className="nav-item">
-              <a className="nav-link" href="#/" style={{ color: "white", cursor: "pointer" }}>ตะกร้าสินค้า</a>
-            </li> */}
-            {/* {
-              (this.props.user === null) &&
-              <li className="nav-item">
-                <a className="nav-link" href="#/login" onClick={() => this.props.history.push('/login')} style={{ color: "white", cursor: "pointer" }}>
-                  เข้าสู่ระบบ
-                </a>
-              </li>
-            } */}
             {/* {
               (this.props.user === null || this.props.user.password === null) && //password === null คือกรณีผู้ใช้ทำการ ResetPassword
               <li className="nav-item">
@@ -113,9 +90,24 @@ class App extends Component {
     )
   }
 
+  renderTopbar() {
+    return (
+      <section className="bg-dark">
+          <div className="row top-bar" style={{  fontFamily: "'Prompt', sans-serif" }}>
+            <div className="col text-right">
+              <span className="text-white">
+                  <a className="nav-link" href="https://content.bebefitroutine.com/" style={{ color: "white", cursor: "pointer", fontSize: "15px" }}><i class="fa fa-arrow-left" aria-hidden="true"></i> กลับเว็บไซส์ bebefitroutine</a>
+              </span>
+            </div>
+          </div>
+      </section>
+    )
+  }
+
   render() {
     return (
       <div className="App">
+        {this.renderTopbar()}
         {this.renderNavbar()}
         <Switch>
           <Route exact path="/">
