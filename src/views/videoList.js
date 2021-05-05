@@ -603,24 +603,19 @@ class VideoList extends Component {
                           </div>
                         }
                       </div>
-                      <div className="col col-lg-4 d-flex align-items-center mt-3">
-                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                          <i
-                            className="changeVideoBtn fa fa-circle fa-1x"
-                            onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} aria-hidden="true">
+                      {
+                        (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
+                        <div className="col col-lg-4 d-flex align-items-center mt-3">
+                          <div className="changeVideoBtn" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                            <i className="fa fa-circle fa-1x" aria-hidden="true" />
                             เปลี่ยนวีดีโอ
-                        </i>
-                        }
-                        {(item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                          (
-                            <i
-                              className="randomVideoBtn fa fa-circle fa-1x"
-                              onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} aria-hidden="true"
-                            > สุ่มวีดีโอ </i>
-                          )
-                        }
-
-                      </div>
+                          </div>
+                          <div className="randomVideoBtn" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                            <i className="fa fa-circle fa-1x" aria-hidden="true" />
+                            สุ่มวีดีโอ
+                          </div>
+                        </div>
+                      }
                     </div>
                   ))
                 }
@@ -843,9 +838,9 @@ class VideoList extends Component {
             {/*  <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-            </li> */}
+            </li>
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -1006,9 +1001,9 @@ class VideoList extends Component {
             {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-            </li> */}
+            </li>
           </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
