@@ -912,20 +912,22 @@ class VideoList extends Component {
                       <span className="col-lg-7 col-md-4 col-12 mb-3" style={{ fontSize: "15px", float: "left" }}> รวมเวลาฝึก {timesExercise} นาที</span>
                     }
                     <div className="col-lg-3 col-md-5 col-12">
-                      <i
-                        className="fa fa-pencil-square-o fa-1x mb-3"
-                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                      <div
+                        className="mb-3"
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
                         onClick={() => this.editVDO()} aria-hidden="true">
+                        <i className="fa fa-pencil-square-o fa-1x mr-1" />
                         แก้ไขคลิปออกกำลังกาย
-                      </i>
+                      </div>
                     </div>
                     <div className="col-lg-2 col-md-3 col-12">
-                      <i
-                        className="fa fa-play-circle fa-1x"
-                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
-                        onClick={() => this.toggleList()} aria-hidden="true">
+                      <div
+                        className="mb-3"
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
+                        onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                        <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
-                      </i>
+                      </div>
                     </div>
                   </th>
                 </tr>
@@ -1072,12 +1074,13 @@ class VideoList extends Component {
                     <div className="col-lg-3 col-md-5 col-12">
                     </div>
                     <div className="col-lg-2 col-md-3 col-12">
-                      <i
-                        className="fa fa-play-circle fa-1x"
-                        style={{ fontSize: "20px", cursor: "pointer", float: "right" }}
+                      <div
+                        className="mb-3"
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
                         onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                        <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
-                      </i>
+                      </div>
                     </div>
                   </th>
                 </tr>
