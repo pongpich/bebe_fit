@@ -570,7 +570,7 @@ class Challenges extends Component {
           style={{ backgroundImage: `url(${bghead})` }}>
           <div className="overlay">
             <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
-              <source src="https://media.planforfit.com/bebe/video/414644989_720.mp4" type="video/mp4"></source>
+              <source src="https://media.planforfit.com/bebe/video/INTRO%20PROGRAM.mp4" type="video/mp4"></source>
             </video>
           </div>
         </div>
