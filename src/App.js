@@ -43,7 +43,7 @@ class App extends Component {
     return (
       <nav className="navbar navbar-expand" style={{ backgroundColor: "#F45197", fontFamily: "'Prompt', sans-serif" }}>
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
-          <img className="mr-3" src="/assets/img/logo.png" alt="" />
+          <img className="mr-3" src="/assets/img/logo_g3.png" alt="" />
         </a>
         <div className="collapse navbar-collapse justify-content-start" id="navbarNav">
           <ul className="navbar-nav">

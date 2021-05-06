@@ -93,22 +93,22 @@ class Challenges extends Component {
     return (
       <div className="row">
         {this.renderPopupRulesAndPrizes()}
-        <div className="card  col-lg-7 col-md-12" >
+        <div className="card  col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
               <div className="col-lg-6  mb-3" style={{ float: "left" }}>
-                <h5 className="card-title"><b>รายการชาเลนจ์แบบทีม</b></h5>
-                <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
-                <p className="card-text">ทีมชั่งน้ำหนักครบ 7 วัน<span style={{ float: "right" }}>{dailyTeamWeightBonusCount}/7</span></p>
+                <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบทีม</b></h5>
+                <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
+                <p className="card-text">ทีมชั่งน้ำหนักครบ 7 วัน<span style={{ float: "right", color: "#F45197" }}>{dailyTeamWeightBonusCount}/7</span></p>
               </div>
               <div className="col-lg-6 mb-3" style={{ float: "right" }}>
-                <h5 className="card-title"><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
-                <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right" }}>{logWeightCount}/2</span></p>
-                <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right" }}>{isReducedWeight ? 1 : 0}/1</span></p>
-                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right" }}>{isExerciseCompleted}/4</span></p>
+                <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
+                <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightCount}/2</span></p>
+                <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right", color: "#F45197" }}>{isReducedWeight ? 1 : 0}/1</span></p>
+                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{isExerciseCompleted}/4</span></p>
               </div>
             </div>
-            <p className="card-text" style={{ float: "right", fontSize: "13px" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
+            <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
             <br></br>
             <hr className="w-100"></hr>
             <h5
@@ -118,13 +118,15 @@ class Challenges extends Component {
           </div>
         </div>
 
-        <div className="card col-lg-4 col-md-12  offset-lg-1" >
+        <div className="card col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <center>
               <img src={rank && `../assets/img/rank/${rank.toLowerCase()}.png`} className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" />
-              <h5 className="card-title mt-3">{rank}</h5>
-              <progress id="expRank" value={scoreInWeek} max="41"> </progress>
-              <p className="card-text">{scoreInWeek}/41 Point</p>
+              <h3 className="card-title" style={{ color: "#F45197" }}><b>{rank}</b></h3>
+              <div class="progress" style={{ width: "70%", borderRadius: "25px" }}>
+                <div class="progress-bar" style={{ width: `${(scoreInWeek / 41) * 100}%`, backgroundColor: "#F45197" }}></div>
+              </div>
+              <h5 className="card-text mt-3 mb-3" style={{ color: "#F45197" }}>{scoreInWeek}/41 คะแนน</h5>
             </center>
           </div>
         </div>
@@ -137,18 +139,18 @@ class Challenges extends Component {
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
-        <div className="card  col-lg-7 col-md-12" >
+        <div className="card  col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
               <div className="col-lg-12">
-                <h5 className="card-title"><b>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
+                <h5 className="card-title"><b style={{ color: "#F45197" }}>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
               </div>
               <div className="col-lg-10">
                 {
                   (membersOfTeam) &&
                   membersOfTeam.map((item, index) =>
                     <p className="card-text">{index + 1}. {item.first_name}
-                      <span style={{ float: "right" }}>
+                      <span style={{ float: "right", color: "#F45197" }}>
                         {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
                       </span>
                     </p>
@@ -165,11 +167,11 @@ class Challenges extends Component {
           </div>
         </div>
 
-        <div className="card col-lg-4 col-md-12  offset-lg-1" >
+        <div className="card col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
-            <center>
-              <h3 className="mt-4">คะแนนทีม</h3>
-              <h1>{totalScoreOfTeam ? totalScoreOfTeam : 0} Point</h1>
+            <center style={{ marginTop: "35%", marginBottom: "35%" }}>
+              <h3 className="mb-4">คะแนนทีม</h3>
+              <h1 style={{ color: "#F45197" }}>{totalScoreOfTeam ? totalScoreOfTeam : 0} คะแนน</h1>
             </center>
           </div>
         </div>
@@ -236,15 +238,15 @@ class Challenges extends Component {
     const { leaderBoard } = this.props;
     return (
       <div className="row">
-        <div className="card  col-lg-7 col-md-12" >
+        <div className="card  col-lg-5 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
-              <div className="col-lg-10  mb-3" style={{ float: "left" }}>
+              <div className="col-lg-12  mb-3" style={{ float: "left" }}>
                 {
                   (leaderBoard) &&
                   leaderBoard.map((item, index) =>
                     <p className="card-text">{index + 1}. {item.group_name}
-                      <span style={{ float: "right" }}>
+                      <span style={{ float: "right", color: "#F45197" }}>
                         {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} Point
                       </span>
                     </p>
@@ -262,7 +264,7 @@ class Challenges extends Component {
     const { selectedNavLink } = this.state;
     return (
       <div>
-        <ul className="nav nav-tabs" id="myTab" role="tablist">
+        <ul className="nav nav-tabs mt-3" id="myTab" role="tablist">
           <li className="nav-item">
             <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
           </li>
@@ -349,7 +351,7 @@ class Challenges extends Component {
             <div className="row">
               <div className="card mt-3  col-lg-12 col-md-12" >
                 <center>
-                  <h4 className="card-title mt-3 mb-4"><b>ตั้งชื่อทีมของคุณ</b></h4>
+                  <h4 className="card-title mt-3 mb-4" style={{ color: "#F45197" }}><b>ตั้งชื่อทีมของคุณ</b></h4>
                   <input
                     type=""
                     className="form-control"
@@ -399,7 +401,7 @@ class Challenges extends Component {
             </ul>
 
             <div className="row" style={{ backgroundColor: "#D8D6DF" }}>
-              <div className="card mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" >
+              <div className="card mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
                 <div className="card-body">
                   <center>
                     <h2 className="card-title mt-3 "><b>ชาเลนจ์น้องใหม่ เอาใจสมาชิก <b style={{ color: "#F45197" }}>BEBE FIT ROUTINE</b></b></h2>
@@ -452,14 +454,7 @@ class Challenges extends Component {
           id="overlayPopupJoinChallenge"
           onClick={() => this.closePopupJoinChallenge()}
         />
-        <div className="popupJoinChallenge" id="popupJoinChallenge">
-          <div
-            className=""
-            onClick={() => this.closePopupJoinChallenge()}
-            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
-          >
-            <i class="fa fa-times fa-lg"></i>
-          </div>
+        <div className="popupJoinChallenge" id="popupJoinChallenge" style={{ borderRadius: "25px" }}>
           <br></br>
           <center>
             <img src={`../assets/img/challenges/champ.png`} className="rounded-circle mb-3" />

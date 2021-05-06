@@ -1130,16 +1130,9 @@ class VideoList extends Component {
           id="overlayPopupDailyWeighChallenge"
           onClick={() => this.closePopupDailyWeighChallenge()}
         />
-        <div className="popupDailyWeighChallenge" id="popupDailyWeighChallenge">
-          <div
-            className=""
-            onClick={() => this.closePopupDailyWeighChallenge()}
-            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
-          >
-            <i class="fa fa-times fa-lg"></i>
-          </div>
+        <div className="popupDailyWeighChallenge" id="popupDailyWeighChallenge" style={{ borderRadius: "25px" }}>
           <br></br>
-          <center><h5 className="mt-1 mb-3">กรุณากรอกน้ำหนักปัจจุบันของคุณ</h5></center>
+          <center><h5 className="mt-1 mb-3" style={{ color: "#F45197" }}><b>กรุณากรอกน้ำหนักปัจจุบันของคุณ</b></h5></center>
           <div class="input-group mb-4">
             <input
               type="number"
@@ -1149,7 +1142,7 @@ class VideoList extends Component {
               value={this.state.weightInDailyWeighChallenge}
               onChange={(event) => this.handleChange(event)}
             />
-            <span className="input-group-text">KG</span>
+            <span className="input-group-text" style={{ color: "#F45197" }}>KG</span>
           </div>
           {
             (this.props.statusPostDailyWeighChallenge !== "loading") ?
@@ -1157,7 +1150,7 @@ class VideoList extends Component {
                 <div className="col-1"></div>
                 <button type="button" className="btn btn-secondary col-4" onClick={() => this.closePopupDailyWeighChallenge()}>ปิด</button>
                 <div className="col-2"></div>
-                <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)}>ยืนยัน</button>
+                <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)} style={{ backgroundColor: "#F45197" }}>ยืนยัน</button>
                 <div className="col-1"></div>
               </div>
               :
