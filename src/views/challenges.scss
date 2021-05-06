@@ -5,7 +5,7 @@
 .popupJoinChallenge {
   display: none;
   position: absolute;
-  top: 70%;
+  top: 90%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
@@ -22,6 +22,7 @@
 
 @media (max-width: 667px) {
   .popupJoinChallenge {
+    top: 150%;
     width: 80%;
   }
 }

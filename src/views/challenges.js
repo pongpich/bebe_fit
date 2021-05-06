@@ -112,9 +112,9 @@ class Challenges extends Component {
             <br></br>
             <hr className="w-100"></hr>
             <h5
-                        className="card-title underline-on-hover"
-                        style={{ cursor: "pointer", color: "#F45197" }}
-                        onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
+              className="card-title underline-on-hover"
+              style={{ cursor: "pointer", color: "#F45197" }}
+              onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
           </div>
         </div>
 
@@ -213,7 +213,7 @@ class Challenges extends Component {
             <button
               type="button"
               className="btn btn-danger col-4"
-              style={{  backgroundColor: "#F45197" }}
+              style={{ backgroundColor: "#F45197" }}
               onClick={() => this.props.leaveTeam(user.user_id)}>ยืนยัน</button>
             <div className="col-1"></div>
           </div>
@@ -262,54 +262,51 @@ class Challenges extends Component {
     const { selectedNavLink } = this.state;
     return (
       <div>
-        <div className="card-body d-flex justify-content-center">
-          <form className="col-lg-8 col-md-12">
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
-              <li className="nav-item">
-                <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
-              </li>
-              {/*  <li className="nav-item">
+        <ul className="nav nav-tabs" id="myTab" role="tablist">
+          <li className="nav-item">
+            <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
+          </li>
+          {/*  <li className="nav-item">
                 <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
               </li> */}
-              <li className="nav-item">
-                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-              </li>
-            </ul>
-
-            <nav className="nav mt-5">
-              <a
-                className="nav-link"
-                style={{ color: `${selectedNavLink === "mission" ? "#F45197" : ""}`, cursor: "pointer" }}
-                onClick={() => this.setState({ selectedNavLink: "mission" })}
-              >
-                <b>ภารกิจ</b>
-              </a>
-              <a
-                className="nav-link"
-                style={{ color: `${selectedNavLink === "teamList" ? "#F45197" : ""}`, cursor: "pointer" }}
-                onClick={() => this.setState({ selectedNavLink: "teamList" })}
-              >
-                <b>สมาชิกในทีม</b>
-              </a>
-              <a
-                className="nav-link"
-                style={{ color: `${selectedNavLink === "scoreBoard" ? "#F45197" : ""}`, cursor: "pointer" }}
-                onClick={() => this.setState({ selectedNavLink: "scoreBoard" })}
-              >
-                <b>กระดานคะแนน</b>
-              </a>
-            </nav>
-            {(selectedNavLink === "mission") && this.renderMission()}
-            {(selectedNavLink === "teamList") && this.renderTeamList()}
-            {(selectedNavLink === "scoreBoard") && this.renderScoreBoard()}
+          <li className="nav-item">
+            <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
+          </li>
+        </ul>
+        <div className="card-body d-flex justify-content-center" style={{ backgroundColor: "#D8D6DF" }}>
+          <form className="col-lg-12 col-md-12">
+            <div className="row mb-5 mt-3">
+              <div className="col-lg-12 mb-5">
+                <nav className="nav">
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "mission" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.setState({ selectedNavLink: "mission" })}
+                  >
+                    <b>ภารกิจ</b>
+                  </a>
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "teamList" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.setState({ selectedNavLink: "teamList" })}
+                  >
+                    <b>สมาชิกในทีม</b>
+                  </a>
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "scoreBoard" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.setState({ selectedNavLink: "scoreBoard" })}
+                  >
+                    <b>กระดานคะแนน</b>
+                  </a>
+                </nav>
+                {(selectedNavLink === "mission") && this.renderMission()}
+                {(selectedNavLink === "teamList") && this.renderTeamList()}
+                {(selectedNavLink === "scoreBoard") && this.renderScoreBoard()}
+              </div>
+            </div>
           </form>
         </div>
-
-        <h1 style={{ color: "white" }}>.</h1>
-        <h1 style={{ color: "white" }}>.</h1>
-        <h1 style={{ color: "white" }}>.</h1>
-        <h1 style={{ color: "white" }}>.</h1>
-
       </div>
     )
   }
@@ -345,7 +342,7 @@ class Challenges extends Component {
                 <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
               </li> */}
               <li className="nav-item">
-                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
+                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
               </li>
             </ul>
 
@@ -366,7 +363,7 @@ class Challenges extends Component {
                       <button
                         type="button"
                         class="btn btn-danger mt-4 mb-4 col-12"
-                        style={{  backgroundColor: "#F45197" }}
+                        style={{ backgroundColor: "#F45197" }}
                         onClick={() =>
                           this.createTeam(this.state.teamName)
                         }>ยืนยัน</button>
@@ -397,32 +394,43 @@ class Challenges extends Component {
                 <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
               </li> */}
               <li className="nav-item">
-                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
+                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
               </li>
             </ul>
 
-            <div className="row">
-              <div className="card mt-3  col-lg-12 col-md-12  offset-lg-1" >
+            <div className="row" style={{ backgroundColor: "#D8D6DF" }}>
+              <div className="card mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" >
                 <div className="card-body">
                   <center>
-                    <h4 className="card-title mt-3 "><b>ชาเลนจ์น้องใหม่ เอาใจสมาชิก BEBE FIT ROUTINE</b></h4>
-                    <h4 className="card-title mb-5"><b>สนุกไปกับภารกิจพร้อมรับสิทธิพิเศษมากมาย</b></h4>
-                    <h4 className="card-title"><b>ภารกิจพิชิตตัวเลข</b></h4>
-                    <h5 className="card-text">บันทึกการชั่งน้ำหนักเพื่อดูความเปลี่ยนแปลงของร่างกาย รับ 10 คะแนน</h5>
-                    <h4 className="card-title"><b>ภารกิจฟิตเฟิร์ม</b></h4>
-                    <h5 className="card-text">ก้าวสู่เป้าหมายออกกำลังกายได้ครบทั้งสัปดาห์  รับ 10 คะแนน</h5>
-                    <h4 className="card-title"><b>ภารกิจก้าวสู่ทีมอันดับ 1</b></h4>
-                    <h5 className="card-text mb-4">สะสมคะแนนกับเพื่อนร่วมทีม อีกหนึ่งแรงผลักดันสู่เป้าหมายในการออกกำลังกาย</h5>
+                    <h2 className="card-title mt-3 "><b>ชาเลนจ์น้องใหม่ เอาใจสมาชิก <b style={{ color: "#F45197" }}>BEBE FIT ROUTINE</b></b></h2>
+                    <h2 className="card-title mb-5"><b>สนุกไปกับภารกิจพร้อมรับสิทธิพิเศษมากมาย</b></h2>
+                    <div className="row">
+                      <div className="mb-4 col-lg-4">
+                        <img src={`../assets/img/challenges/scale.png`} className="rounded-circle mb-3" />
+                        <h5 className="card-title"><b>ภารกิจพิชิตตัวเลข</b></h5>
+                        <h5 className="card-text">บันทึกการชั่งน้ำหนักเพื่อดูความเปลี่ยนแปลงของร่างกาย <span style={{ color: "#F45197" }}>รับ 10 คะแนน</span></h5>
+                      </div>
+                      <div className="mb-4 col-lg-4">
+                        <img src={`../assets/img/challenges/exercise.png`} className="rounded-circle mb-3" />
+                        <h5 className="card-title"><b>ภารกิจฟิตเฟิร์ม</b></h5>
+                        <h5 className="card-text">ก้าวสู่เป้าหมายออกกำลังกายได้ครบทั้งสัปดาห์  <span style={{ color: "#F45197" }}>รับ 10 คะแนน</span></h5>
+                      </div>
+                      <div className="mb-4 col-lg-4">
+                        <img src={`../assets/img/challenges/challenge.png`} className="rounded-circle mb-3" />
+                        <h5 className="card-title"><b>ภารกิจก้าวสู่ทีมอันดับ 1</b></h5>
+                        <h5 className="card-text mb-4">สะสมคะแนนกับเพื่อนร่วมทีม <span style={{ color: "#F45197" }}>อีกหนึ่งแรงผลักดันสู่เป้าหมายในการออกกำลังกาย</span></h5>
+                      </div>
+                    </div>
                     <button
                       type="button"
-                      class="btn btn-danger mt-4 col-12"
-                      style={{ backgroundColor: "#F45197"}}
+                      class="btn btn-danger col-6"
+                      style={{ backgroundColor: "#F45197" }}
                       onClick={() => this.openPopupJoinChallenge()}>เข้าร่วมชาเลนจ์</button>
                   </center>
                   <div className="mt-4">
                     <center>
                       <h5
-                        className="card-title underline-on-hover"
+                        className="card-title underline-on-hover col-6"
                         style={{ cursor: "pointer", color: "#F45197" }}
                         onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
                     </center>
@@ -453,7 +461,10 @@ class Challenges extends Component {
             <i class="fa fa-times fa-lg"></i>
           </div>
           <br></br>
-          <center><h5 className="mt-1 mb-3">คุณต้องการเข้าร่วมชาเลนจ์หรือไม่</h5></center>
+          <center>
+            <img src={`../assets/img/challenges/champ.png`} className="rounded-circle mb-3" />
+            <h4 className="mt-1 mb-3" style={{ color: "#F45197" }}><b>คุณต้องการเข้าร่วมชาเลนจ์หรือไม่</b></h4>
+          </center>
           {
             (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
               <div className="row mt-5">
@@ -466,7 +477,7 @@ class Challenges extends Component {
                 <button
                   type="button"
                   className="btn btn-danger col-4"
-                  style={{  backgroundColor: "#F45197" }}
+                  style={{ backgroundColor: "#F45197" }}
                   onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
                 <div className="col-1"></div>
               </div>
@@ -496,26 +507,26 @@ class Challenges extends Component {
           </div>
           <br></br>
           <h4 className="mt-1 mb-4"><b>กฎและกติการ</b></h4>
-          <h5><b>• สมาชิกในทีม</b></h5>
+          <h5 style={{ color: "#F45197" }}><b>• สมาชิกในทีม</b></h5>
           <h6>1 ทีม จะมีสมาชิกจำนวน 10 ท่าน โดยระบบจะทำการจัดทีมให้อัตโนมัติ</h6>
           <h6>หากสมาชิกหมดอายุก่อนจบ Season ระบบจะตัดออกจากกลุ่มใน 7 วัน</h6>
           <br></br>
-          <h5><b>• การเลื่อนขั้น (Rank)</b></h5>
+          <h5 style={{ color: "#F45197" }}><b>• การเลื่อนขั้น (Rank)</b></h5>
           <h6>ระดับขั้นจะแบ่งออกเป็น Newbie, Bronze, Silver, Gold และ Platinum</h6>
           <h6>ในแต่ละสัปดาห์ถ้ามีคะแนนรวมมากกว่า 40 คะแนนจะได้รับการเลื่อนขั้น</h6>
           <h6>แต่หากคะแนนน้อยกว่าหรือเท่ากับ 40 คะแนนจะถูดลดขั้นลงมา 1 ลำดับ </h6>
           <h6>โดยระบบจะทำการอัปเดตคะแนนทุกวันอาทิตย์เวลา 00.00 น.</h6>
           <br></br>
-          <h5><b>• การสะสมคะแนน</b></h5>
+          <h5 style={{ color: "#F45197" }}><b>• การสะสมคะแนน</b></h5>
           <h6><b>คะแนนส่วนบุคคล</b> จะได้รับจากภารกิจ โดยจำนวนคะแนนที่ได้รับนั้น</h6>
           <h6>จะขึ้นอยู่กับ Rank ในแต่ละสัปดาห์ ยิ่ง Rank สูงจะได้คะแนนมากขึ้น</h6>
           <h6><b>คะแนนของทีม</b> จะเป็นคะแนนสะสมรวมของสมาชิก</h6>
           <h6>ถ้าคนในทีมทำภารกิจสำเร็จ ผู้ร่วมทีมจะได้รับคะแนนด้วยเช่นกัน</h6>
           <br></br>
-          <h5><b>• รายละเอียดของรางวัลประจำ Season</b></h5>
+          <h5 style={{ color: "#F45197" }}><b>• รายละเอียดของรางวัลประจำ Season</b></h5>
           <h6>สามารถติดตามของรางวัลได้ทาง Facebook Group</h6>
           <br></br>
-          <h5><b>• ระยะเวลาชาเลนจ์</b></h5>
+          <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
           <h6>เริ่มตั้งแต่วันที่ 14 มิถุนายน 2561 สิ้นสุดวันที่ 1 สิงหาคม 2561</h6>
           {
             (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
@@ -524,6 +535,7 @@ class Challenges extends Component {
                 <button
                   type="button"
                   className="btn btn-secondary col-6"
+                  style={{ backgroundColor: "#F45197" }}
                   onClick={() => this.closePopupRulesAndPrizes()}>ปิด</button>
                 <div className="col-3"></div>
               </div>
