@@ -72,7 +72,7 @@ class Login extends Component {
     return (
       <div className="all-row-login">
         <div className="row">
-          <div className="auth-card" >
+          <div className="auth-card shadow" style={{ borderRadius: "25px" }}>
             <div className="position-relative image-side-login col-lg-6 col-12">
               <img className="mb-4 mt-3 col-12" src="/assets/img/loginprofile.jpg" alt="" />
               <div className="description">
