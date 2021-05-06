@@ -93,7 +93,7 @@ class Challenges extends Component {
     return (
       <div className="row">
         {this.renderPopupRulesAndPrizes()}
-        <div className="card  col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
               <div className="col-lg-6  mb-3" style={{ float: "left" }}>
@@ -118,7 +118,7 @@ class Challenges extends Component {
           </div>
         </div>
 
-        <div className="card col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <center>
               <img src={rank && `../assets/img/rank/${rank.toLowerCase()}.png`} className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" />
@@ -139,7 +139,7 @@ class Challenges extends Component {
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
-        <div className="card  col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
               <div className="col-lg-12">
@@ -167,7 +167,7 @@ class Challenges extends Component {
           </div>
         </div>
 
-        <div className="card col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <center style={{ marginTop: "35%", marginBottom: "35%" }}>
               <h3 className="mb-4">คะแนนทีม</h3>
@@ -238,7 +238,7 @@ class Challenges extends Component {
     const { leaderBoard } = this.props;
     return (
       <div className="row">
-        <div className="card  col-lg-5 col-md-12" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-5 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
               <div className="col-lg-12  mb-3" style={{ float: "left" }}>
@@ -349,7 +349,7 @@ class Challenges extends Component {
             </ul>
 
             <div className="row">
-              <div className="card mt-3  col-lg-12 col-md-12" >
+              <div className="card shadow mt-3  col-lg-12 col-md-12" >
                 <center>
                   <h4 className="card-title mt-3 mb-4" style={{ color: "#F45197" }}><b>ตั้งชื่อทีมของคุณ</b></h4>
                   <input
@@ -401,7 +401,7 @@ class Challenges extends Component {
             </ul>
 
             <div className="row" style={{ backgroundColor: "#D8D6DF" }}>
-              <div className="card mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
+              <div className="card shadow mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
                 <div className="card-body">
                   <center>
                     <h2 className="card-title mt-3 "><b>ชาเลนจ์น้องใหม่ เอาใจสมาชิก <b style={{ color: "#F45197" }}>BEBE FIT ROUTINE</b></b></h2>
