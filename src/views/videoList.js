@@ -573,7 +573,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               {
                                 (this.state.spinnerRandomVideo === "loading") ?
@@ -935,7 +935,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -1088,7 +1088,7 @@ class VideoList extends Component {
                       <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
                         <div className="videoThumb mr-2">
                           <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}.jpg`} alt="" />
+                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                             <div className="overlay" onClick={() => this.toggle(item)}>
                               <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                               <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
