@@ -112,8 +112,8 @@ class Challenges extends Component {
             <br></br>
             <hr className="w-100"></hr>
             <h5
-                        className="card-title"
-                        style={{ cursor: "pointer" }}
+                        className="card-title underline-on-hover"
+                        style={{ cursor: "pointer", color: "#F45197" }}
                         onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
           </div>
         </div>
@@ -158,10 +158,10 @@ class Challenges extends Component {
             </div>
             <br></br>
             <hr className="w-100"></hr>
-            <u
-              className="nav-link"
-              style={{ cursor: "pointer" }}
-              onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</u>
+            <h5
+              className="underline-on-hover"
+              style={{ cursor: "pointer", color: "#F45197" }}
+              onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</h5>
           </div>
         </div>
 
@@ -213,6 +213,7 @@ class Challenges extends Component {
             <button
               type="button"
               className="btn btn-danger col-4"
+              style={{  backgroundColor: "#F45197" }}
               onClick={() => this.props.leaveTeam(user.user_id)}>ยืนยัน</button>
             <div className="col-1"></div>
           </div>
@@ -278,21 +279,21 @@ class Challenges extends Component {
             <nav className="nav mt-5">
               <a
                 className="nav-link"
-                style={{ color: `${selectedNavLink === "mission" ? "red" : ""}`, cursor: "pointer" }}
+                style={{ color: `${selectedNavLink === "mission" ? "#F45197" : ""}`, cursor: "pointer" }}
                 onClick={() => this.setState({ selectedNavLink: "mission" })}
               >
                 <b>ภารกิจ</b>
               </a>
               <a
                 className="nav-link"
-                style={{ color: `${selectedNavLink === "teamList" ? "red" : ""}`, cursor: "pointer" }}
+                style={{ color: `${selectedNavLink === "teamList" ? "#F45197" : ""}`, cursor: "pointer" }}
                 onClick={() => this.setState({ selectedNavLink: "teamList" })}
               >
                 <b>สมาชิกในทีม</b>
               </a>
               <a
                 className="nav-link"
-                style={{ color: `${selectedNavLink === "scoreBoard" ? "red" : ""}`, cursor: "pointer" }}
+                style={{ color: `${selectedNavLink === "scoreBoard" ? "#F45197" : ""}`, cursor: "pointer" }}
                 onClick={() => this.setState({ selectedNavLink: "scoreBoard" })}
               >
                 <b>กระดานคะแนน</b>
@@ -365,6 +366,7 @@ class Challenges extends Component {
                       <button
                         type="button"
                         class="btn btn-danger mt-4 mb-4 col-12"
+                        style={{  backgroundColor: "#F45197" }}
                         onClick={() =>
                           this.createTeam(this.state.teamName)
                         }>ยืนยัน</button>
@@ -414,13 +416,14 @@ class Challenges extends Component {
                     <button
                       type="button"
                       class="btn btn-danger mt-4 col-12"
+                      style={{ backgroundColor: "#F45197"}}
                       onClick={() => this.openPopupJoinChallenge()}>เข้าร่วมชาเลนจ์</button>
                   </center>
                   <div className="mt-4">
                     <center>
                       <h5
-                        className="card-title"
-                        style={{ cursor: "pointer" }}
+                        className="card-title underline-on-hover"
+                        style={{ cursor: "pointer", color: "#F45197" }}
                         onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
                     </center>
                   </div>
@@ -463,6 +466,7 @@ class Challenges extends Component {
                 <button
                   type="button"
                   className="btn btn-danger col-4"
+                  style={{  backgroundColor: "#F45197" }}
                   onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
                 <div className="col-1"></div>
               </div>

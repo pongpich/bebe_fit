@@ -102,7 +102,7 @@ class Login extends Component {
 
                 <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
                   <Button
-                    color="danger"
+                    style={{ backgroundColor: "#F45197"}}
                     className="btn-shadow"
                     size="lg"
                     onClick={() => this.onUserLogin()}
@@ -120,8 +120,8 @@ class Login extends Component {
                     href="https://content.bebefitroutine.com/onlinecourse/" target="_blank"
                     block
                   >
-                    <span className="text-one">
-                      {"ซื้อคอร์ส Platform"}
+                    <span className="text-one underline-on-hover" style={{ cursor: "pointer", color: "#F45197" }}>
+                      {"ซื้อคอร์สออนไลน์"}
                     </span>
                   </Button>
                 </div>

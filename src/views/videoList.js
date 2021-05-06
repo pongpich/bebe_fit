@@ -557,7 +557,7 @@ class VideoList extends Component {
                       <button
                         className="btn btn-primary border-secondary "
                         type="button"
-                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
+                        style={{ backgroundColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
                         onClick={() => this.onVideoListUpdate()}
                       >
                         <b>ยืนยันการแก้ไข</b>
@@ -848,28 +848,28 @@ class VideoList extends Component {
               <nav className="nav">
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 0 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
                   <b>DAY1</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 1 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
                   <b>DAY2</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 2 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
                   <b>DAY3</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 3 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
                   <b>DAY4</b>
@@ -1011,28 +1011,28 @@ class VideoList extends Component {
               <nav className="nav">
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 0 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
                   <b>DAY1</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 1 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
                   <b>DAY2</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 2 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
                   <b>DAY3</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "red" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 3 ? "#F45197" : ""}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
                   <b>DAY4</b>
