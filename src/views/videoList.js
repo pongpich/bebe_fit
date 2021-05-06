@@ -593,7 +593,7 @@ class VideoList extends Component {
                           </div>
                         </div>
                         <div className="videoName mt-3">
-                          <h5> {item.name} </h5>
+                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
                           <p> {item.category} </p>
                           <br></br>
                         </div>
@@ -947,7 +947,7 @@ class VideoList extends Component {
                           </div>
                         </div>
                         <div className="videoName mt-3">
-                          <h5> {item.name} </h5>
+                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
                           <p> {item.category} </p>
                         </div>
                         {(item.play_time === item.duration) &&
@@ -1100,7 +1100,7 @@ class VideoList extends Component {
                           </div>
                         </div>
                         <div className="videoName mt-3">
-                          <h5> {item.name} </h5>
+                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
                           <p> {item.category} </p>
                         </div>
                         {(item.play_time === item.duration) &&
