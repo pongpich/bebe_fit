@@ -482,9 +482,10 @@ class VideoList extends Component {
           <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
-            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}></div>
+            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>
+              <div className="close-btn">X</div>
+            </div>
             <div className="content">
-              <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
               <h4 className="mb-5"><b>เลือกคลิปวีดีโอ</b></h4>
               <div className="selectEditPlaylist">
                 {
@@ -511,7 +512,7 @@ class VideoList extends Component {
                   ))
                 }
               </div>
-              <div className="close-btn2 mt-3" style={{ cursor: "pointer" }} onClick={() => this.closeTogglePopupSelectEditVideo()}><b>&times; CLOSE</b></div>
+              <div className="close-btn2 mt-3" style={{ cursor: "pointer", color: "#F45197" }} onClick={() => this.closeTogglePopupSelectEditVideo()}><b>CLOSE</b></div>
             </div>
           </div>
 
