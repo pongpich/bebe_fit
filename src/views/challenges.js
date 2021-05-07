@@ -190,11 +190,10 @@ class Challenges extends Component {
         />
         <div className="popupLeaveTeam" id="popupLeaveTeam">
           <div
-            className=""
+            className="close-btn"
             onClick={() => this.closePopupLeaveTeam()}
-            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
           >
-            <i class="fa fa-times fa-lg"></i>
+            &times;
           </div>
           <br></br>
           <center>
@@ -494,11 +493,10 @@ class Challenges extends Component {
         />
         <div className="popupRulesAndPrizes" id="popupRulesAndPrizes">
           <div
-            className=""
+            className="close-btn"
             onClick={() => this.closePopupRulesAndPrizes()}
-            style={{ cursor: "pointer", position: "fixed", top: "5px", right: "5px" }}
           >
-            <i class="fa fa-times fa-lg"></i>
+            &times;
           </div>
           <br></br>
           <h4 className="mt-1 mb-4"><b>กฎและกติการ</b></h4>

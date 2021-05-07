@@ -4,8 +4,8 @@
 
 .popupJoinChallenge {
   display: none;
-  position: absolute;
-  top: 90%;
+  position: fixed;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
@@ -22,7 +22,6 @@
 
 @media (max-width: 667px) {
   .popupJoinChallenge {
-    top: 150%;
     width: 80%;
   }
 }
@@ -48,11 +47,12 @@
 
 .popupRulesAndPrizes {
   display: none;
-  position: absolute;
-  top: 100%;
+  position: fixed;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
+  border-radius: 25px;
   padding: 1.5%;
   box-shadow: 0 0 8px rgba(0,0,0,0.1);
   z-index:2;
@@ -66,7 +66,8 @@
 
 @media (max-width: 667px) {
   .popupRulesAndPrizes {
-    top: 130%;
+    position: absolute;
+    top: 100%;
     width: 70%;
   }
 }
@@ -92,11 +93,12 @@
 
 .popupLeaveTeam {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: white;
+  border-radius: 25px;
   padding: 1.5%;
   box-shadow: 0 0 8px rgba(0,0,0,0.1);
   z-index:2;
@@ -135,4 +137,20 @@
 
 .underline-on-hover:hover {
   text-decoration: underline;
+}
+
+.close-btn {
+  cursor:pointer;
+  position:absolute;
+  right:20px;
+  top:20px;
+  width:30px;
+  height:30px;
+  background:#F45197;
+  color:#fff;
+  font-size:25px;
+  font-weight:600;
+  line-height:30px;
+  text-align:center;
+  border-radius:50%;
 }

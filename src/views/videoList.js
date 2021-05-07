@@ -502,7 +502,7 @@ class VideoList extends Component {
                       <button
                         className="btn btn-danger border-secondary mb-3 mt-5"
                         type="button"
-                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%" }}
+                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%", backgroundColor: "#F45197" }}
                         onClick={() => this.selectEditVideo(item)}
                       >
                         <b>เลือกวีดีโอนี้</b>

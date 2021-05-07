@@ -188,13 +188,13 @@
 }
 
 .popup .content {
-  position:absolute;
+  position:fixed;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%) scale(0);
   background:#fff;
   width:90%;
-  height:40%;
+  height:80%;
   overflow: auto;
   z-index:2;
   padding:20px;
@@ -209,7 +209,7 @@
   top:20px;
   width:30px;
   height:30px;
-  background:#222;
+  background:#F45197;
   color:#fff;
   font-size:25px;
   font-weight:600;
@@ -286,7 +286,7 @@ button {
 
 .popupDailyWeighChallenge {
   display: block;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
