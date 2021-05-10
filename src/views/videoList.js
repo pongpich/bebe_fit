@@ -478,7 +478,7 @@ class VideoList extends Component {
     return (
       <div className="card-body d-flex justify-content-center">
 
-        <form>
+        <form className="mt-3">
           <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
@@ -516,7 +516,7 @@ class VideoList extends Component {
             </div>
           </div>
 
-          <div className="tab-content mt-3 mb-2" id="myTabContent">
+          <div className="tab-content mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <nav className="nav">
                 {focusDay === 0 && <b>DAY1</b>}
@@ -832,45 +832,34 @@ class VideoList extends Component {
     return (
       <div className="card-body d-flex justify-content-center">
         <form>
-          <ul className="nav nav-tabs" id="myTab" role="tablist">
-            <li className="nav-item">
-              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197" }}>Routine workout</a>
-            </li>
-            {/*  <li className="nav-item">
-              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
-            </li> */}
-            <li className="nav-item">
-              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-            </li>
-          </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3">โปรแกรมปัจจุบัน</h4>
+              <h4 className="ml-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
                   <b>DAY1</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
                   <b>DAY2</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
                   <b>DAY3</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
                   <b>DAY4</b>
@@ -879,7 +868,7 @@ class VideoList extends Component {
                   (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
                   <a
                     className="nav-link ml-auto"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", color: "#F45197" }}
                     onClick={() => this.setState({ lastWeekVDO_click: "show" })}
                   >
                     <u>ดูวีดีโอออกกำลังกายสัปดาห์ที่ผ่านมา</u>
@@ -910,7 +899,7 @@ class VideoList extends Component {
                     <div className="col-lg-3 col-md-5 col-12">
                       <div
                         className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
                         onClick={() => this.editVDO()} aria-hidden="true">
                         <i className="fa fa-pencil-square-o fa-1x mr-1" />
                         แก้ไขคลิปออกกำลังกาย
@@ -919,7 +908,7 @@ class VideoList extends Component {
                     <div className="col-lg-2 col-md-3 col-12">
                       <div
                         className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
                         onClick={() => this.toggleListLastWeek()} aria-hidden="true">
                         <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
@@ -995,52 +984,41 @@ class VideoList extends Component {
     return (
       <div className="card-body d-flex justify-content-center">
         <form>
-          <ul className="nav nav-tabs" id="myTab" role="tablist">
-            <li className="nav-item">
-              <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197" }}>Routine workout</a>
-            </li>
-            {/* <li className="nav-item">
-              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
-            </li> */}
-            <li className="nav-item">
-              <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-            </li>
-          </ul>
           <div className="tab-content mt-3 mb-2" id="myTabContent">
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3">โปรแกรมสัปดาห์ที่ผ่านมา</h4>
+              <h4 className="ml-3" style={{ color: "#F45197" }}>โปรแกรมสัปดาห์ที่ผ่านมา</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
                   <b>DAY1</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
                   <b>DAY2</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
                   <b>DAY3</b>
                 </a>
                 <a
                   className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "#F45197" : ""}`, cursor: "pointer" }}
+                  style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
                   <b>DAY4</b>
                 </a>
                 <a
                   className="nav-link ml-auto"
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", color: "#F45197" }}
                   onClick={() => this.setState({ lastWeekVDO_click: "default" })}
                 >
                   <u>ดูวีดีโอออกกำลังกายปัจจุบัน</u>
@@ -1072,7 +1050,7 @@ class VideoList extends Component {
                     <div className="col-lg-2 col-md-3 col-12">
                       <div
                         className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right" }}
+                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
                         onClick={() => this.toggleListLastWeek()} aria-hidden="true">
                         <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
@@ -1190,23 +1168,22 @@ class VideoList extends Component {
               <source src="https://media.planforfit.com/bebe/video/INTRO%20PROGRAM.mp4" type="video/mp4"></source>
             </video>
           </div>
-
-          <div className="container" >
-            <div className="row mt-5" style={{ color: "black" }} >
-              <div className="col-md-8 ml-auto mr-auto text-center mt-5">
-                <h1> BEBE FIT ROUTINE </h1>
-                <span style={{ color: "#DB5077", fontSize: "20px", fontWeight: "bold", lineHeight: "1.6" }}>
-                  BEBE FIT ROUTINE<br></br>
-                WORKOUT PROGRAM<br></br>
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <div className="main main-raised" style={{ backgroundColor: "white" }}>
+        <ul className="nav nav-tabs mt-3" id="myTab" role="tablist">
+          <li className="nav-item">
+            <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197" }}>Routine workout</a>
+          </li>
+          {/* <li className="nav-item">
+              <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
+            </li> */}
+          <li className="nav-item">
+            <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
+          </li>
+        </ul>
+        <div className="main main-raised" style={{ backgroundColor: "#D8D6DF" }}>
           <div className="container">
-            <div className="card card-plain">
+            <div className="">
               {
                 ((this.props.user && this.props.user.other_attributes) && (this.props.statusVideoList !== "no_video")) ?
                   (editVDO_click === "show") ?
