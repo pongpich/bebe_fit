@@ -246,7 +246,7 @@ class Challenges extends Component {
                   leaderBoard.map((item, index) =>
                     <p className="card-text">{index + 1}. {item.group_name}
                       <span style={{ float: "right", color: "#F45197" }}>
-                        {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} Point
+                        {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
                       </span>
                     </p>
                   )
