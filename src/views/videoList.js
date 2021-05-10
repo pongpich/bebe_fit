@@ -601,7 +601,7 @@ class VideoList extends Component {
                           </div>
                           {(item.play_time === item.duration) &&
                             <div className="videoEnd">
-                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                              <h5 style={{ color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
                             </div>
                           }
                         </div>
@@ -945,7 +945,7 @@ class VideoList extends Component {
                           </div>
                           {(item.play_time === item.duration) &&
                             <div className="videoEnd">
-                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                              <h5 style={{ color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
                             </div>
                           }
                         </div>
@@ -1089,7 +1089,7 @@ class VideoList extends Component {
                           </div>
                           {(item.play_time === item.duration) &&
                             <div className="videoEnd">
-                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                              <h5 style={{ color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
                             </div>
                           }
                         </div>
