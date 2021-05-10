@@ -479,7 +479,7 @@ class VideoList extends Component {
       <div className="card-body d-flex justify-content-center">
 
         <form className="mt-3">
-          <span className="mr-5" style={{ fontSize: "15px" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
+          <span className="mr-5" style={{ fontSize: "15px", color: "#F45197" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
             <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>
@@ -570,39 +570,41 @@ class VideoList extends Component {
               <tbody>
                 {
                   tempPlaylist.map((item, index) => (
-                    <div className="row ml-1" key={index}>
-                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 border shadow">
-                        <div className="videoThumb mr-2">
-                          <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                            <div className="overlay" onClick={() => this.toggle(item)}>
-                              {
-                                (this.state.spinnerRandomVideo === "loading") ?
-                                  (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
-                                    <i className="fa fa-refresh fa-spin fa-5x"></i>
+                    <div className="row" key={index}>
+                      <div className="mt-3 mb-1 col col-lg-8 col-md-9">
+                        <div className="videoItem border shadow">
+                          <div className="videoThumb mr-2">
+                            <div className="containerThumb">
+                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <div className="overlay" onClick={() => this.toggle(item)}>
+                                {
+                                  (this.state.spinnerRandomVideo === "loading") ?
+                                    (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
+                                      <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                      :
+                                      <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                     :
                                     <i className="fa fa-play fa-4x" aria-hidden="true"></i>
-                                  :
-                                  <i className="fa fa-play fa-4x" aria-hidden="true"></i>
-                              }
-                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6>
-                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
-                                </h6>
+                                }
+                                <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                  <h6>
+                                    <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                  </h6>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="videoName mt-3">
-                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
-                          <p> {item.category} </p>
-                          <br></br>
-                        </div>
-                        {(item.play_time === item.duration) &&
-                          <div className="videoEnd">
-                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          <div className="videoName mt-3">
+                            <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
+                            <p> {item.category} </p>
+                            <br></br>
                           </div>
-                        }
+                          {(item.play_time === item.duration) &&
+                            <div className="videoEnd">
+                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                            </div>
+                          }
+                        </div>
                       </div>
                       {
                         (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
@@ -921,30 +923,32 @@ class VideoList extends Component {
                 {
                   (this.props.exerciseVideo) &&
                   (todayExercise.map((item, index) => (
-                    <div className="row ml-1" key={index}>
-                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
-                        <div className="videoThumb mr-2">
-                          <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                            <div className="overlay" onClick={() => this.toggle(item)}>
-                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
-                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6>
-                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
-                                </h6>
+                    <div className="row" key={index}>
+                      <div className="mt-3 mb-1 col-lg-8 col-md-9 col-11">
+                        <div className="videoItem border shadow">
+                          <div className="videoThumb mr-3">
+                            <div className="containerThumb">
+                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <div className="overlay" onClick={() => this.toggle(item)}>
+                                <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                                <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                  <h6>
+                                    <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                  </h6>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="videoName mt-3">
-                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
-                          <p> {item.category} </p>
-                        </div>
-                        {(item.play_time === item.duration) &&
-                          <div className="videoEnd">
-                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          <div className="videoName mt-3">
+                            <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
+                            <p> {item.category} </p>
                           </div>
-                        }
+                          {(item.play_time === item.duration) &&
+                            <div className="videoEnd">
+                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                            </div>
+                          }
+                        </div>
                       </div>
                     </div>
 
@@ -1063,30 +1067,32 @@ class VideoList extends Component {
                 {
                   (this.props.exerciseVideoLastWeek) &&
                   (todayExercise.map((item, index) => (
-                    <div className="row ml-1" key={index}>
-                      <div className="videoItem mt-3 mb-1 col col-lg-8 col-md-9 col-11 border shadow">
-                        <div className="videoThumb mr-2">
-                          <div className="containerThumb">
-                            <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                            <div className="overlay" onClick={() => this.toggle(item)}>
-                              <i className="fa fa-play fa-4x" aria-hidden="true"></i>
-                              <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
-                                <h6>
-                                  <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
-                                </h6>
+                    <div className="row" key={index}>
+                      <div className="mt-3 mb-1 col col-lg-8 col-md-9 col-11">
+                        <div className="videoItem border shadow">
+                          <div className="videoThumb mr-3">
+                            <div className="containerThumb">
+                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <div className="overlay" onClick={() => this.toggle(item)}>
+                                <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                                <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                  <h6>
+                                    <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                  </h6>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="videoName mt-3">
-                          <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
-                          <p> {item.category} </p>
-                        </div>
-                        {(item.play_time === item.duration) &&
-                          <div className="videoEnd">
-                            <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                          <div className="videoName mt-3">
+                            <h5 style={{ color: "#F45197" }}><b>{item.name}</b></h5>
+                            <p> {item.category} </p>
                           </div>
-                        }
+                          {(item.play_time === item.duration) &&
+                            <div className="videoEnd">
+                              <h6 style={{ color: "green" }}><i className="fa fa-check fa-lg" > เล่นสำเร็จ</i></h6>
+                            </div>
+                          }
+                        </div>
                       </div>
                     </div>
 

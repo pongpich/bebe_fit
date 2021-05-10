@@ -11,6 +11,13 @@
   .videoThumb {
     float: left;
     width: 50%;
+
+    .img-fluid{
+      border-radius: 8px 0px 0px 8px;
+    }
+    .overlay{
+      border-radius: 8px 0px 0px 8px;
+    }
   }
   .videoName {
     float: left;
