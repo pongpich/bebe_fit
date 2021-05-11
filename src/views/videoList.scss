@@ -11,6 +11,7 @@
   .videoThumb {
     float: left;
     width: 50%;
+    z-index: 0;
 
     .img-fluid{
       border-radius: 8px 0px 0px 8px;
@@ -18,19 +19,6 @@
     .overlay{
       border-radius: 8px 0px 0px 8px;
     }
-  }
-  .videoName {
-    float: left;
-  }
-
-  .videoEnd {
-    float: right;
-    margin-top: 0.7%;
-  }
-  
-  .videoDuration {
-    float: right;
-    margin-top: 22%;
   }
 }
 
@@ -324,7 +312,7 @@ button {
   width:100%;
   height:100vh;
   background:rgba(0,0,0,0.7);
-  z-index:1;
+  z-index:2;
   display:block;
 }
 
