@@ -600,7 +600,7 @@ class VideoList extends Component {
                                 {(item.duration + "").split(".")[0]}:
                                 {
                                   ((item.duration + "").split(".")[1]) &&
-                                  ((item.duration + "").split(".")[1].length < 2) ?
+                                    ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
                                     ((item.duration + "").split(".")[1])
@@ -966,7 +966,7 @@ class VideoList extends Component {
                                 {(item.duration + "").split(".")[0]}:
                                 {
                                   ((item.duration + "").split(".")[1]) &&
-                                  ((item.duration + "").split(".")[1].length < 2) ?
+                                    ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
                                     ((item.duration + "").split(".")[1])
@@ -1087,13 +1087,6 @@ class VideoList extends Component {
                     <div className="col-lg-3 col-md-5 col-12">
                     </div>
                     <div className="col-lg-2 col-md-3 col-12">
-                      <div
-                        className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                        onClick={() => this.toggleListLastWeek()} aria-hidden="true">
-                        <i className="fa fa-play-circle fa-1x mr-1" />
-                        เล่นต่อเนื่อง
-                      </div>
                     </div>
                   </th>
                 </tr>
@@ -1132,7 +1125,7 @@ class VideoList extends Component {
                                 {(item.duration + "").split(".")[0]}:
                                 {
                                   ((item.duration + "").split(".")[1]) &&
-                                  ((item.duration + "").split(".")[1].length < 2) ?
+                                    ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
                                     ((item.duration + "").split(".")[1])
