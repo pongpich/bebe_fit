@@ -599,6 +599,7 @@ class VideoList extends Component {
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
+                                  ((item.duration + "").split(".")[1]) &&
                                   ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
@@ -964,6 +965,7 @@ class VideoList extends Component {
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
+                                  ((item.duration + "").split(".")[1]) &&
                                   ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
@@ -1129,6 +1131,7 @@ class VideoList extends Component {
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
+                                  ((item.duration + "").split(".")[1]) &&
                                   ((item.duration + "").split(".")[1].length < 2) ?
                                     ((item.duration + "").split(".")[1]) + "0"
                                     :
