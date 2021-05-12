@@ -323,3 +323,13 @@ button {
 .popupDailyWeighChallenge.active {
   display: none;
 }
+
+.body_part {
+  width: 45px;
+}
+
+@media (max-width: 769px) {
+  .body_part {
+    width: 40px;
+  }
+}

@@ -824,6 +824,7 @@ class VideoList extends Component {
 
   renderVideoList() {
     const { focusDay, selectedVDO } = this.state;
+    let body_part; 
     const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
@@ -973,15 +974,22 @@ class VideoList extends Component {
                                 } นาที
                               </h6>
                             </div>
-                            <hr className="mt-5" style={{ width: "100%" }}></hr>
+                            <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                             <div className="videoName">
-                              <p style={{ color: "grey" }}> {item.category} </p>
+                              <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
                               {(item.name.length < 20) ?
                                 <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
                                 :
                                 <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                               }
                             </div>
+                            <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
+                            {
+                              (item.type.toLowerCase().split(" ").join("") === "armfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                            }
+                            {
+                              (item.type.toLowerCase().split(" ").join("") === "backfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                            }
                           </div>
                         </div>
                       </div>
