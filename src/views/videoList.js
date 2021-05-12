@@ -571,7 +571,31 @@ class VideoList extends Component {
                 {
                   tempPlaylist.map((item, index) => (
                     <div className="row" key={index}>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-11">
+                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
+                        {
+                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
+                        }
+                        {
+                          (item.play_time === item.duration) ?
+                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                            </span>
+                            :
+                            <span className="dot">
+                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                            </span>
+                        }
+                        {
+                          (index === tempPlaylist.length - 1) ?
+                            <div className="vl" style={{ height: "0%" }}></div>
+                            :
+                            <div className="vl"></div>
+                        }
+                        {
+                          (index === tempPlaylist.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                        }
+                      </div>
+                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
                           <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
                           <div className="videoThumb mr-5">
@@ -588,29 +612,24 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            {
-                              (item.play_time === item.duration) &&
-                              <div className="videoEnd mt-3">
-                                <h5 style={{ float: "right", color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
-                              </div>
-                            }
                             <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
-                                  ((item.duration + "").split(".")[1]) &&
+                                  ((item.duration + "").split(".")[1]) ?
                                     ((item.duration + "").split(".")[1].length < 2) ?
-                                    ((item.duration + "").split(".")[1]) + "0"
-                                    :
-                                    ((item.duration + "").split(".")[1])
+                                      ((item.duration + "").split(".")[1]) + "0"
+                                      :
+                                      ((item.duration + "").split(".")[1])
+                                    : "00"
                                 } นาที
                               </h6>
                             </div>
                             <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                             <div className="videoName">
                               <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 20) ?
+                              {(item.name.length < 17) ?
                                 <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
                                 :
                                 <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
@@ -618,10 +637,10 @@ class VideoList extends Component {
                             </div>
                             <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
                             {
-                              (item.type.toLowerCase().split(" ").join("") === "armfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                              (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
                             }
                             {
-                              (item.type.toLowerCase().split(" ").join("") === "backfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                              (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
                             }
 
                           </div>
@@ -629,7 +648,7 @@ class VideoList extends Component {
                       </div>
                       {
                         (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                        <div className="col col-lg-4 d-flex align-items-center mt-3">
+                        <div className="col col-lg-2 mt-3">
                           <div className="changeVideoBtn" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                             <i className="fa fa-circle fa-1x" aria-hidden="true" />
                             เปลี่ยนวีดีโอ
@@ -945,7 +964,31 @@ class VideoList extends Component {
                   (this.props.exerciseVideo) &&
                   (todayExercise.map((item, index) => (
                     <div className="row" key={index}>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-11">
+                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
+                        {
+                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
+                        }
+                        {
+                          (item.play_time === item.duration) ?
+                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                            </span>
+                            :
+                            <span className="dot">
+                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                            </span>
+                        }
+                        {
+                          (index === todayExercise.length - 1) ?
+                            <div className="vl" style={{ height: "0%" }}></div>
+                            :
+                            <div className="vl"></div>
+                        }
+                        {
+                          (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                        }
+                      </div>
+                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
                           <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
                           <div className="videoThumb mr-5">
@@ -962,29 +1005,24 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            {
-                              (item.play_time === item.duration) &&
-                              <div className="videoEnd mt-3">
-                                <h5 style={{ float: "right", color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
-                              </div>
-                            }
                             <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
-                                  ((item.duration + "").split(".")[1]) &&
+                                  ((item.duration + "").split(".")[1]) ?
                                     ((item.duration + "").split(".")[1].length < 2) ?
-                                    ((item.duration + "").split(".")[1]) + "0"
-                                    :
-                                    ((item.duration + "").split(".")[1])
+                                      ((item.duration + "").split(".")[1]) + "0"
+                                      :
+                                      ((item.duration + "").split(".")[1])
+                                    : "00"
                                 } นาที
                               </h6>
                             </div>
                             <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                             <div className="videoName">
                               <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 20) ?
+                              {(item.name.length < 17) ?
                                 <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
                                 :
                                 <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
@@ -1111,7 +1149,31 @@ class VideoList extends Component {
                   (this.props.exerciseVideoLastWeek) &&
                   (todayExercise.map((item, index) => (
                     <div className="row" key={index}>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-11">
+                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
+                        {
+                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
+                        }
+                        {
+                          (item.play_time === item.duration) ?
+                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                            </span>
+                            :
+                            <span className="dot">
+                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                            </span>
+                        }
+                        {
+                          (index === todayExercise.length - 1) ?
+                            <div className="vl" style={{ height: "0%" }}></div>
+                            :
+                            <div className="vl"></div>
+                        }
+                        {
+                          (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                        }
+                      </div>
+                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
                           <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
                           <div className="videoThumb mr-5">
@@ -1128,29 +1190,24 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            {
-                              (item.play_time === item.duration) &&
-                              <div className="videoEnd mt-3">
-                                <h5 style={{ float: "right", color: "#F45197" }}><i className="fa fa-check fa-lg" ></i>เล่นสำเร็จ</h5>
-                              </div>
-                            }
                             <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
                                 {
-                                  ((item.duration + "").split(".")[1]) &&
+                                  ((item.duration + "").split(".")[1]) ?
                                     ((item.duration + "").split(".")[1].length < 2) ?
-                                    ((item.duration + "").split(".")[1]) + "0"
-                                    :
-                                    ((item.duration + "").split(".")[1])
+                                      ((item.duration + "").split(".")[1]) + "0"
+                                      :
+                                      ((item.duration + "").split(".")[1])
+                                    : "00"
                                 } นาที
                               </h6>
                             </div>
                             <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                             <div className="videoName">
                               <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 20) ?
+                              {(item.name.length < 17) ?
                                 <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
                                 :
                                 <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
@@ -1158,10 +1215,10 @@ class VideoList extends Component {
                             </div>
                             <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
                             {
-                              (item.type.toLowerCase().split(" ").join("") === "armfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                              (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
                             }
                             {
-                              (item.type.toLowerCase().split(" ").join("") === "backfocus") &&  <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                              (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
                             }
 
                           </div>

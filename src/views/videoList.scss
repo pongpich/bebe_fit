@@ -251,9 +251,9 @@ button {
 }
 
 .changeVideoBtn {
+  margin-top: 50%;
   font-size: 18px; 
   cursor: pointer;
-  margin-right: 32px;
 }
 
 .randomVideoBtn {
@@ -269,15 +269,6 @@ button {
   .videoItem .videoThumb {
     margin-top: 10%;
     width: 100%;
-  }
-
-  .changeVideoBtn {
-    font-size: 12px; 
-    margin-right: 3.7px;
-  }
-
-  .randomVideoBtn {
-    font-size: 12px; 
   }
 }
 
@@ -333,3 +324,77 @@ button {
     width: 40px;
   }
 }
+
+.vl {
+  position: absolute;
+  top: 50%; 
+  left: 65%; 
+  transform: translate(-50%,0%);
+  border-left: 0.1px solid #F45197;
+  height: 114%;
+}
+
+.dot {
+  position: absolute; 
+  top: 50%; 
+  left: 65%; 
+  transform: translate(-50%,-50%);
+  height: 40px;
+  width: 40px;
+  z-index: 1;
+  background-color:white;
+  color: #F45197;
+  border-style: solid;
+  border-width: 0.1px;
+  border-color: #F45197;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.firstVideoStartText {
+  position: absolute;
+  top: 30%;
+  left: 65%;
+  transform: translate(-50%,-50%);
+  color: #F45197;
+}
+
+.lastVideoEndText {
+  position: absolute;
+  bottom: 20%;
+  left: 65%;
+  transform: translate(-50%,-50%);
+  color: #F45197;
+}
+
+@media (max-width: 769px) {
+  .firstVideoStartText {
+    top: 20%;
+  }
+  .lastVideoEndText {
+    bottom: -5%;
+  }
+  .vl {
+    height: 138%;
+  }
+  .changeVideoBtn {
+    margin-left: 10%;
+    margin-top: 0%;
+  }
+  .randomVideoBtn {
+    margin-left: 10%;
+  }
+}
+
+@media (max-width: 376px) {
+  .firstVideoStartText {
+    top: 30%;
+  }
+  .lastVideoEndText {
+    bottom: 10%;
+  }
+  .changeVideoBtn {
+    margin-top: 0%;
+  }
+}
+
