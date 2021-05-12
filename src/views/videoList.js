@@ -486,7 +486,43 @@ class VideoList extends Component {
               <div className="close-btn">X</div>
             </div>
             <div className="content">
-              <h4 className="mb-5"><b>เลือกคลิปวีดีโอ</b></h4>
+              <div className="row mt-4">
+                <img className="body_part ml-5" src={`../assets/img/body_part/${this.props.videos[0].type.toLowerCase().split(" ").join("")}.png`}></img>
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "warmup") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Warm Up</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Chest</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Back and Core</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Leg</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Arm and Shoulder</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "subcircuit") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Full Body</b></h2>
+                }
+                {
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "cardio") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Cardio</b></h2>
+                }
+              </div>
               <div className="selectEditPlaylist">
                 {
                   selectChangeVideoList.map((item, index) => (
