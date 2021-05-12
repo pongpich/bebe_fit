@@ -995,15 +995,18 @@ class VideoList extends Component {
                         แก้ไขคลิปออกกำลังกาย
                       </div>
                     </div>
-                    <div className="col-lg-2 col-md-3 col-12">
-                      <div
-                        className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                        onClick={() => this.toggleListLastWeek()} aria-hidden="true">
-                        <i className="fa fa-play-circle fa-1x mr-1" />
+                    {
+                      todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
+                      <div className="col-lg-2 col-md-3 col-12">
+                        <div
+                          className="mb-3"
+                          style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
+                          onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                          <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
                       </div>
-                    </div>
+                      </div>
+                    }
                   </th>
                 </tr>
               </thead>
@@ -1187,8 +1190,18 @@ class VideoList extends Component {
                     }
                     <div className="col-lg-3 col-md-5 col-12">
                     </div>
-                    <div className="col-lg-2 col-md-3 col-12">
-                    </div>
+                    {
+                       ( (todayExercise && todayExercise[todayExercise.length - 1].play_time)) !== (todayExercise && (todayExercise[todayExercise.length - 1].duration)) &&
+                      <div className="col-lg-2 col-md-3 col-12">
+                        <div
+                          className="mb-3"
+                          style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
+                          onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                          <i className="fa fa-play-circle fa-1x mr-1" />
+                        เล่นต่อเนื่อง
+                      </div>
+                      </div>
+                    }
                   </th>
                 </tr>
               </thead>
