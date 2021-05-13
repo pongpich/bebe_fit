@@ -1096,7 +1096,7 @@ class VideoList extends Component {
                         <div
                           className="mb-3"
                           style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                          onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                          onClick={() => this.toggleList()} aria-hidden="true">
                           <i className="fa fa-play-circle fa-1x mr-1" />
                         เล่นต่อเนื่อง
                       </div>
