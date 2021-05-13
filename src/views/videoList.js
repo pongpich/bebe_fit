@@ -424,7 +424,8 @@ class VideoList extends Component {
     if (sex !== "" && age !== "" && weight !== "" && height !== "") {
       if (age % 1 === 0) {
         this.setState({
-          otherAttributesPage: "bodyInfo"
+          otherAttributesPage: "bodyInfo",
+          statusOtherAttributes: "default"
         })
       } else {
         this.setState({
