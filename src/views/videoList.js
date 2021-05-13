@@ -35,7 +35,8 @@ class VideoList extends Component {
       indexPlaylist: 0,
       selectChangeVideoList: [],
       spinnerRandomVideo: "default",
-      weightInDailyWeighChallenge: ""
+      weightInDailyWeighChallenge: "",
+      otherAttributesPage: "basicInfo"
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -71,6 +72,15 @@ class VideoList extends Component {
         this.addEventToVideo();
       }
       this.props.getDailyWeighChallenge(user.user_id);
+      this.setState({
+        sex: JSON.parse(this.props.user.other_attributes).sex,
+        age: JSON.parse(this.props.user.other_attributes).age,
+        weight: JSON.parse(this.props.user.other_attributes).weight,
+        height: JSON.parse(this.props.user.other_attributes).height,
+        chest: JSON.parse(this.props.user.other_attributes).chest,
+        waist: JSON.parse(this.props.user.other_attributes).waist,
+        hip: JSON.parse(this.props.user.other_attributes).hip
+      })
     }
     if (user === null) {
       this.props.history.push('/login');
@@ -403,6 +413,25 @@ class VideoList extends Component {
     }
   }
 
+  onUpdateBasicInfo(event) {
+    const {
+      sex,
+      age,
+      weight,
+      height
+    } = this.state;
+
+    if (sex !== "" && age !== "" && weight !== "" && height !== "") {
+      this.setState({
+        otherAttributesPage: "bodyInfo"
+      })
+    } else {
+      this.setState({
+        statusOtherAttributes: "fail"
+      })
+    }
+  }
+
   onUpdateProfile(event) {
     const {
       sex,
@@ -719,180 +748,235 @@ class VideoList extends Component {
     )
   }
 
-  renderOtherAttribute() {
+  renderBasicInfo() {
     const { statusOtherAttributes } = this.state;
     return (
-      <div className="card-body">
-
-        <form>
-          <h2>ข้อมูลพื้นฐาน</h2>
-          <div className="row">
-            <div className="col-md-3" style={{ paddingTop: "20px" }}>
-              <div className="form-check" onChange={this.onChangeValue}>
-                <span>เพศ : </span>
-                <label className="form-check-label" style={{ marginLeft: "20px" }}>
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    value="male"
-                    name="sex"
-                    checked={this.state.sex === "male"}
-                    onChange={this.onChange}
-                  /> ชาย
+      <div>
+        <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
+          <div className="mb-3 col-lg-12  col-md-12 col-12">
+            <center>
+              <h2 className="mt-5 mb-4" style={{ color: "#F45197" }}><b>ยินดีต้อนรับสู่ Bebe Fit Routine</b></h2>
+              <h5>กรุณากรอกข้อมูลด้านล่างเพื่อที่คุณจะได้รับประสบการณ์</h5>
+              <h5>โปรแกรมออกกำลังกายสำหรับคุณโดยเฉพาะ</h5>
+            </center>
+          </div>
+          <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
+            <p style={{ color: "#F45197" }}>เพศ</p>
+            <div className="form-check" onChange={this.onChangeValue}>
+              <label className="form-check-label mb-3 mr-4">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="male"
+                  name="sex"
+                  checked={this.state.sex === "male"}
+                  onChange={this.onChange}
+                /> ชาย
                           <span className="circle">
-                    <span className="check"></span>
-                  </span>
-                </label>
-                <label className="form-check-label" style={{ marginLeft: "20px" }}>
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    value="female"
-                    name="sex"
-                    checked={this.state.sex === "female"}
-                    onChange={this.onChange}
-                  /> หญิง
+                  <span className="check"></span>
+                </span>
+              </label>
+              <label className="form-check-label" style={{ marginLeft: "20px" }}>
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  value="female"
+                  name="sex"
+                  checked={this.state.sex === "female"}
+                  onChange={this.onChange}
+                /> หญิง
                           <span className="circle">
-                    <span className="check"></span>
-                  </span>
-                </label>
-              </div>
-            </div>
-
-            <div className="col-md-3">
-              <div className="form-group">
-                <label for="age" className="bmd-label-floating">อายุ</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="age"
-                  name="age"
-                  step=".01"
-                  value={this.state.age}
-                  onChange={(event) => this.handleChange(event)}
-                />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.age === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
-            </div>
-            <div className="col-md-3">
-              <div className="form-group">
-                <label for="weight" className="bmd-label-floating">น้ำหนัก (กก.)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="weight"
-                  name="weight"
-                  step=".01"
-                  value={this.state.weight}
-                  onChange={(event) => this.handleChange(event)}
-                />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.weight === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
-            </div>
-            <div className="col-md-3">
-              <div className="form-group">
-                <label for="height" className="bmd-label-floating">ส่วนสูง (ซม.)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="height"
-                  name="height"
-                  step=".01"
-                  value={this.state.height}
-                  onChange={(event) => this.handleChange(event)}
-                />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.height === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
+                  <span className="check"></span>
+                </span>
+              </label>
             </div>
           </div>
 
-          <div className="space-70"></div>
-          <h2>สัดส่วน</h2>
-          <div className="row">
-            <div className="col-md-4">
-              <h6>กรุณาวัดสัดส่วนของท่าน <br></br> โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h6>
-              <div className="form-group">
-                <label for="chest" className="bmd-label-floating">รอบอก (นิ้ว)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="chest"
-                  name="chest"
-                  step=".01"
-                  value={this.state.chest}
-                  onChange={(event) => this.handleChange(event)} />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.chest === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
-              <div className="form-group">
-                <label for="waist" className="bmd-label-floating">รอบเอว (นิ้ว)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="waist"
-                  name="waist"
-                  step=".01"
-                  value={this.state.waist}
-                  onChange={(event) => this.handleChange(event)}
-                />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.waist === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
-              <div className="form-group">
-                <label for="hip" className="bmd-label-floating">สะโพก (นิ้ว)</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  id="hip"
-                  name="hip"
-                  step=".01"
-                  value={this.state.hip} onChange={(event) => this.handleChange(event)}
-                />
-              </div>
-              {
-                (statusOtherAttributes === "fail" && this.state.hip === "") &&
-                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-              }
+          <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
+            <div className="form-group">
+              <label for="age" className="bmd-label-floating" style={{ color: "#F45197" }}>อายุ</label>
+              <input
+                type="number"
+                className="form-control"
+                id="age"
+                name="age"
+                step="1"
+                value={this.state.age}
+                onChange={(event) => this.handleChange(event)}
+              />
             </div>
-
-            <div className="col-md-4" style={{ marginTop: "15px" }}>
-              <div className="d-flex ">
-                <img src="../assets/img/man.png" width="100%" alt="" />
-                <img src="../assets/img/woman.png" width="100%" alt="" />
-              </div>
-            </div>
-
+            {
+              (statusOtherAttributes === "fail" && this.state.age === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
           </div>
-
-          <div className="space-70 mb-5"></div>
-          <div className="form-group mb-5">
+          <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
+            <div className="form-group">
+              <label for="weight" className="bmd-label-floating" style={{ color: "#F45197" }}>น้ำหนัก (กก.)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="weight"
+                name="weight"
+                step=".01"
+                value={this.state.weight}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </div>
+            {
+              (statusOtherAttributes === "fail" && this.state.weight === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
+          </div>
+          <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
+            <div className="form-group">
+              <label for="height" className="bmd-label-floating" style={{ color: "#F45197" }}>ส่วนสูง (ซม.)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="height"
+                name="height"
+                step=".01"
+                value={this.state.height}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </div>
+            {
+              (statusOtherAttributes === "fail" && this.state.height === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
+          </div>
+          <div className="mb-5 mt-4 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="text-center">
               <Button
                 color="danger"
                 className="btn-shadow"
                 size="lg"
-                onClick={() => this.onUpdateProfile()}
+                onClick={() => this.onUpdateBasicInfo()}
                 block
+                style={{ backgroundColor: "#F45197" }}
               >
-                ยืนยัน
-              </Button>
+                ถัดไป
+            </Button>
             </div>
           </div>
-        </form>
+        </div>
+      </div>
+    )
+  }
 
+  renderBodyInfo() {
+    const { statusOtherAttributes } = this.state;
+    return (
+      <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
+        <div className="mt-5 mb-5 col-lg-12  col-md-12 col-12">
+          <center>
+            <h5>กรุณาวัดสัดส่วนของคุณ</h5>
+            <h5>โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h5>
+          </center>
+        </div>
+        <div className="row">
+          <div className="col-md-3 offset-md-1">
+            <div className="form-group">
+              <label for="chest" className="bmd-label-floating" style={{ color: "#F45197" }}>รอบอก (นิ้ว)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="chest"
+                name="chest"
+                step=".01"
+                value={this.state.chest}
+                onChange={(event) => this.handleChange(event)} />
+            </div>
+            {
+              (statusOtherAttributes === "fail" && this.state.chest === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
+            <div className="form-group">
+              <label for="waist" className="bmd-label-floating" style={{ color: "#F45197" }}>รอบเอว (นิ้ว)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="waist"
+                name="waist"
+                step=".01"
+                value={this.state.waist}
+                onChange={(event) => this.handleChange(event)}
+              />
+            </div>
+            {
+              (statusOtherAttributes === "fail" && this.state.waist === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
+            <div className="form-group">
+              <label for="hip" className="bmd-label-floating" style={{ color: "#F45197" }}>สะโพก (นิ้ว)</label>
+              <input
+                type="number"
+                className="form-control"
+                id="hip"
+                name="hip"
+                step=".01"
+                value={this.state.hip} onChange={(event) => this.handleChange(event)}
+              />
+            </div>
+            {
+              (statusOtherAttributes === "fail" && this.state.hip === "") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+            }
+          </div>
+
+          <div className="col-md-7">
+            <div className="d-flex ">
+              {
+                (this.state.sex === "male") && <img src="../assets/img/man.png" width="100%" alt="" />
+              }
+              {
+                (this.state.sex === "female") && <img src="../assets/img/woman.png" width="100%" alt="" />
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <div className="space-70 mb-5"></div>
+        <div className="form-group mb-5">
+          <div className="text-center">
+            <div className="row">
+              <div className="col-md-5 offset-md-1">
+                <Button
+                  color="danger"
+                  className="btn-shadow"
+                  size="lg"
+                  onClick={() => this.setState({ otherAttributesPage: "basicInfo" })}
+                  block
+                  style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
+                >ย้อนกลับ</Button>
+              </div>
+              <div className="col-md-5">
+                <Button
+                  color="danger"
+                  className="btn-shadow"
+                  size="lg"
+                  onClick={() => this.onUpdateProfile()}
+                  block
+                  style={{ backgroundColor: "#F45197" }}
+                >ยืนยัน</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderOtherAttribute() {
+    const { otherAttributesPage } = this.state;
+    return (
+      <div className="card-body">
+        <form>
+          {(otherAttributesPage === "basicInfo") && this.renderBasicInfo()}
+          {(otherAttributesPage === "bodyInfo") && this.renderBodyInfo()}
+        </form>
       </div>
     )
   }
@@ -1191,7 +1275,7 @@ class VideoList extends Component {
                     <div className="col-lg-3 col-md-5 col-12">
                     </div>
                     {
-                       ( (todayExercise && todayExercise[todayExercise.length - 1].play_time)) !== (todayExercise && (todayExercise[todayExercise.length - 1].duration)) &&
+                      ((todayExercise && todayExercise[todayExercise.length - 1].play_time)) !== (todayExercise && (todayExercise[todayExercise.length - 1].duration)) &&
                       <div className="col-lg-2 col-md-3 col-12">
                         <div
                           className="mb-3"
