@@ -422,9 +422,15 @@ class VideoList extends Component {
     } = this.state;
 
     if (sex !== "" && age !== "" && weight !== "" && height !== "") {
-      this.setState({
-        otherAttributesPage: "bodyInfo"
-      })
+      if (age % 1 === 0) {
+        this.setState({
+          otherAttributesPage: "bodyInfo"
+        })
+      } else {
+        this.setState({
+          statusOtherAttributes: "ageNotUseDecimals"
+        })
+      }
     } else {
       this.setState({
         statusOtherAttributes: "fail"
@@ -805,6 +811,10 @@ class VideoList extends Component {
                 onChange={(event) => this.handleChange(event)}
               />
             </div>
+            {
+              (statusOtherAttributes === "ageNotUseDecimals") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อายุ ห้ามเป็นเลขทศนิยม</h6></small>
+            }
             {
               (statusOtherAttributes === "fail" && this.state.age === "") &&
               <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
