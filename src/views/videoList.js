@@ -1462,17 +1462,17 @@ class VideoList extends Component {
           </div>
         </div>
 
-        <ul className="nav nav-tabs mt-3" id="myTab" role="tablist">
-          <li className="nav-item">
-            <a className="nav-link active h5" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197" }}>Routine workout</a>
-          </li>
+        <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
+          <div className="mr-4 mb-3">
+            <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>Routine workout</a>
+          </div>
           {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
-          <li className="nav-item">
-            <a className="nav-link disabled" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false">ชาเลนจ์</a>
-          </li>
-        </ul>
+          <div className="">
+            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+          </div>
+        </div>
         <div className="main main-raised" style={{ backgroundColor: "#D8D6DF" }}>
           <div className="container">
             <div className="">

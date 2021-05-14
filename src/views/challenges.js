@@ -312,17 +312,14 @@ class Challenges extends Component {
     const { selectedNavLink } = this.state;
     return (
       <div>
-        <ul className="nav nav-tabs mt-3" id="myTab" role="tablist">
-          <li className="nav-item">
-            <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
-          </li>
-          {/*  <li className="nav-item">
-                <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
-              </li> */}
-          <li className="nav-item">
-            <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
-          </li>
-        </ul>
+        <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
+          <div className="mr-4 mb-3">
+            <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
+          </div>
+          <div className="">
+            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+          </div>
+        </div>
         <div className="card-body d-flex justify-content-center" style={{ backgroundColor: "#D8D6DF" }}>
           <form className="col-lg-12 col-md-12">
             <div className="row mb-5 mt-3">
@@ -384,17 +381,14 @@ class Challenges extends Component {
       <div>
         <div className="card-body d-flex justify-content-center">
           <form>
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
-              <li className="nav-item">
-                <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
-              </li>
-              {/*  <li className="nav-item">
-                <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
-              </li> */}
-              <li className="nav-item">
-                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
-              </li>
-            </ul>
+            <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
+              <div className="mr-4 mb-3">
+                <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
+              </div>
+              <div className="">
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+              </div>
+            </div>
 
             <div className="row">
               <div className="card shadow mt-3  col-lg-12 col-md-12" >
@@ -434,19 +428,16 @@ class Challenges extends Component {
       <div>
         {this.renderPopupJoinChallenge()}
         {this.renderPopupRulesAndPrizes()}
-        <div className="card-body d-flex justify-content-center">
+        <div className="">
           <form>
-            <ul className="nav nav-tabs" id="myTab" role="tablist">
-              <li className="nav-item">
-                <a className="nav-link disabled" id="home-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="home" aria-selected="true">Routine workout</a>
-              </li>
-              {/*  <li className="nav-item">
-                <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
-              </li> */}
-              <li className="nav-item">
-                <a className="nav-link active h5" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197" }}>ชาเลนจ์</a>
-              </li>
-            </ul>
+            <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
+              <div className="mr-4 mb-3">
+                <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
+              </div>
+              <div className="">
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+              </div>
+            </div>
 
             <div className="row" style={{ backgroundColor: "#D8D6DF" }}>
               <div className="card shadow mt-5 mb-5  col-lg-10 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
