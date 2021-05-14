@@ -582,7 +582,7 @@ class VideoList extends Component {
                         </video>
                       </div>
                       <div className="mt-1 ml-3 mb-4">
-                        <h6><b> {item.name} </b></h6>
+                        <h6 style={{ color: "#F45197" }}><b> {item.name} </b></h6>
                       </div>
                       <button
                         className="btn btn-danger mb-3 mt-5"

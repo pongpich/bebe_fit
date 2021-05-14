@@ -71,19 +71,19 @@ class Login extends Component {
     const { statusLogin } = this.state;
     return (
       <div className="all-row-login">
-        <div className="row">
-          <div className="auth-card shadow" style={{ borderRadius: "25px" }}>
+        <div className="row container">
+          <div className="auth-card shadow col-lg-10 offset-lg-1 col-md-12 col-12" style={{ borderRadius: "25px" }}>
             <div className="position-relative image-side-login col-lg-6 col-12">
               <img className="mb-4 mt-3 col-12" src="/assets/img/loginprofile.jpg" alt="" />
               <div className="description">
-                <h3 className="mb-3"><center>BEBE FIT ROUTINE</center></h3>
+                <h3 className="mb-3" style={{ color: "#F45197" }}><center><b>BEBE FIT ROUTINE</b></center></h3>
                 <h6><center>คอร์สออกกำลังกายสนุกๆ ที่สามารถฝึกได้</center></h6>
                 <h6><center>จากที่บ้าน ไม่ต้องมีอุปกรณ์ก็เสียเหงื่อได้</center></h6>
               </div>
             </div>
 
             <div className="form-side-login col-lg-6 col-12">
-              <CardTitle className="h3 mb-4 mt-5">
+              <CardTitle className="h3 mb-4 mt-5" style={{ color: "#F45197" }}>
                 {"เข้าสู่ระบบ"}
               </CardTitle>
               <Form>
@@ -102,7 +102,7 @@ class Login extends Component {
 
                 <div className="d-flex justify-content-between align-items-center mb-3 btn-login">
                   <Button
-                    style={{ backgroundColor: "#F45197"}}
+                    style={{ backgroundColor: "#F45197", borderColor: "#F45197", borderRadius: "20px" }}
                     className="btn-shadow"
                     size="lg"
                     onClick={() => this.onUserLogin()}
