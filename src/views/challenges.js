@@ -150,7 +150,7 @@ class Challenges extends Component {
                 {
                   (membersOfTeam) &&
                   membersOfTeam.map((item, index) =>
-                    <p className="card-text">{index + 1}. {item.first_name}
+                    <p className="card-text">{index + 1}. {item.first_name} {item.last_name} <span style={{ color: "grey" }}>({item.total_score} คะแนน)</span>
                       <span style={{ float: "right", color: "#F45197" }}>
                         {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
                       </span>
