@@ -585,9 +585,9 @@ class VideoList extends Component {
                         <h6><b> {item.name} </b></h6>
                       </div>
                       <button
-                        className="btn btn-danger border-secondary mb-3 mt-5"
+                        className="btn btn-danger mb-3 mt-5"
                         type="button"
-                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%", backgroundColor: "#F45197" }}
+                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%", backgroundColor: "#F45197", borderRadius: "20px" }}
                         onClick={() => this.selectEditVideo(item)}
                       >
                         <b>เลือกวีดีโอนี้</b>
@@ -631,8 +631,8 @@ class VideoList extends Component {
                     }
                     <div className="col-lg-2 col-md-4 col-6">
                       <button
-                        className="btn btn-light border-dark " type="button"
-                        style={{ fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
+                        className="btn btn-light" type="button"
+                        style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
                         onClick={() => this.closeEditVDO()}
                       >
                         <b>ยกเลิก</b>
@@ -640,9 +640,9 @@ class VideoList extends Component {
                     </div>
                     <div className="col-lg-2 col-md-4 col-6">
                       <button
-                        className="btn btn-primary border-secondary "
+                        className="btn"
                         type="button"
-                        style={{ backgroundColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
+                        style={{ backgroundColor: "#F45197", color: "white", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
                         onClick={() => this.onVideoListUpdate()}
                       >
                         <b>ยืนยันการแก้ไข</b>

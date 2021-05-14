@@ -210,6 +210,7 @@ class Challenges extends Component {
             <button
               type="button"
               className="btn btn-secondary col-4"
+              style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
               onClick={() => this.closePopupLeaveTeam()}>ยกเลิก</button>
             <div className="col-2"></div>
             <button
@@ -514,6 +515,7 @@ class Challenges extends Component {
                 <button
                   type="button"
                   className="btn btn-secondary col-4"
+                  style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
                   onClick={() => this.closePopupJoinChallenge()}>ยกเลิก</button>
                 <div className="col-2"></div>
                 <button
