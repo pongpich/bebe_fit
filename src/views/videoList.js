@@ -655,30 +655,6 @@ class VideoList extends Component {
                 {
                   tempPlaylist.map((item, index) => (
                     <div className="row" key={index}>
-                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
-                        {
-                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
-                        }
-                        {
-                          (item.play_time === item.duration) ?
-                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
-                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
-                            </span>
-                            :
-                            <span className="dot">
-                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
-                            </span>
-                        }
-                        {
-                          (index === tempPlaylist.length - 1) ?
-                            <div className="vl" style={{ height: "0%" }}></div>
-                            :
-                            <div className="vl"></div>
-                        }
-                        {
-                          (index === tempPlaylist.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
-                        }
-                      </div>
                       <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
                           <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
