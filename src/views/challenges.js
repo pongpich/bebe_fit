@@ -12,7 +12,8 @@ class Challenges extends Component {
     this.state = {
       scoreInWeek: 0,
       teamName: "",
-      selectedNavLink: "mission"
+      selectedNavLink: "mission",
+      selectedScoreBoard: "team"
     }
   }
 
@@ -233,25 +234,72 @@ class Challenges extends Component {
     document.getElementById("overlayPopupLeaveTeam").classList.toggle("active");
   }
 
+  renderTeamRank() {
+    const { teamRank } = this.props;
+    return (
+      <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+        {
+          (teamRank) &&
+          teamRank.map((item, index) =>
+            <p className="card-text">{index + 1}. {item.group_name}
+              <span style={{ float: "right", color: "#F45197" }}>
+                {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
+              </span>
+            </p>
+          )
+        }
+      </div>)
+  }
+
+  renderIndividualRank() {
+    const { individualRank } = this.props;
+    const myRank = individualRank.filter(item => item.user_id === this.props.user.user_id);
+    return (
+      <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+        {
+          <b className="row mb-4">
+            <p className="card-text col-12">{myRank[0].rank}. {myRank[0].first_name} {myRank[0].last_name}
+              <span style={{ float: "right", color: "#F45197" }}>
+                {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
+              </span>
+            </p>
+          </b>
+        }
+        {
+          (individualRank) &&
+          individualRank.map((item, index) =>
+            <p className="card-text">{index + 1}. {item.first_name} {item.last_name}
+              <span style={{ float: "right", color: "#F45197" }}>
+                {item.total_score ? item.total_score : 0} คะแนน
+              </span>
+            </p>
+          )
+        }
+      </div>)
+  }
+
   renderScoreBoard() {
-    const { leaderBoard } = this.props;
+    const { selectedScoreBoard } = this.state;
     return (
       <div className="row">
-        <div className="card shadow col-lg-5 col-md-12" style={{ borderRadius: "25px" }}>
+        <div className="card shadow col-lg-5 col-md-12 col-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
-              <div className="col-lg-12  mb-3" style={{ float: "left" }}>
-                {
-                  (leaderBoard) &&
-                  leaderBoard.map((item, index) =>
-                    <p className="card-text">{index + 1}. {item.group_name}
-                      <span style={{ float: "right", color: "#F45197" }}>
-                        {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
-                      </span>
-                    </p>
-                  )
-                }
-              </div>
+              <h5
+                className="ml-3 mr-4"
+                style={{ color: `${selectedScoreBoard === "team" ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                onClick={() => this.setState({ selectedScoreBoard: "team" })}>
+                คะแนนทีม
+              </h5>
+              <h5
+                className=""
+                style={{ color: `${selectedScoreBoard === "individual" ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                onClick={() => this.setState({ selectedScoreBoard: "individual" })}>
+                คะแนนเดี่ยว
+              </h5>
+              <hr className="w-100"></hr>
+              {(selectedScoreBoard === "team") && this.renderTeamRank()}
+              {(selectedScoreBoard === "individual") && this.renderIndividualRank()}
             </div>
           </div>
         </div>
@@ -589,8 +637,8 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, leaderBoard, statusCreateTeam } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, leaderBoard, statusCreateTeam };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam };
 };
 
 const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard };

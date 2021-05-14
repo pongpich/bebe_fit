@@ -479,7 +479,7 @@ function* getLeaderboardSaga() {
     );
     yield put({
       type: types.GET_LEADER_BOARD_SUCCESS,
-      payload: apiResult.results.leaderBoard
+      payload: apiResult.results
     })
   } catch (error) {
     console.log("error from getLeaderboardSaga :", error);
@@ -769,7 +769,8 @@ const INIT_STATE = {
   membersOfTeam: [],
   group_name: "",
   totalScoreOfTeam: 0,
-  leaderBoard: [],
+  teamRank: [],
+  individualRank: [],
   statusCreateTeam: "default"
 };
 
@@ -814,7 +815,8 @@ export function reducer(state = INIT_STATE, action) {
     case types.GET_LEADER_BOARD_SUCCESS:
       return {
         ...state,
-        leaderBoard: action.payload
+        teamRank: action.payload.teamRank,
+        individualRank: action.payload.individualRank
       }
     case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
       return {
