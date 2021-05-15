@@ -253,13 +253,18 @@ button {
 .changeVideoBtn {
   margin-top: 50%;
   margin-left: -30px;
-  font-size: 18px; 
+  font-size: 18px;
+  background-color: #EEB2CA; 
+  border: 0px;
   cursor: pointer;
 }
 
 .randomVideoBtn {
   margin-left: -30px;
-  font-size: 18px; 
+  font-size: 18px;  
+  background-color: #F45197;
+  color: white;
+  border: 0px;
   cursor: pointer;
 }
 
@@ -383,7 +388,7 @@ button {
   }
   .changeVideoBtn {
     margin-left: 10%;
-    margin-top: 0%;
+    margin-top: 3%;
   }
   .randomVideoBtn {
     margin-left: 10%;
@@ -398,7 +403,7 @@ button {
     bottom: 10%;
   }
   .changeVideoBtn {
-    margin-top: 0%;
+    margin-top: 3%;
   }
   .vl {
     height: 110%;

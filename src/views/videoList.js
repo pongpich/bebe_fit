@@ -653,7 +653,7 @@ class VideoList extends Component {
                 {
                   tempPlaylist.map((item, index) => (
                     <div className="row" key={index}>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
+                      <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
                         <div className="videoItem border shadow">
                           <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
                           <div className="videoThumb mr-5">
@@ -706,14 +706,12 @@ class VideoList extends Component {
                       </div>
                       {
                         (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                        <div className="col-lg-2 col-md-12 col-12" style={{ top: "50%" }}>
-                          <div className="changeVideoBtn btn col-lg-12 col-md-3" style={{ borderRadius: "0px 5px 5px 0px", backgroundColor: "#EEB2CA", border: "0px" }} onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                        <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
+                          <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12"  onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                             <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             เลือกวีดีโอใหม่
                           </div>
-                          <div className="col-lg-1 col-md-1 col-12 mt-2 mb-2">
-                          </div>
-                          <div className="randomVideoBtn btn btn-danger col-lg-12 col-md-3" style={{ borderRadius: "0px 5px 5px 0px", backgroundColor: "#F45197", border: "0px" }} onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                          <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
                             <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             สุ่มวีดีโอ
                           </div>
