@@ -706,13 +706,15 @@ class VideoList extends Component {
                       </div>
                       {
                         (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                        <div className="col col-lg-2 mt-3">
-                          <div className="changeVideoBtn" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
-                            <i className="fa fa-circle fa-1x" aria-hidden="true" />
-                            เปลี่ยนวีดีโอ
+                        <div className="col-lg-2 col-md-12 col-12" style={{ top: "50%" }}>
+                          <div className="changeVideoBtn btn col-lg-12 col-md-3" style={{ borderRadius: "0px 5px 5px 0px", backgroundColor: "#EEB2CA", border: "0px" }} onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                            <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                            เลือกวีดีโอใหม่
                           </div>
-                          <div className="randomVideoBtn" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
-                            <i className="fa fa-circle fa-1x" aria-hidden="true" />
+                          <div className="col-lg-1 col-md-1 col-12 mt-2 mb-2">
+                          </div>
+                          <div className="randomVideoBtn btn btn-danger col-lg-12 col-md-3" style={{ borderRadius: "0px 5px 5px 0px", backgroundColor: "#F45197", border: "0px" }} onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                            <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             สุ่มวีดีโอ
                           </div>
                         </div>
