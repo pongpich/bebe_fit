@@ -600,17 +600,34 @@ class VideoList extends Component {
             </div>
           </div>
 
-          <div className="tab-content mb-2" id="myTabContent">
-            <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <nav className="nav">
-                {focusDay === 0 && <b>DAY1</b>}
-                {focusDay === 1 && <b>DAY2</b>}
-                {focusDay === 2 && <b>DAY3</b>}
-                {focusDay === 3 && <b>DAY4</b>}
-              </nav>
+          <div className="tab-content mb-3 row" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "10px" }}>
+            <div className="tab-pane fade show active col-lg-8 col-md-4 col-12" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div className="mt-3">
+                {focusDay === 0 && <h5><b>DAY 1</b></h5>}
+                {focusDay === 1 && <h5><b>DAY 2</b></h5>}
+                {focusDay === 2 && <h5><b>DAY 3</b></h5>}
+                {focusDay === 3 && <h5><b>DAY 4</b></h5>}
+              </div>
             </div>
-            <div className="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">pppp</div>
-            <div className="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">kkkkk</div>
+            <div className="col-lg-2 col-md-4 col-6">
+              <button
+                className="btn btn-light" type="button"
+                style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
+                onClick={() => this.closeEditVDO()}
+              >
+                <b>ยกเลิก</b>
+              </button>
+            </div>
+            <div className="col-lg-2 col-md-4 col-6">
+              <button
+                className="btn"
+                type="button"
+                style={{ backgroundColor: "#F45197", color: "white", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
+                onClick={() => this.onVideoListUpdate()}
+              >
+                <b>ยืนยันการแก้ไข</b>
+              </button>
+            </div>
           </div>
 
           <div className="">
@@ -623,34 +640,15 @@ class VideoList extends Component {
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
-              <thead>
-                <tr>
-                  <th className="tabletitle row">
+              <div>
+                <div>
+                  <div className="tabletitle row mb-4">
                     {
-                      <span className="col-lg-8 col-md-4 col-12" style={{ fontSize: "15px" }}> รวมเวลาฝึก {timesExercise} นาที</span>
+                      <span className="col-lg-8 col-md-4 col-12" style={{ fontSize: "16px" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                     }
-                    <div className="col-lg-2 col-md-4 col-6">
-                      <button
-                        className="btn btn-light" type="button"
-                        style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
-                        onClick={() => this.closeEditVDO()}
-                      >
-                        <b>ยกเลิก</b>
-                      </button>
-                    </div>
-                    <div className="col-lg-2 col-md-4 col-6">
-                      <button
-                        className="btn"
-                        type="button"
-                        style={{ backgroundColor: "#F45197", color: "white", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
-                        onClick={() => this.onVideoListUpdate()}
-                      >
-                        <b>ยืนยันการแก้ไข</b>
-                      </button>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
+                  </div>
+                </div>
+              </div>
               <tbody>
                 {
                   tempPlaylist.map((item, index) => (
@@ -993,37 +991,37 @@ class VideoList extends Component {
     return (
       <div className="card-body d-flex justify-content-center">
         <form>
-          <div className="tab-content mt-3 mb-2" id="myTabContent">
+          <div className="tab-content mt-3 mb-3" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "0px" }}>
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน</h4>
+              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
-                  <b>DAY1</b>
+                  <h5><b>DAY 1</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
-                  <b>DAY2</b>
+                  <h5><b>DAY 2</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
-                  <b>DAY3</b>
+                  <h5><b>DAY 3</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
-                  <b>DAY4</b>
+                  <h5><b>DAY 4</b></h5>
                 </a>
                 {
                   (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
@@ -1051,36 +1049,38 @@ class VideoList extends Component {
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
-              <thead>
-                <tr>
-                  <th className="tabletitle row">
-                    {
-                      <span className="col-lg-7 col-md-4 col-12 mb-3" style={{ fontSize: "15px", float: "left" }}> รวมเวลาฝึก {timesExercise} นาที</span>
-                    }
-                    <div className="col-lg-3 col-md-5 col-12">
-                      <div
-                        className="mb-3"
-                        style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                        onClick={() => this.editVDO()} aria-hidden="true">
-                        <i className="fa fa-pencil-square-o fa-1x mr-1" />
-                        แก้ไขคลิปออกกำลังกาย
-                      </div>
-                    </div>
-                    {
-                      todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
-                      <div className="col-lg-2 col-md-3 col-12">
+              <div>
+                <div>
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <div className="">
+                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                         <div
                           className="mb-3"
-                          style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                          onClick={() => this.toggleList()} aria-hidden="true">
-                          <i className="fa fa-play-circle fa-1x mr-1" />
+                          style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                          onClick={() => this.editVDO()} aria-hidden="true">
+                          <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
+                        แก้ไขวีดีโอ
+                      </div>
+                      </div>
+                    </div>
+                    <div className="col-lg-6">
+                      {
+                        todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
+                        <div className="col-lg-12 col-md-3 col-12">
+                          <div
+                            className=""
+                            style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
+                            onClick={() => this.toggleList()} aria-hidden="true">
+                            <img className="mr-1" src={`../assets/img/play_button.png`} width="35px" height="35px" />
                         เล่นต่อเนื่อง
                       </div>
-                      </div>
-                    }
-                  </th>
-                </tr>
-              </thead>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
               <tbody>
                 {
                   (this.props.exerciseVideo) &&
@@ -1198,37 +1198,37 @@ class VideoList extends Component {
     return (
       <div className="card-body d-flex justify-content-center">
         <form>
-          <div className="tab-content mt-3 mb-2" id="myTabContent">
+          <div className="tab-content mt-3 mb-3" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "0px" }}>
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3" style={{ color: "#F45197" }}>โปรแกรมสัปดาห์ที่ผ่านมา</h4>
+              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมสัปดาห์ที่ผ่านมา</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(0)}
                 >
-                  <b>DAY1</b>
+                  <h5><b>DAY 1</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(1)}
                 >
-                  <b>DAY2</b>
+                  <h5><b>DAY 2</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(2)}
                 >
-                  <b>DAY3</b>
+                  <h5><b>DAY 3</b></h5>
                 </a>
                 <a
                   className="nav-link"
                   style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
                   onClick={() => this.onDayChange(3)}
                 >
-                  <b>DAY4</b>
+                  <h5><b>DAY 4</b></h5>
                 </a>
                 <a
                   className="nav-link ml-auto"
@@ -1253,29 +1253,32 @@ class VideoList extends Component {
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
-              <thead>
-                <tr>
-                  <th className="tabletitle row">
-                    {
-                      <span className="col-lg-7 col-md-4 col-12 mb-3" style={{ fontSize: "15px", float: "left" }}> รวมเวลาฝึก {timesExercise} นาที</span>
-                    }
-                    <div className="col-lg-3 col-md-5 col-12">
+              <div>
+                <div>
+                  <div className="row">
+                    <div className="col-lg-6">
+                      <div className="">
+                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+
+                      </div>
                     </div>
-                    {
-                      ((todayExercise && todayExercise[todayExercise.length - 1].play_time)) !== (todayExercise && (todayExercise[todayExercise.length - 1].duration)) &&
-                      <div className="col-lg-2 col-md-3 col-12">
-                        <div
-                          className="mb-3"
-                          style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                          onClick={() => this.toggleListLastWeek()} aria-hidden="true">
-                          <i className="fa fa-play-circle fa-1x mr-1" />
+                    <div className="col-lg-6">
+                      {
+                        todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
+                        <div className="col-lg-12 col-md-3 col-12">
+                          <div
+                            className=""
+                            style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
+                            onClick={() => this.toggleListLastWeek()} aria-hidden="true">
+                            <img className="mr-1" src={`../assets/img/play_button.png`} width="35px" height="35px" />
                         เล่นต่อเนื่อง
                       </div>
-                      </div>
-                    }
-                  </th>
-                </tr>
-              </thead>
+                        </div>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
               <tbody>
                 {
                   (this.props.exerciseVideoLastWeek) &&
@@ -1440,7 +1443,7 @@ class VideoList extends Component {
 
         <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
           <div className="mr-4 mb-3">
-            <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>Routine workout</a>
+            <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>Routine workout</a>
           </div>
           {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>

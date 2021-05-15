@@ -317,7 +317,7 @@ class Challenges extends Component {
             <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
           </div>
           <div className="">
-            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
           </div>
         </div>
         <div className="card-body d-flex justify-content-center" style={{ backgroundColor: "#D8D6DF" }}>
@@ -386,7 +386,7 @@ class Challenges extends Component {
                 <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
               </div>
               <div className="">
-                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
               </div>
             </div>
 
@@ -435,7 +435,7 @@ class Challenges extends Component {
                 <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
               </div>
               <div className="">
-                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "4px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
               </div>
             </div>
 
