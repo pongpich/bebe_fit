@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import bghead from "../assets/img/bghead.jpg";
 import { connect } from "react-redux";
 import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
@@ -605,14 +604,6 @@ class Challenges extends Component {
     const { numberOfTeamNotFull, statusGetNumberOfTeamNotFull, user } = this.props;
     return (
       <div>
-        <div className="page-header header-small" data-parallax="true"
-          style={{ backgroundImage: `url(${bghead})` }}>
-          <div className="overlay">
-            <video className="mt-4" width="100%" height="100%" controls autoPlay muted >
-              <source src="https://media.planforfit.com/bebe/video/INTRO%20PROGRAM.mp4" type="video/mp4"></source>
-            </video>
-          </div>
-        </div>
         {
           (user && user.group_id) ?
             this.renderChallenge()

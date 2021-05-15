@@ -1,0 +1,22 @@
+.header {
+  padding: 100px;
+  text-align: center;
+  background: black;
+  background-image: url("./assets/img/bgintro_lg.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: white;
+  font-size: 30px;
+}
+
+@media (max-width: 769px) {
+  .header {
+    background-image: url("./assets/img/bgintro_md.png");
+  }
+}
+
+@media (max-width: 376px) {
+  .header {
+    background-image: url("./assets/img/bgintro_sm.png");
+  }
+}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./App.css";
 import Amplify from 'aws-amplify';
 import {
   Switch,
@@ -10,6 +11,7 @@ import { logoutUser } from "./redux/auth";
 import { clearVideoList } from "./redux/exerciseVideos";
 import { clearChallenges } from "./redux/challenges"
 
+/* import bgintro from "./assets/img/bgintro.png"; */
 
 import Login from "./views/login";
 import Register from "./views/register";
@@ -93,14 +95,22 @@ class App extends Component {
   renderTopbar() {
     return (
       <section className="bg-dark">
-          <div className="row top-bar" style={{  fontFamily: "'Prompt', sans-serif" }}>
-            <div className="col text-right">
-              <span className="text-white">
-                  <a className="nav-link" href="https://content.bebefitroutine.com/" style={{ color: "white", cursor: "pointer", fontSize: "15px" }}><i class="fa fa-arrow-left" aria-hidden="true"></i> กลับเว็บไซส์ bebefitroutine</a>
-              </span>
-            </div>
+        <div className="row top-bar" style={{ fontFamily: "'Prompt', sans-serif" }}>
+          <div className="col text-right">
+            <span className="text-white">
+              <a className="nav-link" href="https://content.bebefitroutine.com/" style={{ color: "white", cursor: "pointer", fontSize: "15px" }}><i class="fa fa-arrow-left" aria-hidden="true"></i> กลับเว็บไซส์ bebefitroutine</a>
+            </span>
           </div>
+        </div>
       </section>
+    )
+  }
+
+  renderHeader() {
+    return (
+      <div className="header">
+        <h3 style={{ color: "#F45197" }}>คอร์สออกกำลังกาย</h3>
+      </div>
     )
   }
 
@@ -109,6 +119,8 @@ class App extends Component {
       <div className="App">
         {this.renderTopbar()}
         {this.renderNavbar()}
+        {this.renderHeader()}
+        
         <Switch>
           <Route exact path="/">
             <Redirect to="/login" />

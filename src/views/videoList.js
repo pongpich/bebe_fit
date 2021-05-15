@@ -7,8 +7,6 @@ import { updateProfile, logoutUser } from "../redux/auth";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 
-
-import bghead from "../assets/img/bghead.jpg";
 import "./videoList.scss";
 
 
@@ -1432,14 +1430,6 @@ class VideoList extends Component {
           (dailyWeighChallenge && (this.props.user && this.props.user.group_id)) &&
           this.renderPopupDailyWeighChallenge()
         }
-        <div className="page-header header-small" data-parallax="true"
-          style={{ backgroundImage: `url(${bghead})` }}>
-          <div className="overlay">
-            <video className="mt-4" width="100%" height="100%" controls controlsList="nodownload" disablePictureInPicture autoPlay muted >
-              <source src="https://media.planforfit.com/bebe/video/INTRO%20PROGRAM.mp4" type="video/mp4"></source>
-            </video>
-          </div>
-        </div>
 
         <div className="nav mt-5 mb-4 ml-5" id="myTab" role="tablist">
           <div className="mr-4 mb-3">
