@@ -644,7 +644,7 @@ class VideoList extends Component {
                 <div>
                   <div className="tabletitle row mb-4">
                     {
-                      <span className="col-lg-8 col-md-4 col-12" style={{ fontSize: "16px" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                      <span className="col-lg-8 col-md-6 col-12" style={{ fontSize: "16px" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                     }
                   </div>
                 </div>
@@ -670,7 +670,7 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
+                            <div className="videoDuration mt-3">
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
@@ -707,7 +707,7 @@ class VideoList extends Component {
                       {
                         (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
                         <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
-                          <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12"  onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                          <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                             <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             เลือกวีดีโอใหม่
                           </div>
@@ -1127,7 +1127,7 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
+                            <div className="videoDuration mt-3">
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:
@@ -1325,7 +1325,7 @@ class VideoList extends Component {
                             </div>
                           </div>
                           <div className="videoDetail">
-                            <div className="videoDuration mt-3" style={{ position: "absolute", right: "5%", top: "0", color: "grey" }}>
+                            <div className="videoDuration mt-3">
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                 {(item.duration + "").split(".")[0]}:

@@ -8,6 +8,13 @@
   width: 100%;
   background-color: white;
 
+   .videoDuration {
+    position: absolute; 
+    right: 5%; 
+    top: 0;
+    color: gray;
+    }
+
   .videoThumb {
     float: left;
     width: 50%;
@@ -274,8 +281,16 @@ button {
   }
 
   .videoItem .videoThumb {
-    margin-top: 10%;
+    margin-top: 0%;
     width: 100%;
+
+    .img-fluid{
+      border-radius: 8px 8px 0px 0px;
+    }
+  }
+  
+  .videoItem .videoDuration{
+    top: 85%;
   }
 }
 
