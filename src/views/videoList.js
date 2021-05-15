@@ -577,7 +577,7 @@ class VideoList extends Component {
 
                     <div className="playlistWrapper border shadow" >
                       <div className="">
-                        <video className="" width="100%" height="50%" controls muted style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}>
+                        <video poster={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} className="" width="100%" height="50%" controls controlslist="nodownload" muted style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}>
                           <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
                         </video>
                       </div>
