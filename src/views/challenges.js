@@ -93,6 +93,7 @@ class Challenges extends Component {
     return (
       <div className="row">
         {this.renderPopupRulesAndPrizes()}
+        {this.renderPopupScoreDetail()}
         <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <div className="row">
@@ -111,10 +112,20 @@ class Challenges extends Component {
             <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
             <br></br>
             <hr className="w-100"></hr>
-            <h5
-              className="card-title underline-on-hover"
-              style={{ cursor: "pointer", color: "#F45197" }}
-              onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
+            <div className="row">
+              <div className="col-lg-3 col-md-6 col-12">
+                <h5
+                  className="card-title"
+                  style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                  onClick={() => this.openPopupScoreDetail()}>รายละเอียดคะแนน</h5>
+              </div>
+              <div className="col-lg-4 col-md-6 col-12">
+                <h5
+                  className="card-title"
+                  style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                  onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -149,10 +160,20 @@ class Challenges extends Component {
                 {
                   (membersOfTeam) &&
                   membersOfTeam.map((item, index) =>
-                    <p className="card-text">{index + 1}. {item.first_name} {item.last_name} <span style={{ color: "grey" }}>({item.total_score} คะแนน)</span>
-                      <span style={{ float: "right", color: "#F45197" }}>
-                        {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
-                      </span>
+                    <p className="card-text">
+                      <div className="row">
+                        <div className="col-lg-6 col-md-6 col-12">
+                          {index + 1}. {item.first_name} {item.last_name}
+                        </div>
+                        <div className="col-lg-3 col-md-3 col-6">
+                          <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
+                        </div>
+                        <div className="col-lg-3 col-md-3 col-6">
+                          <span style={{ float: "right", color: "#F45197" }}>
+                            {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
+                          </span>
+                        </div>
+                      </div>
                     </p>
                   )
                 }
@@ -580,6 +601,63 @@ class Challenges extends Component {
     )
   }
 
+  renderPopupScoreDetail() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupScoreDetail"
+          id="overlayPopupScoreDetail"
+          onClick={() => this.closePopupScoreDetail()}
+        />
+        <div className="popupScoreDetail" id="popupScoreDetail">
+          <div
+            className="close-btn"
+            onClick={() => this.closePopupScoreDetail()}
+          >
+            &times;
+          </div>
+          <br></br>
+          <h4 className="mt-1 mb-4"><b>รายละเอียดคะแนน</b></h4>
+          <h5 style={{ color: "#F45197" }}><b>• รายการชาเลนจ์แบบเดี่ยว</b></h5>
+          <h6><b>ชั่งน้ำหนักครบ 2 ครั้ง</b> จะได้รับ 10 คะแนน</h6>
+          <h6><b>น้ำหนักลดลงจากสัปดาห์ก่อน</b> จะได้รับ 10 คะแนน</h6>
+          <h6><b>ออกกำลังกายครบ 4 วันต่อสัปดาห์</b> จะได้รับ 10 คะแนน</h6>
+          <br></br>
+          <h5 style={{ color: "#F45197" }}><b>• รายการชาเลนจ์แบบทีม</b></h5>
+          <h6><b>สมาชิกทุกคนชั่งน้ำหนักครบ 2 ครั้ง</b> ทั้งทีมจะได้รับ คนละ 10 คะแนน</h6>
+          <h6><b>ในแต่ละวันมีสมาชิกอย่างน้อย 1คน ชั่งน้ำหนัก</b></h6>
+          <h6><b> - ครบ 7 วัน</b> ทั้งทีมจะได้รับ คนละ 70 คะแนน</h6>
+          <h6><b> - ครบ 6 วัน</b> ทั้งทีมจะได้รับ คนละ 60 คะแนน</h6>
+          <h6><b> - ครบ 5 วัน</b> ทั้งทีมจะได้รับ คนละ 50 คะแนน</h6>
+          <h6><b> - ครบ 4 วัน</b> ทั้งทีมจะได้รับ คนละ 40 คะแนน</h6>
+          <h6><b> - ครบ 3 วัน</b> ทั้งทีมจะได้รับ คนละ 30 คะแนน</h6>
+          <h6><b> - ครบ 2 วัน</b> ทั้งทีมจะได้รับ คนละ 20 คะแนน</h6>
+          <h6><b> - ครบ 1 วัน</b> ทั้งทีมจะได้รับ คนละ 10 คะแนน</h6>
+          <br></br>
+          <h5 style={{ color: "#F45197" }}><b>• Bonus Rank</b></h5>
+          <h6><b>หากสัปดาห์นั้นอยู่ใน rank Gold</b> จะได้รับคะแนนพิเศษ 5 คะแนน</h6>
+          <h6><b>หากสัปดาห์นั้นอยู่ใน rank Platinum</b> จะได้รับคะแนนพิเศษ 10 คะแนน</h6>
+          <br></br>
+          <h6 style={{ color: "#F45197" }}><b>ระบบจะทำการอัปเดตคะแนนทุกวันอาทิตย์เวลา 00.00 น.</b></h6>
+          {
+            (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
+              <div className="row mt-3">
+                <div className="col-3"></div>
+                <button
+                  type="button"
+                  className="btn btn-secondary col-6"
+                  style={{ backgroundColor: "#F45197" }}
+                  onClick={() => this.closePopupScoreDetail()}>ปิด</button>
+                <div className="col-3"></div>
+              </div>
+              :
+              <div />
+          }
+        </div>
+      </div>
+    )
+  }
+
   openPopupJoinChallenge() {
     document.getElementById("popupJoinChallenge").classList.toggle("active");
     document.getElementById("overlayPopupJoinChallenge").classList.toggle("active");
@@ -598,6 +676,16 @@ class Challenges extends Component {
   closePopupRulesAndPrizes() {
     document.getElementById("popupRulesAndPrizes").classList.toggle("active");
     document.getElementById("overlayPopupRulesAndPrizes").classList.toggle("active");
+  }
+
+  openPopupScoreDetail() {
+    document.getElementById("popupScoreDetail").classList.toggle("active");
+    document.getElementById("overlayPopupScoreDetail").classList.toggle("active");
+  }
+
+  closePopupScoreDetail() {
+    document.getElementById("popupScoreDetail").classList.toggle("active");
+    document.getElementById("overlayPopupScoreDetail").classList.toggle("active");
   }
 
   render() {
