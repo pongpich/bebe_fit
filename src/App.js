@@ -106,10 +106,39 @@ class App extends Component {
     )
   }
 
+  toggle() {
+    document.getElementById("popupIntroVDO").classList.toggle("active");
+    var video = document.getElementById(`introVDO`);
+    video.play();
+  }
+
+  closeToggle() {
+    document.getElementById("popupIntroVDO").classList.toggle("active");
+    var video = document.getElementById(`introVDO`);
+    video.pause();
+    video.currentTime = 0;
+  }
+
   renderHeader() {
     return (
       <div className="header">
-        <h3 style={{ color: "#F45197" }}>คอร์สออกกำลังกาย</h3>
+
+        <div className="popupIntroVDO" id={`popupIntroVDO`}>
+          <video src={'https://media.planforfit.com/bebe/video/INTRO%20PROGRAM.mp4'} id="introVDO" controls controlsList="nodownload" disablePictureInPicture ></video>
+          <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle()}></img>
+        </div>
+
+        <h3>คอร์สออกกำลังกาย</h3>
+        <div className="watch_introduction">
+          <div
+            onClick={() => this.toggle()}
+            className=""
+            style={{ float: "left" }}
+            aria-hidden="true">
+            <img className="mr-2" src={`../assets/img/play_button.png`} width="54px" height="54px" />
+            WATCH INTRODUCTION
+          </div>
+        </div>
       </div>
     )
   }
@@ -120,7 +149,7 @@ class App extends Component {
         {this.renderTopbar()}
         {this.renderNavbar()}
         {this.renderHeader()}
-        
+
         <Switch>
           <Route exact path="/">
             <Redirect to="/login" />
