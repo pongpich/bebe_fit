@@ -1053,13 +1053,16 @@ class VideoList extends Component {
                     <div className="col-lg-6">
                       <div className="">
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
-                        <div
-                          className="mb-3"
-                          style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
-                          onClick={() => this.editVDO()} aria-hidden="true">
-                          <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
-                        แก้ไขวีดีโอ
-                      </div>
+                        {
+                          todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
+                          <div
+                            className="mb-3"
+                            style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                            onClick={() => this.editVDO()} aria-hidden="true">
+                            <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
+                            แก้ไขวีดีโอ
+                          </div>
+                        }
                       </div>
                     </div>
                     <div className="col-lg-6">
