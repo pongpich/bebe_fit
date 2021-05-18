@@ -14,6 +14,15 @@
     top: 0;
     color: gray;
     }
+  
+  .play_button {
+    position: absolute; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 1; 
+    cursor: pointer
+  }
 
   .videoThumb {
     margin-right: 60px;
@@ -291,7 +300,17 @@ button {
   }
   
   .videoItem .videoDuration{
-    top: 85%;
+    top: 48%;
+  }
+
+  .videoItem .videoDetail {
+    margin-top: 200px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .videoItem .play_button {
+    top: 40%;
   }
 }
 
