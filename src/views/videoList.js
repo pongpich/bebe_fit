@@ -653,8 +653,8 @@ class VideoList extends Component {
                     <div className="row" key={index}>
                       <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
                         <div className="videoItem border shadow">
-                          <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
-                          <div className="videoThumb mr-5">
+                          <img className="" src="../assets/img/thumb/play_button.png" width="64px" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
+                          <div className="videoThumb">
                             <div className="containerThumb">
                               <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
@@ -1113,8 +1113,8 @@ class VideoList extends Component {
                       </div>
                       <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
-                          <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
-                          <div className="videoThumb mr-5">
+                          <img className="" src="../assets/img/thumb/play_button.png" width="64px" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
+                          <div className="videoThumb">
                             <div className="containerThumb">
                               <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
@@ -1311,8 +1311,8 @@ class VideoList extends Component {
                       </div>
                       <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
-                          <img className="" src="../assets/img/thumb/play_button.png" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
-                          <div className="videoThumb mr-5">
+                          <img className="" src="../assets/img/thumb/play_button.png" width="64px" style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", zIndex: "1", cursor: "pointer" }} onClick={() => this.toggle(item)}></img>
+                          <div className="videoThumb">
                             <div className="containerThumb">
                               <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
