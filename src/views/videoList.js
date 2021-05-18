@@ -1399,7 +1399,7 @@ class VideoList extends Component {
             (this.props.statusPostDailyWeighChallenge !== "loading") ?
               <div className="row">
                 <div className="col-1"></div>
-                <button type="button" className="btn btn-secondary col-4" onClick={() => this.closePopupDailyWeighChallenge()}>ปิด</button>
+                <button type="button" className="btn col-4" onClick={() => this.closePopupDailyWeighChallenge()} style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}>ปิด</button>
                 <div className="col-2"></div>
                 <button type="button" className="btn btn-danger col-4" onClick={() => this.submitDailyWeighChallenge(this.state.weightInDailyWeighChallenge)} style={{ backgroundColor: "#F45197" }}>ยืนยัน</button>
                 <div className="col-1"></div>
