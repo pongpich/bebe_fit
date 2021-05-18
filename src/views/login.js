@@ -23,7 +23,7 @@ class Login extends Component {
 
   componentDidMount() {
     const { user } = this.props;
-    if (user !== null && user.password !== null) {
+    if (user !== null) {
       this.props.history.push('/videolist');
     }
   }
