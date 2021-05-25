@@ -1442,7 +1442,7 @@ class VideoList extends Component {
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
           {
-            this.props.user.fb_group &&
+            (this.props.user.fb_group && this.props.user.fb_group !== 404)  &&
             <div className="">
               <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
             </div>
