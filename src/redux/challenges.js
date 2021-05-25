@@ -70,12 +70,13 @@ export const leaveTeam = (user_id) => ({
   }
 })
 
-export const createChallengeGroup = (user_id, group_name, start_date) => ({
+export const createChallengeGroup = (user_id, group_name, start_date, fb_group) => ({
   type: types.CREATE_CHALLENGE_GROUP,
   payload: {
     user_id,
     group_name,
-    start_date
+    start_date,
+    fb_group
   }
 })
 
@@ -83,16 +84,20 @@ export const clearChallenges = () => ({
   type: types.CLEAR_CHALLENGES
 })
 
-export const assignGroupToMember = (user_id, start_date) => ({
+export const assignGroupToMember = (user_id, start_date, fb_group) => ({
   type: types.ASSIGN_GROUP_TO_MEMBER,
   payload: {
     user_id,
-    start_date
+    start_date,
+    fb_group
   }
 })
 
-export const getNumberOfTeamNotFull = () => ({
-  type: types.GET_NUMBER_OF_TEAM_NOT_FULL
+export const getNumberOfTeamNotFull = (fb_group) => ({
+  type: types.GET_NUMBER_OF_TEAM_NOT_FULL,
+  payload: {
+    fb_group
+  }
 })
 
 export const postDailyWeighChallenge = (user_id, weight) => ({
@@ -185,11 +190,12 @@ const getLogWeightSagaAsync = async (
 }
 
 const getNumberOfTeamNotFullSagaAsync = async (
-
+  fb_group
 ) => {
   try {
     const apiResult = await API.get("bebe", "/getNumberOfTeamNotFull", {
       queryStringParameters: {
+        fb_group
       }
     });
     return apiResult
@@ -282,13 +288,15 @@ const postDailyWeighChallengeSagaAsync = async (
 
 const assignGroupToMemberSagaAsync = async (
   user_id,
-  start_date
+  start_date,
+  fb_group
 ) => {
   try {
     const apiResult = await API.post("bebe", "/assignGroupToMember", {
       body: {
         user_id,
-        start_date
+        start_date,
+        fb_group
       }
     });
     return apiResult
@@ -301,14 +309,16 @@ const assignGroupToMemberSagaAsync = async (
 const createChallengeGroupSagaAsync = async (
   user_id,
   group_name,
-  start_date
+  start_date,
+  fb_group
 ) => {
   try {
     const apiResult = await API.post("bebe", "/createChallengeGroup", {
       body: {
         user_id,
         group_name,
-        start_date
+        start_date,
+        fb_group
       }
     });
     return apiResult
@@ -458,10 +468,14 @@ function* getLogWeightTeamSaga({ payload }) {
   }
 }
 
-function* getNumberOfTeamNotFullSaga() {
+function* getNumberOfTeamNotFullSaga({ payload }) {
+  const {
+    fb_group
+  } = payload
   try {
     const apiResult = yield call(
-      getNumberOfTeamNotFullSagaAsync
+      getNumberOfTeamNotFullSagaAsync,
+      fb_group
     );
     yield put({
       type: types.GET_NUMBER_OF_TEAM_NOT_FULL_SUCCESS,
@@ -544,13 +558,15 @@ function* postDailyWeighChallengeSaga({ payload }) {
 function* assignGroupToMemberSaga({ payload }) {
   const {
     user_id,
-    start_date
+    start_date,
+    fb_group
   } = payload
   try {
     const apiResult = yield call(
       assignGroupToMemberSagaAsync,
       user_id,
-      start_date
+      start_date,
+      fb_group
     );
     yield put({
       type: types.ASSIGN_GROUP_TO_MEMBER_SUCCESS
@@ -564,14 +580,16 @@ function* createChallengeGroupSaga({ payload }) {
   const {
     user_id,
     group_name,
-    start_date
+    start_date,
+    fb_group
   } = payload
   try {
     const apiResult = yield call(
       createChallengeGroupSagaAsync,
       user_id,
       group_name,
-      start_date
+      start_date,
+      fb_group
     );
     yield put({
       type: types.CREATE_CHALLENGE_GROUP_SUCCESS

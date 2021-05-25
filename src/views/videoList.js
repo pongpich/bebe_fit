@@ -1441,9 +1441,13 @@ class VideoList extends Component {
           {/* <li className="nav-item">
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
-          <div className="">
-            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
-          </div>
+          {
+            this.props.user.fb_group &&
+            <div className="">
+              <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+            </div>
+          }
+
         </div>
         <div className="main main-raised" style={{ backgroundColor: "#D8D6DF" }}>
           <div className="container">

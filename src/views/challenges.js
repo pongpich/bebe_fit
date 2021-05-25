@@ -36,7 +36,7 @@ class Challenges extends Component {
     const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam } = this.props;
     if (prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "success") {
       if (numberOfTeamNotFull > 0) {
-        this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date);
+        this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date, this.props.user.fb_group);
       }
     }
     //หลังจาก assignGroupToMember หรือ createChallengeGroup  จะมีการ getNumberOfTeamNotFull ให้ทำการ getGroupID
@@ -273,8 +273,12 @@ class Challenges extends Component {
   }
 
   renderIndividualRank() {
-    const { individualRank } = this.props;
-    const myRank = individualRank.filter(item => item.user_id === this.props.user.user_id);
+    const { individualRank, user } = this.props;
+    var myRank = individualRank.filter(item => item.user_id === this.props.user.user_id);
+    // myRank[0] === undefined คือกรณีผู้ใช้ไม่มีข้อมูลอยู่เลยใน member_event_log  (ทำให้เกิดบัค จึงต้องกำหนดค่าให้)
+    if(myRank[0] === undefined) {
+      myRank[0] = {"rank":0, "first_name": user.first_name, "last_name": user.last_name, "total_score":0 };
+    }
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
         {
@@ -387,7 +391,7 @@ class Challenges extends Component {
   createTeam(teamName) {
     const { user } = this.props;
     if (teamName.length > 6) {
-      this.props.createChallengeGroup(user.user_id, teamName, user.start_date)
+      this.props.createChallengeGroup(user.user_id, teamName, user.start_date, user.fb_group)
     } else {
       this.setState({
         teamName: ""
@@ -533,7 +537,7 @@ class Challenges extends Component {
                   type="button"
                   className="btn btn-danger col-4"
                   style={{ backgroundColor: "#F45197" }}
-                  onClick={() => this.props.getNumberOfTeamNotFull()}>เข้าร่วม</button>
+                  onClick={() => this.props.getNumberOfTeamNotFull(this.props.user.fb_group)}>เข้าร่วม</button>
                 <div className="col-1"></div>
               </div>
               :
