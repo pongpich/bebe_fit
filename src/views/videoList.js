@@ -202,6 +202,7 @@ class VideoList extends Component {
     });
     this.props.selectChangeVideo(video_id, category, type);
     this.props.resetStatus();
+    document.body.style.overflow = "hidden";
   }
 
   closeTogglePopupSelectEditVideo() {
@@ -210,6 +211,7 @@ class VideoList extends Component {
       selectChangeVideoList: [],
       indexPlaylist: 0
     })
+    document.body.style.overflow = "auto";
   }
 
   selectEditVideo(video) {
