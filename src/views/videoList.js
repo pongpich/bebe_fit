@@ -859,7 +859,18 @@ class VideoList extends Component {
           </center>
         </div>
         <div className="row">
-          <div className="col-md-3 offset-md-1">
+          <div className="col-md-7 offset-md-1">
+            <div className="d-flex ">
+              {
+                (this.state.sex === "male") && <img src="../assets/img/male.png" width="100%" alt="" />
+              }
+              {
+                (this.state.sex === "female") && <img src="../assets/img/female.png" width="100%" alt="" />
+              }
+            </div>
+          </div>
+
+          <div className="col-md-3">
             <div className="form-group">
               <label for="chest" className="bmd-label-floating" style={{ color: "#F45197" }}>รอบอก (นิ้ว)</label>
               <input
@@ -907,18 +918,6 @@ class VideoList extends Component {
               <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
             }
           </div>
-
-          <div className="col-md-7">
-            <div className="d-flex ">
-              {
-                (this.state.sex === "male") && <img src="../assets/img/man.png" width="100%" alt="" />
-              }
-              {
-                (this.state.sex === "female") && <img src="../assets/img/woman.png" width="100%" alt="" />
-              }
-            </div>
-          </div>
-
         </div>
 
         <div className="space-70 mb-5"></div>
@@ -1442,7 +1441,7 @@ class VideoList extends Component {
               <a className="nav-link disabled" id="profile-tab" data-toggle="tab" href="/#/VideoList" role="tab" aria-controls="profile" aria-selected="false">รวมคลิปออกกำลังกาย</a>
             </li> */}
           {
-            (this.props.user.fb_group && this.props.user.fb_group !== 404)  &&
+            (this.props.user.fb_group && this.props.user.fb_group !== 404) &&
             <div className="">
               <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
             </div>
