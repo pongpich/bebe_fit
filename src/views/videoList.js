@@ -516,11 +516,11 @@ class VideoList extends Component {
           <span className="mr-5" style={{ fontSize: "15px", color: "#F45197" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
-            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>
-              <div className="close-btn">X</div>
+            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>    
             </div>
             <div className="content">
-              <div className="row mt-4">
+            <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
+              <div className="row mt-4 body_part_header" >
                 {
                   (this.props.videos[0]) &&
                   <img className="body_part ml-5" src={`../assets/img/body_part/${this.props.videos[0].type.toLowerCase().split(" ").join("")}.png`}></img>
@@ -594,7 +594,6 @@ class VideoList extends Component {
                   ))
                 }
               </div>
-              <div className="close-btn2 mt-3" style={{ cursor: "pointer", color: "#F45197" }} onClick={() => this.closeTogglePopupSelectEditVideo()}><b>CLOSE</b></div>
             </div>
           </div>
 

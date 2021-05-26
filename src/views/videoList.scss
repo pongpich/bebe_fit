@@ -209,7 +209,7 @@
   border-radius: 25px;
   width:95%;
   height:87%;
-  overflow: auto;
+  overflow: hidden;
   z-index:2;
   padding:20px;
   box-sizing:border-box;
@@ -253,9 +253,13 @@ button {
 }
 
 .selectEditPlaylist {
+  position:absolute; 
+  top:100px; 
+  bottom:10px; 
   display: flex; 
   flex-wrap: wrap; 
   justify-content: center;
+  overflow: auto;
 }
 
 .playlistWrapper {
@@ -444,4 +448,3 @@ button {
     height: 110%;
   }
 }
-
