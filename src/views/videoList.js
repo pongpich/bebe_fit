@@ -34,7 +34,8 @@ class VideoList extends Component {
       selectChangeVideoList: [],
       spinnerRandomVideo: "default",
       weightInDailyWeighChallenge: "",
-      otherAttributesPage: "basicInfo"
+      otherAttributesPage: "basicInfo",
+      autoPlayCheck: false
     };
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
@@ -288,6 +289,14 @@ class VideoList extends Component {
     })
   }
 
+  autoPlayCheck() {
+    if (document.getElementById("autoPlayCheck").checked === true) {     
+      this.setState({ autoPlayCheck: true })
+    } else {
+      this.setState({ autoPlayCheck: false })
+    }
+  }
+
   toggleList() {
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
@@ -518,10 +527,10 @@ class VideoList extends Component {
           <span className="mr-5" style={{ fontSize: "15px", color: "#F45197" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
           <div className="popup" id="popupSelectEditVideo">
-            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>    
+            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>
             </div>
             <div className="content">
-            <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
+              <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
               <div className="row mt-4 body_part_header" >
                 {
                   (this.props.videos[0]) &&
@@ -657,7 +666,7 @@ class VideoList extends Component {
                           <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
                           <div className="videoThumb">
                             <div className="containerThumb">
-                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -1066,18 +1075,15 @@ class VideoList extends Component {
                       </div>
                     </div>
                     <div className="col-lg-6">
-                      {
-                        todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
-                        <div className="col-lg-12 col-md-3 col-12">
-                          <div
-                            className=""
-                            style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                            onClick={() => this.toggleList()} aria-hidden="true">
-                            <img className="mr-1" src={`../assets/img/play_button.png`} width="35px" height="35px" />
-                        เล่นต่อเนื่อง
-                      </div>
+                      <div className="col-lg-12 col-md-4 col-12">
+                        <div className="mt-1" style={{ float: "right" }} >
+                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold" }}>เล่นอัตโนมัติ</span>
+                          <label className="switch" onClick={() => this.autoPlayCheck()}>
+                            <input type="checkbox" className="danger" id="autoPlayCheck"></input>
+                            <span className="slider round"></span>
+                          </label>
                         </div>
-                      }
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1113,10 +1119,17 @@ class VideoList extends Component {
                       </div>
                       <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
-                          <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          {
+                            (this.state.autoPlayCheck) &&
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList()}></img>
+                          }
+                          {
+                            (!this.state.autoPlayCheck) &&
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          }
                           <div className="videoThumb">
                             <div className="containerThumb">
-                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -1260,22 +1273,18 @@ class VideoList extends Component {
                     <div className="col-lg-6">
                       <div className="">
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
-
                       </div>
                     </div>
                     <div className="col-lg-6">
-                      {
-                        todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
-                        <div className="col-lg-12 col-md-3 col-12">
-                          <div
-                            className=""
-                            style={{ fontSize: "18px", cursor: "pointer", float: "right", color: "#F45197" }}
-                            onClick={() => this.toggleListLastWeek()} aria-hidden="true">
-                            <img className="mr-1" src={`../assets/img/play_button.png`} width="35px" height="35px" />
-                        เล่นต่อเนื่อง
-                      </div>
+                      <div className="col-lg-12 col-md-4 col-12">
+                        <div className="mt-1" style={{ float: "right" }} >
+                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold" }}>เล่นอัตโนมัติ</span>
+                          <label className="switch" onClick={() => this.autoPlayCheck()}>
+                            <input type="checkbox" className="danger" id="autoPlayCheck"></input>
+                            <span className="slider round"></span>
+                          </label>
                         </div>
-                      }
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1311,10 +1320,17 @@ class VideoList extends Component {
                       </div>
                       <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
                         <div className="videoItem border shadow">
-                          <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          {
+                            (this.state.autoPlayCheck) &&
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek()}></img>
+                          }
+                          {
+                            (!this.state.autoPlayCheck) &&
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          }
                           <div className="videoThumb">
                             <div className="containerThumb">
-                              <img className="img-fluid" onClick={() => this.toggle(item)} src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
                               {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
