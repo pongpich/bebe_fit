@@ -297,10 +297,10 @@ class VideoList extends Component {
     }
   }
 
-  toggleList() {
+  toggleList(index) {
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
-    const selectedVDO = todayExercise.find(element => (element.duration !== element.play_time));
+    const selectedVDO = todayExercise.find(element => (element.order === index));
     if (selectedVDO) {
       this.setState({
         selectedVDO
@@ -313,10 +313,10 @@ class VideoList extends Component {
     }
   }
 
-  toggleListLastWeek() {
+  toggleListLastWeek(index) {
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
-    const selectedVDO = todayExercise.find(element => (element.duration !== element.play_time));
+    const selectedVDO = todayExercise.find(element => (element.order === index));
     if (selectedVDO) {
       this.setState({
         selectedVDO
@@ -366,8 +366,9 @@ class VideoList extends Component {
     }
 
     const nextVDO = todayExercise.find(
-      element => (element.duration !== element.play_time) && (element.order > selectedVDO.order)
+      element => (element.order > selectedVDO.order)
     );
+    
     if (nextVDO) {
       this.setState({
         selectedVDO: nextVDO
@@ -1121,7 +1122,7 @@ class VideoList extends Component {
                         <div className="videoItem border shadow">
                           {
                             (this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList()}></img>
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList(index)}></img>
                           }
                           {
                             (!this.state.autoPlayCheck) &&
@@ -1322,7 +1323,7 @@ class VideoList extends Component {
                         <div className="videoItem border shadow">
                           {
                             (this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek()}></img>
+                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
                           }
                           {
                             (!this.state.autoPlayCheck) &&
