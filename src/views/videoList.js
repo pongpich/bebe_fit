@@ -290,7 +290,7 @@ class VideoList extends Component {
   }
 
   autoPlayCheck() {
-    if (document.getElementById("autoPlayCheck").checked === true) {     
+    if (document.getElementById("autoPlayCheck").checked === true) {
       this.setState({ autoPlayCheck: true })
     } else {
       this.setState({ autoPlayCheck: false })
@@ -368,7 +368,7 @@ class VideoList extends Component {
     const nextVDO = todayExercise.find(
       element => (element.order > selectedVDO.order)
     );
-    
+
     if (nextVDO) {
       this.setState({
         selectedVDO: nextVDO
@@ -664,7 +664,17 @@ class VideoList extends Component {
                     <div className="row" key={index}>
                       <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
                         <div className="videoItem border shadow">
-                          <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          {
+                            (this.state.spinnerRandomVideo === "loading") ?
+                              (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
+                                <div className="play_button">
+                                  <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                </div>
+                                :
+                                <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                              :
+                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                          }
                           <div className="videoThumb">
                             <div className="containerThumb">
                               <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
