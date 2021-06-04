@@ -148,7 +148,7 @@ class App extends Component {
       <div className="App">
         {this.renderTopbar()}
         {this.renderNavbar()}
-        {this.renderHeader()}
+        {this.props.user && this.renderHeader()}
 
         <Switch>
           <Route exact path="/">
