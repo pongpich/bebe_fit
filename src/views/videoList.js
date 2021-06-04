@@ -224,6 +224,7 @@ class VideoList extends Component {
       selectChangeVideoList: []
     })
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
+    document.body.style.overflow = "auto";
   }
 
   exerciseDaySelection(focusDay) {
