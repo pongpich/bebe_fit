@@ -146,7 +146,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {this.renderTopbar()}
+        {/* {this.renderTopbar()} */}
         {this.renderNavbar()}
         {this.props.user && this.renderHeader()}
 
