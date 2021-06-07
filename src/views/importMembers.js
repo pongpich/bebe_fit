@@ -14,7 +14,12 @@ class ImportMembers extends Component {
       selectedStartDate: null,
       selectedExpireDate: null,
       selectedFile: null,
-      statusSubmit: "default"
+      statusSubmitImportMembers: "default",
+      statusSubmitAddMember: "default",
+      email: "",
+      fullname: "",
+      phone: "",
+      fb_group: 404
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
   }
@@ -28,6 +33,12 @@ class ImportMembers extends Component {
     } else {
       this.props.history.push('/login');
     }
+  }
+
+  handleChange(event) {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
   }
 
   fileSelectedHandler = event => {
@@ -66,12 +77,12 @@ class ImportMembers extends Component {
     }
   }
 
-  onSubmit() {
+  onSubmitImportMembers() {
     const { members, selectedStartDate, selectedExpireDate, selectedFile } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
-      statusSubmit: "default"
+      statusSubmitImportMembers: "default"
     })
 
     if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
@@ -84,10 +95,40 @@ class ImportMembers extends Component {
       }, delayInMilliseconds);
     } else {
       this.setState({
-        statusSubmit: "fail"
+        statusSubmitImportMembers: "fail"
       })
     }
 
+  }
+
+  onSubmitAddMember() {
+    const { selectedStartDate, selectedExpireDate, email, fullname, phone, fb_group } = this.state;
+    const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
+    const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
+    this.setState({
+      statusSubmitAddMember: "default"
+    })
+    const full_name = (fullname) ? (fullname.trim()).split(" ") : "";
+    const first_name = full_name[0] ? full_name[0] : "";
+    const last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1] : "";
+    const members = [{ email: email, first_name: first_name, last_name: last_name, phone: phone, fb_group: fb_group }];
+
+    if (email && fullname && phone && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
+      console.log("members : ", members);
+      console.log("start_date : ", start_date);
+      console.log("expire_date : ", expire_date);
+      this.props.importMembers(members, start_date, expire_date);
+      document.getElementById("popupSuccessSubmit").classList.toggle("active");
+      document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+      var delayInMilliseconds = 1750; //1.75 second
+      setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+        this.closePopupSuccessSubmit();
+      }, delayInMilliseconds);
+    } else {
+      this.setState({
+        statusSubmitAddMember: "fail"
+      })
+    }
   }
 
 
@@ -121,8 +162,90 @@ class ImportMembers extends Component {
     )
   }
 
-  render() {
-    const { selectedStartDate, selectedExpireDate, statusSubmit } = this.state;
+  renderAddMember() {
+    const { selectedStartDate, selectedExpireDate, statusSubmitAddMember } = this.state;
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">เพิ่มสมาชิก</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} /><br></br>
+            <label for="fname">Fullname: </label>
+            <input type="text" id="fullname" name="fullname" value={this.state.fullname} onChange={(event) => this.handleChange(event)} /><br></br>
+            <label for="fname">Phone: </label>
+            <input type="text" id="phone" name="phone" value={this.state.phone} onChange={(event) => this.handleChange(event)} /><br></br>
+            <label for="fname">fb_group: </label>
+            <input type="text" id="fb_group" name="fb_group" value={this.state.fb_group} onChange={(event) => this.handleChange(event)} /><br></br>
+            <section>
+              <div style={{ float: "left" }} className="mr-5">
+                <label style={{ display: "block" }} className="h5">วันเริ่มต้น</label>
+                <DatePicker
+                  style={{ display: "block" }}
+                  dateFormat='yyyy/MM/dd'
+                  selected={selectedStartDate}
+                  onChange={date => this.setState({ selectedStartDate: date })}
+                  isClearable
+                  showYearDropdown
+                  showMonthDropdown
+                  scrollableMonthYearDropdown
+                />
+              </div>
+              <div style={{ float: "left" }}>
+                <label style={{ display: "block" }} className="h5">วันสิ้นสุด</label>
+                <DatePicker
+                  style={{ display: "block" }}
+                  dateFormat='yyyy/MM/dd'
+                  selected={selectedExpireDate}
+                  onChange={date => this.setState({ selectedExpireDate: date })}
+                  isClearable
+                  showYearDropdown
+                  showMonthDropdown
+                  scrollableMonthYearDropdown
+                />
+              </div>
+            </section>
+          </div>
+          {
+            (statusSubmitAddMember === "fail") &&
+            <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>**กรุณากรอกข้อมูลให้ครบถ้วน</h6></small>
+          }
+        </div>
+
+
+        <button
+          type="button"
+          className="btn btn-danger ml-auto col-lg-1 col-md-6 "
+          onClick={() => this.setState({
+            members: [],
+            selectedStartDate: null,
+            selectedExpireDate: null,
+            statusSubmitImportMembers: "default",
+            statusSubmitAddMember: "default",
+            email: "",
+            fullname: "",
+            phone: "",
+            fb_group: 404
+          })}
+        >
+          ยกเลิก
+        </button>
+        <button
+          type="button"
+          className="btn btn-success col-lg-1 col-md-6 "
+          onClick={() => this.onSubmitAddMember()}
+        >
+          ยืนยัน
+        </button>
+      </div>
+    )
+  }
+
+  renderImportMembers() {
+    const { selectedStartDate, selectedExpireDate, statusSubmitImportMembers } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -197,7 +320,7 @@ class ImportMembers extends Component {
             </section>
           </div>
           {
-            (statusSubmit === "fail") &&
+            (statusSubmitImportMembers === "fail") &&
             <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>**กรุณากรอกข้อมูลให้ครบถ้วน</h6></small>
           }
         </div>
@@ -217,10 +340,19 @@ class ImportMembers extends Component {
         <button
           type="button"
           className="btn btn-success col-lg-1 col-md-6 "
-          onClick={() => this.onSubmit()}
+          onClick={() => this.onSubmitImportMembers()}
         >
           ยืนยัน
         </button>
+      </div>
+    )
+  }
+
+  render() {
+    return (
+      <div>
+        {this.renderImportMembers()}
+        {this.renderAddMember()}
       </div>
     )
   }
