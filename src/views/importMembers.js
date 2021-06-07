@@ -47,7 +47,7 @@ class ImportMembers extends Component {
           console.log("data : ", data);
           for (var i = 1; i <= data.length - 1; i++) { // i = 1 เพราะว่า rowที่0 เป็นหัวcolumn
             var member = { email: "", first_name: "", last_name: "", phone: "", fb_group: 404 }; // fb_group = 404 คือ Admin ไม่ใส่ fb_group ตอน Import
-            member.email = (data[i][0]) ? data[i][0].trim() : "";
+            member.email = (data[i][0]) ? (data[i][0].trim()).split(" ").join("") : "";
             const full_name = (data[i][1]) ? (data[i][1].trim()).split(" ") : "";
             member.first_name = full_name[0] ? full_name[0] : "";
             member.last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1] : "";
