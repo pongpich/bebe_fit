@@ -27,8 +27,21 @@ export const types = {
   RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL",
   IMPORT_MEMBERS: "IMPORT_MEMBERS",
   GET_GROUP_ID: "GET_GROUP_ID",
-  GET_GROUP_ID_SUCCESS: "GET_GROUP_ID_SUCCESS"
+  GET_GROUP_ID_SUCCESS: "GET_GROUP_ID_SUCCESS",
+  CHANGE_EMAIL: "CHANGE_EMAIL",
+  CHANGE_EMAIL_SUCCESS: "CHANGE_EMAIL_SUCCESS"
 }
+
+export const changeEmail = (
+  email,
+  new_email
+) => ({
+  type: types.CHANGE_EMAIL,
+  payload: {
+    email,
+    new_email
+  }
+})
 
 export const getGroupID = (
   user_id
@@ -290,6 +303,23 @@ const getExpireDateSagaAsync = async (
   }
 }
 
+const changeEmailSagaAsync = async (
+  email,
+  new_email
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/changeEmail", {
+      body: {
+        email,
+        new_email
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const getGroupIDSagaAsync = async (
   user_id
 ) => {
@@ -543,6 +573,31 @@ function* getGroupIDSaga({ payload }) {
   }
 }
 
+function* changeEmailSaga({ payload }) {
+  const {
+    email,
+    new_email
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      changeEmailSagaAsync,
+      email,
+      new_email
+    );
+    yield put({
+      type: types.CHANGE_EMAIL_SUCCESS,
+      payload: apiResult.results.message
+    })
+    yield put({
+      type: types.CHANGE_EMAIL_FAIL,
+      payload: apiResult.results.message
+    })
+  } catch (error) {
+    console.log("error from changeEmailSaga :", error);
+  }
+}
+
 function* resetPasswordSaga({ payload }) {
   const {
     email,
@@ -661,6 +716,10 @@ export function* watchGetGroupID() {
   yield takeEvery(types.GET_GROUP_ID, getGroupIDSaga);
 }
 
+export function* watchChangeEmail() {
+  yield takeEvery(types.CHANGE_EMAIL, changeEmailSaga);
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -675,6 +734,7 @@ export function* saga() {
     fork(watchResetPassword),
     fork(watchImportMembers),
     fork(watchGetGroupID),
+    fork(watchChangeEmail)
   ]);
 }
 
@@ -687,7 +747,8 @@ const INIT_STATE = {
   status: "default",
   loading: false,
   statusRegister: "default",
-  statusResetPassword: "default"
+  statusResetPassword: "default",
+  statusChangeEmail: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -759,6 +820,11 @@ export function reducer(state = INIT_STATE, action) {
           expire_date: action.payload
         }
       };
+    case types.CHANGE_EMAIL_SUCCESS:
+      return {
+        ...state,
+        statusChangeEmail: action.payload
+      }
     case types.LOGOUT_USER:
       return INIT_STATE;
     default:

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { importMembers } from "../redux/auth";
+import { importMembers, changeEmail } from "../redux/auth";
 import { selectProgramInWeek, deleteProgramInWeek } from "../redux/exerciseVideos";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -18,6 +18,8 @@ class ImportMembers extends Component {
       statusSubmitImportMembers: "default",
       statusSubmitAddMember: "default",
       email: "",
+      new_email: "",
+      statusChangeEmail: "default",
       fullname: "",
       phone: "",
       fb_group: 404
@@ -169,6 +171,50 @@ class ImportMembers extends Component {
         <div className="overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
         <div className="popupSuccessSubmit" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
           <center><h2 style={{ color: "green" }}><i className="fa fa-check fa-lg" > Success</i></h2></center>
+        </div>
+      </div>
+    )
+  }
+
+  changeEmail(email, new_email) {
+    this.props.changeEmail(email, new_email);
+    var delayInMilliseconds = 1300; //1.3 second
+    setTimeout(() => { // หน่วงเวลา แล้วค่อย setState 
+      this.setState({
+        statusChangeEmail: this.props.statusChangeEmail
+      })
+    }, delayInMilliseconds);
+  }
+
+  renderChangeEmail() {
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">เปลี่ยนอีเมล</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
+            <br></br>
+            {
+              (this.state.statusChangeEmail === "email_incorrect") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลไม่ถูกต้อง</h6></small>
+            }
+            <label for="fname">New Email: </label>
+            <input type="text" id="new_email" name="new_email" value={this.state.new_email} onChange={(event) => this.handleChange(event)} />
+            {
+              (this.state.statusChangeEmail === "email_exist") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อีเมลนี้มีในระบบอยู่แล้ว</h6></small>
+            }
+            {
+              (this.state.statusChangeEmail === "success") &&
+              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "green" }}>Success</h6></small>
+            }
+            <br></br>
+            <button type="button" onClick={() => this.changeEmail(this.state.email, this.state.new_email)}>ยืนยัน</button>
+          </div>
         </div>
       </div>
     )
@@ -389,18 +435,19 @@ class ImportMembers extends Component {
         {this.renderImportMembers()}
         {this.renderAddMember()}
         {this.renderDeleteProgramInWeek()}
+        {this.renderChangeEmail()}
       </div>
     )
   }
 }
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
-  const { user, status } = authUser;
+  const { user, status, statusChangeEmail } = authUser;
   const { programInWeek } = exerciseVideos;
-  return { user, status, programInWeek };
+  return { user, status, programInWeek, statusChangeEmail };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail };
 
 export default connect(
   mapStateToProps,
