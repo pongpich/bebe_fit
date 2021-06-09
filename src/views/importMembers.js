@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers } from "../redux/auth";
+import { selectProgramInWeek, deleteProgramInWeek } from "../redux/exerciseVideos";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./importMembers.scss";
@@ -131,6 +132,17 @@ class ImportMembers extends Component {
     }
   }
 
+  deleteProgramInWeek(email) {
+    this.props.deleteProgramInWeek(email);
+    document.getElementById("popupSuccessSubmit").classList.toggle("active");
+    document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+    var delayInMilliseconds = 1750; //1.75 second
+    setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+      this.props.selectProgramInWeek(email);
+      this.closePopupSuccessSubmit();
+    }, delayInMilliseconds);
+  }
+
 
   formatDate(date) {
     var d = new Date(date),
@@ -157,6 +169,29 @@ class ImportMembers extends Component {
         <div className="overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
         <div className="popupSuccessSubmit" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
           <center><h2 style={{ color: "green" }}><i className="fa fa-check fa-lg" > Success</i></h2></center>
+        </div>
+      </div>
+    )
+  }
+
+  renderDeleteProgramInWeek() {
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">Program In Week</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
+            <button type="button" onClick={() => this.props.selectProgramInWeek(this.state.email)}>ค้นหา</button>
+            <br></br>
+            <textarea id="w3review" name="w3review" rows="10" cols="100"
+              value={this.props.programInWeek}>
+            </textarea>
+            <button type="button" onClick={() => this.deleteProgramInWeek(this.state.email)}>ลบ</button>
+          </div>
         </div>
       </div>
     )
@@ -353,17 +388,19 @@ class ImportMembers extends Component {
       <div>
         {this.renderImportMembers()}
         {this.renderAddMember()}
+        {this.renderDeleteProgramInWeek()}
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ authUser }) => {
+const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user, status } = authUser;
-  return { user, status };
+  const { programInWeek } = exerciseVideos;
+  return { user, status, programInWeek };
 };
 
-const mapActionsToProps = { importMembers };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek };
 
 export default connect(
   mapStateToProps,

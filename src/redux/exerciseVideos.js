@@ -29,8 +29,25 @@ export const types = {
   SELECT_CHANGE_VIDEO_SUCCESS: "SELECT_CHANGE_VIDEO_SUCCESS",
   SELECT_CHANGE_VIDEO_FAIL: "SELECT_CHANGE_VIDEO_FAIL",
   RESET_STATUS: "RESET_STATUS",
+  SELECT_PROGRAM_IN_WEEK: "SELECT_PROGRAM_IN_WEEK",
+  SELECT_PROGRAM_IN_WEEK_SUCCESS: "SELECT_PROGRAM_IN_WEEK_SUCCESS",
+  DELETE_PROGRAM_IN_WEEK: "DELETE_PROGRAM_IN_WEEK",
   CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST"
 }
+
+export const selectProgramInWeek = (email) => ({
+  type: types.SELECT_PROGRAM_IN_WEEK,
+  payload: {
+    email
+  }
+});
+
+export const deleteProgramInWeek = (email) => ({
+  type: types.DELETE_PROGRAM_IN_WEEK,
+  payload: {
+    email
+  }
+});
 
 export const createCustomWeekForUser = (user_id, weight, start_date, expire_date, offset) => ({
   type: types.CREATE_CUSTOM_WEEK_FOR_USER,
@@ -330,6 +347,36 @@ const updateBodyInfoSagaAsync = async (
   }
 }
 
+const selectProgramInWeekSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/selectProgramInWeek", {
+      queryStringParameters: {
+        email
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const deleteProgramInWeekSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/deleteProgramInWeek", {
+      body: {
+        email
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const createCustomWeekForUserSagaAsync = async (
   user_id,
   weight,
@@ -476,6 +523,42 @@ function* updateBodyInfoSaga({ payload }) {
   }
 }
 
+function* selectProgramInWeekSaga({ payload }) {
+  const {
+    email
+  } = payload
+  try {
+    const apiResult = yield call(
+      selectProgramInWeekSagaAsync,
+      email
+    );
+
+    yield put({
+      type: types.SELECT_PROGRAM_IN_WEEK_SUCCESS,
+      payload: apiResult.results
+    });
+
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* deleteProgramInWeekSaga({ payload }) {
+  const {
+    email
+  } = payload
+  try {
+    const apiResult = yield call(
+      deleteProgramInWeekSagaAsync,
+      email
+    );
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* updatePlaytimeSaga({ payload }) {
   const {
     user_id,
@@ -600,7 +683,7 @@ function* videoListForUserLastWeekSaga({ payload }) {
           type: types.GET_LASTWEEK,
           payload: lastweek
         })
-        
+
       } else {
         yield put({ // lastweek <= 0 กำหนด isFirstWeek = true
           type: types.VIDEO_LIST_FOR_USER_LASTWEEK_FAIL
@@ -712,6 +795,14 @@ export function* watchUpdateBodyInfo() {
   yield takeEvery(types.UPDATE_BODY_INFO, updateBodyInfoSaga)
 }
 
+export function* watchSelectProgramInWeek() {
+  yield takeEvery(types.SELECT_PROGRAM_IN_WEEK, selectProgramInWeekSaga)
+}
+
+export function* watchDeleteProgramInWeek() {
+  yield takeEvery(types.DELETE_PROGRAM_IN_WEEK, deleteProgramInWeekSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
@@ -722,7 +813,9 @@ export function* saga() {
     fork(watchRandomVideo),
     fork(watchSelectChangeVideo),
     fork(watchCreateCustomWeekForUser),
-    fork(watchUpdateBodyInfo)
+    fork(watchUpdateBodyInfo),
+    fork(watchSelectProgramInWeek),
+    fork(watchDeleteProgramInWeek)
   ]);
 }
 
@@ -740,7 +833,8 @@ const INIT_STATE = {
   video: {},
   videos: [],
   statusVideoList: "default",
-  statusUpdateBodyInfo: "default"
+  statusUpdateBodyInfo: "default",
+  programInWeek: []
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -816,6 +910,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         videos: action.payload
+      };
+    case types.SELECT_PROGRAM_IN_WEEK_SUCCESS:
+      return {
+        ...state,
+        programInWeek: JSON.stringify(action.payload)
       };
     case types.RESET_STATUS:
       return {
