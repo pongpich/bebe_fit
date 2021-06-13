@@ -24,6 +24,8 @@ import Challenges from "./views/challenges";
 
 import { awsConfig } from "./constants/defaultValues";
 
+import ReactGa from 'react-ga';
+
 Amplify.configure(awsConfig);
 
 class App extends Component {
