@@ -398,13 +398,13 @@ class VideoList extends Component {
   onVideoTimeUpdate(compName = "video") {
     var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
-    if (video.currentTime >= (video.duration * 0.99) && (selectedVDO.duration !== selectedVDO.play_time)) {
+    if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
       const user_id = this.props.user.user_id;
       const start_date = this.props.user.start_date;
       const expire_date = this.props.user.expire_date;
       const day_number = focusDay;
       const video_number = selectedVDO.order;
-      const play_time = selectedVDO.duration;
+      const play_time = selectedVDO.duration; //ถ้าแก้เป็นแบบยิงถี่ๆ video.currentTime
       const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
       const tempExerciseVideo = [...this.props.exerciseVideo];
       if (lastWeekVDO_click === "show") {
