@@ -11,6 +11,8 @@ export const localeOptions = [
   { id: "th", name: "ไทย" },
   { id: "en", name: "English" },
 ];
+export const completeVideoPlayPercentage = 0.9;
+export const minimumVideoPlayPercentage = 0.2;
 
 export const searchPath = "/app/pages/search";
 export const servicePath = "https://api.planforfit.com/actdev";

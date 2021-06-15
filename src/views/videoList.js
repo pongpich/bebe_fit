@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import { updateProfile, logoutUser } from "../redux/auth";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
-
+import { completeVideoPlayPercentage, minimumVideoPlayPercentage } from "../constants/defaultValues";
+import { convertSecondsToMinutes, convertFormatTime } from "../helpers/utils";
 import "./videoList.scss";
 
 
@@ -396,32 +397,40 @@ class VideoList extends Component {
   }
 
   onVideoTimeUpdate(compName = "video") {
-    var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
-    if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
-      const user_id = this.props.user.user_id;
-      const start_date = this.props.user.start_date;
-      const expire_date = this.props.user.expire_date;
-      const day_number = focusDay;
-      const video_number = selectedVDO.order;
-      const play_time = selectedVDO.duration; //ถ้าแก้เป็นแบบยิงถี่ๆ video.currentTime
-      const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
-      const tempExerciseVideo = [...this.props.exerciseVideo];
-      if (lastWeekVDO_click === "show") {
-        tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time };
-      } else {
-        tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
-      }
-      const newVideo = { ...selectedVDO, play_time };
-      this.setState({
-        selectedVDO: newVideo
-      });
-      if (lastWeekVDO_click === "show") {
-        this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideoLastWeek);
-      } else {
-        this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, tempExerciseVideo);
-      }
+    var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
+    if (!video || !selectedVDO) { return }
+    if (
+      !video.duration ||
+      video.currentTime / video.duration < minimumVideoPlayPercentage ||
+      selectedVDO.play_time / selectedVDO.duration >= completeVideoPlayPercentage) {
+      return
     }
+    //if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
+    const user_id = this.props.user.user_id;
+    const start_date = this.props.user.start_date;
+    const expire_date = this.props.user.expire_date;
+    const day_number = focusDay;
+    const video_number = selectedVDO.order;
+    const play_time = video.currentTime;
+    const duration = video.duration;
+    const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
+    const tempExerciseVideo = [...this.props.exerciseVideo];
+    if (lastWeekVDO_click === "show") {
+      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time };
+    } else {
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
+    }
+    const newVideo = { ...selectedVDO, play_time };
+    this.setState({
+      selectedVDO: newVideo
+    });
+    if (lastWeekVDO_click === "show") {
+      this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideoLastWeek);
+    } else {
+      this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo);
+    }
+    //}
   }
 
   onUpdateBasicInfo(event) {
@@ -1001,11 +1010,16 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
+    if(totalMinute > 150) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute=Math.floor(sumMinute / 60);
+      totalSecond=(sumMinute%60);
+    }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
       timesExercise = `${totalMinute}:${totalSecond}`;
     }
+  
 
     return (
       <div className="card-body d-flex justify-content-center">
@@ -1075,7 +1089,7 @@ class VideoList extends Component {
                       <div className="">
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                         {
-                          todayExercise && (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].play_time) !== (todayExercise[todayExercise.length - 1] && todayExercise[todayExercise.length - 1].duration) &&
+                          todayExercise && (todayExercise[todayExercise.length - 1] && !(todayExercise[todayExercise.length - 1].play_time / todayExercise[todayExercise.length - 1].duration >= completeVideoPlayPercentage)) &&
                           <div
                             className="mb-3"
                             style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
@@ -1103,46 +1117,48 @@ class VideoList extends Component {
               <tbody>
                 {
                   (this.props.exerciseVideo) &&
-                  (todayExercise.map((item, index) => (
-                    <div className="row" key={index}>
-                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
-                        {
-                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
-                        }
-                        {
-                          (item.play_time === item.duration) ?
-                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
-                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
-                            </span>
-                            :
-                            <span className="dot">
-                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
-                            </span>
-                        }
-                        {
-                          (index === todayExercise.length - 1) ?
-                            <div className="vl" style={{ height: "0%" }}></div>
-                            :
-                            <div className="vl"></div>
-                        }
-                        {
-                          (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
-                        }
-                      </div>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
-                        <div className="videoItem border shadow">
+                  (todayExercise.map((item, index) => {
+                    const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                    return (
+                      <div className="row" key={index}>
+                        <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
                           {
-                            (this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList(index)}></img>
+                            (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
                           }
                           {
-                            (!this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                            (item.play_time && item.duration && item.play_time / item.duration >= completeVideoPlayPercentage) ?
+                              <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                                <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                              </span>
+                              :
+                              <span className="dot">
+                                <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                              </span>
                           }
-                          <div className="videoThumb">
-                            <div className="containerThumb">
-                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                              {/* <div className="overlay" onClick={() => this.toggle(item)}>
+                          {
+                            (index === todayExercise.length - 1) ?
+                              <div className="vl" style={{ height: "0%" }}></div>
+                              :
+                              <div className="vl"></div>
+                          }
+                          {
+                            (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                          }
+                        </div>
+                        <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
+                          <div className="videoItem border shadow">
+                            {
+                              (this.state.autoPlayCheck) &&
+                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList(index)}></img>
+                            }
+                            {
+                              (!this.state.autoPlayCheck) &&
+                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                            }
+                            <div className="videoThumb">
+                              <div className="containerThumb">
+                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
                                   <h6>
@@ -1150,45 +1166,38 @@ class VideoList extends Component {
                                   </h6>
                                 </div>
                               </div> */}
+                              </div>
                             </div>
-                          </div>
-                          <div className="videoDetail">
-                            <div className="videoDuration mt-3">
-                              <h6>
-                                <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                {(item.duration + "").split(".")[0]}:
-                                {
-                                  ((item.duration + "").split(".")[1]) ?
-                                    ((item.duration + "").split(".")[1].length < 2) ?
-                                      ((item.duration + "").split(".")[1]) + "0"
-                                      :
-                                      ((item.duration + "").split(".")[1])
-                                    : "00"
-                                } นาที
+                            <div className="videoDetail">
+                              <div className="videoDuration mt-3">
+                                <h6>
+                                  <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
+                                  {minuteLabel} นาที
                               </h6>
-                            </div>
-                            <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
-                            <div className="videoName">
-                              <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 17) ?
-                                <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
-                                :
-                                <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                              </div>
+                              <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
+                              <div className="videoName">
+                                <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
+                                {(item.name.length < 17) ?
+                                  <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
+                                  :
+                                  <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                }
+                              </div>
+                              <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
                               }
                             </div>
-                            <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
-                            }
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
-                            }
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                  )))
+                    )
+                  }))
                 }
               </tbody>
             </table>
@@ -1215,6 +1224,10 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
+    if(totalMinute > 150) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute=Math.floor(sumMinute / 60);
+      totalSecond=(sumMinute%60);
+    }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
@@ -1304,46 +1317,48 @@ class VideoList extends Component {
               <tbody>
                 {
                   (this.props.exerciseVideoLastWeek) &&
-                  (todayExercise.map((item, index) => (
-                    <div className="row" key={index}>
-                      <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
-                        {
-                          (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
-                        }
-                        {
-                          (item.play_time === item.duration) ?
-                            <span className="dot" style={{ backgroundColor: "#F45197" }}>
-                              <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
-                            </span>
-                            :
-                            <span className="dot">
-                              <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
-                            </span>
-                        }
-                        {
-                          (index === todayExercise.length - 1) ?
-                            <div className="vl" style={{ height: "0%" }}></div>
-                            :
-                            <div className="vl"></div>
-                        }
-                        {
-                          (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
-                        }
-                      </div>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
-                        <div className="videoItem border shadow">
+                  (todayExercise.map((item, index) => {
+                    const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                    return (
+                      <div className="row" key={index}>
+                        <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
                           {
-                            (this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
+                            (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
                           }
                           {
-                            (!this.state.autoPlayCheck) &&
-                            <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                            (item.play_time && item.duration && item.play_time / item.duration >= completeVideoPlayPercentage) ?
+                              <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                                <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                              </span>
+                              :
+                              <span className="dot">
+                                <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                              </span>
                           }
-                          <div className="videoThumb">
-                            <div className="containerThumb">
-                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                              {/* <div className="overlay" onClick={() => this.toggle(item)}>
+                          {
+                            (index === todayExercise.length - 1) ?
+                              <div className="vl" style={{ height: "0%" }}></div>
+                              :
+                              <div className="vl"></div>
+                          }
+                          {
+                            (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                          }
+                        </div>
+                        <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
+                          <div className="videoItem border shadow">
+                            {
+                              (this.state.autoPlayCheck) &&
+                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
+                            }
+                            {
+                              (!this.state.autoPlayCheck) &&
+                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                            }
+                            <div className="videoThumb">
+                              <div className="containerThumb">
+                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
                                   <h6>
@@ -1351,46 +1366,38 @@ class VideoList extends Component {
                                   </h6>
                                 </div>
                               </div> */}
+                              </div>
                             </div>
-                          </div>
-                          <div className="videoDetail">
-                            <div className="videoDuration mt-3">
-                              <h6>
-                                <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                {(item.duration + "").split(".")[0]}:
-                                {
-                                  ((item.duration + "").split(".")[1]) ?
-                                    ((item.duration + "").split(".")[1].length < 2) ?
-                                      ((item.duration + "").split(".")[1]) + "0"
-                                      :
-                                      ((item.duration + "").split(".")[1])
-                                    : "00"
-                                } นาที
+                            <div className="videoDetail">
+                              <div className="videoDuration mt-3">
+                                <h6>
+                                  <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
+                                  {minuteLabel}นาที
                               </h6>
-                            </div>
-                            <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
-                            <div className="videoName">
-                              <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 17) ?
-                                <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
-                                :
-                                <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                              </div>
+                              <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
+                              <div className="videoName">
+                                <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
+                                {(item.name.length < 17) ?
+                                  <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
+                                  :
+                                  <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                }
+                              </div>
+                              <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
                               }
-                            </div>
-                            <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
-                            }
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
-                            }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                              }
 
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                  )))
+                    )}))
                 }
               </tbody>
             </table>

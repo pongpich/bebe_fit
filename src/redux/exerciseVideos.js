@@ -107,7 +107,7 @@ export const updatePlaylist = (user_id, start_date, day_number, playlist, exerci
   }
 })
 
-export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, exerciseVideo) => ({
+export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
@@ -116,11 +116,12 @@ export const updatePlaytime = (user_id, start_date, expire_date, day_number, vid
     day_number,
     video_number,
     play_time,
+    duration,
     exerciseVideo
   }
 })
 
-export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, exerciseVideo) => ({
+export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME_LASTWEEK,
   payload: {
     user_id,
@@ -129,6 +130,7 @@ export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_num
     day_number,
     video_number,
     play_time,
+    duration,
     exerciseVideo
   }
 })
@@ -196,7 +198,8 @@ const updatePlaytimeSagaAsync = async (
   expire_date,
   day_number,
   video_number,
-  play_time
+  play_time,
+  duration
 ) => {
   try {
     const apiResult = await API.put("bebe", "/play_time", {
@@ -206,7 +209,8 @@ const updatePlaytimeSagaAsync = async (
         expire_date,
         day_number,
         video_number,
-        play_time
+        play_time,
+        duration
       }
     });
     return apiResult;
@@ -221,7 +225,8 @@ const updatePlaytimeLastWeekSagaAsync = async (
   expire_date,
   day_number,
   video_number,
-  play_time
+  play_time,
+  duration
 ) => {
   try {
     const apiResult = await API.put("bebe", "/play_time_lastweek", {
@@ -231,7 +236,8 @@ const updatePlaytimeLastWeekSagaAsync = async (
         expire_date,
         day_number,
         video_number,
-        play_time
+        play_time,
+        duration
       }
     });
     return apiResult;
@@ -567,6 +573,7 @@ function* updatePlaytimeSaga({ payload }) {
     day_number,
     video_number,
     play_time,
+    duration,
     exerciseVideo
   } = payload
   try {
@@ -577,7 +584,8 @@ function* updatePlaytimeSaga({ payload }) {
       expire_date,
       day_number,
       video_number,
-      play_time
+      play_time,
+      duration
     );
     let keyDay = "";
     switch (day_number) {
@@ -614,6 +622,7 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
     day_number,
     video_number,
     play_time,
+    duration,
     exerciseVideo
   } = payload
   try {
@@ -624,7 +633,8 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
       expire_date,
       day_number,
       video_number,
-      play_time
+      play_time,
+      duration,
     );
     let keyDay = "";
     switch (day_number) {
