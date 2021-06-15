@@ -69,7 +69,7 @@ class Challenges extends Component {
       const dailyExercises = activites[dayIndex];
       for (let exIndex = 0; exIndex < dailyExercises.length; exIndex++) {
         const exercise = dailyExercises[exIndex];
-        if (parseFloat(exercise.play_time) !== parseFloat(exercise.duration)) {
+        if (parseFloat(exercise.play_time)/parseFloat(exercise.duration) < 0.9) {
           //isCompleted = false;
           count = count - 1;
           break;
