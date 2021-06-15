@@ -525,6 +525,10 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
+    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute=Math.floor(sumMinute / 60);
+      totalSecond=(sumMinute%60);
+    }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
@@ -670,7 +674,9 @@ class VideoList extends Component {
               </div>
               <tbody>
                 {
-                  tempPlaylist.map((item, index) => (
+                  tempPlaylist.map((item, index) => {
+                  const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                  return(
                     <div className="row" key={index}>
                       <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
                         <div className="videoItem border shadow">
@@ -702,15 +708,7 @@ class VideoList extends Component {
                             <div className="videoDuration mt-3">
                               <h6>
                                 <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                {(item.duration + "").split(".")[0]}:
-                                {
-                                  ((item.duration + "").split(".")[1]) ?
-                                    ((item.duration + "").split(".")[1].length < 2) ?
-                                      ((item.duration + "").split(".")[1]) + "0"
-                                      :
-                                      ((item.duration + "").split(".")[1])
-                                    : "00"
-                                } นาที
+                                {minuteLabel} นาที
                               </h6>
                             </div>
                             <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
@@ -747,7 +745,7 @@ class VideoList extends Component {
                         </div>
                       }
                     </div>
-                  ))
+                  )})
                 }
               </tbody>
             </table>
@@ -1010,7 +1008,7 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if(totalMinute > 150) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
       totalMinute=Math.floor(sumMinute / 60);
       totalSecond=(sumMinute%60);
     }
@@ -1224,7 +1222,7 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if(totalMinute > 150) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
       totalMinute=Math.floor(sumMinute / 60);
       totalSecond=(sumMinute%60);
     }
