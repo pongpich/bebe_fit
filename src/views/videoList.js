@@ -417,11 +417,11 @@ class VideoList extends Component {
     const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
     const tempExerciseVideo = [...this.props.exerciseVideo];
     if (lastWeekVDO_click === "show") {
-      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time };
+      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time, duration: duration};
     } else {
-      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time };
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time, duration: duration  };
     }
-    const newVideo = { ...selectedVDO, play_time };
+    const newVideo = { ...selectedVDO, play_time, duration };
     this.setState({
       selectedVDO: newVideo
     });
