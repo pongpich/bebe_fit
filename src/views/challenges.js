@@ -69,7 +69,7 @@ class Challenges extends Component {
       const dailyExercises = activites[dayIndex];
       for (let exIndex = 0; exIndex < dailyExercises.length; exIndex++) {
         const exercise = dailyExercises[exIndex];
-        if (parseFloat(exercise.play_time)/parseFloat(exercise.duration) < 0.9) {
+        if (parseFloat(exercise.play_time) / parseFloat(exercise.duration) < 0.9) {
           //isCompleted = false;
           count = count - 1;
           break;
@@ -163,7 +163,7 @@ class Challenges extends Component {
                     <p className="card-text">
                       <div className="row">
                         <div className="col-lg-6 col-md-6 col-12">
-                          {index + 1}. {item.first_name} {item.last_name}
+                          {index + 1}. {item.facebook ? item.facebook : "ไม่มีข้อมูล"}
                         </div>
                         <div className="col-lg-3 col-md-3 col-6">
                           <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
@@ -276,14 +276,14 @@ class Challenges extends Component {
     const { individualRank, user } = this.props;
     var myRank = individualRank.filter(item => item.user_id === this.props.user.user_id);
     // myRank[0] === undefined คือกรณีผู้ใช้ไม่มีข้อมูลอยู่เลยใน member_event_log  (ทำให้เกิดบัค จึงต้องกำหนดค่าให้)
-    if(myRank[0] === undefined) {
-      myRank[0] = {"rank":0, "first_name": user.first_name, "last_name": user.last_name, "total_score":0 };
+    if (myRank[0] === undefined) {
+      myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : "ไม่มีข้อมูล", "total_score": 0 };
     }
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
         {
           <b className="row mb-4">
-            <p className="card-text col-12">{myRank[0].rank}. {myRank[0].first_name} {myRank[0].last_name}
+            <p className="card-text col-12">{myRank[0].rank}. {myRank[0].facebook ? myRank[0].facebook : "ไม่มีข้อมูล"}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
               </span>
@@ -293,7 +293,7 @@ class Challenges extends Component {
         {
           (individualRank) &&
           individualRank.map((item, index) =>
-            <p className="card-text">{index + 1}. {item.first_name} {item.last_name}
+            <p className="card-text">{index + 1}. {item.facebook ? item.facebook : "ไม่มีข้อมูล"}
               <span style={{ float: "right", color: "#F45197" }}>
                 {item.total_score ? item.total_score : 0} คะแนน
               </span>
