@@ -17,18 +17,23 @@ class Challenges extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.user && this.props.user.group_id) {
-      this.props.getRank(this.props.user.user_id, this.props.user.start_date);
-      this.props.getLogWeight(this.props.user.user_id);
-      this.props.getLogWeightTeam(this.props.user.group_id);
-      this.props.getIsReducedWeight(this.props.user.user_id);
-      this.props.getDailyTeamWeightBonus(this.props.user.user_id);
-      this.props.getMembersAndRank(this.props.user.group_id);
-      this.props.getGroupName(this.props.user.group_id);
-      this.props.getScoreOfTeam(this.props.user.group_id);
-      this.props.getLeaderboard();
+    if (this.props.user) {
+      this.props.getGroupID(this.props.user.user_id);
+      if (this.props.user && this.props.user.group_id) {
+        this.props.getRank(this.props.user.user_id, this.props.user.start_date);
+        this.props.getLogWeight(this.props.user.user_id);
+        this.props.getLogWeightTeam(this.props.user.group_id);
+        this.props.getIsReducedWeight(this.props.user.user_id);
+        this.props.getDailyTeamWeightBonus(this.props.user.user_id);
+        this.props.getMembersAndRank(this.props.user.group_id);
+        this.props.getGroupName(this.props.user.group_id);
+        this.props.getScoreOfTeam(this.props.user.group_id);
+        this.props.getLeaderboard();
+      } else {
+        this.props.clearChallenges()
+      }
     } else {
-      this.props.clearChallenges()
+      this.props.history.push('/login');
     }
   }
 
