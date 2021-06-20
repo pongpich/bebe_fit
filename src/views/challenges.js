@@ -111,7 +111,7 @@ class Challenges extends Component {
                 <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
                 <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightCount}/2</span></p>
                 <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right", color: "#F45197" }}>{isReducedWeight ? 1 : 0}/1</span></p>
-                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{isExerciseCompleted}/4</span></p>
+                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{(this.props.statusVideoList !== 'no_video') ? isExerciseCompleted : 0}/4</span></p>
               </div>
             </div>
             <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
@@ -717,9 +717,9 @@ class Challenges extends Component {
 
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
-  const { exerciseVideo } = exerciseVideos;
+  const { exerciseVideo, statusVideoList } = exerciseVideos;
   const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam };
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam };
 };
 
 const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard };
