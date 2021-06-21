@@ -56,10 +56,11 @@ export const getGroupName = (group_id) => ({
   }
 })
 
-export const getMembersAndRank = (group_id) => ({
+export const getMembersAndRank = (group_id, start_date) => ({
   type: types.GET_MEMBERS_AND_RANK,
   payload: {
-    group_id
+    group_id,
+    start_date
   }
 })
 
@@ -345,12 +346,14 @@ const leaveTeamSagaAsync = async (
 }
 
 const getMembersAndRankSagaAsync = async (
-  group_id
+  group_id,
+  start_date
 ) => {
   try {
     const apiResult = await API.get("bebe", "/getMembersAndRank", {
       queryStringParameters: {
-        group_id
+        group_id,
+        start_date
       }
     });
     return apiResult
@@ -618,12 +621,14 @@ function* leaveTeamSaga({ payload }) {
 
 function* getMembersAndRankSaga({ payload }) {
   const {
-    group_id
+    group_id,
+    start_date
   } = payload
   try {
     const apiResult = yield call(
       getMembersAndRankSagaAsync,
-      group_id
+      group_id,
+      start_date
     );
     yield put({
       type: types.GET_MEMBERS_AND_RANK_SUCCESS,
