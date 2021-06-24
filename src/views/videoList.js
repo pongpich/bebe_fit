@@ -417,9 +417,9 @@ class VideoList extends Component {
     const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
     const tempExerciseVideo = [...this.props.exerciseVideo];
     if (lastWeekVDO_click === "show") {
-      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time, duration: duration};
+      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time, duration: duration };
     } else {
-      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time, duration: duration  };
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time, duration: duration };
     }
     const newVideo = { ...selectedVDO, play_time, duration };
     this.setState({
@@ -525,9 +525,9 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
-      totalMinute=Math.floor(sumMinute / 60);
-      totalSecond=(sumMinute%60);
+    if (totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute = Math.floor(sumMinute / 60);
+      totalSecond = (sumMinute % 60);
     }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
@@ -675,26 +675,26 @@ class VideoList extends Component {
               <tbody>
                 {
                   tempPlaylist.map((item, index) => {
-                  const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
-                  return(
-                    <div className="row" key={index}>
-                      <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
-                        <div className="videoItem border shadow">
-                          {
-                            (this.state.spinnerRandomVideo === "loading") ?
-                              (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
-                                <div className="play_button">
-                                  <i className="fa fa-refresh fa-spin fa-5x"></i>
-                                </div>
+                    const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                    return (
+                      <div className="row" key={index}>
+                        <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
+                          <div className="videoItem border shadow">
+                            {
+                              (this.state.spinnerRandomVideo === "loading") ?
+                                (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
+                                  <div className="play_button">
+                                    <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                  </div>
+                                  :
+                                  <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
                                 :
                                 <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
-                              :
-                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
-                          }
-                          <div className="videoThumb">
-                            <div className="containerThumb">
-                              <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
-                              {/* <div className="overlay" onClick={() => this.toggle(item)}>
+                            }
+                            <div className="videoThumb">
+                              <div className="containerThumb">
+                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
                                   <h6>
@@ -702,50 +702,51 @@ class VideoList extends Component {
                                   </h6>
                                 </div>
                               </div> */}
+                              </div>
                             </div>
-                          </div>
-                          <div className="videoDetail">
-                            <div className="videoDuration mt-3">
-                              <h6>
-                                <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                {minuteLabel} นาที
+                            <div className="videoDetail">
+                              <div className="videoDuration mt-3">
+                                <h6>
+                                  <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
+                                  {minuteLabel} นาที
                               </h6>
-                            </div>
-                            <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
-                            <div className="videoName">
-                              <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                              {(item.name.length < 17) ?
-                                <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
-                                :
-                                <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                              </div>
+                              <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
+                              <div className="videoName">
+                                <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
+                                {(item.name.length < 17) ?
+                                  <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
+                                  :
+                                  <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                }
+                              </div>
+                              <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
                               }
-                            </div>
-                            <img className="body_part" src={`../assets/img/body_part/${item.type.toLowerCase().split(" ").join("")}.png`}></img>
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "armfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
-                            }
-                            {
-                              (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
-                            }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "backfocus") && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                              }
 
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      {
-                        (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
-                        <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
-                          <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
-                            <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                        {
+                          (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
+                          <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
+                            <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                              <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             เลือกวีดีโอใหม่
                           </div>
-                          <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
-                            <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                            <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                              <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
                             สุ่มวีดีโอ
                           </div>
-                        </div>
-                      }
-                    </div>
-                  )})
+                          </div>
+                        }
+                      </div>
+                    )
+                  })
                 }
               </tbody>
             </table>
@@ -1008,23 +1009,23 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
-      totalMinute=Math.floor(sumMinute / 60);
-      totalSecond=(sumMinute%60);
+    if (totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute = Math.floor(sumMinute / 60);
+      totalSecond = (sumMinute % 60);
     }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
     } else {
       timesExercise = `${totalMinute}:${totalSecond}`;
     }
-  
+
 
     return (
       <div className="card-body d-flex justify-content-center">
         <form>
           <div className="tab-content mt-3 mb-3" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "0px" }}>
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน</h4>
+              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน <span>(WEEK {this.props.week})</span></h4>
               <nav className="nav">
                 <a
                   className="nav-link"
@@ -1222,9 +1223,9 @@ class VideoList extends Component {
     let totalMinute = Number(sumMinute) + Number(minute2);
     let totalSecond = sumSecond % 60;
     let timesExercise;
-    if(totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
-      totalMinute=Math.floor(sumMinute / 60);
-      totalSecond=(sumMinute%60);
+    if (totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute = Math.floor(sumMinute / 60);
+      totalSecond = (sumMinute % 60);
     }
     if (totalSecond < 10) {
       timesExercise = `${totalMinute}:0${totalSecond}`;
@@ -1395,7 +1396,8 @@ class VideoList extends Component {
                         </div>
                       </div>
 
-                    )}))
+                    )
+                  }))
                 }
               </tbody>
             </table>
