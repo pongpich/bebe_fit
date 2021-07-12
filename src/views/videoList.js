@@ -1025,7 +1025,7 @@ class VideoList extends Component {
         <form>
           <div className="tab-content mt-3 mb-3" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "0px" }}>
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน <span>(WEEK {this.props.week})</span></h4>
+              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน {this.props.user.fb_group !== 404 ? <span>(WEEK {this.props.week})</span> : <span></span>}</h4>
               <nav className="nav">
                 <a
                   className="nav-link"
