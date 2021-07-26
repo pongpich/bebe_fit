@@ -175,7 +175,13 @@ class Challenges extends Component {
                         </div>
                         <div className="col-lg-3 col-md-3 col-6">
                           <span style={{ float: "right", color: "#F45197" }}>
-                            {item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()}
+                            {
+                              item.end_rank ?
+                                item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
+                                :
+                                item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
+                            }
+
                           </span>
                         </div>
                       </div>
