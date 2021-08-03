@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 
@@ -19,6 +19,7 @@ class Challenges extends Component {
   async componentDidMount() {
     if (this.props.user) {
       this.props.getGroupID(this.props.user.user_id);
+      this.props.getChallengePeriod();
       if (this.props.user && this.props.user.group_id) {
         this.props.getRank(this.props.user.user_id, this.props.user.start_date);
         this.props.getLogWeight(this.props.user.user_id);
@@ -497,11 +498,16 @@ class Challenges extends Component {
                         <h5 className="card-text mb-4">สะสมคะแนนกับเพื่อนร่วมทีม <span style={{ color: "#F45197" }}>อีกหนึ่งแรงผลักดันสู่เป้าหมายในการออกกำลังกาย</span></h5>
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      class="btn btn-danger col-6"
-                      style={{ backgroundColor: "#F45197" }}
-                      onClick={() => this.openPopupJoinChallenge()}>เข้าร่วมชาเลนจ์</button>
+                    {
+                      this.props.challengePeriod &&
+                      <button
+                        type="button"
+                        class="btn btn-danger col-6"
+                        style={{ backgroundColor: "#F45197" }}
+                        onClick={() => this.openPopupJoinChallenge()}>
+                        เข้าร่วมชาเลนจ์
+                        </button>
+                    }
                   </center>
                   <div className="mt-4">
                     <center>
@@ -724,11 +730,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod };
 
 export default connect(
   mapStateToProps,

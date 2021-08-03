@@ -35,8 +35,14 @@ export const types = {
   GET_SCORE_OF_TEAM: "GET_SCORE_OF_TEAM",
   GET_SCORE_OF_TEAM_SUCCESS: "GET_SCORE_OF_TEAM_SUCCESS",
   GET_LEADER_BOARD: "GET_LEADER_BOARD",
-  GET_LEADER_BOARD_SUCCESS: "GET_LEADER_BOARD_SUCCESS"
+  GET_LEADER_BOARD_SUCCESS: "GET_LEADER_BOARD_SUCCESS",
+  GET_CHALLENGE_PERIOD: "GET_CHALLENGE_PERIOD",
+  GET_CHALLENGE_PERIOD_SUCCESS: "GET_CHALLENGE_PERIOD_SUCCESS"
 }
+
+export const getChallengePeriod = () => ({
+  type: types.GET_CHALLENGE_PERIOD
+})
 
 export const getLeaderboard = () => ({
   type: types.GET_LEADER_BOARD
@@ -211,6 +217,21 @@ const getLeaderboardSagaAsync = async (
 ) => {
   try {
     const apiResult = await API.get("bebe", "/getLeaderboard", {
+      queryStringParameters: {
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getChallengePeriodSagaAsync = async (
+
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getChallengePeriod", {
       queryStringParameters: {
       }
     });
@@ -503,6 +524,20 @@ function* getLeaderboardSaga() {
   }
 }
 
+function* getChallengePeriodSaga() {
+  try {
+    const apiResult = yield call(
+      getChallengePeriodSagaAsync
+    );
+    yield put({
+      type: types.GET_CHALLENGE_PERIOD_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    console.log("error from getChallengePeriodSaga :", error);
+  }
+}
+
 function* getIsReducedWeightSaga({ payload }) {
   const {
     user_id
@@ -753,6 +788,10 @@ export function* watchGetLeaderboard() {
   yield takeEvery(types.GET_LEADER_BOARD, getLeaderboardSaga)
 }
 
+export function* watchGetChallengePeriod() {
+  yield takeEvery(types.GET_CHALLENGE_PERIOD, getChallengePeriodSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -770,6 +809,7 @@ export function* saga() {
     fork(watchGetGroupName),
     fork(watchGetScoreOfTeam),
     fork(watchGetLeaderboard),
+    fork(watchGetChallengePeriod),
   ]);
 }
 
@@ -794,7 +834,8 @@ const INIT_STATE = {
   totalScoreOfTeam: 0,
   teamRank: [],
   individualRank: [],
-  statusCreateTeam: "default"
+  statusCreateTeam: "default",
+  challengePeriod: true,
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -840,6 +881,11 @@ export function reducer(state = INIT_STATE, action) {
         ...state,
         teamRank: action.payload.teamRank,
         individualRank: action.payload.individualRank
+      }
+    case types.GET_CHALLENGE_PERIOD_SUCCESS:
+      return {
+        ...state,
+        challengePeriod: action.payload.challengePeriod
       }
     case types.ASSIGN_GROUP_TO_MEMBER_SUCCESS:
       return {
