@@ -602,7 +602,7 @@ class Challenges extends Component {
           <h6>สามารถติดตามของรางวัลได้ทาง Facebook Group</h6>
           <br></br>
           <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
-          <h6>เริ่มตั้งแต่วันที่ 14 มิถุนายน 2561 สิ้นสุดวันที่ 1 สิงหาคม 2561</h6>
+          <h6>เริ่มตั้งแต่วันที่ 9 สิงหาคม 2561 สิ้นสุดวันที่ 19 กันยายน 2561</h6>
           {
             (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
               <div className="row mt-3">
