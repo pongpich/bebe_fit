@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers, changeEmail } from "../redux/auth";
-import { selectProgramInWeek, deleteProgramInWeek } from "../redux/exerciseVideos";
+import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo } from "../redux/exerciseVideos";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./importMembers.scss";
@@ -214,6 +214,50 @@ class ImportMembers extends Component {
             }
             <br></br>
             <button type="button" onClick={() => this.changeEmail(this.state.email, this.state.new_email)}>ยืนยัน</button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderMemberInfo() {
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">ข้อมูลผู้ใช้</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
+            <button type="button" onClick={() => this.props.selectMemberInfo(this.state.email)}>ค้นหา</button>
+            <br></br>
+            <h5>{"Email : " + this.props.memberInfo.email}</h5>
+            <h5>{"Firstname : " + this.props.memberInfo.first_name}</h5>
+            <h5>{"Lastname : " + this.props.memberInfo.last_name}</h5>
+            <h5>{"Phone : " + this.props.memberInfo.phone}</h5>
+            <h5>{"FB Group : " + this.props.memberInfo.fb_group}</h5>
+            <h5>{"Facebook : " + this.props.memberInfo.facebook}</h5>
+            <h5>
+              {
+                "Info : "
+                + " อายุ: " + JSON.parse(this.props.memberInfo.other_attributes).age + ","
+                + " เพศ: " + JSON.parse(this.props.memberInfo.other_attributes).sex + ","
+              }
+            </h5>
+            <h5>
+              {
+                "Body Info : "
+                + " น้ำหนัก: " + JSON.parse(this.props.memberInfo.other_attributes).weight + ","
+                + " ส่วนสูง: " + JSON.parse(this.props.memberInfo.other_attributes).height + ","
+                + " อก: " + JSON.parse(this.props.memberInfo.other_attributes).chest + ","
+                + " เอว: " + JSON.parse(this.props.memberInfo.other_attributes).waist + ","
+                + " สะโพก: " + JSON.parse(this.props.memberInfo.other_attributes).hip + ","
+              }
+            </h5>
+            <h5>{"วันเริ่มต้น : " + this.props.memberInfo.start_date}</h5>
+            <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
           </div>
         </div>
       </div>
@@ -436,6 +480,7 @@ class ImportMembers extends Component {
         {this.renderAddMember()}
         {this.renderDeleteProgramInWeek()}
         {this.renderChangeEmail()}
+        {this.renderMemberInfo()}
       </div>
     )
   }
@@ -443,11 +488,11 @@ class ImportMembers extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user, status, statusChangeEmail } = authUser;
-  const { programInWeek } = exerciseVideos;
-  return { user, status, programInWeek, statusChangeEmail };
+  const { programInWeek, memberInfo } = exerciseVideos;
+  return { user, status, programInWeek, memberInfo, statusChangeEmail };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo };
 
 export default connect(
   mapStateToProps,

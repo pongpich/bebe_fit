@@ -76,7 +76,7 @@ class App extends Component {
               (this.props.user !== null && this.props.user.authorization === "admin") &&
               <li className="nav-item">
                 <a className="nav-link" href="#/import-members" onClick={() => this.props.history.push('/import-members')} style={{ color: "white", cursor: "pointer" }}>
-                  เพิ่มสมาชิก
+                  จัดการสมาชิก
                 </a>
               </li>
             }
