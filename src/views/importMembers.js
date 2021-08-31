@@ -233,31 +233,36 @@ class ImportMembers extends Component {
             <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
             <button type="button" onClick={() => this.props.selectMemberInfo(this.state.email)}>ค้นหา</button>
             <br></br>
-            <h5>{"Email : " + this.props.memberInfo.email}</h5>
-            <h5>{"Firstname : " + this.props.memberInfo.first_name}</h5>
-            <h5>{"Lastname : " + this.props.memberInfo.last_name}</h5>
-            <h5>{"Phone : " + this.props.memberInfo.phone}</h5>
-            <h5>{"FB Group : " + this.props.memberInfo.fb_group}</h5>
-            <h5>{"Facebook : " + this.props.memberInfo.facebook}</h5>
-            <h5>
-              {
-                "Info : "
-                + " อายุ: " + JSON.parse(this.props.memberInfo.other_attributes).age + ","
-                + " เพศ: " + JSON.parse(this.props.memberInfo.other_attributes).sex + ","
-              }
-            </h5>
-            <h5>
-              {
-                "Body Info : "
-                + " น้ำหนัก: " + JSON.parse(this.props.memberInfo.other_attributes).weight + ","
-                + " ส่วนสูง: " + JSON.parse(this.props.memberInfo.other_attributes).height + ","
-                + " อก: " + JSON.parse(this.props.memberInfo.other_attributes).chest + ","
-                + " เอว: " + JSON.parse(this.props.memberInfo.other_attributes).waist + ","
-                + " สะโพก: " + JSON.parse(this.props.memberInfo.other_attributes).hip + ","
-              }
-            </h5>
-            <h5>{"วันเริ่มต้น : " + this.props.memberInfo.start_date}</h5>
-            <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
+            {
+              (this.props.memberInfo) &&
+              <div>
+                <h5>{"Email : " + this.props.memberInfo.email}</h5>
+                <h5>{"Firstname : " + this.props.memberInfo.first_name}</h5>
+                <h5>{"Lastname : " + this.props.memberInfo.last_name}</h5>
+                <h5>{"Phone : " + this.props.memberInfo.phone}</h5>
+                <h5>{"FB Group : " + this.props.memberInfo.fb_group}</h5>
+                <h5>{"Facebook : " + this.props.memberInfo.facebook}</h5>
+                <h5>
+                  {
+                    "Info : "
+                    + " อายุ: " + JSON.parse(this.props.memberInfo.other_attributes).age + ","
+                    + " เพศ: " + JSON.parse(this.props.memberInfo.other_attributes).sex + ","
+                  }
+                </h5>
+                <h5>
+                  {
+                    "Body Info : "
+                    + " น้ำหนัก: " + JSON.parse(this.props.memberInfo.other_attributes).weight + ","
+                    + " ส่วนสูง: " + JSON.parse(this.props.memberInfo.other_attributes).height + ","
+                    + " อก: " + JSON.parse(this.props.memberInfo.other_attributes).chest + ","
+                    + " เอว: " + JSON.parse(this.props.memberInfo.other_attributes).waist + ","
+                    + " สะโพก: " + JSON.parse(this.props.memberInfo.other_attributes).hip + ","
+                  }
+                </h5>
+                <h5>{"วันเริ่มต้น : " + this.props.memberInfo.start_date}</h5>
+                <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
+              </div>
+            }
           </div>
         </div>
       </div>
