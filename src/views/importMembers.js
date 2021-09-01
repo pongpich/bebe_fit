@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers, changeEmail } from "../redux/auth";
 import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo, selectBodyInfo } from "../redux/exerciseVideos";
+import { selectMemberEventLog } from "../redux/challenges";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./importMembers.scss";
@@ -264,6 +265,89 @@ class ImportMembers extends Component {
                 <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
               </div>
             }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  renderMemberEventLog() {
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">Member Event Log</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
+            <button type="button" onClick={() => this.props.selectMemberEventLog(this.state.email)}>ค้นหา</button>
+            <table style={{ border: '4px solid black' }}>
+              <tr style={{ border: '4px solid black', backgroundColor: '#CFE2F3', textAlign: 'center' }}>
+                <td style={{ border: '1px solid black', width: 220 }}><h5><b>{"Log"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 280 }}><h5><b>{"ความหมาย"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 380 }}><h5><b>{"หมายเหตุ"}</b></h5></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"weight"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ชั่งน้ำหนัก"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 10 คะแนน ทันที (เมื่อครบ 2 ครั้ง)"}</h6></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"weight bonus"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ในวันนั้นมีสมาชิกในทีมชั่งน้ำหนัก"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 10 คะแนน ทันที (สูงสุด 70 คะแนน ต่อ สัปดาห์)"}</h6></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"reduced weight"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"น้ำหนักลดลงจากสัปดาห์ก่อน"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 10 คะแนน วัน อา. เวลา 23:30:XX"}</h6></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"exercise complete"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ออกกำลังกายครบ 4 วัน ต่อสัปดาห์"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 10 คะแนน วัน อา. เวลา 23:30:XX"}</h6></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"weight team complete"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"สมาชิกในทีมทุกคน แต่ละคนชั่งน้ำหนักครบ 2 ครั้ง ในสัปดาห์"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 10 คะแนน วัน อา. เวลา 23:30:XX"}</h6></td>
+              </tr>
+              <tr style={{ border: '4px solid black', backgroundColor: '#ECF0F1' }}>
+                <td style={{ border: '1px solid black' }}><h6>{"rank bonus"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"โบนัสคะแนนของแต่ละ rank"}</h6></td>
+                <td style={{ border: '1px solid black' }}><h6>{"ได้รับ 5, 10 คะแนน (ขึ้นอยู่กับ Rank) วัน อา. เวลา 23:30:XX"}</h6></td>
+              </tr>
+            </table>
+            <br></br>
+
+            <table style={{ border: '4px solid black' }}>
+              <tr style={{ border: '4px solid black', backgroundColor: '#EEB2CB', textAlign: 'center' }}>
+                <td style={{ border: '1px solid black', width: 220 }}><h5><b>{"Log"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"Log Value"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 120 }}><h5><b>{"Log Type"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 80 }}><h5><b>{"Score"}</b></h5></td>
+                <td style={{ border: '0px solid black', width: 120 }}><h5><b>{"Created at"}</b></h5></td>
+                <td style={{ border: '0px solid black' }}><h5></h5></td>
+              </tr>
+
+              {
+                (this.props.memberEventLog) && this.props.memberEventLog.map((item, index) => {
+                  return (
+                    <tr style={(index % 2 === 0) ? { border: '1px solid black' } : { border: '1px solid black', backgroundColor: '#ECF0F1' }}>
+                      <td style={{ border: '1px solid black' }}><h6>{item.log}</h6></td>
+                      <td style={{ border: '1px solid black', textAlign: 'left' }}><h6>{item.log_value}</h6></td>
+                      <td style={{ border: '1px solid black', textAlign: 'left' }}><h6>{item.log_type}</h6></td>
+                      <td style={{ border: '1px solid black', textAlign: 'center' }}><h6 style={(item.score > 0) ? { color: 'red' } : {}}>{item.score}</h6></td>
+                      <td style={{ border: '1px solid black', textAlign: 'center' }}><h6>{(item.created_at).split("T")[0]}</h6></td>
+                      <td style={{ border: '1px solid black' }}><h6>{(item.created_at).split("T")[1].split(".000Z")}</h6></td>
+                    </tr>
+                  )
+                })
+              }
+
+            </table>
           </div>
         </div>
       </div>
@@ -539,6 +623,9 @@ class ImportMembers extends Component {
           <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
             <a className="" onClick={() => this.setState({ selectedRenderPage: "renderBodyInfo", email: "" })} style={{}}>BodyInfo</a>
           </div>
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderMemberEventLog", email: "" })} style={{}}>MemberEventLog</a>
+          </div>
         </div>
         {(selectedRenderPage === "renderImportMembers") && this.renderImportMembers()}
         {(selectedRenderPage === "renderImportMembers") && this.renderAddMember()}
@@ -546,18 +633,20 @@ class ImportMembers extends Component {
         {(selectedRenderPage === "renderChangeEmail") && this.renderChangeEmail()}
         {(selectedRenderPage === "renderMemberInfo") && this.renderMemberInfo()}
         {(selectedRenderPage === "renderBodyInfo") && this.renderBodyInfo()}
+        {(selectedRenderPage === "renderMemberEventLog") && this.renderMemberEventLog()}
       </div>
     )
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseVideos }) => {
+const mapStateToProps = ({ authUser, exerciseVideos, challenges }) => {
   const { user, status, statusChangeEmail } = authUser;
   const { programInWeek, memberInfo, bodyInfo } = exerciseVideos;
-  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail };
+  const { memberEventLog } = challenges;
+  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog };
 
 export default connect(
   mapStateToProps,

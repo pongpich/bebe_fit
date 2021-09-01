@@ -37,8 +37,17 @@ export const types = {
   GET_LEADER_BOARD: "GET_LEADER_BOARD",
   GET_LEADER_BOARD_SUCCESS: "GET_LEADER_BOARD_SUCCESS",
   GET_CHALLENGE_PERIOD: "GET_CHALLENGE_PERIOD",
-  GET_CHALLENGE_PERIOD_SUCCESS: "GET_CHALLENGE_PERIOD_SUCCESS"
+  GET_CHALLENGE_PERIOD_SUCCESS: "GET_CHALLENGE_PERIOD_SUCCESS",
+  SELECT_MEMBER_EVENT_LOG: "SELECT_MEMBER_EVENT_LOG",
+  SELECT_MEMBER_EVENT_LOG_SUCCESS: "SELECT_MEMBER_EVENT_LOG_SUCCESS"
 }
+
+export const selectMemberEventLog = (email) => ({
+  type: types.SELECT_MEMBER_EVENT_LOG,
+  payload: {
+    email
+  }
+});
 
 export const getChallengePeriod = () => ({
   type: types.GET_CHALLENGE_PERIOD
@@ -265,6 +274,22 @@ const getIsReducedWeightSagaAsync = async (
     const apiResult = await API.get("bebe", "/getIsReducedWeight", {
       queryStringParameters: {
         user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const selectMemberEventLogSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/selectMemberEventLog", {
+      queryStringParameters: {
+        email
       }
     });
     return apiResult
@@ -538,6 +563,24 @@ function* getChallengePeriodSaga() {
   }
 }
 
+function* selectMemberEventLogSaga({ payload }) {
+  const {
+    email
+  } = payload
+  try {
+    const apiResult = yield call(
+      selectMemberEventLogSagaAsync,
+      email
+    );
+    yield put({
+      type: types.SELECT_MEMBER_EVENT_LOG_SUCCESS,
+      payload: apiResult.results.memberEventLog
+    })
+  } catch (error) {
+    console.log("error from selectMemberEventLogSaga :", error);
+  }
+}
+
 function* getIsReducedWeightSaga({ payload }) {
   const {
     user_id
@@ -792,6 +835,10 @@ export function* watchGetChallengePeriod() {
   yield takeEvery(types.GET_CHALLENGE_PERIOD, getChallengePeriodSaga)
 }
 
+export function* watchSelectMemberEventLog() {
+  yield takeEvery(types.SELECT_MEMBER_EVENT_LOG, selectMemberEventLogSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -810,6 +857,7 @@ export function* saga() {
     fork(watchGetScoreOfTeam),
     fork(watchGetLeaderboard),
     fork(watchGetChallengePeriod),
+    fork(watchSelectMemberEventLog),
   ]);
 }
 
@@ -836,10 +884,16 @@ const INIT_STATE = {
   individualRank: [],
   statusCreateTeam: "default",
   challengePeriod: true,
+  memberEventLog: [],
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.SELECT_MEMBER_EVENT_LOG_SUCCESS:
+      return {
+        ...state,
+        memberEventLog: action.payload
+      }
     case types.GET_RANK_SUCCESS:
       return {
         ...state,
