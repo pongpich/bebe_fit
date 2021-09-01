@@ -234,7 +234,7 @@ class ImportMembers extends Component {
             <button type="button" onClick={() => this.props.selectMemberInfo(this.state.email)}>ค้นหา</button>
             <br></br>
             {
-              (this.props.memberInfo) &&
+              (this.props.memberInfo && this.props.memberInfo.other_attributes) &&
               <div>
                 <h5>{"Email : " + this.props.memberInfo.email}</h5>
                 <h5>{"Firstname : " + this.props.memberInfo.first_name}</h5>
