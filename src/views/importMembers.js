@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers, changeEmail } from "../redux/auth";
-import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo } from "../redux/exerciseVideos";
+import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo, selectBodyInfo } from "../redux/exerciseVideos";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./importMembers.scss";
@@ -11,6 +11,7 @@ class ImportMembers extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedRenderPage: "renderImportMembers",
       members: [],
       selectedStartDate: null,
       selectedExpireDate: null,
@@ -269,6 +270,46 @@ class ImportMembers extends Component {
     )
   }
 
+  renderBodyInfo() {
+    return (
+      <div className="row">
+        {this.renderPopupSuccessSubmit()}
+        <h1>.</h1>
+        <div className="card mt-5 mb-3 col-lg-12">
+          <div className="card-body">
+
+            <h1 className="mb-5">Body Info</h1>
+            <label for="fname">Email: </label>
+            <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} />
+            <button type="button" onClick={() => this.props.selectBodyInfo(this.state.email)}>ค้นหา</button>
+            <br></br>
+
+            {
+              (this.props.bodyInfo) && this.props.bodyInfo.map((item, index) => {
+                return (
+                  <div>
+                    <h5>{"Week " + item.week_in_program + " : "}
+                      <span>
+                        {
+                          (item.body_info) &&
+                          " น้ำหนัก: " + (JSON.parse(item.body_info).weight) + ","
+                          + " ส่วนสูง: " + (JSON.parse(item.body_info).height) + ","
+                          + " อก: " + (JSON.parse(item.body_info).chest) + ","
+                          + " เอว: " + (JSON.parse(item.body_info).waist) + ","
+                          + " สะโพก: " + (JSON.parse(item.body_info).hip) + ","
+                        }
+                      </span>
+                    </h5>
+                  </div>
+                )
+              })
+            }
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   renderDeleteProgramInWeek() {
     return (
       <div className="row">
@@ -479,13 +520,32 @@ class ImportMembers extends Component {
   }
 
   render() {
+    const { selectedRenderPage } = this.state;
     return (
       <div>
-        {this.renderImportMembers()}
-        {this.renderAddMember()}
-        {this.renderDeleteProgramInWeek()}
-        {this.renderChangeEmail()}
-        {this.renderMemberInfo()}
+        <div className="nav mt-5 ml-5" id="myTab" role="tablist">
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderImportMembers", email: "" })} style={{}}>เพิ่มสมาชิก</a>
+          </div>
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderChangeEmail", email: "" })} style={{}}>เปลี่ยนอีเมล</a>
+          </div>
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderDeleteProgramInWeek", email: "" })} style={{}}>ProgramInWeek</a>
+          </div>
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderMemberInfo", email: "" })} style={{}}>ข้อมูลผู้ใช้</a>
+          </div>
+          <div className="mr-4 mb-3" style={{ cursor: "pointer" }}>
+            <a className="" onClick={() => this.setState({ selectedRenderPage: "renderBodyInfo", email: "" })} style={{}}>BodyInfo</a>
+          </div>
+        </div>
+        {(selectedRenderPage === "renderImportMembers") && this.renderImportMembers()}
+        {(selectedRenderPage === "renderImportMembers") && this.renderAddMember()}
+        {(selectedRenderPage === "renderDeleteProgramInWeek") && this.renderDeleteProgramInWeek()}
+        {(selectedRenderPage === "renderChangeEmail") && this.renderChangeEmail()}
+        {(selectedRenderPage === "renderMemberInfo") && this.renderMemberInfo()}
+        {(selectedRenderPage === "renderBodyInfo") && this.renderBodyInfo()}
       </div>
     )
   }
@@ -493,11 +553,11 @@ class ImportMembers extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos }) => {
   const { user, status, statusChangeEmail } = authUser;
-  const { programInWeek, memberInfo } = exerciseVideos;
-  return { user, status, programInWeek, memberInfo, statusChangeEmail };
+  const { programInWeek, memberInfo, bodyInfo } = exerciseVideos;
+  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo };
 
 export default connect(
   mapStateToProps,

@@ -33,9 +33,18 @@ export const types = {
   SELECT_PROGRAM_IN_WEEK_SUCCESS: "SELECT_PROGRAM_IN_WEEK_SUCCESS",
   SELECT_MEMBER_INFO: "SELECT_MEMBER_INFO",
   SELECT_MEMBER_INFO_SUCCESS: "SELECT_MEMBER_INFO_SUCCESS",
+  SELECT_BODY_INFO: "SELECT_BODY_INFO",
+  SELECT_BODY_INFO_SUCCESS: "SELECT_BODY_INFO_SUCCESS",
   DELETE_PROGRAM_IN_WEEK: "DELETE_PROGRAM_IN_WEEK",
   CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST"
 }
+
+export const selectBodyInfo = (email) => ({
+  type: types.SELECT_BODY_INFO,
+  payload: {
+    email
+  }
+});
 
 export const selectMemberInfo = (email) => ({
   type: types.SELECT_MEMBER_INFO,
@@ -392,6 +401,21 @@ const selectMemberInfoSagaAsync = async (
   }
 }
 
+const selectBodyInfoSagaAsync = async (
+  email
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/selectBodyInfo", {
+      queryStringParameters: {
+        email
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const deleteProgramInWeekSagaAsync = async (
   email
 ) => {
@@ -587,6 +611,27 @@ function* selectMemberInfoSaga({ payload }) {
     yield put({
       type: types.SELECT_MEMBER_INFO_SUCCESS,
       payload: apiResult.results.memberInfo
+    });
+
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* selectBodyInfoSaga({ payload }) {
+  const {
+    email
+  } = payload
+  try {
+    const apiResult = yield call(
+      selectBodyInfoSagaAsync,
+      email
+    );
+
+    yield put({
+      type: types.SELECT_BODY_INFO_SUCCESS,
+      payload: apiResult.results.bodyInfo
     });
 
     return apiResult;
@@ -858,6 +903,10 @@ export function* watchSelectMemberInfo() {
   yield takeEvery(types.SELECT_MEMBER_INFO, selectMemberInfoSaga)
 }
 
+export function* watchSelectBodyInfo() {
+  yield takeEvery(types.SELECT_BODY_INFO, selectBodyInfoSaga)
+}
+
 export function* watchDeleteProgramInWeek() {
   yield takeEvery(types.DELETE_PROGRAM_IN_WEEK, deleteProgramInWeekSaga)
 }
@@ -875,6 +924,7 @@ export function* saga() {
     fork(watchUpdateBodyInfo),
     fork(watchSelectProgramInWeek),
     fork(watchSelectMemberInfo),
+    fork(watchSelectBodyInfo),
     fork(watchDeleteProgramInWeek)
   ]);
 }
@@ -895,7 +945,8 @@ const INIT_STATE = {
   statusVideoList: "default",
   statusUpdateBodyInfo: "default",
   programInWeek: [],
-  memberInfo: []
+  memberInfo: [],
+  bodyInfo: [],
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -981,6 +1032,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         memberInfo: action.payload
+      };
+    case types.SELECT_BODY_INFO_SUCCESS:
+      return {
+        ...state,
+        bodyInfo: action.payload
       };
     case types.RESET_STATUS:
       return {
