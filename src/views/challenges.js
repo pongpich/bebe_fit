@@ -269,12 +269,13 @@ class Challenges extends Component {
   }
 
   renderTeamRank() {
-    const { teamRank } = this.props;
+    const { teamRank, user } = this.props;
+    const teamRankFilter = teamRank.filter(item => user.fb_group === item.fb_group);
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
         {
-          (teamRank) &&
-          teamRank.map((item, index) =>
+          (teamRankFilter) &&
+          teamRankFilter.map((item, index) =>
             <p className="card-text">{index + 1}. {item.group_name}
               <span style={{ float: "right", color: "#F45197" }}>
                 {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
