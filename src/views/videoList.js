@@ -6,13 +6,11 @@ import { connect } from "react-redux";
 import { updateProfile, logoutUser } from "../redux/auth";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
-import { completeVideoPlayPercentage, minimumVideoPlayPercentage } from "../constants/defaultValues";
+import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime } from "../helpers/utils";
 import "./videoList.scss";
 
-
 class VideoList extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -38,6 +36,9 @@ class VideoList extends Component {
       otherAttributesPage: "basicInfo",
       autoPlayCheck: false
     };
+
+    this.prevPlayTime = 0;
+
     this.onUpdateProfile = this.onUpdateProfile.bind(this);
     this.onDayChange = this.onDayChange.bind(this);
     this.onVideoTimeUpdate = this.onVideoTimeUpdate.bind(this);
@@ -400,12 +401,16 @@ class VideoList extends Component {
     const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
     var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     if (!video || !selectedVDO) { return }
+    const diffTime = video.currentTime - this.prevPlayTime;
+    if (diffTime < updateFrequency) { return }
+    this.prevPlayTime = video.currentTime
     if (
       !video.duration ||
       video.currentTime / video.duration < minimumVideoPlayPercentage ||
       selectedVDO.play_time / selectedVDO.duration >= completeVideoPlayPercentage) {
       return
     }
+
     //if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
     const user_id = this.props.user.user_id;
     const start_date = this.props.user.start_date;

@@ -10,6 +10,7 @@
     "aws-amplify": "^3.3.3",
     "bootstrap": "^4.5.2",
     "csv-parser": "^3.0.0",
+    "moment": "^2.29.1",
     "node-sass": "^4.14.1",
     "papaparse": "^5.3.0",
     "react": "^16.13.1",

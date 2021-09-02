@@ -12,7 +12,8 @@ export const localeOptions = [
   { id: "en", name: "English" },
 ];
 export const completeVideoPlayPercentage = 0.9;
-export const minimumVideoPlayPercentage = 0.2;
+export const minimumVideoPlayPercentage = 0.75;
+export const updateFrequency = 0.5;
 
 export const searchPath = "/app/pages/search";
 export const servicePath = "https://api.planforfit.com/actdev";

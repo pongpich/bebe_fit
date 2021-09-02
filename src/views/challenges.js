@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
+import moment from "moment"
 
 
 class Challenges extends Component {
@@ -291,6 +292,8 @@ class Challenges extends Component {
     if (myRank[0] === undefined) {
       myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
     }
+
+    const individualRankFilter = individualRank.filter(item => Math.abs(moment(user.start_date).diff(moment(item.start_date),"days"))<=1);
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
         {
@@ -303,14 +306,18 @@ class Challenges extends Component {
           </b>
         }
         {
-          (individualRank) &&
-          individualRank.map((item, index) =>
-            <p className="card-text">{index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
-              <span style={{ float: "right", color: "#F45197" }}>
-                {item.total_score ? item.total_score : 0} คะแนน
+          (individualRankFilter) &&
+          individualRankFilter.map((item, index) => {
+            const fullName = `${item.first_name} ${item.last_name}`;
+            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}` ;
+            return (
+              <p className="card-text">{rankDetail}
+                <span style={{ float: "right", color: "#F45197" }}>
+                  {item.total_score ? item.total_score : 0} คะแนน
               </span>
-            </p>
-          )
+              </p>
+            )
+          })
         }
       </div>)
   }
