@@ -558,27 +558,27 @@ class VideoList extends Component {
                   <img className="body_part" src={`../assets/img/body_part/${this.props.videos[0].category.toLowerCase().split(" ").join("")}.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
                 }
 
