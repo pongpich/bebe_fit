@@ -24,6 +24,7 @@ class ImportMembers extends Component {
       statusChangeEmail: "default",
       fullname: "",
       phone: "",
+      facebook: "",
       fb_group: 404
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
@@ -62,14 +63,15 @@ class ImportMembers extends Component {
           var data = results.data;
           console.log("data : ", data);
           for (var i = 1; i <= data.length - 1; i++) { // i = 1 เพราะว่า rowที่0 เป็นหัวcolumn
-            var member = { email: "", first_name: "", last_name: "", phone: "", fb_group: 404 }; // fb_group = 404 คือ Admin ไม่ใส่ fb_group ตอน Import
+            var member = { email: "", first_name: "", last_name: "", phone: "", facebook: "", fb_group: 404 }; // fb_group = 404 คือ Admin ไม่ใส่ fb_group ตอน Import
             member.email = (data[i][0]) ? (data[i][0].trim()).split(" ").join("") : "";
             const full_name = (data[i][1]) ? (data[i][1].trim()).split(" ") : "";
-            member.first_name = full_name[0] ? full_name[0] : "";
-            member.last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1] : "";
+            member.first_name = full_name[0] ? full_name[0].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
+            member.last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
             if (member.first_name === member.last_name) { member.last_name = "" }; //เช็คสำหรับ กรณีกรอกมาแค่ชื่อ
             member.phone = (data[i][2]) ? data[i][2] : "";
-            member.fb_group = (data[i][3]) ? data[i][3] : 404; // fb_group = 404 คือ Admin ไม่ใส่ fb_group ตอน Import
+            member.facebook = (data[i][3]) ? data[i][3].trim().split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
+            member.fb_group = (data[i][4]) ? data[i][4] : 404; // fb_group = 404 คือ Admin ไม่ใส่ fb_group ตอน Import
             members.push(member);
             console.log(`members ${i} : `, members);
           }
@@ -107,18 +109,27 @@ class ImportMembers extends Component {
   }
 
   onSubmitAddMember() {
-    const { selectedStartDate, selectedExpireDate, email, fullname, phone, fb_group } = this.state;
+    const { selectedStartDate, selectedExpireDate, email, fullname, phone, facebook, fb_group } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
       statusSubmitAddMember: "default"
     })
-    const full_name = (fullname) ? (fullname.trim()).split(" ") : "";
-    const first_name = full_name[0] ? full_name[0] : "";
-    const last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1] : "";
-    const members = [{ email: email, first_name: first_name, last_name: last_name, phone: phone, fb_group: fb_group }];
+    const full_name = (fullname) ? (fullname.trim()).split(" ") : ""; 
+    const first_name = full_name[0] ? full_name[0].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
+    const last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
+    const members = [
+      {
+        email: email,
+        first_name: first_name,
+        last_name: last_name,
+        phone: phone,
+        facebook: facebook.split("'").join('"'), //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
+        fb_group: fb_group
+      }
+    ];
 
-    if (email && fullname && phone && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
+    if (email && fullname && phone && facebook && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
       console.log("members : ", members);
       console.log("start_date : ", start_date);
       console.log("expire_date : ", expire_date);
@@ -433,6 +444,8 @@ class ImportMembers extends Component {
             <input type="text" id="fullname" name="fullname" value={this.state.fullname} onChange={(event) => this.handleChange(event)} /><br></br>
             <label for="fname">Phone: </label>
             <input type="text" id="phone" name="phone" value={this.state.phone} onChange={(event) => this.handleChange(event)} /><br></br>
+            <label for="fname">Facebook: </label>
+            <input type="text" id="facebook" name="facebook" value={this.state.facebook} onChange={(event) => this.handleChange(event)} /><br></br>
             <label for="fname">fb_group: </label>
             <input type="text" id="fb_group" name="fb_group" value={this.state.fb_group} onChange={(event) => this.handleChange(event)} /><br></br>
             <section>
@@ -483,6 +496,7 @@ class ImportMembers extends Component {
             email: "",
             fullname: "",
             phone: "",
+            facebook: "",
             fb_group: 404
           })}
         >
