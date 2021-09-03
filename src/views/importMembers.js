@@ -115,7 +115,7 @@ class ImportMembers extends Component {
     this.setState({
       statusSubmitAddMember: "default"
     })
-    const full_name = (fullname) ? (fullname.trim()).split(" ") : ""; 
+    const full_name = (fullname) ? (fullname.trim()).split(" ") : "";
     const first_name = full_name[0] ? full_name[0].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
     const last_name = full_name[full_name.length - 1] ? full_name[full_name.length - 1].split("'").join('"') : ""; //ต้องมีการเปลี่ยน ' เป็น " เพื่อป้องกัน syntax error ของ SQL
     const members = [
@@ -129,7 +129,7 @@ class ImportMembers extends Component {
       }
     ];
 
-    if (email && fullname && phone && facebook && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
+    if (email && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
       console.log("members : ", members);
       console.log("start_date : ", start_date);
       console.log("expire_date : ", expire_date);
@@ -523,6 +523,37 @@ class ImportMembers extends Component {
           <div className="card-body">
 
             <h1 className="mb-5">เพิ่มสมาชิก</h1>
+            <h5>
+              <span className="h6 ml-3" style={{ color: "red" }}>
+                *ตัวอย่าง รูปแบบ Table
+              </span>
+            </h5>
+            <table style={{ border: '4px solid black' }}>
+              <tr style={{ border: '4px solid black', backgroundColor: '#CFE2F3', textAlign: 'center' }}>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"email"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"full_name"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"phone"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100}}><h5><b>{"facebook"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"fb_group"}</b></h5></td>
+              </tr>
+              <tr style={{ border: '1px solid black', textAlign: 'center' }}>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100}}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxx"}</h6></td>
+              </tr>
+              <tr style={{ border: '1px solid black', textAlign: 'center' }}>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100}}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxx"}</h6></td>
+              </tr>
+            </table>
+
+            <br></br>
+
             <h5>อัปโหลดไฟล์อีเมล
               <span className="h6 ml-3" style={{ color: "red" }}>
                 *ไฟล์นามสกุล .csv
