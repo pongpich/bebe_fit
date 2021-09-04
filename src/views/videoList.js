@@ -401,9 +401,11 @@ class VideoList extends Component {
     const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
     var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     if (!video || !selectedVDO) { return }
-    const diffTime = video.currentTime - this.prevPlayTime;
+
+    const diffTime = Math.abs(video.currentTime - this.prevPlayTime);
     if (diffTime < updateFrequency) { return }
     this.prevPlayTime = video.currentTime
+    
     if (
       !video.duration ||
       video.currentTime / video.duration < minimumVideoPlayPercentage ||
