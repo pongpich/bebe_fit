@@ -405,7 +405,7 @@ class VideoList extends Component {
     const diffTime = Math.abs(video.currentTime - this.prevPlayTime);
     if (diffTime < updateFrequency) { return }
     this.prevPlayTime = video.currentTime
-    
+
     if (
       !video.duration ||
       video.currentTime / video.duration < minimumVideoPlayPercentage ||
@@ -787,7 +787,7 @@ class VideoList extends Component {
                           </div>
                         </div>
                         {
-                          (item.play_time !== item.duration) && (item.category !== "Warm Up" && item.category !== "Cool Down" && item.category !== "Challenge") &&
+                          (item.play_time !== item.duration) && (item.category !== "Challenge") &&
                           <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
                             <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                               <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
