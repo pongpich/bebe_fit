@@ -288,18 +288,21 @@ class Challenges extends Component {
 
   renderIndividualRank() {
     const { individualRank, user } = this.props;
+    const individualRankFilter = individualRank.filter(item => Math.abs(moment(user.start_date).diff(moment(item.start_date), "days")) <= 1);
+
     var myRank = individualRank.filter(item => item.user_id === this.props.user.user_id);
     // myRank[0] === undefined คือกรณีผู้ใช้ไม่มีข้อมูลอยู่เลยใน member_event_log  (ทำให้เกิดบัค จึงต้องกำหนดค่าให้)
     if (myRank[0] === undefined) {
       myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
     }
+    
+    var myRankIndex = individualRankFilter.findIndex(item => item.user_id === this.props.user.user_id);
 
-    const individualRankFilter = individualRank.filter(item => Math.abs(moment(user.start_date).diff(moment(item.start_date),"days"))<=1);
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
         {
           <b className="row mb-4">
-            <p className="card-text col-12">{myRank[0].rank}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
+            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
               </span>
@@ -310,7 +313,7 @@ class Challenges extends Component {
           (individualRankFilter) &&
           individualRankFilter.map((item, index) => {
             const fullName = `${item.first_name} ${item.last_name}`;
-            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}` ;
+            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
             return (
               <p className="card-text">{rankDetail}
                 <span style={{ float: "right", color: "#F45197" }}>
