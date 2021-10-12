@@ -6,6 +6,8 @@ import { API } from "aws-amplify";
 export const types = {
   GET_GAMIFICATION: "GET_GAMIFICATION",
   GET_GAMIFICATION_SUCCESS: "GET_GAMIFICATION_SUCCESS",
+  GET_CHALLENGE_EVENT: "GET_CHALLENGE_EVENT",
+  GET_CHALLENGE_EVENT_SUCCESS: "GET_CHALLENGE_EVENT_SUCCESS",
   CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
 
@@ -22,6 +24,12 @@ export const getGamification = (
   }
 });
 
+export const getChallengeEvent = (
+
+) => ({
+  type: types.GET_CHALLENGE_EVENT
+});
+
 
 /* END OF ACTION Section */
 
@@ -36,6 +44,20 @@ const getGamificationSagaAsync = async (
     const apiResult = await API.get("bebe", "/getGamification", {
       queryStringParameters: {
         season
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const getChallengeEventSagaAsync = async (
+  
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getChallengeEvent", {
+      queryStringParameters: {
       }
     });
     return apiResult;
@@ -62,13 +84,33 @@ function* getGamificationSaga({ payload }) {
   }
 }
 
+function* getChallengeEventSaga({  }) {
+
+  try {
+    const apiResult = yield call(
+      getChallengeEventSagaAsync,
+    );
+    yield put({
+      type: types.GET_CHALLENGE_EVENT_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 export function* watchGetGamification() {
   yield takeEvery(types.GET_GAMIFICATION, getGamificationSaga)
 }
 
+export function* watchGetChallengeEvent() {
+  yield takeEvery(types.GET_CHALLENGE_EVENT, getChallengeEventSaga)
+}
+
 export function* saga() {
   yield all([
-    fork(watchGetGamification)
+    fork(watchGetGamification),
+    fork(watchGetChallengeEvent),
   ]);
 }
 
@@ -84,7 +126,8 @@ const INIT_STATE = {
   percentCompleteOfReducedWeight: 0,
   numberOfMembersInSeason: 0,
   numberOfMembersInEndSeason: 0,
-  numberOfMembersNotInGamification: 0
+  numberOfMembersNotInGamification: 0,
+  challengeEvent: null
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -100,6 +143,11 @@ export function reducer(state = INIT_STATE, action) {
         numberOfMembersInSeason: action.payload.numberOfMembersInSeason,
         numberOfMembersInEndSeason: action.payload.numberOfMembersInEndSeason,
         numberOfMembersNotInGamification: action.payload.numberOfMembersNotInGamification
+      };
+    case types.GET_CHALLENGE_EVENT_SUCCESS:
+      return {
+        ...state,
+        challengeEvent: action.payload.challengeEvent,
       };
     case types.CLEAR_GAMIFICATION:
       return INIT_STATE;

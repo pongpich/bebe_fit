@@ -4,34 +4,45 @@ import {
   Form,
   Label,
   Input,
-  Button
+  Button,
+  Dropdown, DropdownToggle, DropdownMenu, DropdownItem
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification } from "../redux/dashboard";
+import { getGamification, clearGamification, getChallengeEvent } from "../redux/dashboard";
 //import "./login.scss";
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      season: "season 2"
+      season: "season",
+      dropdownOpen: false
     };
   }
 
   componentDidMount() {
     const { season } = this.state;
     this.props.clearGamification();
-    this.props.getGamification(season);
+    this.props.getChallengeEvent();
   }
 
   componentDidUpdate(prevProps) {
 
   }
 
+  toggle() {
+    const { dropdownOpen } = this.state;
+    this.setState({ dropdownOpen: !dropdownOpen })
+  }
+
+  selectSeason(season) {
+    this.props.getGamification(season);
+    this.setState({ season: season });
+  }
 
   render() {
-    const { season } = this.state;
+    const { season, dropdownOpen } = this.state;
     const {
       percentCompleteOfWeightResult,
       percentCompleteOfExerciseComplete,
@@ -40,11 +51,21 @@ class Dashboard extends Component {
       percentCompleteOfReducedWeight,
       numberOfMembersInSeason,
       numberOfMembersInEndSeason,
-      numberOfMembersNotInGamification
+      numberOfMembersNotInGamification,
+      challengeEvent
     } = this.props;
     return (
       <div>
-        <h1>{season}</h1>
+        <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
+          <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
+          <DropdownMenu>
+            {
+              challengeEvent && challengeEvent.map((item, index) => (
+                <DropdownItem onClick={() => this.selectSeason(item.event_name)}>{item.event_name}</DropdownItem>
+              ))
+            }
+          </DropdownMenu>
+        </Dropdown>
         <h1>บันทึกน้ำหนักครบ 2 ครั้ง : {percentCompleteOfWeightResult}%</h1>
         <h1>ออกกำลังกายครบ 4 วันต่อสัปดาห์ : {percentCompleteOfExerciseComplete}%</h1>
         <h1>ทีมชั่งน้ำหนักครบ 7 วัน : {percentCompleteOfWeightBonusResult}%</h1>
@@ -66,7 +87,8 @@ const mapStateToProps = ({ dashboard }) => {
     percentCompleteOfReducedWeight,
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification
+    numberOfMembersNotInGamification,
+    challengeEvent
   } = dashboard;
   return {
     percentCompleteOfWeightResult,
@@ -76,11 +98,12 @@ const mapStateToProps = ({ dashboard }) => {
     percentCompleteOfReducedWeight,
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification
+    numberOfMembersNotInGamification,
+    challengeEvent
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification };
+const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent };
 
 export default connect(
   mapStateToProps,
