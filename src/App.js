@@ -21,6 +21,7 @@ import Platform from "./views/platform";
 import Package from "./views/package";
 import ImportMembers from "./views/importMembers";
 import Challenges from "./views/challenges";
+import Dashboard from "./views/dashboard";
 
 import { awsConfig } from "./constants/defaultValues";
 
@@ -161,6 +162,7 @@ class App extends Component {
           <Route path='/forgot-password' component={ForgotPassword} /> */}
           <Route path='/import-Members' component={ImportMembers} />
           <Route path='/Challenges' component={Challenges} />
+          <Route path='/Dashboard' component={Dashboard} />
           <Route path='/VideoList' component={VideoList} />
           {/* <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} /> */}

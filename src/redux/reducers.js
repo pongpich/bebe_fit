@@ -8,6 +8,7 @@ import { reducer as exerciseVideos} from './exerciseVideos';
 import { reducer as exerciseProgram} from './exerciseProgram';
 import { reducer as payment} from './payment';
 import { reducer as challenges} from './challenges';
+import { reducer as dashboard} from './dashboard';
 
 
 
@@ -22,7 +23,8 @@ const reducers = combineReducers({
   exerciseVideos,
   exerciseProgram,
   payment,
-  challenges
+  challenges,
+  dashboard
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers)

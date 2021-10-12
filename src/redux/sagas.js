@@ -4,6 +4,7 @@ import { saga as exerciseVideos} from './exerciseVideos';
 import { saga as exerciseProgram} from './exerciseProgram';
 import { saga as payment} from './payment';
 import { saga as challenges} from './challenges';
+import { saga as dashboard} from './dashboard';
 
 
 export default function* rootSaga(getState) {
@@ -12,6 +13,7 @@ export default function* rootSaga(getState) {
     exerciseVideos(),
     exerciseProgram(),
     payment(),
-    challenges()
+    challenges(),
+    dashboard()
   ]);
 }
