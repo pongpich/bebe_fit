@@ -6,7 +6,12 @@ import { API } from "aws-amplify";
 export const types = {
   GET_GAMIFICATION: "GET_GAMIFICATION",
   GET_GAMIFICATION_SUCCESS: "GET_GAMIFICATION_SUCCESS",
+  CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
+
+export const clearGamification = () => ({
+  type: types.CLEAR_GAMIFICATION
+})
 
 export const getGamification = (
   season
@@ -96,6 +101,8 @@ export function reducer(state = INIT_STATE, action) {
         numberOfMembersInEndSeason: action.payload.numberOfMembersInEndSeason,
         numberOfMembersNotInGamification: action.payload.numberOfMembersNotInGamification
       };
+    case types.CLEAR_GAMIFICATION:
+      return INIT_STATE;
     default:
       return { ...state };
   }
