@@ -5,10 +5,11 @@ import {
 import { connect } from "react-redux";
 import { updateProfile, logoutUser } from "../redux/auth";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, clearVideos } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime } from "../helpers/utils";
 import "./videoList.scss";
+import dashjs from 'dashjs';
 
 class VideoList extends Component {
   constructor(props) {
@@ -30,11 +31,12 @@ class VideoList extends Component {
       lastWeekVDO_click: "default",
       tempPlaylist: [],
       indexPlaylist: 0,
-      selectChangeVideoList: [],
       spinnerRandomVideo: "default",
       weightInDailyWeighChallenge: "",
       otherAttributesPage: "basicInfo",
-      autoPlayCheck: false
+      autoPlayCheck: false,
+      videoPlayer: dashjs.MediaPlayer().create(),
+      videoPlayerList: dashjs.MediaPlayer().create(),
     };
 
     this.prevPlayTime = 0;
@@ -52,6 +54,9 @@ class VideoList extends Component {
 
   async componentDidMount() {
     const { user } = this.props;
+
+    this.props.clearVideos();
+
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
         this.props.user.user_id,
@@ -139,10 +144,9 @@ class VideoList extends Component {
       })
     }
     if (prevProps.videos !== this.props.videos) {
-      const videos = this.props.videos;
-      this.setState({
-        selectChangeVideoList: videos
-      })
+      if (this.props.videos && this.props.videos.length > 0) {
+        this.videoPlayerEditVDOAll();
+      }
     }
     if (prevProps.status === "processing" && this.props.status === "success") {
       this.closeEditVDO();
@@ -211,9 +215,10 @@ class VideoList extends Component {
   closeTogglePopupSelectEditVideo() {
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
     this.setState({
-      selectChangeVideoList: [],
+      //selectChangeVideoList: [],
       indexPlaylist: 0
     })
+    this.props.clearVideos();
     document.body.style.overflow = "auto";
   }
 
@@ -223,8 +228,9 @@ class VideoList extends Component {
     playlist[indexPlaylist] = { ...playlist[indexPlaylist], ...video, play_time: 0 };
     this.setState({
       tempPlaylist: playlist,
-      selectChangeVideoList: []
+      //selectChangeVideoList: []
     })
+    this.props.clearVideos();
     document.getElementById("popupSelectEditVideo").classList.toggle("active");
     document.body.style.overflow = "auto";
   }
@@ -301,7 +307,7 @@ class VideoList extends Component {
   }
 
   toggleList(index) {
-    const { focusDay } = this.state;
+    const { focusDay, videoPlayerList } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
     const selectedVDO = todayExercise.find(element => (element.order === index));
     if (selectedVDO) {
@@ -309,15 +315,16 @@ class VideoList extends Component {
         selectedVDO
       }, () => {
         var trailer = document.getElementById(`popupVDOList`);
-        var video = document.getElementById(`videoPlayerList`);
+        // var video = document.getElementById(`videoPlayerList`);
         trailer.classList.add("active_list");
-        video.play();
+        //video.play();
+        videoPlayerList.play();
       })
     }
   }
 
   toggleListLastWeek(index) {
-    const { focusDay } = this.state;
+    const { focusDay, videoPlayerList } = this.state;
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     const selectedVDO = todayExercise.find(element => (element.order === index));
     if (selectedVDO) {
@@ -325,19 +332,32 @@ class VideoList extends Component {
         selectedVDO
       }, () => {
         var trailer = document.getElementById(`popupVDOList`);
-        var video = document.getElementById(`videoPlayerList`);
+        //var video = document.getElementById(`videoPlayerList`);
         trailer.classList.add("active_list");
-        video.play();
+        //video.play();
+        videoPlayerList.play();
       })
     }
   }
 
   closeList() {
+    const { videoPlayerList } = this.state;
     var trailer = document.getElementById(`popupVDOList`);
-    var video = document.getElementById(`videoPlayerList`);
+    //var video = document.getElementById(`videoPlayerList`);
+
+    this.props.videoListForUser(
+      this.props.user.user_id,
+      // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+      JSON.parse(this.props.user.other_attributes).weight,
+      this.props.user.start_date,
+      this.props.user.expire_date,
+      this.props.user.offset
+    );
+
     trailer.classList.remove("active_list");
-    video.pause();
-    video.currentTime = 0;
+    //video.pause();
+    videoPlayerList.pause();
+    //video.currentTime = 0;
 
   }
 
@@ -349,6 +369,16 @@ class VideoList extends Component {
         selectedVDO: selectedVDO
       })
     }
+    if (trailer.classList.contains("active")) {
+      this.props.videoListForUser(
+        this.props.user.user_id,
+        // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+        JSON.parse(this.props.user.other_attributes).weight,
+        this.props.user.start_date,
+        this.props.user.expire_date,
+        this.props.user.offset
+      );
+    }
     trailer.classList.toggle("active");
     video.pause();
     video.currentTime = 0;
@@ -357,10 +387,14 @@ class VideoList extends Component {
   close() {
     var trailer = document.getElementById(`popupVDO`);
     trailer.classList.toggle("active");
+
+    var video = document.getElementById(`videoPlayer`);
+    video.pause();
+    video.currentTime = 0;
   }
 
   onVideoEnd() {
-    const { focusDay, selectedVDO, lastWeekVDO_click } = this.state;
+    const { focusDay, selectedVDO, lastWeekVDO_click, videoPlayerList } = this.state;
     var todayExercise;
     if (lastWeekVDO_click === "show") {
       todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
@@ -372,14 +406,17 @@ class VideoList extends Component {
       element => (element.order > selectedVDO.order)
     );
 
-    if (nextVDO) {
+    var trailer = document.getElementById(`popupVDOList`);
+    // ต้องเช็ค trailer.classList.contains("active_list") เพื่อป้องกันและแก้บัค
+    // เนื่องจากบางที onVideoEnd() ถูกเรียกในจังหวะที่ไม่คาดคิด จะทำให้ nextVDO ทำงาน ส่งผลให้ popupVDOList เด้งขึ้นมาในจังหวะที่ไม่ต้องการ
+    if (nextVDO && trailer.classList.contains("active_list")) {
       this.setState({
         selectedVDO: nextVDO
       }, () => {
-        var trailer = document.getElementById(`popupVDOList`);
-        var video = document.getElementById(`videoPlayerList`);
+        //var video = document.getElementById(`videoPlayerList`);
         trailer.classList.add("active_list");
-        video.play();
+        //video.play();
+        videoPlayerList.play();
       })
     }
   }
@@ -413,7 +450,6 @@ class VideoList extends Component {
       return
     }
 
-    //if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
     const user_id = this.props.user.user_id;
     const start_date = this.props.user.start_date;
     const expire_date = this.props.user.expire_date;
@@ -428,16 +464,16 @@ class VideoList extends Component {
     } else {
       tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time, duration: duration };
     }
-    const newVideo = { ...selectedVDO, play_time, duration };
-    this.setState({
-      selectedVDO: newVideo
-    });
+    // 2021-10-15 คอมเม้นท์ออกเพราะบัคเกี่ยวกับ strem video แต่เก็บไว้ก่อนเพราะไม่แน่ใจว่าจะกระทบอะไรบ้าง
+    /*  const newVideo = { ...selectedVDO, play_time, duration };
+     this.setState({
+       selectedVDO: newVideo
+     }); */
     if (lastWeekVDO_click === "show") {
-      this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideoLastWeek);
+      this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, duration);
     } else {
-      this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo);
+      this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration);
     }
-    //}
   }
 
   onUpdateBasicInfo(event) {
@@ -519,9 +555,33 @@ class VideoList extends Component {
     }
   };
 
+  videoPlayerEditVDOAll() { //ใช้สำหรับวนลูปเพื่อ initialize เนื่องจากเปลี่ยนการเล่น video ใหม่เป็นเล่นผ่านการ stream
+
+    if (this.props.videos && this.props.videos.length > 0) {
+
+      let videoPlayerEditVDOAll = []
+      for (var i = 0; i < this.props.videos.length; i++) {
+        videoPlayerEditVDOAll.push(dashjs.MediaPlayer().create())
+      }
+
+      this.props.videos.map((item, index) => (
+        videoPlayerEditVDOAll[index].initialize(document.querySelector(`#videoPlayerEditVDO${index + 1}`), `https://stream.planforfit.com/mnt/ext/videos/bebe/video/${item.video_id}_720.mp4/manifest.mpd`, false)
+      ))
+    }
+
+  }
+
   renderEditVDO() {
-    const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList } = this.state;
-    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const { focusDay, selectedVDO, tempPlaylist, videoPlayer, videoPlayerList, } = this.state;
+    //const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl = selectedVDO ? `https://stream.planforfit.com/mnt/ext/videos/bebe/video/${selectedVDO.video_id}_720.mp4/manifest.mpd` : "";
+    videoPlayer.initialize(document.querySelector("#videoPlayer"), videoUrl, false);
+    videoPlayerList.initialize(document.querySelector("#videoPlayerList"), videoUrl, false);
+
+    if (this.props.videos && this.props.videos.length > 0) {
+      this.videoPlayerEditVDOAll();
+    }
+
     let allMinute = [];
     let allSecond = [];
     tempPlaylist.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
@@ -544,7 +604,6 @@ class VideoList extends Component {
 
     return (
       <div className="card-body d-flex justify-content-center">
-
         <form className="mt-3">
           <span className="mr-5" style={{ fontSize: "15px", color: "#F45197" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
 
@@ -630,16 +689,21 @@ class VideoList extends Component {
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Cardio</b></h2>
                 }
               </div>
-              <div className="selectEditPlaylist">
+              <div className="selectEditPlaylist" id="selectEditPlaylist">
                 {
-                  selectChangeVideoList.map((item, index) => (
+                  (this.props.videos) &&
+                  this.props.videos.map((item, index) => (
 
                     <div className="playlistWrapper border shadow" >
                       <div className="">
-                        <video poster={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} className="" width="100%" height="50%" controls controlslist="nodownload" muted style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}>
-                          <source src={`https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
-                        </video>
+                        <video
+                          poster={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`}
+                          id={`videoPlayerEditVDO${index + 1}`}
+                          width="100%" height="50%" controls controlsList="nodownload" muted
+                          style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}
+                        ></video>
                       </div>
+
                       <div className="mt-1 ml-3 mb-4">
                         <h6 style={{ color: "#F45197" }}><b> {item.name} </b></h6>
                       </div>
@@ -709,6 +773,7 @@ class VideoList extends Component {
               </div>
               <tbody>
                 {
+                  (tempPlaylist) &&
                   tempPlaylist.map((item, index) => {
                     const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
                     return (
@@ -787,7 +852,7 @@ class VideoList extends Component {
                           </div>
                         </div>
                         {
-                          (item.play_time !== item.duration) && (item.category !== "Challenge") &&
+                          (item.play_time / item.duration < completeVideoPlayPercentage) && (item.category !== "Challenge") &&
                           <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
                             <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                               <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
@@ -807,7 +872,6 @@ class VideoList extends Component {
             </table>
           </div>
         </form>
-
       </div>
     )
   }
@@ -1049,8 +1113,12 @@ class VideoList extends Component {
   }
 
   renderVideoList() {
-    const { focusDay, selectedVDO } = this.state;
-    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const { focusDay, selectedVDO, videoPlayer, videoPlayerList } = this.state;
+    //const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl = selectedVDO ? `https://stream.planforfit.com/mnt/ext/videos/bebe/video/${selectedVDO.video_id}_720.mp4/manifest.mpd` : "";
+    videoPlayer.initialize(document.querySelector("#videoPlayer"), videoUrl, false);
+    videoPlayerList.initialize(document.querySelector("#videoPlayerList"), videoUrl, false);
+
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
@@ -1284,8 +1352,12 @@ class VideoList extends Component {
   }
 
   renderVideoListLastWeek() {
-    const { focusDay, selectedVDO } = this.state;
-    const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const { focusDay, selectedVDO, videoPlayer, videoPlayerList } = this.state;
+    //const videoUrl = selectedVDO ? `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl = selectedVDO ? `https://stream.planforfit.com/mnt/ext/videos/bebe/video/${selectedVDO.video_id}_720.mp4/manifest.mpd` : "";
+    videoPlayer.initialize(document.querySelector("#videoPlayer"), videoUrl, false);
+    videoPlayerList.initialize(document.querySelector("#videoPlayerList"), videoUrl, false);
+
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     let allMinute = [];
     let allSecond = [];
@@ -1610,7 +1682,7 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges }) => {
   return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, clearVideos };
 
 export default connect(
   mapStateToProps,

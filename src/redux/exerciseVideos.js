@@ -36,7 +36,8 @@ export const types = {
   SELECT_BODY_INFO: "SELECT_BODY_INFO",
   SELECT_BODY_INFO_SUCCESS: "SELECT_BODY_INFO_SUCCESS",
   DELETE_PROGRAM_IN_WEEK: "DELETE_PROGRAM_IN_WEEK",
-  CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST"
+  CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST",
+  CLEAR_VIDEOS: "CLEAR_VIDEOS",
 }
 
 export const selectBodyInfo = (email) => ({
@@ -82,6 +83,10 @@ export const clearVideoList = () => ({
   type: types.CLEAR_VIDEO_LIST
 })
 
+export const clearVideos = () => ({
+  type: types.CLEAR_VIDEOS
+})
+
 export const resetStatus = () => ({
   type: types.RESET_STATUS
 })
@@ -125,7 +130,7 @@ export const updatePlaylist = (user_id, start_date, day_number, playlist, exerci
   }
 })
 
-export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
+export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, duration) => ({
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
@@ -134,12 +139,11 @@ export const updatePlaytime = (user_id, start_date, expire_date, day_number, vid
     day_number,
     video_number,
     play_time,
-    duration,
-    exerciseVideo
+    duration
   }
 })
 
-export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
+export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, duration) => ({
   type: types.UPDATE_PLAYTIME_LASTWEEK,
   payload: {
     user_id,
@@ -148,8 +152,7 @@ export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_num
     day_number,
     video_number,
     play_time,
-    duration,
-    exerciseVideo
+    duration
   }
 })
 
@@ -663,8 +666,7 @@ function* updatePlaytimeSaga({ payload }) {
     day_number,
     video_number,
     play_time,
-    duration,
-    exerciseVideo
+    duration
   } = payload
   try {
     const apiResult = yield call(
@@ -695,8 +697,7 @@ function* updatePlaytimeSaga({ payload }) {
         break;
     }
     yield put({
-      type: types.UPDATE_PLAYTIME_SUCCESS,
-      payload: exerciseVideo
+      type: types.UPDATE_PLAYTIME_SUCCESS
     });
     return apiResult;
   } catch (error) {
@@ -712,8 +713,7 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
     day_number,
     video_number,
     play_time,
-    duration,
-    exerciseVideo
+    duration
   } = payload
   try {
     const apiResult = yield call(
@@ -744,8 +744,7 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
         break;
     }
     yield put({
-      type: types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS,
-      payload: exerciseVideo
+      type: types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS
     });
     return apiResult;
   } catch (error) {
@@ -975,13 +974,11 @@ export function reducer(state = INIT_STATE, action) {
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
-        ...state,
-        exerciseVideo: action.payload
+        ...state
       };
     case types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS:
       return {
-        ...state,
-        exerciseVideoLastWeek: action.payload
+        ...state
       };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {
@@ -1042,6 +1039,11 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         status: "default"
+      };
+    case types.CLEAR_VIDEOS:
+      return {
+        ...state,
+        videos: []
       };
     case types.CLEAR_VIDEO_LIST:
       return INIT_STATE;
