@@ -130,7 +130,7 @@ export const updatePlaylist = (user_id, start_date, day_number, playlist, exerci
   }
 })
 
-export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, duration) => ({
+export const updatePlaytime = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME,
   payload: {
     user_id,
@@ -139,11 +139,12 @@ export const updatePlaytime = (user_id, start_date, expire_date, day_number, vid
     day_number,
     video_number,
     play_time,
-    duration
+    duration,
+    exerciseVideo
   }
 })
 
-export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, duration) => ({
+export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo) => ({
   type: types.UPDATE_PLAYTIME_LASTWEEK,
   payload: {
     user_id,
@@ -152,7 +153,8 @@ export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_num
     day_number,
     video_number,
     play_time,
-    duration
+    duration,
+    exerciseVideo
   }
 })
 
@@ -666,7 +668,8 @@ function* updatePlaytimeSaga({ payload }) {
     day_number,
     video_number,
     play_time,
-    duration
+    duration,
+    exerciseVideo
   } = payload
   try {
     const apiResult = yield call(
@@ -697,7 +700,8 @@ function* updatePlaytimeSaga({ payload }) {
         break;
     }
     yield put({
-      type: types.UPDATE_PLAYTIME_SUCCESS
+      type: types.UPDATE_PLAYTIME_SUCCESS,
+      payload: exerciseVideo
     });
     return apiResult;
   } catch (error) {
@@ -713,7 +717,8 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
     day_number,
     video_number,
     play_time,
-    duration
+    duration,
+    exerciseVideo
   } = payload
   try {
     const apiResult = yield call(
@@ -744,7 +749,8 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
         break;
     }
     yield put({
-      type: types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS
+      type: types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS,
+      payload: exerciseVideo
     });
     return apiResult;
   } catch (error) {
@@ -974,11 +980,13 @@ export function reducer(state = INIT_STATE, action) {
       };
     case types.UPDATE_PLAYTIME_SUCCESS:
       return {
-        ...state
+        ...state,
+        exerciseVideo: action.payload
       };
     case types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS:
       return {
-        ...state
+        ...state,
+        exerciseVideo: action.payload
       };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {

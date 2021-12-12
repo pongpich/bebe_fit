@@ -612,8 +612,8 @@ class Challenges extends Component {
           <h5 style={{ color: "#F45197" }}><b>• รายละเอียดของรางวัลประจำ Season</b></h5>
           <h6>สามารถติดตามของรางวัลได้ทาง Facebook Group</h6>
           <br></br>
-          <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
-          <h6>เริ่มตั้งแต่วันที่ 4 ตุลาคม 2561 สิ้นสุดวันที่ 28 พฤศจิกายน 2561</h6>
+         {/*  <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
+          <h6>เริ่มตั้งแต่วันที่ 4 ตุลาคม 2561 สิ้นสุดวันที่ 28 พฤศจิกายน 2561</h6> */}
           {
             (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
               <div className="row mt-3">

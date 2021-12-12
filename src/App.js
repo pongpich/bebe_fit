@@ -127,7 +127,7 @@ class App extends Component {
       <div className="header">
 
         <div className="popupIntroVDO" id={`popupIntroVDO`}>
-          <video data-dashjs-player  src={`https://stream.planforfit.com/mnt/ext/videos/bebe/video/INTRO%20PROGRAM.mp4/manifest.mpd`}  id="introVDO" controls controlsList="nodownload" disablePictureInPicture ></video>
+          <video src={'https://player.vimeo.com/external/414645540.hd.mp4?s=d2c95abe8443336f858f4bf9243b79fee350a8d4&profile_id=174'} id="introVDO" controls controlsList="nodownload" disablePictureInPicture ></video>
           <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle()}></img>
         </div>
 
