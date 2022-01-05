@@ -1,109 +1,46 @@
 import React, { Component } from "react";
-import {
-  CardTitle,
-  Form,
-  Label,
-  Input,
-  Button,
-  Dropdown, DropdownToggle, DropdownMenu, DropdownItem
-} from "reactstrap";
-import { connect } from "react-redux";
+import ChallengesDashboard1 from '../components/dashboard/ChallengesDashboard1';
 
-import { getGamification, clearGamification, getChallengeEvent } from "../redux/dashboard";
-//import "./login.scss";
+import { connect } from "react-redux";
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      season: "season",
-      dropdownOpen: false
+
     };
   }
 
   componentDidMount() {
-    const { season } = this.state;
-    this.props.clearGamification();
-    this.props.getChallengeEvent();
+    const { user } = this.props;
+    if (user) { // เช็คว่า login ยัง
+      if (user !== null && user.password !== null && user.authorization === "member") { // ถ้าเป็น member ธรรมดาจะถูกไม่สามารถเข้าหน้านี้ได้ (จะถูกส่งไปหน้า login)
+        this.props.history.push('/login');
+      }
+    } else {
+      this.props.history.push('/login');
+    }
   }
 
   componentDidUpdate(prevProps) {
 
   }
 
-  toggle() {
-    const { dropdownOpen } = this.state;
-    this.setState({ dropdownOpen: !dropdownOpen })
-  }
-
-  selectSeason(season) {
-    this.props.getGamification(season);
-    this.setState({ season: season });
-  }
-
   render() {
-    const { season, dropdownOpen } = this.state;
-    const {
-      percentCompleteOfWeightResult,
-      percentCompleteOfExerciseComplete,
-      percentCompleteOfWeightBonusResult,
-      percentCompleteOfWeightTeamComplete,
-      percentCompleteOfReducedWeight,
-      numberOfMembersInSeason,
-      numberOfMembersInEndSeason,
-      numberOfMembersNotInGamification,
-      challengeEvent
-    } = this.props;
     return (
       <div>
-        <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
-          <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
-          <DropdownMenu>
-            {
-              challengeEvent && challengeEvent.map((item, index) => (
-                <DropdownItem onClick={() => this.selectSeason(item.event_name)}>{item.event_name}</DropdownItem>
-              ))
-            }
-          </DropdownMenu>
-        </Dropdown>
-        <h1>บันทึกน้ำหนักครบ 2 ครั้ง : {percentCompleteOfWeightResult}%</h1>
-        <h1>ออกกำลังกายครบ 4 วันต่อสัปดาห์ : {percentCompleteOfExerciseComplete}%</h1>
-        <h1>ทีมชั่งน้ำหนักครบ 7 วัน : {percentCompleteOfWeightBonusResult}%</h1>
-        <h1>สมาชิกชั่งครบ 2 ครั้ง : {percentCompleteOfWeightTeamComplete}%</h1>
-        <h1>น้ำหนักลดลงจากสัปดาห์ที่แล้ว : {percentCompleteOfReducedWeight}%</h1>
-        <h1>จำนวนคนที่เล่น Gamification ใน season นี้ : {numberOfMembersInSeason} คน</h1>
-        <h1>จำนวนคนที่อยู่ในทีมจนจบ season : {numberOfMembersInEndSeason} คน</h1>
-        <h1>จำนวนคนที่ไม่มีทีมจนจบ season : {numberOfMembersNotInGamification} คน</h1>
+        <ChallengesDashboard1 />
       </div>
     );
   }
 }
-const mapStateToProps = ({ dashboard }) => {
-  const {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent
-  } = dashboard;
-  return {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent
-  };
+
+const mapStateToProps = ({ authUser }) => {
+  const { user } = authUser;
+  return { user };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent };
+const mapActionsToProps = {};
 
 export default connect(
   mapStateToProps,
