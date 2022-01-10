@@ -1,11 +1,11 @@
 .box-background {
     background-color: #FFFFFF;
     max-width: 900px;
-    min-height: 500px;
-    margin-left: 40px;
+    min-height: 300px;
     margin-top: 25px;
-    margin-right: 40px;
     border-radius: 20px;
+    margin-bottom: 25px;
+    padding-bottom: 30px;
 }
 .background {
     background-color: #D8D6DF;
@@ -44,4 +44,22 @@
     position: relative;
     float: right;
     color: #F45197;
+}
+.box-number-people {
+    text-align: center;
+    padding-top:  30px;
+    min-width: 330px;
+    min-height: 300px;
+    background-color: #FFFFFF;
+    margin-top: 27px;
+    border-radius: 20px;
+
+}
+.people {
+    color: #F45197;
+    font-size: 30px;
+}
+.dropdown{
+    padding-top: 10px;
+    padding-left: 30px;
 }
