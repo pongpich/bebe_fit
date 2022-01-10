@@ -63,3 +63,25 @@
     padding-top: 10px;
     padding-left: 30px;
 }
+.gamification {
+    margin-top: 20px;
+    width: 420px;
+    margin-left: -20px;
+    height: 150px;
+    background-color: #FFFFFF;
+    margin-bottom: 50px;
+    border-radius: 20px;
+    padding-top: 20px;
+    text-align: center;
+}
+.active-season {
+    margin-top: 20px;
+    width: 420px;
+    margin-left: 5px;
+    height: 150px;
+    background-color: #FFFFFF;
+    margin-bottom: 50px;
+    border-radius: 20px;
+    padding-top: 20px;
+    text-align: center;
+}

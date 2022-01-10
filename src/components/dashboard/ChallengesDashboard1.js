@@ -67,18 +67,17 @@ class ChallengesDashboard1 extends Component {
             <div class="col-md-8">
               <div className="box-background">
                 <div className="dropdown">
-                <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
-                  <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
-                  <DropdownMenu>
-                    {
-                      challengeEvent && challengeEvent.map((item, index) => (
-                        <DropdownItem onClick={() => this.selectSeason(item.event_name)}>{item.event_name}</DropdownItem>
-                      ))
-                    }
-                  </DropdownMenu>
-                </Dropdown>
+                  <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
+                    <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
+                    <DropdownMenu>
+                      {
+                        challengeEvent && challengeEvent.map((item, index) => (
+                          <DropdownItem onClick={() => this.selectSeason(item.event_name)}>{item.event_name}</DropdownItem>
+                        ))
+                      }
+                    </DropdownMenu>
+                  </Dropdown>
                 </div>
-               
                 <br />
                 <p className="text-progress">บันทึกน้ำหนักครบ 2 ครั้ง <span className="text-progressRight"> สำเร็จ {percentCompleteOfWeightResult}% </span></p>
                 <div class="progress">
@@ -103,6 +102,20 @@ class ChallengesDashboard1 extends Component {
                 <p className="text-progress">น้ำหนักลดลงจากสัปดาห์ที่แล้ว <span className="text-progressRight"> สำเร็จ {percentCompleteOfReducedWeight}% </span></p>
                 <div class="progress">
                   <div class="progress-bar" role="progressbar" style={{ "width": `${percentCompleteOfReducedWeight}%` }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+              <div class="container">
+                <div class="row">
+                  <div class="col">
+                    <div className="gamification">
+                      <p>จำนวนคนที่เล่น Gamification ใน season นี้</p>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div className="active-season">
+                    <p>จำนวนคนที่ Active อยู่ในทีมมากกว่า 1 อาทิตย์</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
