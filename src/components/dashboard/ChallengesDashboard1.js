@@ -109,6 +109,7 @@ class ChallengesDashboard1 extends Component {
                   <div class="col">
                     <div className="gamification">
                       <p>จำนวนคนที่เล่น Gamification ใน season นี้</p>
+                      <p className="people"> {numberOfMembersInSeason} คน</p>
                     </div>
                   </div>
                   <div class="col">
