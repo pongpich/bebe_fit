@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import './ChallengesDashboard2.css';
+import './ChallengesDashboard5.css';
 
 
 import {
@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 
 import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
 
-class ChallengesDashboard2 extends Component {
+class ChallengesDashboard5 extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,54 +66,53 @@ class ChallengesDashboard2 extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="box-background">
+              <div className="dropdown">
+                  <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
+                    <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
+                    <DropdownMenu>
+                      {
+                        challengeEvent && challengeEvent.map((item, index) => (
+                          <DropdownItem onClick={() => this.selectSeason(item.event_name)}>{item.event_name}</DropdownItem>
+                        ))
+                      }
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+                <br />
               <div className="table-responsive">
-                <table className="table table-bordered">
+                <table className="table">
                     <thead>
                       <tr>
-                        <th scope="col" className="text-center"></th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 1</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 2</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 3</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 4</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 5</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 6</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 7</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 8</th>
+                        <th scope="col" className="text-center">ชื่อ-สกุล <i class='fas fa-angle-down' ></i></th>
+                        <th scope="col" className="text-center" >เบอร์โทรศัพท์</th>
+                        <th scope="col" className="text-center" >อีเมล</th>
+                        <th scope="col" className="text-center" >รอบที่ต่ออายุ <i class='fas fa-angle-down'></i></th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <th scope="row" className="text-centerColor">SEASON 1</th>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
+                        <th scope="row" className="text-center color-primary">บพิตร์ เตชะวัฒนานันท์</th>
+                        <td  className="text-center">0812122222</td>
+                        <td  className="text-center">vsdfknj@mail.com</td>
+                        <td className="text-centerColor">Season 11</td>
                       </tr>
                       <tr>
-                        <th scope="row" className="text-centerColor">SEASON 2</th>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
+                        <th scope="row" className="text-center color-primary">อนุพงศ์ อรุณ</th>
+                        <td  className="text-center">0812122222</td>
+                        <td  className="text-center">vsdfknj@mail.com</td>
+                        <td className="text-center">Season 8</td>
                       </tr>
                       <tr>
-                        <th scope="row" className="text-centerColor">SEASON 3</th>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
+                        <th scope="row" className="text-center color-primary">ไกำพอ_ภำพะ้เดก</th>
+                        <td  className="text-center">0812122222</td>
+                        <td  className="text-center">vsdfknj@mail.com</td>
+                        <td className="text-centerColor">Season11</td>
+                      </tr>
+                      <tr>
+                        <th scope="row" className="text-center color-primary">บพิตร์ เตชะวัฒนานันท์</th>
+                        <td  className="text-center">0812122222</td>
+                        <td  className="text-center">vsdfknj@mail.com</td>
+                        <td className="text-center">Season 9</td>
                       </tr>
                     </tbody>
                   </table>
@@ -157,4 +156,4 @@ const mapActionsToProps = { getGamification, clearGamification, getChallengeEven
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(ChallengesDashboard2);
+)(ChallengesDashboard5);

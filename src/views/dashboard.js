@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import ChallengesDashboard1 from '../components/dashboard/ChallengesDashboard1';
 import ChallengesDashboard2 from '../components/dashboard/ChallengesDashboard2';
+import ChallengesDashboard3 from '../components/dashboard/ChallengesDashboard3';
+import ChallengesDashboard4 from '../components/dashboard/ChallengesDashboard4';
+import ChallengesDashboard5 from '../components/dashboard/ChallengesDashboard5';
 
 import { connect } from "react-redux";
 
@@ -32,6 +35,9 @@ class Dashboard extends Component {
       <div>
         <ChallengesDashboard1 />
         <ChallengesDashboard2 />
+        <ChallengesDashboard3 />
+        <ChallengesDashboard4 />
+        <ChallengesDashboard5 />
       </div>
     );
   }

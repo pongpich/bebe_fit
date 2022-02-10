@@ -1,12 +1,11 @@
 .box-background {
     background-color: #FFFFFF;
-    max-width: 900px;
+  max-width: 1600px !important;
     min-height: 300px;
     margin-top: 25px;
     border-radius: 20px;
     margin-bottom: 25px;
-   /*  padding-bottom: 30px; */
-    padding: 30px;
+    padding-bottom: 30px;
 }
 .background {
     background-color: #D8D6DF;
@@ -44,6 +43,13 @@
 .text-progressRight {
     position: relative;
     float: right;
+    color: #F45197;
+}
+.text-center {
+    text-align: center;
+}
+.text-centerColor {
+    text-align: center;
     color: #F45197;
 }
 .box-number-people {
