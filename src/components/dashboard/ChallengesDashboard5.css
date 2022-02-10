@@ -72,6 +72,9 @@
 .dropdown{
     padding-top: 10px;
     padding-left: 30px;
+    margin-top: -30px;
+    margin-left: 100px;
+    
 }
 .gamification {
     margin-top: 20px;

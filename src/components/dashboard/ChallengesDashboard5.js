@@ -66,8 +66,9 @@ class ChallengesDashboard5 extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="box-background">
+              <h5>รายชื่อผู้สมัครคอร์สออนไลน์</h5>
               <div className="dropdown">
-                  <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
+                <Dropdown isOpen={dropdownOpen} toggle={() => this.toggle()}>
                     <DropdownToggle style={{ backgroundColor: "white", color: "black" }} caret>{season}</DropdownToggle>
                     <DropdownMenu>
                       {
