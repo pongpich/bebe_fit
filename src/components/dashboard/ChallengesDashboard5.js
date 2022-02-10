@@ -92,25 +92,25 @@ class ChallengesDashboard5 extends Component {
                     </thead>
                     <tbody>
                       <tr>
-                        <th scope="row" className="text-center color-primary">บพิตร์ เตชะวัฒนานันท์</th>
+                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</th>
                         <td  className="text-center">0812122222</td>
                         <td  className="text-center">vsdfknj@mail.com</td>
                         <td className="text-centerColor">Season 11</td>
                       </tr>
                       <tr>
-                        <th scope="row" className="text-center color-primary">อนุพงศ์ อรุณ</th>
+                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">อนุพงศ์ อรุณ</th>
                         <td  className="text-center">0812122222</td>
                         <td  className="text-center">vsdfknj@mail.com</td>
                         <td className="text-center">Season 8</td>
                       </tr>
                       <tr>
-                        <th scope="row" className="text-center color-primary">ไกำพอ_ภำพะ้เดก</th>
+                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">ไกำพอ_ภำพะ้เดก</th>
                         <td  className="text-center">0812122222</td>
                         <td  className="text-center">vsdfknj@mail.com</td>
                         <td className="text-centerColor">Season11</td>
                       </tr>
                       <tr>
-                        <th scope="row" className="text-center color-primary">บพิตร์ เตชะวัฒนานันท์</th>
+                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</th>
                         <td  className="text-center">0812122222</td>
                         <td  className="text-center">vsdfknj@mail.com</td>
                         <td className="text-center">Season 9</td>
@@ -122,7 +122,67 @@ class ChallengesDashboard5 extends Component {
             </div>
           </div>
         </div>
+              {/* pop up */}
+        
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog  modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+              <table className="table  table-borderless">
+                    <thead>
+                      <tr>
+                        <th scope="col" className="text-center">ชื่อ-สกุล</th>
+                        <th scope="col" className="text-center" >เบอร์โทรศัพท์</th>
+                        <th scope="col" className="text-center" >อีเมล</th>
+                      
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row" className="text-center  pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</td>
+                        <td  className="text-center">0812122222</td>
+                        <td  className="text-center">vsdfknj@mail.com</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" className="text-center">รอบที่ต่ออายุ </th>
+                        <th scope="col" className="text-center" >วันที่ต่ออายุ</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td  className="text-center">Season 1</td>
+                        <td  className="text-center">11/12/2564</td>
+                      </tr>
+                      <tr>
+                        <td  className="text-center">Season 2</td>
+                        <td  className="text-center">11/12/2564</td>
+                      </tr>
+                      <tr>
+                        <td  className="text-center">Season 3</td>
+                        <td  className="text-center">11/12/2564</td>
+                      </tr>
+                      <tr>
+                        <td  className="text-center">Season 4</td>
+                        <td  className="text-center">11/12/2564</td>
+                      </tr>
+                    </tbody>
+                  </table>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+
+
     );
   }
 }
