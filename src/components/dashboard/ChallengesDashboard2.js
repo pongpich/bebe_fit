@@ -13,6 +13,11 @@ import {
 import { connect } from "react-redux";
 
 import { getGamification, clearGamification, getChallengeEvent,getMembersEachWeekInSeason } from "../../redux/dashboard";
+let max_length = [];
+let index = []; 
+let numberMax = null;
+let week = null;
+
 
 class ChallengesDashboard2 extends Component {
   constructor(props) {
@@ -29,6 +34,7 @@ class ChallengesDashboard2 extends Component {
     this.props.clearGamification();
     this.props.getChallengeEvent();
     this.props.getMembersEachWeekInSeason();
+    this.weekAll(percentOfMembersEachWeek)
   }
 
   componentDidUpdate(prevProps) {
@@ -45,18 +51,35 @@ class ChallengesDashboard2 extends Component {
     this.setState({ season: season });
   }
 
+
+  weekAll(percentOfMembersEachWeek) {
+      percentOfMembersEachWeek  && percentOfMembersEachWeek.map(( key, value) => {
+        max_length.push(key.length);
+        numberMax =  Math.max(...max_length);
+          for (let i = 1; i <= numberMax; i++) {
+            index  += i;
+          } 
+          week =   Array.from(new Set(index))
+     })
+  }
+
+
+
+
   render() {
+
+    
     const { season, dropdownOpen } = this.state;
     const {
-      percentCompleteOfWeightResult,percentOfMembersEachWeek,
+      percentCompleteOfWeightResult,percentOfMembersEachWeek,weekAll
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
 
-
-    
+  
     console.log("percentOfMembersEachWeek",percentOfMembersEachWeek);
+    this.weekAll(percentOfMembersEachWeek);
 
     return (
       <div className="background">
@@ -69,33 +92,34 @@ class ChallengesDashboard2 extends Component {
                     <thead>
                       <tr>
                         <th scope="col" className="text-center"></th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 1</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 2</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 3</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 4</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 5</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 6</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 7</th>
-                        <th scope="col" className="text-centerColor">สัปดาห์ที่ 8</th>
+                        {
+                            week  && week.map((key) => {
+                               return  <th scope="col" className="text-centerColor"> สัปดาห์ที่ {key}</th>
+                            }) 
+                          }
+                       
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row" className="text-centerColor">SEASON 1</th>
-                        <td className="text-center">
+                      {
+                        percentOfMembersEachWeek === 0  ? 
+                       <td className="text-center">
                           <div className="spinner-border text-pink" role="status">
                             <span className="visually-hidden">Loading...</span>
                           </div>
-                        </td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                      </tr>
-                     
+                       </td> 
+                       : 
+                       percentOfMembersEachWeek  && percentOfMembersEachWeek.map((item,index) => {
+                        return <tr>
+                           <th scope="row" className="text-centerColor">SEASON {index+1}</th>
+                         {
+                           item && item.map((val) => {
+                             return  <td>{val}</td>
+                           })
+                         }
+                         </tr> 
+                       }) 
+                      }
                     </tbody>
                   </table>
                   </div>

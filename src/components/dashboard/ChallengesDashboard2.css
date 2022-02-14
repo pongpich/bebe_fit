@@ -54,9 +54,13 @@
 }
 
 .text-pink {
-  
     color: #F45197 !important;
+  
 } 
+
+.loading-size {
+    font-size:  200px !important;
+}
 
 .box-number-people {
     text-align: center;
@@ -67,6 +71,10 @@
     margin-top: 27px;
     border-radius: 20px;
 
+}
+
+.table-responsive>.table-bordered {
+    border: aliceblue !important;
 }
 .people {
     color: #F45197;
