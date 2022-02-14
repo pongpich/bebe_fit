@@ -83,7 +83,7 @@ class ChallengesDashboard2 extends Component {
                       <tr>
                         <th scope="row" className="text-centerColor">SEASON 1</th>
                         <td className="text-center">
-                          <div className="spinner-border text-primary2" role="status">
+                          <div className="spinner-border text-pink" role="status">
                             <span className="visually-hidden">Loading...</span>
                           </div>
                         </td>
@@ -95,28 +95,7 @@ class ChallengesDashboard2 extends Component {
                         <td>0.00 %</td>
                         <td>0.00 %</td>
                       </tr>
-                      <tr>
-                        <th scope="row" className="text-centerColor">SEASON 2</th>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-centerColor">SEASON 3</th>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                        <td>0.00 %</td>
-                      </tr>
+                     
                     </tbody>
                   </table>
                   </div>
