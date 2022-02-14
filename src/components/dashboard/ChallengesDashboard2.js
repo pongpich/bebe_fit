@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
+import { getGamification, clearGamification, getChallengeEvent,getMembersEachWeekInSeason } from "../../redux/dashboard";
 
 class ChallengesDashboard2 extends Component {
   constructor(props) {
@@ -25,8 +25,10 @@ class ChallengesDashboard2 extends Component {
 
   componentDidMount() {
     const { season } = this.state;
+    const { percentOfMembersEachWeek } = this.state;
     this.props.clearGamification();
     this.props.getChallengeEvent();
+    this.props.getMembersEachWeekInSeason();
   }
 
   componentDidUpdate(prevProps) {
@@ -46,19 +48,15 @@ class ChallengesDashboard2 extends Component {
   render() {
     const { season, dropdownOpen } = this.state;
     const {
-      percentCompleteOfWeightResult,
-      percentCompleteOfExerciseComplete,
-      percentCompleteOfWeightBonusResult,
-      percentCompleteOfWeightTeamComplete,
-      percentCompleteOfReducedWeight,
-      numberOfMembersInSeason,
-      numberOfMembersInEndSeason,
-      numberOfMembersNotInGamification,
-      challengeEvent
+      percentCompleteOfWeightResult,percentOfMembersEachWeek,
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
+
+
+    
+    console.log("percentOfMembersEachWeek",percentOfMembersEachWeek);
 
     return (
       <div className="background">
@@ -84,7 +82,11 @@ class ChallengesDashboard2 extends Component {
                     <tbody>
                       <tr>
                         <th scope="row" className="text-centerColor">SEASON 1</th>
-                        <td>0.00 %</td>
+                        <td className="text-center">
+                          <div className="spinner-border text-primary2" role="status">
+                            <span className="visually-hidden">Loading...</span>
+                          </div>
+                        </td>
                         <td>0.00 %</td>
                         <td>0.00 %</td>
                         <td>0.00 %</td>
@@ -137,7 +139,8 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
-    challengeEvent
+    challengeEvent,
+    percentOfMembersEachWeek
   } = dashboard;
   return {
     percentCompleteOfWeightResult,
@@ -148,11 +151,12 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
-    challengeEvent
+    challengeEvent,
+    percentOfMembersEachWeek
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent };
+const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent, getMembersEachWeekInSeason };
 
 export default connect(
   mapStateToProps,

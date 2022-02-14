@@ -8,6 +8,8 @@ export const types = {
   GET_GAMIFICATION_SUCCESS: "GET_GAMIFICATION_SUCCESS",
   GET_CHALLENGE_EVENT: "GET_CHALLENGE_EVENT",
   GET_CHALLENGE_EVENT_SUCCESS: "GET_CHALLENGE_EVENT_SUCCESS",
+  GET_MEMBERS_EACH_WEEK_IN_SEASON: "GET_MEMBERS_EACH_WEEK_IN_SEASON", 
+  GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS: "GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS",
   CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
 
@@ -29,6 +31,13 @@ export const getChallengeEvent = (
 ) => ({
   type: types.GET_CHALLENGE_EVENT
 });
+
+export const getMembersEachWeekInSeason = (
+
+  ) => ({
+    type: types.GET_MEMBERS_EACH_WEEK_IN_SEASON
+  });
+  
 
 
 /* END OF ACTION Section */
@@ -66,6 +75,23 @@ const getChallengeEventSagaAsync = async (
   }
 }
 
+const getMembersEachWeekInSeasonSagaAsync = async (
+  
+  ) => {
+    try {
+      const apiResult = await API.get("bebe", "/getMembersEachWeekInSeason", {
+        queryStringParameters: {
+        }
+      });
+     return apiResult;
+  
+    } catch (error) {
+      return { error, messsage: error.message };
+    }
+  }
+
+  
+
 function* getGamificationSaga({ payload }) {
   const {
     season
@@ -99,6 +125,25 @@ function* getChallengeEventSaga({  }) {
   }
 }
 
+
+
+function* getMembersEachWeekInSeasonSaga({  }) {
+
+  try {
+    const apiResult = yield call(
+      getMembersEachWeekInSeasonSagaAsync,
+    );
+/* 
+    console.log("apiResult",apiResult); */
+    yield put({
+      type: types.GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 export function* watchGetGamification() {
   yield takeEvery(types.GET_GAMIFICATION, getGamificationSaga)
 }
@@ -107,10 +152,15 @@ export function* watchGetChallengeEvent() {
   yield takeEvery(types.GET_CHALLENGE_EVENT, getChallengeEventSaga)
 }
 
+export function* watchGetMembersEachWeekInSeason() {
+  yield takeEvery(types.GET_MEMBERS_EACH_WEEK_IN_SEASON, getMembersEachWeekInSeasonSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetGamification),
     fork(watchGetChallengeEvent),
+    fork(watchGetMembersEachWeekInSeason),
   ]);
 }
 
@@ -127,7 +177,8 @@ const INIT_STATE = {
   numberOfMembersInSeason: 0,
   numberOfMembersInEndSeason: 0,
   numberOfMembersNotInGamification: 0,
-  challengeEvent: null
+  challengeEvent: null,
+  percentOfMembersEachWeek: 0
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -153,5 +204,10 @@ export function reducer(state = INIT_STATE, action) {
       return INIT_STATE;
     default:
       return { ...state };
+    case types.GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS:
+      return { 
+        ...state,
+        percentOfMembersEachWeek: action.payload.percentOfMembersEachWeek};
+
   }
 }

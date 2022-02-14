@@ -52,6 +52,12 @@
     text-align: center;
     color: #F45197;
 }
+
+.text-primary2 {
+  
+    color: #F45197 !important;
+} 
+
 .box-number-people {
     text-align: center;
     padding-top:  30px;

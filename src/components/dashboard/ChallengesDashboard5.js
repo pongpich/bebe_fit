@@ -149,32 +149,34 @@ class ChallengesDashboard5 extends Component {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-              <table className="table table-striped">
-                    <thead>
-                      <tr>
-                        <th scope="col" className="text-center">รอบที่ต่ออายุ </th>
-                        <th scope="col" className="text-center" >วันที่ต่ออายุ</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td  className="text-center">Season 1</td>
-                        <td  className="text-center">11/12/2564</td>
-                      </tr>
-                      <tr>
-                        <td  className="text-center">Season 2</td>
-                        <td  className="text-center">11/12/2564</td>
-                      </tr>
-                      <tr>
-                        <td  className="text-center">Season 3</td>
-                        <td  className="text-center">11/12/2564</td>
-                      </tr>
-                      <tr>
-                        <td  className="text-center">Season 4</td>
-                        <td  className="text-center">11/12/2564</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div className="table-responsive">
+                  <table className="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col" className="text-center">รอบที่ต่ออายุ </th>
+                            <th scope="col" className="text-center" >วันที่ต่ออายุ</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td  className="text-center">Season 1</td>
+                            <td  className="text-center">11/12/2564</td>
+                          </tr>
+                          <tr>
+                            <td  className="text-center">Season 2</td>
+                            <td  className="text-center">11/12/2564</td>
+                          </tr>
+                          <tr>
+                            <td  className="text-center">Season 3</td>
+                            <td  className="text-center">11/12/2564</td>
+                          </tr>
+                          <tr>
+                            <td  className="text-center">Season 4</td>
+                            <td  className="text-center">11/12/2564</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                  </div>
               </div>
             </div>
           </div>
