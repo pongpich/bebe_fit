@@ -65,8 +65,8 @@
     font-size: 30px;
 }
 .dropdown{
-    padding-top: 10px;
-    padding-left: 30px;
+    padding-top: 10px !important;
+    padding-left: 30px  !important;
 }
 .gamification {
     margin-top: 20px;
