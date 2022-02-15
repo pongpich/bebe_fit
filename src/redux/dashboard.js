@@ -178,7 +178,8 @@ const INIT_STATE = {
   numberOfMembersInEndSeason: 0,
   numberOfMembersNotInGamification: 0,
   challengeEvent: null,
-  percentOfMembersEachWeek: 0
+  percentOfMembersEachWeek: 0,
+  numberOfMembersActiveMoreThan1Week: 0
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -193,6 +194,7 @@ export function reducer(state = INIT_STATE, action) {
         percentCompleteOfReducedWeight: action.payload.percentCompleteOfReducedWeight,
         numberOfMembersInSeason: action.payload.numberOfMembersInSeason,
         numberOfMembersInEndSeason: action.payload.numberOfMembersInEndSeason,
+        numberOfMembersActiveMoreThan1Week: action.payload.numberOfMembersActiveMoreThan1Week,
         numberOfMembersNotInGamification: action.payload.numberOfMembersNotInGamification
       };
     case types.GET_CHALLENGE_EVENT_SUCCESS:

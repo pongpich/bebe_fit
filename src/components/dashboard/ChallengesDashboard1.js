@@ -54,12 +54,15 @@ class ChallengesDashboard1 extends Component {
       numberOfMembersInSeason,
       numberOfMembersInEndSeason,
       numberOfMembersNotInGamification,
+      numberOfMembersActiveMoreThan1Week,
       challengeEvent
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
 
+
+    
     return (
       <div className="background">
         <div class="container">
@@ -106,15 +109,16 @@ class ChallengesDashboard1 extends Component {
               </div>
               <div class="container">
                 <div class="row">
-                  <div class="col">
+                  <div class="col-md-6">
                     <div className="gamification">
                       <p>จำนวนคนที่เล่น Gamification ใน season นี้</p>
                       <p className="people"> {numberOfMembersInSeason} คน</p>
                     </div>
                   </div>
-                  <div class="col">
+                  <div class="col-6 col-md-6">
                     <div className="active-season">
                     <p>จำนวนคนที่ Active อยู่ในทีมมากกว่า 1 อาทิตย์</p>
+                    <p className="people"> {numberOfMembersActiveMoreThan1Week} คน</p>
                     </div>
                   </div>
                 </div>
@@ -145,6 +149,7 @@ const mapStateToProps = ({ dashboard }) => {
     percentCompleteOfWeightTeamComplete,
     percentCompleteOfReducedWeight,
     numberOfMembersInSeason,
+    numberOfMembersActiveMoreThan1Week,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
     challengeEvent
@@ -156,6 +161,7 @@ const mapStateToProps = ({ dashboard }) => {
     percentCompleteOfWeightTeamComplete,
     percentCompleteOfReducedWeight,
     numberOfMembersInSeason,
+    numberOfMembersActiveMoreThan1Week,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
     challengeEvent

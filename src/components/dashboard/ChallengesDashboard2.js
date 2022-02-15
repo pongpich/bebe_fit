@@ -2,17 +2,9 @@ import React, { Component } from "react";
 import './ChallengesDashboard2.css';
 
 
-import {
-  CardTitle,
-  Form,
-  Label,
-  Input,
-  Button,
-  Dropdown, DropdownToggle, DropdownMenu, DropdownItem
-} from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification, getChallengeEvent,getMembersEachWeekInSeason } from "../../redux/dashboard";
+import { getMembersEachWeekInSeason } from "../../redux/dashboard";
 let max_length = [];
 let index = []; 
 let numberMax = null;
@@ -31,8 +23,6 @@ class ChallengesDashboard2 extends Component {
   componentDidMount() {
     const { season } = this.state;
     const { percentOfMembersEachWeek } = this.state;
-    this.props.clearGamification();
-    this.props.getChallengeEvent();
     this.props.getMembersEachWeekInSeason();
     this.weekAll(percentOfMembersEachWeek)
   }
@@ -134,32 +124,14 @@ class ChallengesDashboard2 extends Component {
 
 const mapStateToProps = ({ dashboard }) => {
   const {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent,
     percentOfMembersEachWeek
   } = dashboard;
   return {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent,
-    percentOfMembersEachWeek
+    percentOfMembersEachWeek,
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent, getMembersEachWeekInSeason };
+const mapActionsToProps = { getMembersEachWeekInSeason };
 
 export default connect(
   mapStateToProps,
