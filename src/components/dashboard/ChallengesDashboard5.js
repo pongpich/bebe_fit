@@ -12,8 +12,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
-
+import { getGamification, clearGamification, getChallengeEvent,getMemberInSeason } from "../../redux/dashboard";
 class ChallengesDashboard5 extends Component {
   constructor(props) {
     super(props);
@@ -22,6 +21,8 @@ class ChallengesDashboard5 extends Component {
       dropdownOpen: false
     };
   }
+  
+  
 
   componentDidMount() {
     const { season } = this.state;
@@ -39,22 +40,17 @@ class ChallengesDashboard5 extends Component {
   }
 
   selectSeason(season) {
-    this.props.getGamification(season);
+    this.props.getMumberInSeason(season);
     this.setState({ season: season });
+
   }
 
   render() {
     const { season, dropdownOpen } = this.state;
     const {
       percentCompleteOfWeightResult,
-      percentCompleteOfExerciseComplete,
-      percentCompleteOfWeightBonusResult,
-      percentCompleteOfWeightTeamComplete,
-      percentCompleteOfReducedWeight,
-      numberOfMembersInSeason,
-      numberOfMembersInEndSeason,
-      numberOfMembersNotInGamification,
-      challengeEvent
+      challengeEvent,
+      numberOfInSeasonResult,
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
@@ -77,7 +73,7 @@ class ChallengesDashboard5 extends Component {
                         ))
                       }
                     </DropdownMenu>
-                  </Dropdown>
+                  </Dropdown> 
                 </div>
                 <br />
               <div className="table-responsive">
@@ -91,30 +87,23 @@ class ChallengesDashboard5 extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                     {  
+                         numberOfInSeasonResult  && numberOfInSeasonResult.map((item) => {
+                           return <tr>
+                                <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">{item.first_name}  {item.last_name}</th>
+                                <td  className="text-center">{item.phone}</td>
+                                <td  className="text-center">{item.email}</td>
+                                <td className="text-centerColor">{season}</td>
+                           </tr> 
+                         })  
+                      }
+                    
+                     {/*  <tr>
                         <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</th>
                         <td  className="text-center">0812122222</td>
                         <td  className="text-center">vsdfknj@mail.com</td>
                         <td className="text-centerColor">Season 11</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">อนุพงศ์ อรุณ</th>
-                        <td  className="text-center">0812122222</td>
-                        <td  className="text-center">vsdfknj@mail.com</td>
-                        <td className="text-center">Season 8</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">ไกำพอ_ภำพะ้เดก</th>
-                        <td  className="text-center">0812122222</td>
-                        <td  className="text-center">vsdfknj@mail.com</td>
-                        <td className="text-centerColor">Season11</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</th>
-                        <td  className="text-center">0812122222</td>
-                        <td  className="text-center">vsdfknj@mail.com</td>
-                        <td className="text-center">Season 9</td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                   </div>
@@ -199,7 +188,8 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
-    challengeEvent
+    challengeEvent,
+    numberOfInSeasonResult
   } = dashboard;
   return {
     percentCompleteOfWeightResult,
@@ -210,11 +200,12 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
+    numberOfInSeasonResult,
     challengeEvent
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent };
+const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent,getMumberInSeason: getMemberInSeason};
 
 export default connect(
   mapStateToProps,

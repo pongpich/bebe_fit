@@ -10,6 +10,8 @@ export const types = {
   GET_CHALLENGE_EVENT_SUCCESS: "GET_CHALLENGE_EVENT_SUCCESS",
   GET_MEMBERS_EACH_WEEK_IN_SEASON: "GET_MEMBERS_EACH_WEEK_IN_SEASON", 
   GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS: "GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS",
+  GET_MEMBER_IN_SEASON: "GET_MEMBER_IN_SEASON", 
+  GET_MEMBER_IN_SEASON_SUCCESS: "GET_MEMBER_IN_SEASON_SUCCESS",
   CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
 
@@ -31,6 +33,16 @@ export const getChallengeEvent = (
 ) => ({
   type: types.GET_CHALLENGE_EVENT
 });
+
+export const getMemberInSeason = (
+  season
+  ) => ({
+    type: types.GET_MEMBER_IN_SEASON,
+    payload: {
+      season
+    }
+  });
+  
 
 export const getMembersEachWeekInSeason = (
 
@@ -55,6 +67,22 @@ const getGamificationSagaAsync = async (
         season
       }
     });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const getMemberInSeasonSagaAsync = async (
+  season
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getMemberInSeason", {
+      queryStringParameters: {
+        season
+      }
+    });
+    console.log("apiResult",apiResult);
     return apiResult;
   } catch (error) {
     return { error, messsage: error.message };
@@ -110,6 +138,24 @@ function* getGamificationSaga({ payload }) {
   }
 }
 
+function* getMemberInSeasonSaga({ payload }) {
+  const {
+    season
+  } = payload
+  try {
+    const apiResult = yield call(
+      getMemberInSeasonSagaAsync,
+      season
+    );
+    yield put({
+      type: types.GET_MEMBER_IN_SEASON_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* getChallengeEventSaga({  }) {
 
   try {
@@ -156,11 +202,18 @@ export function* watchGetMembersEachWeekInSeason() {
   yield takeEvery(types.GET_MEMBERS_EACH_WEEK_IN_SEASON, getMembersEachWeekInSeasonSaga)
 }
 
+
+ export function* watchGetMemberInSeason() {
+  yield takeEvery(types.GET_MEMBER_IN_SEASON, getMemberInSeasonSaga)
+}
+ 
+
 export function* saga() {
   yield all([
     fork(watchGetGamification),
     fork(watchGetChallengeEvent),
     fork(watchGetMembersEachWeekInSeason),
+    fork(watchGetMemberInSeason)
   ]);
 }
 
@@ -179,7 +232,8 @@ const INIT_STATE = {
   numberOfMembersNotInGamification: 0,
   challengeEvent: null,
   percentOfMembersEachWeek: 0,
-  numberOfMembersActiveMoreThan1Week: 0
+  numberOfMembersActiveMoreThan1Week: 0,
+  numberOfInSeasonResult: null
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -197,6 +251,10 @@ export function reducer(state = INIT_STATE, action) {
         numberOfMembersActiveMoreThan1Week: action.payload.numberOfMembersActiveMoreThan1Week,
         numberOfMembersNotInGamification: action.payload.numberOfMembersNotInGamification
       };
+    case types.GET_MEMBER_IN_SEASON_SUCCESS:
+      return { 
+        ...state,
+        numberOfInSeasonResult: action.payload.numberOfInSeasonResult};
     case types.GET_CHALLENGE_EVENT_SUCCESS:
       return {
         ...state,
@@ -210,6 +268,9 @@ export function reducer(state = INIT_STATE, action) {
       return { 
         ...state,
         percentOfMembersEachWeek: action.payload.percentOfMembersEachWeek};
+   
 
   }
+
+  
 }
