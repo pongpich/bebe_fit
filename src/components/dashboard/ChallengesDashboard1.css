@@ -79,6 +79,11 @@
     padding-top: 20px;
     text-align: center;
 }
+.export-dashboard1 {
+    float: right;
+    margin-top: -40px;
+    position: relative;
+}
 .active-season {
     margin-top: 20px;
     width: 370px;

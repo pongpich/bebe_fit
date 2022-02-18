@@ -12,6 +12,8 @@ export const types = {
   GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS: "GET_MEMBERS_EACH_WEEK_IN_SEASON_SUCCESS",
   GET_MEMBER_IN_SEASON: "GET_MEMBER_IN_SEASON", 
   GET_MEMBER_IN_SEASON_SUCCESS: "GET_MEMBER_IN_SEASON_SUCCESS",
+  GET_DATE_OF_JOINING_CHALLENGE: "GET_DATE_OF_JOINING_CHALLENGE", 
+  GET_DATE_OF_JOINING_CHALLENGE_SUCCESS: "GET_DATE_OF_JOINING_CHALLENGE_SUCCESS", 
   CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
 
@@ -43,6 +45,15 @@ export const getMemberInSeason = (
     }
   });
   
+
+  export const getDateOfJoiningChallenge = (
+    user_id
+    ) => ({
+      type: types.GET_DATE_OF_JOINING_CHALLENGE,
+      payload: {
+        user_id
+      }
+    });
 
 export const getMembersEachWeekInSeason = (
 
@@ -82,7 +93,21 @@ const getMemberInSeasonSagaAsync = async (
         season
       }
     });
-    console.log("apiResult",apiResult);
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const getDateOfJoiningChallengeSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getDateOfJoiningChallenge", {
+      queryStringParameters: {
+        user_id
+      }
+    });
     return apiResult;
   } catch (error) {
     return { error, messsage: error.message };
@@ -156,6 +181,26 @@ function* getMemberInSeasonSaga({ payload }) {
   }
 }
 
+
+
+function* getDateOfJoiningChallengeSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getDateOfJoiningChallengeSagaAsync,
+      user_id
+    );
+    yield put({
+      type: types.GET_DATE_OF_JOINING_CHALLENGE_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* getChallengeEventSaga({  }) {
 
   try {
@@ -206,6 +251,10 @@ export function* watchGetMembersEachWeekInSeason() {
  export function* watchGetMemberInSeason() {
   yield takeEvery(types.GET_MEMBER_IN_SEASON, getMemberInSeasonSaga)
 }
+
+export function* watchGetDateOfJoiningChallengeSaga() {
+  yield takeEvery(types.GET_DATE_OF_JOINING_CHALLENGE, getDateOfJoiningChallengeSaga)
+}
  
 
 export function* saga() {
@@ -213,7 +262,8 @@ export function* saga() {
     fork(watchGetGamification),
     fork(watchGetChallengeEvent),
     fork(watchGetMembersEachWeekInSeason),
-    fork(watchGetMemberInSeason)
+    fork(watchGetMemberInSeason),
+    fork(watchGetDateOfJoiningChallengeSaga)
   ]);
 }
 
@@ -233,7 +283,8 @@ const INIT_STATE = {
   challengeEvent: null,
   percentOfMembersEachWeek: 0,
   numberOfMembersActiveMoreThan1Week: 0,
-  numberOfInSeasonResult: null
+  memberOfInSeasonResult: null,
+  dateOfJoiningChallengeEachSeason: null
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -254,7 +305,7 @@ export function reducer(state = INIT_STATE, action) {
     case types.GET_MEMBER_IN_SEASON_SUCCESS:
       return { 
         ...state,
-        numberOfInSeasonResult: action.payload.numberOfInSeasonResult};
+        memberOfInSeasonResult: action.payload.memberOfInSeasonResult};
     case types.GET_CHALLENGE_EVENT_SUCCESS:
       return {
         ...state,
@@ -268,6 +319,10 @@ export function reducer(state = INIT_STATE, action) {
       return { 
         ...state,
         percentOfMembersEachWeek: action.payload.percentOfMembersEachWeek};
+    case types.GET_DATE_OF_JOINING_CHALLENGE_SUCCESS:
+      return { 
+        ...state,
+        dateOfJoiningChallengeEachSeason: action.payload.dateOfJoiningChallengeEachSeason};
    
 
   }

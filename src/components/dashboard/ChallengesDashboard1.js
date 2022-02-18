@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import './ChallengesDashboard1.css';
 
-
 import {
   CardTitle,
   Form,
@@ -13,6 +12,8 @@ import {
 import { connect } from "react-redux";
 
 import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
+
+
 
 class ChallengesDashboard1 extends Component {
   constructor(props) {
@@ -43,6 +44,12 @@ class ChallengesDashboard1 extends Component {
     this.setState({ season: season });
   }
 
+  activateLasers() {
+
+
+   
+  }
+
   render() {
     const { season, dropdownOpen } = this.state;
     const {
@@ -60,8 +67,7 @@ class ChallengesDashboard1 extends Component {
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
-
-
+ 
     
     return (
       <div className="background">
@@ -80,6 +86,9 @@ class ChallengesDashboard1 extends Component {
                       }
                     </DropdownMenu>
                   </Dropdown>
+                </div>
+                <div className="export-dashboard1" >
+                    <Button   style={{ backgroundColor: "white", color: "black" }}  onClick={()=> this.activateLasers()}>Export .csv  <i class="fas fa-download"></i></Button>
                 </div>
                 <br />
                 <p className="text-progress">บันทึกน้ำหนักครบ 2 ครั้ง <span className="text-progressRight"> สำเร็จ {percentCompleteOfWeightResult}% </span></p>

@@ -67,8 +67,6 @@ class ChallengesDashboard2 extends Component {
       width: { percentCompleteOfWeightResult }
     };
 
-  
-    console.log("percentOfMembersEachWeek",percentOfMembersEachWeek);
     this.weekAll(percentOfMembersEachWeek);
 
     return (

@@ -12,13 +12,17 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification, getChallengeEvent,getMemberInSeason } from "../../redux/dashboard";
+import { getGamification, clearGamification, getChallengeEvent,getMemberInSeason,getDateOfJoiningChallenge } from "../../redux/dashboard";
 class ChallengesDashboard5 extends Component {
   constructor(props) {
     super(props);
     this.state = {
       season: "ตลอดทั้ง season",
-      dropdownOpen: false
+      dropdownOpen: false,
+      first_name: null,
+      last_name: null,
+      phone: null,
+      email: null
     };
   }
   
@@ -45,17 +49,25 @@ class ChallengesDashboard5 extends Component {
 
   }
 
+  selectUser_id(user_id,first_name,last_name,phone,email) {
+   this.props.getDateOfJoiningChallenge(user_id);
+   this.setState({  first_name: first_name, last_name: last_name,phone:phone,email:email });
+
+
+
+  }
+
   render() {
-    const { season, dropdownOpen } = this.state;
+    const { season, dropdownOpen ,  first_name,last_name,phone,email} = this.state;
     const {
       percentCompleteOfWeightResult,
       challengeEvent,
-      numberOfInSeasonResult,
+      memberOfInSeasonResult,
+      dateOfJoiningChallengeEachSeason
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
-
     return (
       <div className="background">
         <div className="container">
@@ -88,22 +100,15 @@ class ChallengesDashboard5 extends Component {
                     </thead>
                     <tbody>
                      {  
-                         numberOfInSeasonResult  && numberOfInSeasonResult.map((item) => {
+                         memberOfInSeasonResult  && memberOfInSeasonResult.map((item) => {
                            return <tr>
-                                <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">{item.first_name}  {item.last_name}</th>
+                                <th scope="row" className="text-center color-primary pointer"   data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => this.selectUser_id(item.user_id,item.first_name,item.last_name,item.phone,item.email)} > {item.first_name}  {item.last_name}</th>
                                 <td  className="text-center">{item.phone}</td>
                                 <td  className="text-center">{item.email}</td>
                                 <td className="text-centerColor">{season}</td>
                            </tr> 
                          })  
                       }
-                    
-                     {/*  <tr>
-                        <th scope="row" className="text-center color-primary pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</th>
-                        <td  className="text-center">0812122222</td>
-                        <td  className="text-center">vsdfknj@mail.com</td>
-                        <td className="text-centerColor">Season 11</td>
-                      </tr> */}
                     </tbody>
                   </table>
                   </div>
@@ -129,9 +134,9 @@ class ChallengesDashboard5 extends Component {
                     </thead>
                     <tbody>
                       <tr>
-                        <td scope="row" className="text-center  pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">บพิตร์ เตชะวัฒนานันท์</td>
-                        <td  className="text-center">0812122222</td>
-                        <td  className="text-center">vsdfknj@mail.com</td>
+                        <td scope="row" className="text-center  pointer"  data-bs-toggle="modal" data-bs-target="#exampleModal">{first_name} {last_name}</td>
+                        <td  className="text-center">{phone}</td>
+                        <td  className="text-center">{email}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -147,22 +152,28 @@ class ChallengesDashboard5 extends Component {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td  className="text-center">Season 1</td>
-                            <td  className="text-center">11/12/2564</td>
-                          </tr>
-                          <tr>
-                            <td  className="text-center">Season 2</td>
-                            <td  className="text-center">11/12/2564</td>
-                          </tr>
-                          <tr>
-                            <td  className="text-center">Season 3</td>
-                            <td  className="text-center">11/12/2564</td>
-                          </tr>
-                          <tr>
-                            <td  className="text-center">Season 4</td>
-                            <td  className="text-center">11/12/2564</td>
-                          </tr>
+
+                        {  
+
+                          dateOfJoiningChallengeEachSeason   === null  ? 
+                          <td className="text-center">
+                            <div className="spinner-border text-pink" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                            </div>
+                          </td> 
+                          : 
+                         dateOfJoiningChallengeEachSeason  && dateOfJoiningChallengeEachSeason.map((item) => {
+                        let created_at =   new Date(item.created_at).toLocaleString("th-TH", { timeZone: "UTC" })
+                            created_at = created_at.split(" ");
+                           return <tr >
+                            
+                                <td  className="text-center">{item.event_name}</td>
+                                <td  className="text-center">{
+                                      created_at[0] !== 'Invalid' ? created_at[0] : "-"  
+                                }</td>
+                           </tr> 
+                         })  
+                      }
                         </tbody>
                       </table>
                   </div>
@@ -189,7 +200,8 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
     challengeEvent,
-    numberOfInSeasonResult
+    memberOfInSeasonResult,
+    dateOfJoiningChallengeEachSeason
   } = dashboard;
   return {
     percentCompleteOfWeightResult,
@@ -200,12 +212,13 @@ const mapStateToProps = ({ dashboard }) => {
     numberOfMembersInSeason,
     numberOfMembersInEndSeason,
     numberOfMembersNotInGamification,
-    numberOfInSeasonResult,
-    challengeEvent
+    memberOfInSeasonResult,
+    challengeEvent,
+    dateOfJoiningChallengeEachSeason
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent,getMumberInSeason: getMemberInSeason};
+const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent,getMumberInSeason: getMemberInSeason,getDateOfJoiningChallenge};
 
 export default connect(
   mapStateToProps,
