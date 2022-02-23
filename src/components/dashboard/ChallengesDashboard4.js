@@ -46,7 +46,7 @@ class ChallengesDashboard3 extends Component {
                 <table className="table table-bordered">
                     <thead>
                       <tr>
-                        <th scope="col" className="text-center"></th>
+                        <th scope="col" className="text-centerColor">season</th>
                         <th scope="col " className="text-centerColor" >อก</th>
                         <th scope="col " className="text-centerColor" >หลัง</th>
                         <th scope="col " className="text-centerColor" >แขน</th>
