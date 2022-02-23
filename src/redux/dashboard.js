@@ -13,7 +13,11 @@ export const types = {
   GET_MEMBER_IN_SEASON: "GET_MEMBER_IN_SEASON", 
   GET_MEMBER_IN_SEASON_SUCCESS: "GET_MEMBER_IN_SEASON_SUCCESS",
   GET_DATE_OF_JOINING_CHALLENGE: "GET_DATE_OF_JOINING_CHALLENGE", 
-  GET_DATE_OF_JOINING_CHALLENGE_SUCCESS: "GET_DATE_OF_JOINING_CHALLENGE_SUCCESS", 
+  GET_DATE_OF_JOINING_CHALLENGE_SUCCESS: "GET_DATE_OF_JOINING_CHALLENGE_SUCCESS",
+  GET_BEST_CLIP_IN_SEASON: "GET_BEST_CLIP_IN_SEASON", 
+  GET_BEST_CLIP_IN_SEASON_SUCCESS: "GET_BEST_CLIP_IN_SEASON_SUCCESS",  
+  GET_WORST_CLIP_IN_SEASON: "GET_WORST_CLIP_IN_SEASON", 
+  GET_WORST_CLIP_IN_SEASON_SUCCESS: "GET_WORST_CLIP_IN_SEASON_SUCCESS",  
   CLEAR_GAMIFICATION: "CLEAR_GAMIFICATION",
 }
 
@@ -43,6 +47,16 @@ export const getMemberInSeason = (
     payload: {
       season
     }
+  });
+
+export const getBestClipInSeason = (
+  ) => ({
+    type: types.GET_BEST_CLIP_IN_SEASON
+  });
+
+export const getWorstClipInSeason = (
+  ) => ({
+    type: types.GET_WORST_CLIP_IN_SEASON
   });
   
 
@@ -98,6 +112,34 @@ const getMemberInSeasonSagaAsync = async (
     return { error, messsage: error.message };
   }
 }
+
+const getBestClipInSeasonSagaAsync = async (
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getBestClipInSeason", {
+      queryStringParameters: {
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+
+const getWorstClipInSeasonSagaAsync = async (
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getWorstClipInSeason", {
+      queryStringParameters: {
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 
 const getDateOfJoiningChallengeSagaAsync = async (
   user_id
@@ -181,6 +223,40 @@ function* getMemberInSeasonSaga({ payload }) {
   }
 }
 
+function* getBestClipInSeasonSaga({  }) {
+/*   const {
+    season
+  } = payload */
+  try {
+    const apiResult = yield call(
+      getBestClipInSeasonSagaAsync
+    );
+    yield put({
+      type: types.GET_BEST_CLIP_IN_SEASON_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* getWorstClipInSeasonSaga({  }) {
+/*   const {
+    season
+  } = payload */
+  try {
+    const apiResult = yield call(
+      getWorstClipInSeasonSagaAsync
+    );
+    yield put({
+      type: types.GET_WORST_CLIP_IN_SEASON_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 
 
 function* getDateOfJoiningChallengeSaga({ payload }) {
@@ -255,6 +331,15 @@ export function* watchGetMembersEachWeekInSeason() {
 export function* watchGetDateOfJoiningChallengeSaga() {
   yield takeEvery(types.GET_DATE_OF_JOINING_CHALLENGE, getDateOfJoiningChallengeSaga)
 }
+
+export function* watchGetBestClipInSeasonSaga() {
+  yield takeEvery(types.GET_BEST_CLIP_IN_SEASON, getBestClipInSeasonSaga)
+}
+ 
+export function* watchGetWorstClipInSeasonSaga() {
+  yield takeEvery(types.GET_WORST_CLIP_IN_SEASON, getWorstClipInSeasonSaga)
+}
+ 
  
 
 export function* saga() {
@@ -263,7 +348,9 @@ export function* saga() {
     fork(watchGetChallengeEvent),
     fork(watchGetMembersEachWeekInSeason),
     fork(watchGetMemberInSeason),
-    fork(watchGetDateOfJoiningChallengeSaga)
+    fork(watchGetDateOfJoiningChallengeSaga),
+    fork(watchGetBestClipInSeasonSaga),
+    fork(watchGetWorstClipInSeasonSaga)
   ]);
 }
 
@@ -284,7 +371,9 @@ const INIT_STATE = {
   percentOfMembersEachWeek: 0,
   numberOfMembersActiveMoreThan1Week: 0,
   memberOfInSeasonResult: null,
-  dateOfJoiningChallengeEachSeason: null
+  dateOfJoiningChallengeEachSeason: null,
+  bestClipInSeason:null,
+  worstClipInSeason: null
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -323,6 +412,14 @@ export function reducer(state = INIT_STATE, action) {
       return { 
         ...state,
         dateOfJoiningChallengeEachSeason: action.payload.dateOfJoiningChallengeEachSeason};
+    case types.GET_BEST_CLIP_IN_SEASON_SUCCESS:
+      return { 
+        ...state,
+        bestClipInSeason: action.payload.bestClipInSeason};
+    case types.GET_WORST_CLIP_IN_SEASON_SUCCESS:
+      return { 
+        ...state,
+        worstClipInSeason: action.payload.worstClipInSeason};
    
 
   }

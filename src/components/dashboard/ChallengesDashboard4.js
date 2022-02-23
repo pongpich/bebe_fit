@@ -12,53 +12,26 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 
-import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
+import { getWorstClipInSeason } from "../../redux/dashboard";
 
-class ChallengesDashboard4 extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      season: "ตลอดทั้ง season",
-      dropdownOpen: false
-    };
-  }
+class ChallengesDashboard3 extends Component {
+
 
   componentDidMount() {
-    const { season } = this.state;
-    this.props.clearGamification();
-    this.props.getChallengeEvent();
-  }
-
-  componentDidUpdate(prevProps) {
+   this.props.getWorstClipInSeason();
 
   }
 
-  toggle() {
-    const { dropdownOpen } = this.state;
-    this.setState({ dropdownOpen: !dropdownOpen })
-  }
+ 
 
-  selectSeason(season) {
-    this.props.getGamification(season);
-    this.setState({ season: season });
-  }
+
+
 
   render() {
-    const { season, dropdownOpen } = this.state;
     const {
-      percentCompleteOfWeightResult,
-      percentCompleteOfExerciseComplete,
-      percentCompleteOfWeightBonusResult,
-      percentCompleteOfWeightTeamComplete,
-      percentCompleteOfReducedWeight,
-      numberOfMembersInSeason,
-      numberOfMembersInEndSeason,
-      numberOfMembersNotInGamification,
-      challengeEvent
+      worstClipInSeason
     } = this.props;
-    const myStyle = {
-      width: { percentCompleteOfWeightResult }
-    };
+
 
     return (
       <div className="background">
@@ -67,91 +40,33 @@ class ChallengesDashboard4 extends Component {
             <div className="col-md-12">
               <div className="box-background">
                 <br />
-                <h5  className="text-center">คลิปที่คนสามารถลดน้ำหนักได้น้อยที่สุด</h5>
+                <h5  className="text-center">คลิปที่คนสามารถลดน้ำหนักได้มากที่สุด</h5>
                 <br/>
               <div className="table-responsive">
                 <table className="table table-bordered">
                     <thead>
                       <tr>
                         <th scope="col" className="text-center"></th>
-                        <th scope="col " className="text-centerColor" >SEASON 10</th>
-                        <th scope="col " className="text-centerColor" >SEASON 9</th>
-                        <th scope="col " className="text-centerColor" >SEASON 8</th>
-                        <th scope="col " className="text-centerColor" >SEASON 7</th>
-                        <th scope="col " className="text-centerColor" >SEASON 6</th>
-                        <th scope="col " className="text-centerColor" >SEASON 5</th>
-                        <th scope="col " className="text-centerColor" >SEASON 4</th>
-                        <th scope="col " className="text-centerColor" >SEASON 3</th>
-                        <th scope="col " className="text-centerColor" >SEASON 2</th>
-                        <th scope="col " className="text-centerColor" >SEASON 1</th>
+                        <th scope="col " className="text-centerColor" >อก</th>
+                        <th scope="col " className="text-centerColor" >หลัง</th>
+                        <th scope="col " className="text-centerColor" >แขน</th>
+                        <th scope="col " className="text-centerColor" >ขา</th>
+                        <th scope="col " className="text-centerColor" >Cadio</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <th scope="row" className="text-center">อก</th>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                        <td>Chest 02</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center">หลัง</th>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                        <td>Back 05</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center">แขน</th>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                        <td>Arm 01</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center">ขา</th>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                        <td>Leg 04</td>
-                      </tr>
-                      <tr>
-                        <th scope="row" className="text-center">Cadio</th>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                        <td>Cadio 04</td>
-                      </tr>
+                      {
+                          worstClipInSeason  && worstClipInSeason.map((key) => {
+                            return   <tr>
+                                      <th scope="row" className="text-center">{key.event_name}</th>
+                                      <td>{key.chest_focus}</td>
+                                      <td>{key.back_focus}</td>
+                                      <td>{key.arm_focus}</td>
+                                      <td>{key.leg_focus}</td>
+                                      <td>{key.cardio}</td>
+                                    </tr>
+                         }) 
+                      }
                     </tbody>
                   </table>
                   </div>
@@ -166,32 +81,16 @@ class ChallengesDashboard4 extends Component {
 
 const mapStateToProps = ({ dashboard }) => {
   const {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent
+    worstClipInSeason
   } = dashboard;
   return {
-    percentCompleteOfWeightResult,
-    percentCompleteOfExerciseComplete,
-    percentCompleteOfWeightBonusResult,
-    percentCompleteOfWeightTeamComplete,
-    percentCompleteOfReducedWeight,
-    numberOfMembersInSeason,
-    numberOfMembersInEndSeason,
-    numberOfMembersNotInGamification,
-    challengeEvent
+    worstClipInSeason
   };
 };
 
-const mapActionsToProps = { getGamification, clearGamification, getChallengeEvent };
+const mapActionsToProps = { getWorstClipInSeason};
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(ChallengesDashboard4);
+)(ChallengesDashboard3);
