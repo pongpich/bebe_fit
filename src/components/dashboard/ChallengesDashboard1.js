@@ -13,7 +13,7 @@ import { connect } from "react-redux";
 
 import { getGamification, clearGamification, getChallengeEvent } from "../../redux/dashboard";
 
-
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 
 class ChallengesDashboard1 extends Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class ChallengesDashboard1 extends Component {
   activateLasers() {
 
 
-   
+
   }
 
   render() {
@@ -67,8 +67,8 @@ class ChallengesDashboard1 extends Component {
     const myStyle = {
       width: { percentCompleteOfWeightResult }
     };
- 
-    
+
+
     return (
       <div className="background">
         <div class="container">
@@ -88,7 +88,14 @@ class ChallengesDashboard1 extends Component {
                   </Dropdown>
                 </div>
                 <div className="export-dashboard1" >
-                    <Button   style={{ backgroundColor: "white", color: "black" }}  onClick={()=> this.activateLasers()}>Export .csv  <i class="fas fa-download"></i></Button>
+                  {/*  <Button style={{ backgroundColor: "white", color: "black" }} onClick={() => this.activateLasers()}>Export .csv  <i class="fas fa-download"></i></Button> */}
+                  <ReactHTMLTableToExcel
+                    id="test-table-xls-button"
+                    className="download-table-xls-button"
+                    table="table-to-xls"
+                    filename="tablexls"
+                    sheet="tablexls"
+                    buttonText="Download as XLS" />
                 </div>
                 <br />
                 <p className="text-progress">บันทึกน้ำหนักครบ 2 ครั้ง <span className="text-progressRight"> สำเร็จ {percentCompleteOfWeightResult}% </span></p>
@@ -126,8 +133,8 @@ class ChallengesDashboard1 extends Component {
                   </div>
                   <div class="col-6 col-md-6">
                     <div className="active-season">
-                    <p>จำนวนคนที่ Active อยู่ในทีมมากกว่า 1 อาทิตย์</p>
-                    <p className="people"> {numberOfMembersActiveMoreThan1Week} คน</p>
+                      <p>จำนวนคนที่ Active อยู่ในทีมมากกว่า 1 อาทิตย์</p>
+                      <p className="people"> {numberOfMembersActiveMoreThan1Week} คน</p>
                     </div>
                   </div>
                 </div>

@@ -4,12 +4,13 @@ import './ChallengesDashboard2.css';
 
 import { connect } from "react-redux";
 
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 import { getMembersEachWeekInSeason } from "../../redux/dashboard";
 let max_length = [];
-let index = []; 
+let index = [];
 let numberMax = null;
 let week = null;
-
 
 class ChallengesDashboard2 extends Component {
   constructor(props) {
@@ -43,14 +44,14 @@ class ChallengesDashboard2 extends Component {
 
 
   weekAll(percentOfMembersEachWeek) {
-      percentOfMembersEachWeek  && percentOfMembersEachWeek.map(( key, value) => {
-        max_length.push(key.length);
-        numberMax =  Math.max(...max_length);
-          for (let i = 1; i <= numberMax; i++) {
-            index  += i;
-          } 
-          week =   Array.from(new Set(index))
-     })
+    percentOfMembersEachWeek && percentOfMembersEachWeek.map((key, value) => {
+      max_length.push(key.length);
+      numberMax = Math.max(...max_length);
+      for (let i = 1; i <= numberMax; i++) {
+        index += i;
+      }
+      week = Array.from(new Set(index))
+    })
   }
 
 
@@ -58,10 +59,10 @@ class ChallengesDashboard2 extends Component {
 
   render() {
 
-    
+
     const { season, dropdownOpen } = this.state;
     const {
-      percentCompleteOfWeightResult,percentOfMembersEachWeek,weekAll
+      percentCompleteOfWeightResult, percentOfMembersEachWeek, weekAll
     } = this.props;
     const myStyle = {
       width: { percentCompleteOfWeightResult }
@@ -75,42 +76,49 @@ class ChallengesDashboard2 extends Component {
           <div className="row">
             <div className="col-md-12">
               <div className="box-background">
-              <div className="table-responsive">
-                <table className="table table-bordered">
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="download-table-xls-button"
+                  table="table-to-xls"
+                  filename="tablexls"
+                  sheet="tablexls"
+                  buttonText="Download as XLS" />
+                <div className="table-responsive">
+                  <table  id="table-to-xls" className="table table-bordered">
                     <thead>
                       <tr>
                         <th scope="col" className="text-center"></th>
                         {
-                            week  && week.map((key) => {
-                               return  <th scope="col" className="text-centerColor"> สัปดาห์ที่ {key}</th>
-                            }) 
-                          }
-                       
+                          week && week.map((key) => {
+                            return <th scope="col" className="text-centerColor"> สัปดาห์ที่ {key}</th>
+                          })
+                        }
+
                       </tr>
                     </thead>
                     <tbody>
                       {
-                        percentOfMembersEachWeek === 0  ? 
-                       <td className="text-center">
-                          <div className="spinner-border text-pink" role="status">
-                            <span className="visually-hidden">Loading...</span>
-                          </div>
-                       </td> 
-                       : 
-                       percentOfMembersEachWeek  && percentOfMembersEachWeek.map((item,index) => {
-                        return <tr>
-                           <th scope="row" className="text-centerColor">SEASON {index+1}</th>
-                         {
-                           item && item.map((val) => {
-                             return  <td>{val}</td>
-                           })
-                         }
-                         </tr> 
-                       }) 
+                        percentOfMembersEachWeek === 0 ?
+                          <td className="text-center">
+                            <div className="spinner-border text-pink" role="status">
+                              <span className="visually-hidden">Loading...</span>
+                            </div>
+                          </td>
+                          :
+                          percentOfMembersEachWeek && percentOfMembersEachWeek.map((item, index) => {
+                            return <tr>
+                              <th scope="row" className="text-centerColor">SEASON {index + 1}</th>
+                              {
+                                item && item.map((val) => {
+                                  return <td>{val}%</td>
+                                })
+                              }
+                            </tr>
+                          })
                       }
                     </tbody>
                   </table>
-                  </div>
+                </div>
               </div>
             </div>
           </div>
