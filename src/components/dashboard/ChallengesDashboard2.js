@@ -79,12 +79,12 @@ class ChallengesDashboard2 extends Component {
                 <ReactHTMLTableToExcel
                   id="test-table-xls-button"
                   className="download-table-xls-button"
-                  table="table-to-xls"
+                  table="table-to-xls2"
                   filename="tablexls"
                   sheet="tablexls"
-                  buttonText="Download as XLS" />
+                  buttonText={<h5>Export .csv <i class="fa-solid fa-arrow-up-from-bracket"></i></h5>} />
                 <div className="table-responsive">
-                  <table  id="table-to-xls" className="table table-bordered">
+                  <table  id="table-to-xls2" className="table table-bordered">
                     <thead>
                       <tr>
                         <th scope="col" className="text-center"></th>

@@ -19,7 +19,7 @@ class ChallengesDashboard1 extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      season: "ตลอดทั้ง season",
+      season: "เลือก season",
       dropdownOpen: false
     };
   }
@@ -88,14 +88,15 @@ class ChallengesDashboard1 extends Component {
                   </Dropdown>
                 </div>
                 <div className="export-dashboard1" >
-                  {/*  <Button style={{ backgroundColor: "white", color: "black" }} onClick={() => this.activateLasers()}>Export .csv  <i class="fas fa-download"></i></Button> */}
+                  {/* <Button style={{ backgroundColor: "white", color: "black" }} onClick={() => this.activateLasers()}>Export .csv  <i class="fas fa-download"></i></Button> */}
                   <ReactHTMLTableToExcel
                     id="test-table-xls-button"
                     className="download-table-xls-button"
-                    table="table-to-xls"
+                    table="table-to-xls1"
                     filename="tablexls"
                     sheet="tablexls"
-                    buttonText="Download as XLS" />
+                    buttonText={<h5>Export .csv <i class="fa-solid fa-arrow-up-from-bracket"></i></h5>}
+                  />
                 </div>
                 <br />
                 <p className="text-progress">บันทึกน้ำหนักครบ 2 ครั้ง <span className="text-progressRight"> สำเร็จ {percentCompleteOfWeightResult}% </span></p>
@@ -148,6 +149,65 @@ class ChallengesDashboard1 extends Component {
                 <br />
                 <p>จำนวนคนที่ไม่มีทีมจนจบ season</p>
                 <p className="people"> {numberOfMembersNotInGamification} คน</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="background" style={{ display: 'none' }} >
+          <div className="container">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="box-background">
+                  <div className="table-responsive">
+                    <table id="table-to-xls1" className="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th scope="col" className="text-center">หัวข้อ</th>
+                          <th scope="col" className="text-center">จำนวน</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th scope="row">บันทึกน้ำหนักครบ 2 ครั้ง</th>
+                          <td>{percentCompleteOfWeightResult}%</td>
+
+                        </tr>
+                        <tr>
+                          <th scope="row">ออกกำลังกายครบ 4 วันต่อสัปดาห์</th>
+                          <td> {percentCompleteOfExerciseComplete}%</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">ทีมชั่งน้ำหนักครบ 7 วัน</th>
+                          <td>{percentCompleteOfWeightBonusResult}%</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">สมาชิกชั่งครบ 2 ครั้ง</th>
+                          <td> {percentCompleteOfWeightTeamComplete}%</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">น้ำหนักลดลงจากสัปดาห์ที่แล้ว</th>
+                          <td>{percentCompleteOfReducedWeight}%</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">จำนวนคนที่เล่น Gamification ใน season นี้</th>
+                          <td> {numberOfMembersInSeason} คน</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">จำนวนคนที่ Active อยู่ในทีมมากกว่า 1 อาทิตย์</th>
+                          <td>{numberOfMembersActiveMoreThan1Week} คน</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">จำนวนคนที่อยู่ในทีมจนจบ season</th>
+                          <td>{numberOfMembersInEndSeason} คน</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">จำนวนคนที่ไม่มีทีมจนจบ season</th>
+                          <td>{numberOfMembersNotInGamification} คน</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

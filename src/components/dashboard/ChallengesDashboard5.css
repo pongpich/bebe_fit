@@ -97,3 +97,15 @@
     text-align: center;
 }
 .pointer {cursor: pointer;}
+
+.download-table-xls-button {
+  border-color: #F45197;
+  border-radius: 10px;
+  height: 40px;
+  font-size: 18px;
+  font-weight: normal;
+  color: #4F4F4F;
+  padding-top: 5px;
+  float: right;
+  margin-bottom: 20px;
+}

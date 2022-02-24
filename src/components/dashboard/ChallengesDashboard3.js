@@ -14,16 +14,18 @@ import { connect } from "react-redux";
 
 import { getBestClipInSeason } from "../../redux/dashboard";
 
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+
 class ChallengesDashboard3 extends Component {
 
 
   componentDidMount() {
 
-   this.props.getBestClipInSeason();
+    this.props.getBestClipInSeason();
 
   }
 
- 
+
 
 
 
@@ -40,10 +42,17 @@ class ChallengesDashboard3 extends Component {
             <div className="col-md-12">
               <div className="box-background">
                 <br />
-                <h5  className="text-center">คลิปที่คนสามารถลดน้ำหนักได้มากที่สุด</h5>
-                <br/>
-              <div className="table-responsive">
-                <table className="table table-bordered">
+                <h5 className="text-center">คลิปที่คนสามารถลดน้ำหนักได้มากที่สุด</h5>
+                <br />
+                <ReactHTMLTableToExcel
+                  id="test-table-xls-button"
+                  className="download-table-xls-button"
+                  table="table-to-xls3"
+                  filename="tablexls"
+                  sheet="tablexls"
+                  buttonText={<h5>Export .csv <i class="fa-solid fa-arrow-up-from-bracket"></i></h5>} />
+                <div className="table-responsive">
+                  <table id="table-to-xls3" className="table table-bordered">
                     <thead>
                       <tr>
                         <th scope="col" className="text-centerColor">season</th>
@@ -56,20 +65,20 @@ class ChallengesDashboard3 extends Component {
                     </thead>
                     <tbody>
                       {
-                          bestClipInSeason  && bestClipInSeason.map((key) => {
-                            return   <tr>
-                                      <th scope="row" className="text-center">{key.event_name}</th>
-                                      <td>{key.chest_focus}</td>
-                                      <td>{key.back_focus}</td>
-                                      <td>{key.arm_focus}</td>
-                                      <td>{key.leg_focus}</td>
-                                      <td>{key.cardio}</td>
-                                    </tr>
-                         }) 
+                        bestClipInSeason && bestClipInSeason.map((key) => {
+                          return <tr>
+                            <th scope="row" className="text-center">{key.event_name}</th>
+                            <td>{key.chest_focus}</td>
+                            <td>{key.back_focus}</td>
+                            <td>{key.arm_focus}</td>
+                            <td>{key.leg_focus}</td>
+                            <td>{key.cardio}</td>
+                          </tr>
+                        })
                       }
                     </tbody>
                   </table>
-                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -81,14 +90,14 @@ class ChallengesDashboard3 extends Component {
 
 const mapStateToProps = ({ dashboard }) => {
   const {
-    bestClipInSeason,worstClipInSeason
+    bestClipInSeason, worstClipInSeason
   } = dashboard;
   return {
-    bestClipInSeason,worstClipInSeason
+    bestClipInSeason, worstClipInSeason
   };
 };
 
-const mapActionsToProps = { getBestClipInSeason};
+const mapActionsToProps = { getBestClipInSeason };
 
 export default connect(
   mapStateToProps,
