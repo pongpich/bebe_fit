@@ -62,7 +62,7 @@ class ChallengesDashboard3 extends Component {
                         <th scope="col " className="text-centerColor" >หลัง</th>
                         <th scope="col " className="text-centerColor" >แขน</th>
                         <th scope="col " className="text-centerColor" >ขา</th>
-                        <th scope="col " className="text-centerColor" >Cadio</th>
+                        <th scope="col " className="text-centerColor" >Cardio</th>
                       </tr>
                     </thead>
                     <tbody>
