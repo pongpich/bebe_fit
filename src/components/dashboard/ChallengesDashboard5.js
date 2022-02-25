@@ -149,7 +149,9 @@ class ChallengesDashboard5 extends Component {
                     </tr>
                   </tbody>
                 </table>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span style={{ fontSize: 50 }} aria-hidden="true">&times;</span>
+                </button>
               </div>
               <div class="modal-body">
                 <div className="table-responsive">
@@ -167,7 +169,7 @@ class ChallengesDashboard5 extends Component {
                         dateOfJoiningChallengeEachSeason === null ?
                           <td className="text-center">
                             <div className="spinner-border text-pink" role="status">
-                              <span className="visually-hidden">Loading...</span>
+                              <span className="sr-only">Loading...</span>
                             </div>
                           </td>
                           :

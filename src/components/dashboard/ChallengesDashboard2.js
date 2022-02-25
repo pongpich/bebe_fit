@@ -84,7 +84,7 @@ class ChallengesDashboard2 extends Component {
                   sheet="tablexls"
                   buttonText={<h5>Export .csv <i class="fa-solid fa-arrow-up-from-bracket"></i></h5>} />
                 <div className="table-responsive">
-                  <table  id="table-to-xls2" className="table table-bordered">
+                  <table id="table-to-xls2" className="table table-bordered">
                     <thead>
                       <tr>
                         <th scope="col" className="text-center"></th>
@@ -101,7 +101,7 @@ class ChallengesDashboard2 extends Component {
                         percentOfMembersEachWeek === 0 ?
                           <td className="text-center">
                             <div className="spinner-border text-pink" role="status">
-                              <span className="visually-hidden">Loading...</span>
+                              <span className="sr-only">Loading...</span>
                             </div>
                           </td>
                           :
