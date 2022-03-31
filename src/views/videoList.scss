@@ -507,3 +507,24 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.hr {
+  border-bottom: 1px solid #C4C4C4;
+  width: 80%;
+  padding: 0 10%;
+  margin: 0px 10% 20px;
+}
+.hrPink {
+  border-bottom: 1px solid #E25E96;
+  width: 80%;
+  padding: 0 10%;
+  margin: 0px 10% 20px;
+}
+
+.centerForm {
+  text-align: center;
+  display: inline-block;
+}
+
+
+

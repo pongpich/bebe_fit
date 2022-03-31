@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component,useState  } from "react";
+import ReactDOM from 'react-dom';
 import {
   Button
 } from "reactstrap";
@@ -34,7 +35,14 @@ class VideoList extends Component {
       spinnerRandomVideo: "default",
       weightInDailyWeighChallenge: "",
       otherAttributesPage: "basicInfo",
-      autoPlayCheck: false
+      autoPlayCheck: false,
+      staticSex: "hr",
+      staticAge: "hr",
+      staticWeight: "hr",
+      staticHeight: "hr",
+      staticChest: "hr",
+      staticWaist: "hr",
+      staticHip: "hr"
     };
 
     this.prevPlayTime = 0;
@@ -1024,7 +1032,9 @@ class VideoList extends Component {
                   color="danger"
                   className="btn-shadow"
                   size="lg"
-                  onClick={() => this.onUpdateProfile()}
+
+                /*   onClick={() => this.onUpdateProfile()} */
+                onClick={() => this.setState({ otherAttributesPage: "renderBasicBodyInfo" })} 
                   block
                   style={{ backgroundColor: "#F45197" }}
                 >ยืนยัน</Button>
@@ -1036,6 +1046,199 @@ class VideoList extends Component {
     )
   }
 
+  
+
+  
+  renderBasicBodyInfo() {
+   const sexInfo =  this.state.sex;
+   const sexInfoTH = sexInfo === "male" ? "ชาย" :"หญิง";
+   const sexInfoTHBack = sexInfo === "male" ? "หญิง" :"ชาย";
+   const sexInfoEngฺBack = sexInfo === "male" ? "female" :"male";
+    return (
+     <>
+   <div className="card shadow mb-4 col-lg-8 offset-lg-2 col-md-12 col-12" style={{ borderRadius: "20px" }}>
+          <div className="mb-3 col-lg-12  col-md-12 col-12">
+            <center>
+              <h2 className="mt-5 mb-4" style={{ color: "#F45197" }}><b>สรุปรายละเอียด</b></h2>
+              <h5>กรุณาตรวจสอบข้อมูลอีกครั้งเพื่อที่คุณจะได้รับประสบการณ์</h5>
+              <h5>โปรแกรมการออกกำลังกายสำหรับคุณโดยเฉพาะ/อย่างแม่นยำ/อย่างถูกต้อง</h5>
+            </center>
+          </div>
+            <div className="centerForm">
+              <div class="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">เพศ</label>
+                <div className="col-sm-4">
+                  <select onClick={(event) => this.renderHr(event)} onChange={(event) => this.handleChangeBasicBodyInfo(event)} className="form-control" id="sex"  aria-label="Default select example">
+                    {
+                      sexInfo === "male" ?  <option value={sexInfo} selected>{sexInfoTH}</option>  : 
+                       <option value="female">หญิง</option>  
+                    }
+                     <option value={sexInfoEngฺBack}>{sexInfoTHBack}</option> 
+                     
+                   
+
+                </select>
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticSex}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">อายุ</label>
+                <div className="col-sm-4">
+                  <input  type="number"  id="age"      name="age"   min="0"  value={this.state.age}     onClick={(event) => this.renderHr(event)} onChange={(event) => this.handleChangeBasicBodyInfo(event)}  className="form-control"/>
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticAge}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">น้ำหนัก(กก.)</label>
+                <div className="col-sm-4">
+                 <input  type="number"  id="weight"   name="weight" step=".01" value={this.state.weight} min="0"   onChange={(event) => this.handleChangeBasicBodyInfo(event)}  onClick={(event) => this.renderHr(event)} className="form-control"  /> 
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticWeight}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">ส่วนสูง (ซม.)</label>
+                <div className="col-sm-4">
+               
+                  <input type="number"  id="height"  name="height" step=".01" min="0"  value={this.state.height}   onChange={(event) => this.handleChangeBasicBodyInfo(event)}  onClick={(event) => this.renderHr(event)}  className="form-control"  />
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticHeight}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">รอบอก (นิ้ว)</label>
+                <div className="col-sm-4">
+                  <input type="number"   step=".01" min="0" name="chest"   id="chest"   value={this.state.chest}  onClick={(event) => this.renderHr(event)} onChange={(event) => this.handleChangeBasicBodyInfo(event)} className="form-control"/>
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticChest}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">รอบเอว (นิ้ว)</label>
+                <div className="col-sm-4">
+                  <input type="number"   step=".01" min="0"  id="waist"   name="waist" value={this.state.waist}  onClick={(event) => this.renderHr(event)}  onChange={(event) => this.handleChangeBasicBodyInfo(event)} className="form-control"   />
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticWaist}></div>
+          <div className="centerForm">
+              <div className="mb-3 row">
+              <label for="staticEmail" className="col-sm-6 col-form-label">สะโพก (นิ้ว)</label>
+                <div className="col-sm-4">
+                  <input type="number"   step=".01" min="0"  id="hip"   name="hip"  value={this.state.hip} onClick={(event) => this.renderHr(event)} onChange={(event) => this.handleChangeBasicBodyInfo(event)} className="form-control"  />
+                </div>
+              </div>
+            </div>
+          <div className={this.state.staticHip}></div>
+              <div className="centerForm">
+                <div className="mb-6 col-lg-6 offset-lg-3 col-md-12 col-12">
+                  <Button
+                    color="danger"
+                    className="btn-shadow"
+                    size="lg"
+                    onClick={() => this.onUpdateProfile()}
+                    block
+                    style={{ backgroundColor: "#F45197" }}
+                  >ยืนยัน</Button>
+                </div>
+              </div>
+              <br />
+        </div>  
+     </>
+    )
+  }
+
+  handleChangeBasicBodyInfo(event) {
+    this.setState({
+      [event.target.id]: event.target.value
+    })
+  };
+
+  renderHr(event){
+   const idHr =  event.target.id;
+    
+    if(idHr === "sex"){
+          this.setState({
+            staticSex : "hrPink"
+        });
+      
+      }else{
+        this.setState({
+          staticSex : "hr"
+      });
+    }
+    if(idHr === "age"){
+        this.setState({
+          staticAge : "hrPink"
+      });
+    }else{
+      this.setState({
+        staticAge : "hr"
+      });
+    }
+    if(idHr === "weight"){
+        this.setState({
+          staticWeight : "hrPink"
+      });
+    }else{
+      this.setState({
+        staticWeight : "hr"
+      });
+    }
+    if(idHr === "height"){
+        this.setState({
+          staticHeight : "hrPink"
+      });
+    }else{
+      this.setState({
+        staticHeight : "hr"
+      });
+    }
+    if(idHr === "chest"){
+        this.setState({
+          staticChest : "hrPink"
+      });
+    }else{
+      this.setState({
+        staticChest : "hr"
+      });
+    }  
+    if(idHr === "waist"){
+      this.setState({
+        staticWaist : "hrPink"
+      });
+    }else{
+      this.setState({
+        staticWaist : "hr"
+      });
+    }
+    if(idHr === "hip"){
+      this.setState({
+        staticHip : "hrPink"
+      });
+    }else{
+    this.setState({
+        staticHip : "hr"
+      });
+    }       
+
+  
+
+     
+
+  }
+
+  
+
+
+ 
   renderOtherAttribute() {
     const { otherAttributesPage } = this.state;
     return (
@@ -1043,6 +1246,7 @@ class VideoList extends Component {
         <form>
           {(otherAttributesPage === "basicInfo") && this.renderBasicInfo()}
           {(otherAttributesPage === "bodyInfo") && this.renderBodyInfo()}
+          {(otherAttributesPage === "renderBasicBodyInfo") && this.renderBasicBodyInfo()}
         </form>
       </div>
     )
