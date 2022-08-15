@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends } from "../redux/challenges";
 import { getGroupID } from "../redux/auth";
 import "./challenges.scss";
 import moment from "moment"
@@ -31,6 +31,8 @@ class Challenges extends Component {
         this.props.getGroupName(this.props.user.group_id);
         this.props.getScoreOfTeam(this.props.user.group_id);
         this.props.getLeaderboard();
+        this.props.getFriendList(this.props.user.user_id);
+        this.props.getMaxFriends(this.props.user.user_id);
       } else {
         this.props.clearChallenges()
       }
@@ -295,7 +297,7 @@ class Challenges extends Component {
     if (myRank[0] === undefined) {
       myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
     }
-    
+
     var myRankIndex = individualRankFilter.findIndex(item => item.user_id === this.props.user.user_id);
 
     return (
@@ -355,6 +357,63 @@ class Challenges extends Component {
     )
   }
 
+  renderFriendList() {
+    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam, friend_list, max_friends } = this.props;
+    return (
+      <div className="row">
+        {this.renderPopupLeaveTeam()}
+        <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+          <div className="card-body">
+            <div className="row">
+              <div className="col-lg-12">
+                <h5 className="card-title"><b style={{ color: "#F45197" }}>รายชื่อเพื่อน</b> <span style={{ float: "right" }}>เพื่อน {friend_list && friend_list.length}/{max_friends} คน</span></h5>
+              </div>
+              <div className="col-lg-10">
+                {
+                  (friend_list && friend_list.length > 0) &&
+                  friend_list.map((item, index) =>
+                    <p className="card-text">
+                      <div className="row">
+                        <div className="col-lg-6 col-md-6 col-12">
+                          {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                        </div>
+                        <div className="col-lg-3 col-md-3 col-6">
+                          <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
+                        </div>
+                        <div className="col-lg-3 col-md-3 col-6">
+                          <span style={{ float: "right", color: "#F45197" }}>
+                            {
+                              item.end_rank ?
+                                item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
+                                :
+                                item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
+                            }
+
+                          </span>
+                        </div>
+                      </div>
+                    </p>
+                  )
+                }
+              </div>
+            </div>
+            <br></br>
+            <hr className="w-100"></hr>
+          </div>
+        </div>
+
+        <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
+          <div className="card-body">
+            <center style={{ marginTop: "35%", marginBottom: "35%" }}>
+              <h3 className="mb-4">คะแนนทีม</h3>
+              <h1 style={{ color: "#F45197" }}>{totalScoreOfTeam ? totalScoreOfTeam : 0} คะแนน</h1>
+            </center>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   renderChallenge() {
     const { selectedNavLink } = this.state;
     return (
@@ -393,10 +452,18 @@ class Challenges extends Component {
                   >
                     <b>กระดานคะแนน</b>
                   </a>
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "friendList" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.setState({ selectedNavLink: "friendList" })}
+                  >
+                    <b>รายชื่อเพื่อน</b>
+                  </a>
                 </nav>
                 {(selectedNavLink === "mission") && this.renderMission()}
                 {(selectedNavLink === "teamList") && this.renderTeamList()}
                 {(selectedNavLink === "scoreBoard") && this.renderScoreBoard()}
+                {(selectedNavLink === "friendList") && this.renderFriendList()}
               </div>
             </div>
           </form>
@@ -612,7 +679,7 @@ class Challenges extends Component {
           <h5 style={{ color: "#F45197" }}><b>• รายละเอียดของรางวัลประจำ Season</b></h5>
           <h6>สามารถติดตามของรางวัลได้ทาง Facebook Group</h6>
           <br></br>
-         {/*  <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
+          {/*  <h5 style={{ color: "#F45197" }}><b>• ระยะเวลาชาเลนจ์</b></h5>
           <h6>เริ่มตั้งแต่วันที่ 4 ตุลาคม 2561 สิ้นสุดวันที่ 28 พฤศจิกายน 2561</h6> */}
           {
             (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
@@ -741,11 +808,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends };
 
 export default connect(
   mapStateToProps,
