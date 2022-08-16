@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends } from "../redux/challenges";
-import { getGroupID } from "../redux/auth";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest } from "../redux/challenges";
+import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
 import "./challenges.scss";
 import moment from "moment"
 
@@ -13,13 +13,16 @@ class Challenges extends Component {
       scoreInWeek: 0,
       teamName: "",
       selectedNavLink: "mission",
-      selectedScoreBoard: "team"
+      selectedScoreBoard: "team",
+      selectedAddFriend: false,
+      emailAddFriend: "",
     }
   }
 
   async componentDidMount() {
     if (this.props.user) {
       this.props.getGroupID(this.props.user.user_id);
+      this.props.checkUpdateMaxFriends(this.props.user.user_id);
       this.props.getChallengePeriod();
       if (this.props.user && this.props.user.group_id) {
         this.props.getRank(this.props.user.user_id, this.props.user.start_date);
@@ -32,6 +35,7 @@ class Challenges extends Component {
         this.props.getScoreOfTeam(this.props.user.group_id);
         this.props.getLeaderboard();
         this.props.getFriendList(this.props.user.user_id);
+        this.props.getFriendRequest(this.props.user.user_id);
         this.props.getMaxFriends(this.props.user.user_id);
       } else {
         this.props.clearChallenges()
@@ -42,7 +46,19 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam } = this.props;
+    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest } = this.props;
+
+    if ((prevProps.statusGetFriendRequest !== statusGetFriendRequest) && statusGetFriendRequest === "success") {
+      if (friend_request && friend_request[0]) { //friend_request[0] คือ คำขอเป็นเพื่อนที่เก่าที่สุดที่ยังไม่ตอบรับ
+        //สั่งให้โชว์ popup FriendRequest
+        this.openPopupFriendRequest()
+      }
+    }
+
+    if ((prevProps.statusSendFriendRequest !== statusSendFriendRequest) && (statusSendFriendRequest === "success")) {
+      this.setState({ selectedAddFriend: false })
+    }
+
     if (prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "success") {
       if (numberOfTeamNotFull > 0) {
         this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date, this.props.user.fb_group);
@@ -357,59 +373,202 @@ class Challenges extends Component {
     )
   }
 
+  renderPopupMaxFriendsDetail() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupMaxFriendsDetail"
+          id="overlayPopupMaxFriendsDetail"
+          onClick={() => this.closePopupMaxFriendsDetail()}
+        />
+        <div className="popupMaxFriendsDetail" id="popupMaxFriendsDetail">
+          <div
+            className="close-btn"
+            onClick={() => this.closePopupMaxFriendsDetail()}
+          >
+            &times;
+          </div>
+          <br></br>
+          <h5 style={{ color: "#F45197" }}><b>วิธีการเพิ่มจำนวนเพื่อน</b></h5>
+          <h6><b>•</b> เริ่มต้นสามารถ add เพื่อนได้ 1 คน</h6>
+          <h6><b>•</b> ทำ 1 active week (ออกกำลังกายครบอย่างน้อย 1 วัน) จะสามารถเพิ่มเพื่อนได้อีก 2 คน</h6>
+          <h6><b>•</b> จำนวนเพื่อนมีสูงสุดได้ 15 คน</h6>
+          <br></br>
+          {
+            (this.props.statusGetNumberOfTeamNotFull !== "loading") ?
+              <div className="row mt-3">
+                <div className="col-3"></div>
+                <button
+                  type="button"
+                  className="btn btn-secondary col-6"
+                  style={{ backgroundColor: "#F45197" }}
+                  onClick={() => this.closePopupMaxFriendsDetail()}>ปิด</button>
+                <div className="col-3"></div>
+              </div>
+              :
+              <div />
+          }
+        </div>
+      </div>
+    )
+  }
+
+  openPopupMaxFriendsDetail() {
+    document.getElementById("popupMaxFriendsDetail").classList.toggle("active");
+    document.getElementById("overlayPopupMaxFriendsDetail").classList.toggle("active");
+  }
+
+  closePopupMaxFriendsDetail() {
+    document.getElementById("popupMaxFriendsDetail").classList.toggle("active");
+    document.getElementById("overlayPopupMaxFriendsDetail").classList.toggle("active");
+  }
+
+  renderPopupFriendRequest() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupFriendRequest"
+          id="overlayPopupFriendRequest"
+          onClick={() => this.closePopupFriendRequest()}
+        />
+        <div className="popupFriendRequest" id="popupFriendRequest">
+          <div
+            className="close-btn"
+            onClick={() => this.closePopupFriendRequest()}
+          >
+            &times;
+          </div>
+          <br></br>
+          <h5 style={{ color: "#F45197", textAlign: "center" }}><b>คำขอเป็นเพื่อน</b></h5>
+          <br></br>
+          <h6><b>{this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].email}</b> ต้องการเป็นเพื่อนกับคุณ</h6>
+          <br></br>
+          {
+            <div className="row mt-3">
+              <div className="col-1"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.closePopupFriendRequest()}>ปฎิเสธ</button>
+              <div className="col-2"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.closePopupFriendRequest()}>ยอมรับ</button>
+              <div className="col-1"></div>
+            </div>
+          }
+        </div>
+      </div>
+    )
+  }
+
+  openPopupFriendRequest() {
+    document.getElementById("popupFriendRequest").classList.toggle("active");
+    document.getElementById("overlayPopupFriendRequest").classList.toggle("active");
+  }
+
+  closePopupFriendRequest() {
+    document.getElementById("popupFriendRequest").classList.toggle("active");
+    document.getElementById("overlayPopupFriendRequest").classList.toggle("active");
+  }
+
   renderFriendList() {
-    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam, friend_list, max_friends } = this.props;
+    const { friend_list, max_friends, user, statusSendFriendRequest } = this.props;
+    const { emailAddFriend } = this.state;
     return (
       <div className="row">
-        {this.renderPopupLeaveTeam()}
-        <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-lg-12">
-                <h5 className="card-title"><b style={{ color: "#F45197" }}>รายชื่อเพื่อน</b> <span style={{ float: "right" }}>เพื่อน {friend_list && friend_list.length}/{max_friends} คน</span></h5>
-              </div>
-              <div className="col-lg-10">
-                {
-                  (friend_list && friend_list.length > 0) &&
-                  friend_list.map((item, index) =>
-                    <p className="card-text">
-                      <div className="row">
-                        <div className="col-lg-6 col-md-6 col-12">
-                          {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
-                        </div>
-                        <div className="col-lg-3 col-md-3 col-6">
-                          <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
-                        </div>
-                        <div className="col-lg-3 col-md-3 col-6">
-                          <span style={{ float: "right", color: "#F45197" }}>
-                            {
-                              item.end_rank ?
-                                item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
-                                :
-                                item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
-                            }
-
-                          </span>
-                        </div>
-                      </div>
-                    </p>
-                  )
-                }
+        {this.renderPopupMaxFriendsDetail()}
+        {
+          this.state.selectedAddFriend ?
+            <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+              <div className="card-body">
+                <div className="row mt-4 justify-content-center">
+                  <div className="col-lg-12 "  >
+                    <h5 className="" style={{ textAlign: "center" }}> <img src={`../assets/img/challenges/vectorinvite.png`} />&nbsp; ขอเป็นเพื่อน</h5>
+                  </div>
+                  <div className="col-lg-6">
+                    <input
+                      type=""
+                      className="form-control"
+                      placeholder="อีเมล"
+                      id="emailAddFriend"
+                      value={this.state.emailAddFriend}
+                      onChange={(event) => this.handleChange(event)}
+                    />
+                    {
+                      (statusSendFriendRequest === "fail") &&
+                      <h6 style={{ color: "red" }}>ไม่พบผู้ใช้ที่ต้้องการเพิ่มเพื่อนอยู่ในระบบ</h6>
+                    }
+                    <button
+                      type="button"
+                      class="btn btn-danger mt-4 mb-4 col-12"
+                      style={{ backgroundColor: "#F45197" }}
+                      onClick={() => this.props.sendFriendRequest(user.user_id, emailAddFriend)}
+                    >
+                      ส่งคำขอ
+                    </button>
+                  </div>
+                </div>
+                <br></br>
               </div>
             </div>
-            <br></br>
-            <hr className="w-100"></hr>
-          </div>
-        </div>
+            :
+            <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <h5 className="card-title"><b style={{ color: "#F45197" }}>รายชื่อเพื่อน</b> <span style={{ float: "right" }}>เพื่อน {friend_list && friend_list.length}/{max_friends} คน</span></h5>
+                  </div>
+                  <div className="col-lg-10">
+                    {
+                      (friend_list && friend_list.length > 0) &&
+                      friend_list.map((item, index) =>
+                        <p className="card-text">
+                          <div className="row">
+                            <div className="col-lg-6 col-md-6 col-12">
+                              {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                            </div>
+                            <div className="col-lg-3 col-md-3 col-6">
+                              <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
+                            </div>
+                            <div className="col-lg-3 col-md-3 col-6">
+                              <span style={{ float: "right", color: "#F45197" }}>
+                                {
+                                  item.end_rank ?
+                                    item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
+                                    :
+                                    item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
+                                }
 
-        <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
-          <div className="card-body">
-            <center style={{ marginTop: "35%", marginBottom: "35%" }}>
-              <h3 className="mb-4">คะแนนทีม</h3>
-              <h1 style={{ color: "#F45197" }}>{totalScoreOfTeam ? totalScoreOfTeam : 0} คะแนน</h1>
-            </center>
-          </div>
-        </div>
+                              </span>
+                            </div>
+                          </div>
+                        </p>
+                      )
+                    }
+                  </div>
+                </div>
+                <br></br>
+                <hr className="w-100"></hr>
+                <div className="row justify-content-between">
+                  <h5
+                    className="underline-on-hover"
+                    style={{ cursor: "pointer", color: "#F45197" }}
+                    onClick={() => this.openPopupMaxFriendsDetail()}>วิธีการเพิ่มจำนวนเพื่อน</h5>
+                  {
+                    (friend_list.length < max_friends) &&
+                    <h5
+                      className="underline-on-hover"
+                      style={{ cursor: "pointer", color: "#F45197" }}
+                      onClick={() => this.setState({ selectedAddFriend: true })}>+ เพิ่มเพื่อน</h5>
+                  }
+                </div>
+              </div>
+            </div>
+        }
       </div>
     )
   }
@@ -455,7 +614,7 @@ class Challenges extends Component {
                   <a
                     className="nav-link"
                     style={{ color: `${selectedNavLink === "friendList" ? "#F45197" : ""}`, cursor: "pointer" }}
-                    onClick={() => this.setState({ selectedNavLink: "friendList" })}
+                    onClick={() => this.setState({ selectedNavLink: "friendList", selectedAddFriend: false })}
                   >
                     <b>รายชื่อเพื่อน</b>
                   </a>
@@ -791,6 +950,7 @@ class Challenges extends Component {
     const { numberOfTeamNotFull, statusGetNumberOfTeamNotFull, user } = this.props;
     return (
       <div>
+        {this.renderPopupFriendRequest()}
         {
           (user && user.group_id) ?
             this.renderChallenge()
@@ -808,11 +968,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest };
 
 export default connect(
   mapStateToProps,

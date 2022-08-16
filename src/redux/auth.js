@@ -29,8 +29,16 @@ export const types = {
   GET_GROUP_ID: "GET_GROUP_ID",
   GET_GROUP_ID_SUCCESS: "GET_GROUP_ID_SUCCESS",
   CHANGE_EMAIL: "CHANGE_EMAIL",
-  CHANGE_EMAIL_SUCCESS: "CHANGE_EMAIL_SUCCESS"
+  CHANGE_EMAIL_SUCCESS: "CHANGE_EMAIL_SUCCESS",
+  CHECK_UPDATE_MAX_FRIENDS: "CHECK_UPDATE_MAX_FRIENDS",
 }
+
+export const checkUpdateMaxFriends = (user_id) => ({
+  type: types.CHECK_UPDATE_MAX_FRIENDS,
+  payload: {
+    user_id
+  }
+})
 
 export const changeEmail = (
   email,
@@ -157,6 +165,21 @@ export const signupUser = (email, password, firstname, lastname, phone) => ({
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+const checkUpdateMaxFriendsSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/checkUpdateMaxFriends", {
+      body: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 const checkUserSagaAsync = async (
   email
@@ -402,6 +425,21 @@ function* checkUserSaga({ payload }) {
     })
   } catch (error) {
     console.log("error from checkUserSaga :", error);
+  }
+}
+
+function* checkUpdateMaxFriendsSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      checkUpdateMaxFriendsSagaAsync,
+      user_id
+    );
+  } catch (error) {
+    console.log("error from checkUpdateMaxFriendsSaga :", error);
   }
 }
 
@@ -720,6 +758,10 @@ export function* watchChangeEmail() {
   yield takeEvery(types.CHANGE_EMAIL, changeEmailSaga);
 }
 
+export function* watchCheckUpdateMaxFriends() {
+  yield takeEvery(types.CHECK_UPDATE_MAX_FRIENDS, checkUpdateMaxFriendsSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchLoginUser),
@@ -734,7 +776,8 @@ export function* saga() {
     fork(watchResetPassword),
     fork(watchImportMembers),
     fork(watchGetGroupID),
-    fork(watchChangeEmail)
+    fork(watchChangeEmail),
+    fork(watchCheckUpdateMaxFriends),
   ]);
 }
 

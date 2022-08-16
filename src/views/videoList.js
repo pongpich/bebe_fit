@@ -4,7 +4,7 @@ import {
   Button
 } from "reactstrap";
 import { connect } from "react-redux";
-import { updateProfile, logoutUser } from "../redux/auth";
+import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
@@ -81,6 +81,7 @@ class VideoList extends Component {
         this.addEventToVideo();
       }
       this.props.getDailyWeighChallenge(user.user_id);
+      this.props.checkUpdateMaxFriends(user.user_id);
       this.setState({
         sex: JSON.parse(this.props.user.other_attributes).sex,
         age: JSON.parse(this.props.user.other_attributes).age,
@@ -1814,7 +1815,7 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges }) => {
   return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends };
 
 export default connect(
   mapStateToProps,
