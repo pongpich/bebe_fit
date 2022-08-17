@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank } from "../redux/challenges";
 import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
 import "./challenges.scss";
 import moment from "moment"
@@ -16,6 +16,7 @@ class Challenges extends Component {
       selectedScoreBoard: "team",
       selectedAddFriend: false,
       emailAddFriend: "",
+      emailDeleteFriend: "",
     }
   }
 
@@ -37,6 +38,7 @@ class Challenges extends Component {
         this.props.getFriendList(this.props.user.user_id);
         this.props.getFriendRequest(this.props.user.user_id);
         this.props.getMaxFriends(this.props.user.user_id);
+        this.props.getFriendsRank(this.props.user.user_id)
       } else {
         this.props.clearChallenges()
       }
@@ -46,12 +48,27 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest } = this.props;
+    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend } = this.props;
+
+    if ((prevProps.statusDeleteFriend !== statusDeleteFriend) && (statusDeleteFriend === "success")) {
+      this.closePopupDeleteFriend(); //สั่งให้ซ่อน popup DeleteFriend
+      this.props.getFriendList(this.props.user.user_id);
+    }
+
+    if ((prevProps.statusRejectFriend !== statusRejectFriend) && (statusRejectFriend === "success")) {
+      this.closePopupFriendRequest(); //สั่งให้ซ่อน popup FriendRequest
+      this.props.getFriendRequest(this.props.user.user_id);
+    }
+
+    if ((prevProps.statusAcceptFriend !== statusAcceptFriend) && (statusAcceptFriend === "success" || statusAcceptFriend === "fail")) {
+      this.closePopupFriendRequest(); //สั่งให้ซ่อน popup FriendRequest
+      this.props.getFriendList(this.props.user.user_id);
+      this.props.getFriendRequest(this.props.user.user_id);
+    }
 
     if ((prevProps.statusGetFriendRequest !== statusGetFriendRequest) && statusGetFriendRequest === "success") {
       if (friend_request && friend_request[0]) { //friend_request[0] คือ คำขอเป็นเพื่อนที่เก่าที่สุดที่ยังไม่ตอบรับ
-        //สั่งให้โชว์ popup FriendRequest
-        this.openPopupFriendRequest()
+        this.openPopupFriendRequest(); //สั่งให้โชว์ popup FriendRequest
       }
     }
 
@@ -344,7 +361,47 @@ class Challenges extends Component {
       </div>)
   }
 
+  renderFriendsRank() {
+    const { user, friendsRank } = this.props;
+
+    var myRank = friendsRank.filter(item => item.user_id === this.props.user.user_id);
+    // myRank[0] === undefined คือกรณีผู้ใช้ไม่มีข้อมูลอยู่เลยใน member_event_log  (ทำให้เกิดบัค จึงต้องกำหนดค่าให้)
+    if (myRank[0] === undefined) {
+      myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
+    }
+
+    var myRankIndex = friendsRank.findIndex(item => item.user_id === this.props.user.user_id);
+
+    return (
+      <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+        {
+          <b className="row mb-4">
+            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
+              <span style={{ float: "right", color: "#F45197" }}>
+                {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
+              </span>
+            </p>
+          </b>
+        }
+        {
+          (friendsRank && (friendsRank.length > 0)) &&
+          friendsRank.map((item, index) => {
+            const fullName = `${item.first_name} ${item.last_name}`;
+            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
+            return (
+              <p className="card-text">{rankDetail}
+                <span style={{ float: "right", color: "#F45197" }}>
+                  {item.total_score ? item.total_score : 0} คะแนน
+              </span>
+              </p>
+            )
+          })
+        }
+      </div>)
+  }
+
   renderScoreBoard() {
+    const { friendsRank } = this.props;
     const { selectedScoreBoard } = this.state;
     return (
       <div className="row">
@@ -358,14 +415,24 @@ class Challenges extends Component {
                 คะแนนทีม
               </h5>
               <h5
-                className=""
+                className="mr-4"
                 style={{ color: `${selectedScoreBoard === "individual" ? "#F45197" : "grey"}`, cursor: "pointer" }}
                 onClick={() => this.setState({ selectedScoreBoard: "individual" })}>
                 คะแนนเดี่ยว
               </h5>
+              {
+                (friendsRank && (friendsRank.length > 0)) &&
+                <h5
+                  className=""
+                  style={{ color: `${selectedScoreBoard === "friendsRank" ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                  onClick={() => this.setState({ selectedScoreBoard: "friendsRank" })}>
+                  คะแนนเพื่อน
+                </h5>
+              }
               <hr className="w-100"></hr>
               {(selectedScoreBoard === "team") && this.renderTeamRank()}
               {(selectedScoreBoard === "individual") && this.renderIndividualRank()}
+              {(selectedScoreBoard === "friendsRank") && this.renderFriendsRank()}
             </div>
           </div>
         </div>
@@ -444,19 +511,26 @@ class Challenges extends Component {
           <h6><b>{this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].email}</b> ต้องการเป็นเพื่อนกับคุณ</h6>
           <br></br>
           {
+            ((this.props.statusAcceptFriend !== "loading" && this.props.statusRejectFriend !== "loading")) &&
             <div className="row mt-3">
               <div className="col-1"></div>
               <button
                 type="button"
                 className="btn btn-secondary col-4"
                 style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
-                onClick={() => this.closePopupFriendRequest()}>ปฎิเสธ</button>
+                onClick={() => this.props.rejectFriend(this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].log_id)}
+              >
+                ปฎิเสธ
+              </button>
               <div className="col-2"></div>
               <button
                 type="button"
                 className="btn btn-secondary col-4"
                 style={{ backgroundColor: "#F45197", borderColor: "#F45197" }}
-                onClick={() => this.closePopupFriendRequest()}>ยอมรับ</button>
+                onClick={() => this.props.acceptFriend((this.props.user && this.props.user.user_id), (this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].sender_id), (this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].log_id))}
+              >
+                ยอมรับ
+              </button>
               <div className="col-1"></div>
             </div>
           }
@@ -475,11 +549,79 @@ class Challenges extends Component {
     document.getElementById("overlayPopupFriendRequest").classList.toggle("active");
   }
 
+  renderPopupDeleteFriend() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupDeleteFriend"
+          id="overlayPopupDeleteFriend"
+          onClick={() => this.closePopupDeleteFriend()}
+        />
+        <div className="popupDeleteFriend" id="popupDeleteFriend">
+          <div
+            className="close-btn"
+            onClick={() => this.closePopupDeleteFriend()}
+          >
+            &times;
+          </div>
+          <br></br>
+          <h5 style={{ color: "#F45197", textAlign: "center" }}><b>ยืนยันการลบเพื่อน</b></h5>
+          <br></br>
+          <h6 style={{ textAlign: "center" }}>คุณต้องการลบ <b>{this.props.friend_request && this.props.friend_request[0] && this.props.friend_request[0].email}</b></h6>
+          <h6 style={{ textAlign: "center" }}>ออกจากรายชื่อเพื่อนหรือไม่</h6>
+          <br></br>
+          {
+            (this.props.statusDeleteFriend !== "loading") &&
+            <div className="row mt-3">
+              <div className="col-1"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.closePopupDeleteFriend()}
+              >
+                ยกเลิก
+              </button>
+              <div className="col-2"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.props.deleteFriend((this.props.user && this.props.user.user_id), (this.state.emailDeleteFriend))}
+              >
+                ลบเพื่อน
+              </button>
+              <div className="col-1"></div>
+            </div>
+          }
+        </div>
+      </div>
+    )
+  }
+
+  openPopupDeleteFriend() {
+    document.getElementById("popupDeleteFriend").classList.toggle("active");
+    document.getElementById("overlayPopupDeleteFriend").classList.toggle("active");
+  }
+
+  closePopupDeleteFriend() {
+    document.getElementById("popupDeleteFriend").classList.toggle("active");
+    document.getElementById("overlayPopupDeleteFriend").classList.toggle("active");
+  }
+
+  onDeleteFriendModal(friend_email) {
+    this.setState({
+      emailDeleteFriend: friend_email
+    })
+    this.openPopupDeleteFriend();
+  }
+
   renderFriendList() {
     const { friend_list, max_friends, user, statusSendFriendRequest } = this.props;
     const { emailAddFriend } = this.state;
     return (
       <div className="row">
+        {this.renderPopupDeleteFriend()}
         {this.renderPopupMaxFriendsDetail()}
         {
           this.state.selectedAddFriend ?
@@ -541,8 +683,7 @@ class Challenges extends Component {
                                     item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
                                     :
                                     item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
-                                }
-
+                                } <img className="ml-4" style={{ cursor: "pointer" }} src={`../assets/img/challenges/icon_x.png`} onClick={() => this.onDeleteFriendModal(item.email)} />
                               </span>
                             </div>
                           </div>
@@ -968,11 +1109,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank };
 
 export default connect(
   mapStateToProps,

@@ -52,7 +52,48 @@ export const types = {
   GET_FRIEND_REQUEST: "GET_FRIEND_REQUEST",
   GET_FRIEND_REQUEST_SUCCESS: "GET_FRIEND_REQUEST_SUCCESS",
   GET_FRIEND_REQUEST_FAIL: "GET_FRIEND_REQUEST_FAIL",
+  ACCEPT_FRIEND: "ACCEPT_FRIEND",
+  ACCEPT_FRIEND_SUCCESS: "ACCEPT_FRIEND_SUCCESS",
+  ACCEPT_FRIEND_FAIL: "ACCEPT_FRIEND_FAIL",
+  REJECT_FRIEND: "REJECT_FRIEND",
+  REJECT_FRIEND_SUCCESS: "REJECT_FRIEND_SUCCESS",
+  REJECT_FRIEND_FAIL: "REJECT_FRIEND_FAIL",
+  DELETE_FRIEND: "DELETE_FRIEND",
+  DELETE_FRIEND_SUCCESS: "DELETE_FRIEND_SUCCESS",
+  DELETE_FRIEND_FAIL: "DELETE_FRIEND_FAIL",
+  GET_FRIENDS_RANK: "GET_FRIENDS_RANK",
+  GET_FRIENDS_RANK_SUCCESS: "GET_FRIENDS_RANK_SUCCESS",
+  GET_FRIENDS_RANK_FAIL: "GET_FRIENDS_RANK_FAIL",
 }
+
+export const getFriendsRank = (user_id) => ({
+  type: types.GET_FRIENDS_RANK,
+  payload: {
+    user_id
+  }
+})
+
+export const deleteFriend = (user_id, friend_email) => ({
+  type: types.DELETE_FRIEND,
+  payload: {
+    user_id,
+    friend_email
+  }
+});
+
+export const rejectFriend = (log_id) => ({
+  type: types.REJECT_FRIEND,
+  payload: {
+    log_id
+  }
+});
+
+export const acceptFriend = (user_id, sender_id, log_id) => ({
+  type: types.ACCEPT_FRIEND,
+  payload: {
+    user_id, sender_id, log_id
+  }
+});
 
 export const getFriendRequest = (user_id) => ({
   type: types.GET_FRIEND_REQUEST,
@@ -211,6 +252,77 @@ export const getIsReducedWeight = (user_id) => ({
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+
+const getFriendsRankSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getFriendsRank", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const deleteFriendSagaAsync = async (
+  user_id,
+  friend_email
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/deleteFriend", {
+      body: {
+        user_id,
+        friend_email
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const rejectFriendSagaAsync = async (
+  log_id
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/rejectFriend", {
+      body: {
+        log_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const acceptFriendSagaAsync = async (
+  user_id,
+  sender_id,
+  log_id
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/acceptFriend", {
+      body: {
+        user_id,
+        sender_id,
+        log_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
 
 const getFriendRequestSagaAsync = async (
   user_id
@@ -561,6 +673,103 @@ const getDailyTeamWeightBonusSagaAsync = async (
   } catch (error) {
     console.log("error :", error);
     return { error, messsage: error.message }
+  }
+}
+
+function* getFriendsRankSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getFriendsRankSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.GET_FRIENDS_RANK_SUCCESS,
+        payload: apiResult.results.friend_list
+      })
+    } else if (apiResult.results.message === "friendless") {
+      yield put({
+        type: types.GET_FRIENDS_RANK_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from getFriendsRankSaga :", error);
+  }
+}
+
+function* rejectFriendSaga({ payload }) {
+  const {
+    log_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      rejectFriendSagaAsync,
+      log_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.REJECT_FRIEND_SUCCESS
+      })
+    }
+  } catch (error) {
+    console.log("error from rejectFriendSaga :", error);
+  }
+}
+
+function* deleteFriendSaga({ payload }) {
+  const {
+    user_id,
+    friend_email
+  } = payload
+  try {
+    const apiResult = yield call(
+      deleteFriendSagaAsync,
+      user_id,
+      friend_email
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.DELETE_FRIEND_SUCCESS
+      })
+    } else if (apiResult.results.message === "friendless") {
+      yield put({
+        type: types.DELETE_FRIEND_FAIL
+      })
+    }
+  } catch (error) {
+    console.log("error from deleteFriendSaga :", error);
+  }
+}
+
+function* acceptFriendSaga({ payload }) {
+  const {
+    user_id,
+    sender_id,
+    log_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      acceptFriendSagaAsync,
+      user_id,
+      sender_id,
+      log_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.ACCEPT_FRIEND_SUCCESS
+      })
+    } else if (apiResult.results.message === "friend_list_exist") {
+      yield put({
+        type: types.ACCEPT_FRIEND_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from acceptFriendSaga :", error);
   }
 }
 
@@ -1059,6 +1268,22 @@ export function* watchGetFriendRequest() {
   yield takeEvery(types.GET_FRIEND_REQUEST, getFriendRequestSaga)
 }
 
+export function* watchAcceptFriend() {
+  yield takeEvery(types.ACCEPT_FRIEND, acceptFriendSaga)
+}
+
+export function* watchRejectFriend() {
+  yield takeEvery(types.REJECT_FRIEND, rejectFriendSaga)
+}
+
+export function* watchDeleteFriend() {
+  yield takeEvery(types.DELETE_FRIEND, deleteFriendSaga)
+}
+
+export function* watchGetFriendsRank() {
+  yield takeEvery(types.GET_FRIENDS_RANK, getFriendsRankSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -1082,6 +1307,10 @@ export function* saga() {
     fork(watchGetMaxFriends),
     fork(watchSendFriendRequest),
     fork(watchGetFriendRequest),
+    fork(watchAcceptFriend),
+    fork(watchRejectFriend),
+    fork(watchDeleteFriend),
+    fork(watchGetFriendsRank),
   ]);
 }
 
@@ -1106,6 +1335,7 @@ const INIT_STATE = {
   totalScoreOfTeam: 0,
   teamRank: [],
   individualRank: [],
+  friendsRank: [],
   statusCreateTeam: "default",
   challengePeriod: true,
   memberEventLog: [],
@@ -1116,10 +1346,71 @@ const INIT_STATE = {
   statusSendFriendRequest: "default",
   friend_request: [],
   statusGetFriendRequest: "default",
+  statusAcceptFriend: "default",
+  statusRejectFriend: "default",
+  statusDeleteFriend: "default",
+  statusGetFriendsRank: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.GET_FRIENDS_RANK:
+      return {
+        ...state,
+        statusGetFriendsRank: "loading"
+      }
+    case types.GET_FRIENDS_RANK_SUCCESS:
+      return {
+        ...state,
+        friendsRank: action.payload,
+        statusGetFriendsRank: "success"
+      }
+    case types.GET_FRIENDS_RANK_FAIL:
+      return {
+        ...state,
+        friendsRank: [],
+        statusGetFriendsRank: "fail"
+      }
+    case types.DELETE_FRIEND:
+      return {
+        ...state,
+        statusDeleteFriend: "loading"
+      }
+    case types.DELETE_FRIEND_SUCCESS:
+      return {
+        ...state,
+        statusDeleteFriend: "success"
+      }
+    case types.DELETE_FRIEND_FAIL:
+      return {
+        ...state,
+        statusDeleteFriend: "fail"
+      }
+    case types.REJECT_FRIEND:
+      return {
+        ...state,
+        statusRejectFriend: "loading"
+      }
+    case types.REJECT_FRIEND_SUCCESS:
+      return {
+        ...state,
+        statusRejectFriend: "success"
+      }
+    case types.ACCEPT_FRIEND:
+      return {
+        ...state,
+        statusAcceptFriend: "loading"
+      }
+    case types.ACCEPT_FRIEND_SUCCESS:
+      return {
+        ...state,
+        statusAcceptFriend: "success"
+      }
+    case types.ACCEPT_FRIEND_FAIL:
+      return {
+        ...state,
+        statusAcceptFriend: "fail"
+      }
     case types.GET_FRIEND_REQUEST:
       return {
         ...state,
