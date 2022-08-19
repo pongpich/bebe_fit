@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank } from "../redux/challenges";
+import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite } from "../redux/challenges";
 import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
 import "./challenges.scss";
 import moment from "moment"
@@ -17,6 +17,8 @@ class Challenges extends Component {
       selectedAddFriend: false,
       emailAddFriend: "",
       emailDeleteFriend: "",
+      emailTeamInvite: "",
+      selectedTeamInvite: false,
     }
   }
 
@@ -25,6 +27,8 @@ class Challenges extends Component {
       this.props.getGroupID(this.props.user.user_id);
       this.props.checkUpdateMaxFriends(this.props.user.user_id);
       this.props.getChallengePeriod();
+
+      this.props.getTeamInvite(this.props.user.user_id);
       if (this.props.user && this.props.user.group_id) {
         this.props.getRank(this.props.user.user_id, this.props.user.start_date);
         this.props.getLogWeight(this.props.user.user_id);
@@ -48,7 +52,30 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend } = this.props;
+    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite } = this.props;
+
+    if ((prevProps.statusRejectTeamInvite !== statusRejectTeamInvite) && (statusRejectTeamInvite === "success")) {
+      this.openPopupTeamInvite(); //สั่งให้ซ่อน popup TeamInvite
+      this.props.getTeamInvite(this.props.user.user_id)
+    }
+
+    if ((prevProps.statusAcceptTeamInvite !== statusAcceptTeamInvite) && (statusAcceptTeamInvite === "success")) {
+      this.openPopupTeamInvite(); //สั่งให้ซ่อน popup TeamInvite
+      this.props.getGroupID(user.user_id);
+      this.props.getTeamInvite(this.props.user.user_id)
+    }
+
+    if ((prevProps.statusGetTeamInvite !== statusGetTeamInvite) && (statusGetTeamInvite === "success")) {
+      if (team_invite && team_invite[0]) { //team_invite[0] คือ คำชวนเข้าทีมที่เก่าที่สุดที่ยังไม่ตอบรับ
+        this.openPopupTeamInvite(); //สั่งให้โชว์ popup TeamInvite
+      }
+    }
+
+    if ((prevProps.statusSendTeamInvite !== statusSendTeamInvite) && (statusSendTeamInvite === "success")) {
+      this.setState({
+        selectedTeamInvite: false
+      })
+    }
 
     if ((prevProps.statusDeleteFriend !== statusDeleteFriend) && (statusDeleteFriend === "success")) {
       this.closePopupDeleteFriend(); //สั่งให้ซ่อน popup DeleteFriend
@@ -187,54 +214,162 @@ class Challenges extends Component {
     )
   }
 
+  renderPopupTeamInvite() {
+    return (
+      <div>
+        <div
+          className="overlayContainerPopupTeamInvite"
+          id="overlayPopupTeamInvite"
+          onClick={() => this.closePopupTeamInvite()}
+        />
+        <div className="popupTeamInvite" id="popupTeamInvite">
+          <div
+            className="close-btn"
+            onClick={() => this.closePopupTeamInvite()}
+          >
+            &times;
+          </div>
+          <br></br>
+          <h5 style={{ color: "#F45197", textAlign: "center" }}><b>คำชวนเข้าร่วมทีมชาเลนจ์</b></h5>
+          <br></br>
+          <h6><b>{this.props.team_invite && this.props.team_invite[0] && this.props.team_invite[0].email}</b> ต้องการชวนคุณเข้าร่วมทีม</h6>
+          <br></br>
+          {
+            ((this.props.statusAcceptFriend !== "loading" && this.props.statusRejectFriend !== "loading")) &&
+            <div className="row mt-3">
+              <div className="col-1"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.props.rejectTeamInvite(this.props.team_invite && this.props.team_invite[0] && this.props.team_invite[0].log_id)}
+              >
+                ปฎิเสธ
+              </button>
+              <div className="col-2"></div>
+              <button
+                type="button"
+                className="btn btn-secondary col-4"
+                style={{ backgroundColor: "#F45197", borderColor: "#F45197" }}
+                onClick={() => this.props.acceptTeamInvite(
+                  (this.props.user && this.props.user.user_id),
+                  (this.props.team_invite && this.props.team_invite[0] && this.props.team_invite[0].group_id),
+                  (this.props.team_invite && this.props.team_invite[0] && this.props.team_invite[0].log_id),
+                )}
+              >
+                เข้าร่วมทีม
+              </button>
+              <div className="col-1"></div>
+            </div>
+          }
+        </div>
+      </div>
+    )
+  }
+
+  openPopupTeamInvite() {
+    document.getElementById("popupTeamInvite").classList.toggle("active");
+    document.getElementById("overlayPopupTeamInvite").classList.toggle("active");
+  }
+
+  closePopupTeamInvite() {
+    document.getElementById("popupTeamInvite").classList.toggle("active");
+    document.getElementById("overlayPopupTeamInvite").classList.toggle("active");
+  }
+
   renderTeamList() {
-    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam } = this.props;
+    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam, user, statusSendTeamInvite } = this.props;
+    const { selectedTeamInvite, emailTeamInvite } = this.state;
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
-        <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-lg-12">
-                <h5 className="card-title"><b style={{ color: "#F45197" }}>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
-              </div>
-              <div className="col-lg-10">
-                {
-                  (membersOfTeam) &&
-                  membersOfTeam.map((item, index) =>
-                    <p className="card-text">
-                      <div className="row">
-                        <div className="col-lg-6 col-md-6 col-12">
-                          {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
-                        </div>
-                        <div className="col-lg-3 col-md-3 col-6">
-                          <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
-                        </div>
-                        <div className="col-lg-3 col-md-3 col-6">
-                          <span style={{ float: "right", color: "#F45197" }}>
-                            {
-                              item.end_rank ?
-                                item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
-                                :
-                                item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
-                            }
-
-                          </span>
-                        </div>
-                      </div>
-                    </p>
-                  )
-                }
+        {
+          selectedTeamInvite ?
+            <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+              <div className="card-body">
+                <div className="row mt-4 justify-content-center">
+                  <div className="col-lg-12 "  >
+                    <h5 className="" style={{ textAlign: "center" }}> <img src={`../assets/img/challenges/vectorinvite.png`} />&nbsp; ชวนเข้าทีม</h5>
+                  </div>
+                  <div className="col-lg-6">
+                    <input
+                      type=""
+                      className="form-control"
+                      placeholder="อีเมล"
+                      id="emailTeamInvite"
+                      value={this.state.emailTeamInvite}
+                      onChange={(event) => this.handleChange(event)}
+                    />
+                    {
+                      statusSendTeamInvite !== "loading" &&
+                      <button
+                        type="button"
+                        class="btn btn-danger mt-4 mb-4 col-12"
+                        style={{ backgroundColor: "#F45197" }}
+                        onClick={() => this.props.sendTeamInvite((user && user.user_id), emailTeamInvite)}
+                      >
+                        ส่งคำเชิญ
+                      </button>
+                    }
+                  </div>
+                </div>
+                <br></br>
               </div>
             </div>
-            <br></br>
-            <hr className="w-100"></hr>
-            <h5
-              className="underline-on-hover"
-              style={{ cursor: "pointer", color: "#F45197" }}
-              onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</h5>
-          </div>
-        </div>
+            :
+            <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <h5 className="card-title"><b style={{ color: "#F45197" }}>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
+                  </div>
+                  <div className="col-lg-10">
+                    {
+                      (membersOfTeam) &&
+                      membersOfTeam.map((item, index) =>
+                        <p className="card-text">
+                          <div className="row">
+                            <div className="col-lg-6 col-md-6 col-12">
+                              {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                            </div>
+                            <div className="col-lg-3 col-md-3 col-6">
+                              <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
+                            </div>
+                            <div className="col-lg-3 col-md-3 col-6">
+                              <span style={{ float: "right", color: "#F45197" }}>
+                                {
+                                  item.end_rank ?
+                                    item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
+                                    :
+                                    item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
+                                }
+
+                              </span>
+                            </div>
+                          </div>
+                        </p>
+                      )
+                    }
+                  </div>
+                </div>
+                <br></br>
+                <hr className="w-100"></hr>
+                <div className="row justify-content-between">
+                  <h5
+                    className="underline-on-hover"
+                    style={{ cursor: "pointer", color: "#F45197" }}
+                    onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</h5>
+                  {
+                    (membersOfTeam) && (membersOfTeam.length < 10) &&
+                    <h5
+                      className="underline-on-hover"
+                      style={{ cursor: "pointer", color: "#F45197" }}
+                      onClick={() => this.setState({ selectedTeamInvite: true })}>+ ชวนเข้าทีม</h5>
+                  }
+                </div>
+              </div>
+            </div>
+        }
 
         <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
@@ -741,7 +876,7 @@ class Challenges extends Component {
                   <a
                     className="nav-link"
                     style={{ color: `${selectedNavLink === "teamList" ? "#F45197" : ""}`, cursor: "pointer" }}
-                    onClick={() => this.setState({ selectedNavLink: "teamList" })}
+                    onClick={() => this.setState({ selectedNavLink: "teamList", selectedTeamInvite: false })}
                   >
                     <b>สมาชิกในทีม</b>
                   </a>
@@ -1092,6 +1227,7 @@ class Challenges extends Component {
     return (
       <div>
         {this.renderPopupFriendRequest()}
+        {this.renderPopupTeamInvite()}
         {
           (user && user.group_id) ?
             this.renderChallenge()
@@ -1109,11 +1245,11 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite };
 
 export default connect(
   mapStateToProps,
