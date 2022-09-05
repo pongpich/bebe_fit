@@ -442,16 +442,85 @@ class Challenges extends Component {
   renderTeamRank() {
     const { teamRank, user } = this.props;
     const teamRankFilter = teamRank.filter(item => user.fb_group === item.fb_group);
+
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+        <div className="box-Individual">
+          {
+            
+            (teamRankFilter) &&
+            teamRankFilter.map((item, index) =>
+              <>
+                { 
+                  user.group_id == item.group_id ?
+                    <p className="card-text user-idLogin">{index + 1}. {item.group_name}
+                      &nbsp;
+                      {
+                        console.log("index",index)
+                      }
+                      {
+                        index + 1 == "1" ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index+ 1 == "2" ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index+ 1 == "3" ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                      <span style={{ float: "right", color: "#F45197" }}>
+                        {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
+                      </span>
+                    </p>
+                    :
+                    <p className="card-text">{index + 1}. {item.group_name}
+                      &nbsp;
+                      {
+                        console.log("index",index)
+                      }
+                      {
+                        index + 1 == "1" ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index + 1 == "2" ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index + 1 == "3" ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                      <span style={{ float: "right", color: "#F45197" }}>
+                        {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
+                      </span>
+                    </p>
+                }
+              </>
+
+            )
+          }
+        </div>
         {
           (teamRankFilter) &&
           teamRankFilter.map((item, index) =>
-            <p className="card-text">{index + 1}. {item.group_name}
-              <span style={{ float: "right", color: "#F45197" }}>
-                {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
-              </span>
-            </p>
+            user.group_id == item.group_id ?
+              <b className=" mb-4">
+                <p className="card-text">{index + 1}. {item.group_name}
+                  <span style={{ float: "right", color: "#F45197" }}>
+                    {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
+                  </span>
+                </p>
+              </b>
+              : null
+
           )
         }
       </div>)
@@ -471,6 +540,73 @@ class Challenges extends Component {
 
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+        <div className="box-Individual">
+          {
+            (individualRankFilter) &&
+            individualRankFilter.map((item, index) => {
+              const fullName = `${item.first_name} ${item.last_name}`;
+              const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
+              index = index + 1;
+              return (
+                <>
+                  {
+                    this.props.user.user_id === item.user_id ?
+                      <p className="card-text user-idLogin">{rankDetail}
+                       &nbsp;
+                      {
+                        console.log("index",index)
+                      }
+                      {
+                        index == "1" ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "2" ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "3" ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                        <span style={{ float: "right", color: "#F45197" }}>
+                          {item.total_score ? item.total_score : 0} คะแนน
+                        </span>
+                      </p>
+                      :
+                      <p className="card-text">{rankDetail}
+                       &nbsp;
+                      {
+                        console.log("index",index)
+                      }
+                      {
+                        index == "1" ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "2" ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "3" ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                        <span style={{ float: "right", color: "#F45197" }}>
+                          {item.total_score ? item.total_score : 0} คะแนน
+                        </span>
+                      </p>
+                  }
+                </>
+
+              )
+            })
+          }
+        </div>
         {
           <b className="row mb-4">
             <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
@@ -479,20 +615,6 @@ class Challenges extends Component {
               </span>
             </p>
           </b>
-        }
-        {
-          (individualRankFilter) &&
-          individualRankFilter.map((item, index) => {
-            const fullName = `${item.first_name} ${item.last_name}`;
-            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
-            return (
-              <p className="card-text">{rankDetail}
-                <span style={{ float: "right", color: "#F45197" }}>
-                  {item.total_score ? item.total_score : 0} คะแนน
-              </span>
-              </p>
-            )
-          })
         }
       </div>)
   }
@@ -510,28 +632,78 @@ class Challenges extends Component {
 
     return (
       <div className="col-lg-12  mb-3" style={{ float: "left" }}>
+
+        <div className="box-Individual">
+          {
+            (friendsRank && (friendsRank.length > 0)) &&
+            friendsRank.map((item, index) => {
+              const fullName = `${item.first_name} ${item.last_name}`;
+              const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
+               index = index+1;
+              return (
+                <>
+                  {
+                    user.user_id === item.user_id ? 
+                      <p className="card-text user-idLogin">{rankDetail} &nbsp;
+                      {
+                        console.log("index",index)
+                      }
+                      {
+                        index == "1" ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "2" ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == "3" ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                        <span style={{ float: "right", color: "#F45197" }}>
+                          {item.total_score ? item.total_score : 0} คะแนน
+                        </span>
+                        
+                      </p>
+                      :
+                      <p className="card-text">{rankDetail}&nbsp;
+                      {
+                        index == 1 ? 
+                        <img  src="../assets/img/coin/gold.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == 2 ? 
+                        <img  src="../assets/img/coin/silver.png" alt=""/>
+                        : null
+                      }
+                      {
+                        index == 3 ? 
+                        <img  src="../assets/img/coin/copper.png" alt=""/>
+                        : null
+                      }
+                        <span style={{ float: "right", color: "#F45197" }}>
+                          {item.total_score ? item.total_score : 0} คะแนน
+                        </span>
+                      </p> 
+                  }
+                </>
+
+              )
+            })
+          }
+        </div>
         {
-          <b className="row mb-4">
+          <b className="row mb-6">
             <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
               </span>
             </p>
           </b>
-        }
-        {
-          (friendsRank && (friendsRank.length > 0)) &&
-          friendsRank.map((item, index) => {
-            const fullName = `${item.first_name} ${item.last_name}`;
-            const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
-            return (
-              <p className="card-text">{rankDetail}
-                <span style={{ float: "right", color: "#F45197" }}>
-                  {item.total_score ? item.total_score : 0} คะแนน
-              </span>
-              </p>
-            )
-          })
         }
       </div>)
   }
@@ -1020,7 +1192,7 @@ class Challenges extends Component {
                         style={{ backgroundColor: "#F45197" }}
                         onClick={() => this.openPopupJoinChallenge()}>
                         เข้าร่วมชาเลนจ์
-                        </button>
+                      </button>
                     }
                   </center>
                   <div className="mt-4">
