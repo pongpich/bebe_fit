@@ -478,7 +478,8 @@ class Challenges extends Component {
                       </span>
                     </p>
                     :
-                    <p className="card-text">{index + 1}. {item.group_name}
+
+                    <p className="card-text">{index + 1}. {item.group_name} 
                       &nbsp;
                       {
                         console.log("index",index)
@@ -498,7 +499,7 @@ class Challenges extends Component {
                         <img  src="../assets/img/coin/copper.png" alt=""/>
                         : null
                       }
-                      <span style={{ float: "right", color: "#F45197" }}>
+                      <span style={{ float: "right", color: "#F45197"}}>
                         {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
                       </span>
                     </p>
@@ -509,10 +510,13 @@ class Challenges extends Component {
           }
         </div>
         {
+          
           (teamRankFilter) &&
           teamRankFilter.map((item, index) =>
             user.group_id == item.group_id ?
-              <b className=" mb-4">
+           
+              <b className="mb-4">
+                 <hr class="w-100" />
                 <p className="card-text">{index + 1}. {item.group_name}
                   <span style={{ float: "right", color: "#F45197" }}>
                     {item.totalScoreOfTeam ? item.totalScoreOfTeam : 0} คะแนน
@@ -609,6 +613,7 @@ class Challenges extends Component {
         </div>
         {
           <b className="row mb-4">
+            <hr class="w-100" />
             <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
@@ -698,6 +703,7 @@ class Challenges extends Component {
         </div>
         {
           <b className="row mb-6">
+            <hr class="w-100" />
             <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
