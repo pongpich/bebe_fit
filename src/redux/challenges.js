@@ -76,7 +76,43 @@ export const types = {
   ACCEPT_TEAM_INVITE: "ACCEPT_TEAM_INVITE",
   ACCEPT_TEAM_INVITE_SUCCESS: "ACCEPT_TEAM_INVITE_SUCCESS",
   ACCEPT_TEAM_INVITE_FAIL: "ACCEPT_TEAM_INVITE_FAIL",
+  GET_ACHIEVEMENT_LOG: "GET_ACHIEVEMENT_LOG",
+  GET_ACHIEVEMENT_LOG_SUCCESS: "GET_ACHIEVEMENT_LOG_SUCCESS",
+  GET_ACHIEVEMENT_LOG_FAIL: "GET_ACHIEVEMENT_LOG_FAIL",
+  UPDATE_ACHIEVEMENT_LOG: "UPDATE_ACHIEVEMENT_LOG",
+  UPDATE_ACHIEVEMENT_LOG_SUCCESS: "UPDATE_ACHIEVEMENT_LOG_SUCCESS",
+  UPDATE_ACHIEVEMENT_LOG_FAIL: "UPDATE_ACHIEVEMENT_LOG_FAIL",
+  CHECK_ALL_MISSION_COMPLETE: "CHECK_ALL_MISSION_COMPLETE",
+  CHECK_ALL_MISSION_COMPLETE_SUCCESS: "CHECK_ALL_MISSION_COMPLETE_SUCCESS",
+  CHECK_ALL_MISSION_COMPLETE_FAIL: "CHECK_ALL_MISSION_COMPLETE_FAIL",
 }
+
+export const getAchievementLog = (user_id) => ({
+  type: types.GET_ACHIEVEMENT_LOG,
+  payload: {
+    user_id
+  }
+})
+
+export const updateAchievementLog = (
+  user_id,
+  achievement_name
+) => ({
+  type: types.UPDATE_ACHIEVEMENT_LOG,
+  payload: {
+    user_id,
+    achievement_name
+  }
+});
+
+export const checkAllMissionComplete = (
+  user_id
+) => ({
+  type: types.CHECK_ALL_MISSION_COMPLETE,
+  payload: {
+    user_id
+  }
+});
 
 export const acceptTeamInvite = (user_id, group_id, log_id) => ({
   type: types.ACCEPT_TEAM_INVITE,
@@ -293,6 +329,56 @@ export const getIsReducedWeight = (user_id) => ({
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+const checkAllMissionCompleteSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/checkAllMissionCompelete", {
+      body: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const updateAchievementLogSagaAsync = async (
+  user_id,
+  achievement_name
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/updateAchievementLog", {
+      body: {
+        user_id,
+        achievement_name
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getAchievementLogSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getAchievementLog", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
 
 const acceptTeamInviteSagaAsync = async (
   user_id,
@@ -786,6 +872,55 @@ const getDailyTeamWeightBonusSagaAsync = async (
   }
 }
 
+function* checkAllMissionCompleteSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      checkAllMissionCompleteSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.CHECK_ALL_MISSION_COMPLETE_SUCCESS
+      })
+    } else {
+      yield put({
+        type: types.CHECK_ALL_MISSION_COMPLETE_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from acceptFriendSaga :", error);
+  }
+}
+
+function* getAchievementLogSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getAchievementLogSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.GET_ACHIEVEMENT_LOG_SUCCESS,
+        payload: apiResult.results.achievementLog
+      })
+    } else {
+      yield put({
+        type: types.GET_ACHIEVEMENT_LOG_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from getAchievementLogSaga :", error);
+  }
+}
+
 function* acceptTeamInviteSaga({ payload }) {
   const {
     user_id,
@@ -811,6 +946,32 @@ function* acceptTeamInviteSaga({ payload }) {
 
   } catch (error) {
     console.log("error from acceptTeamInviteSaga :", error);
+  }
+}
+
+function* updateAchievementLogSaga({ payload }) {
+  const {
+    user_id,
+    achievement_name
+  } = payload
+  try {
+    const apiResult = yield call(
+      updateAchievementLogSagaAsync,
+      user_id,
+      achievement_name
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.UPDATE_ACHIEVEMENT_LOG_SUCCESS
+      })
+    } else {
+      yield put({
+        type: types.UPDATE_ACHIEVEMENT_LOG_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from acceptFriendSaga :", error);
   }
 }
 
@@ -1507,6 +1668,18 @@ export function* watchAcceptTeamInvite() {
   yield takeEvery(types.ACCEPT_TEAM_INVITE, acceptTeamInviteSaga)
 }
 
+export function* watchGetAchievementLog() {
+  yield takeEvery(types.GET_ACHIEVEMENT_LOG, getAchievementLogSaga)
+}
+
+export function* watchUpdateAchievementLog() {
+  yield takeEvery(types.UPDATE_ACHIEVEMENT_LOG, updateAchievementLogSaga)
+}
+
+export function* watchCheckAllMissionComplete() {
+  yield takeEvery(types.CHECK_ALL_MISSION_COMPLETE, checkAllMissionCompleteSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -1538,6 +1711,9 @@ export function* saga() {
     fork(watchGetTeamInvite),
     fork(watchRejectTeamInvite),
     fork(watchAcceptTeamInvite),
+    fork(watchGetAchievementLog),
+    fork(watchUpdateAchievementLog),
+    fork(watchCheckAllMissionComplete),
   ]);
 }
 
@@ -1581,11 +1757,62 @@ const INIT_STATE = {
   statusGetTeamInvite: "default",
   team_invite: [],
   statusRejectTeamInvite: "default",
-  statusAcceptTeamInvite: "default"
+  statusAcceptTeamInvite: "default",
+  statusGetAchievement: "default",
+  achievementLog: [],
+  statusUpdateAchievement: "default",
+  statusCheckAllMissionComplete: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.CHECK_ALL_MISSION_COMPLETE:
+      return {
+        ...state,
+        statusCheckAllMissionComplete: "loading"
+      }
+    case types.CHECK_ALL_MISSION_COMPLETE_SUCCESS:
+      return {
+        ...state,
+        statusCheckAllMissionComplete: "success"
+      }
+    case types.CHECK_ALL_MISSION_COMPLETE_FAIL:
+      return {
+        ...state,
+        statusCheckAllMissionComplete: "fail"
+      }
+    case types.UPDATE_ACHIEVEMENT_LOG:
+      return {
+        ...state,
+        statusUpdateAchievement: "loading"
+      }
+    case types.UPDATE_ACHIEVEMENT_LOG_SUCCESS:
+      return {
+        ...state,
+        statusUpdateAchievement: "success"
+      }
+    case types.UPDATE_ACHIEVEMENT_LOG_FAIL:
+      return {
+        ...state,
+        statusUpdateAchievement: "fail"
+      }
+    case types.GET_ACHIEVEMENT_LOG:
+      return {
+        ...state,
+        statusGetAchievement: "loading"
+      }
+    case types.GET_ACHIEVEMENT_LOG_SUCCESS:
+      return {
+        ...state,
+        statusGetAchievement: "success",
+        achievementLog: action.payload
+      }
+    case types.GET_ACHIEVEMENT_LOG_FAIL:
+      return {
+        ...state,
+        statusGetAchievement: "fail",
+        achievementLog: []
+      }
     case types.REJECT_TEAM_INVITE:
       return {
         ...state,
