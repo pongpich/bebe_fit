@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete } from "../redux/challenges";
 import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
 import "./challenges.scss";
+import { FacebookShareButton, TwitterShareButton, FacebookMessengerShareButton, LineShareButton, WhatsappShareButton } from "react-share";
 import moment from "moment";
 import icon_web from "../assets/img/icon-web.png";
 import facebook from "../assets/img/icon-facebook.png";
@@ -35,6 +36,9 @@ class Challenges extends Component {
       emailDeleteFriend: "",
       emailTeamInvite: "",
       selectedTeamInvite: false,
+      numbOfFriends: 0,
+      myTeamRank: 0,
+      myIndividualRank: 0,
     }
   }
 
@@ -69,7 +73,68 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite } = this.props;
+    const { user, teamRank, individualRank, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite, statusGetFriendList, friend_list, statusCheckAllMissionComplete, achievementLog, statusUpdateAchievement, statusGetLeaderBoard } = this.props;
+    const achievementFinisher = (achievementLog && (achievementLog.filter(item => item.achievement === 'Finisher')).length > 0) ? true : false;
+    const achievementAce = (achievementLog && (achievementLog.filter(item => item.achievement === 'Ace')).length > 0) ? true : false;
+    const achievement1st = (achievementLog && (achievementLog.filter(item => item.achievement === '1st')).length > 0) ? true : false;
+    const achievement2nd = (achievementLog && (achievementLog.filter(item => item.achievement === '2nd')).length > 0) ? true : false;
+    const achievementTop10 = (achievementLog && (achievementLog.filter(item => item.achievement === 'Top 10')).length > 0) ? true : false;
+    const achievementSocialStar = (achievementLog && (achievementLog.filter(item => item.achievement === 'Social star')).length > 0) ? true : false;
+    const achievementSocialStarPlus = (achievementLog && (achievementLog.filter(item => item.achievement === 'Social star+')).length > 0) ? true : false;
+
+    if ((prevProps.statusGetLeaderBoard !== statusGetLeaderBoard) && statusGetLeaderBoard === "success") {
+      const myTeamRankIndex = teamRank.findIndex(item => item.group_id === parseInt(this.props.user.group_id));
+      const myIndividualRankIndex = individualRank.findIndex(item => item.user_id === this.props.user.user_id);
+      this.setState({
+        myTeamRank: myTeamRankIndex + 1,
+        myIndividualRank: myIndividualRankIndex + 1
+      });
+
+      if ((myIndividualRankIndex + 1 === 1) && !achievementAce) {
+        document.getElementById("modalAchievement1Btn") && document.getElementById("modalAchievement1Btn").click();
+        this.props.updateAchievementLog(user.user_id, 'Ace');
+      }
+      if ((myTeamRankIndex + 1 === 1) && !achievement1st) {
+        document.getElementById("modalAchievement3Btn") && document.getElementById("modalAchievement3Btn").click();
+        this.props.updateAchievementLog(user.user_id, '1st');
+      }
+      if ((myTeamRankIndex + 1 === 2) && !achievement2nd) {
+        document.getElementById("modalAchievement4Btn") && document.getElementById("modalAchievement4Btn").click();
+        this.props.updateAchievementLog(user.user_id, '2nd');
+      }
+      if ((myTeamRankIndex + 1 >= 3) && (myTeamRankIndex + 1 <= 10) && !achievementTop10) {
+        document.getElementById("modalAchievement5Btn") && document.getElementById("modalAchievement5Btn").click();
+        this.props.updateAchievementLog(user.user_id, 'Top 10');
+      }
+    }
+
+    if ((prevProps.statusUpdateAchievement !== statusUpdateAchievement) && statusUpdateAchievement === "success") {
+      this.props.getAchievementLog(user.user_id);
+    }
+
+    if ((prevProps.statusCheckAllMissionComplete !== statusCheckAllMissionComplete) && statusCheckAllMissionComplete === "success") {
+      //สั่งให้โชว์ popup 
+      document.getElementById("modalAchievement8Btn") && document.getElementById("modalAchievement8Btn").click();
+      this.props.getAchievementLog(user.user_id);
+    }
+
+    if ((prevProps.statusGetFriendList !== statusGetFriendList) && statusGetFriendList === "success") {
+      console.log("friend_list.length :", friend_list.length);
+      this.setState({
+        numbOfFriends: friend_list.length
+      })
+
+      if (friend_list.length >= 10 && !achievementSocialStar) {
+        //มีเพื่อนในรายชื่อ 10 คนแล้ว
+        document.getElementById("modalAchievement6Btn") && document.getElementById("modalAchievement6Btn").click();
+        this.props.updateAchievementLog(user.user_id, 'Social star');
+      }
+      if (friend_list.length >= 15 && !achievementSocialStarPlus) {
+        //มีเพื่อนในรายชื่อ 15 คนแล้ว
+        document.getElementById("modalAchievement7Btn") && document.getElementById("modalAchievement7Btn").click();
+        this.props.updateAchievementLog(user.user_id, 'Social star+');
+      }
+    }
 
     if ((prevProps.statusRejectTeamInvite !== statusRejectTeamInvite) && (statusRejectTeamInvite === "success")) {
       this.openPopupTeamInvite(); //สั่งให้ซ่อน popup TeamInvite
@@ -1749,86 +1814,8 @@ class Challenges extends Component {
 
 
   /* เเชร์  */
-  nieyeah() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement2.html';
-    return (
-      <div class="container text-center">
-        <div class="row justify-content-md-center">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-            <img src={frame41} className="frame41" />
-            <img src={icon_web} className="icon_web" />
-          </div>
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
-            <div className="canterMode-box">
-              <p className="modeText-box">วันนี้คุณออกกำลังกายครบแล้ว</p>
-              <p className="share-success">แชร์ความสำเร็จ</p>
-              <div className="box-share">
-                {/*    <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/* </FacebookShareButton> */}
-                {/*    <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/* <LineShareButton url={urlShare}> */}
-                <img src={line} className="icon-share" />
-                {/*   </LineShareButton> */}
-                {/* <img src={tiktok} className="icon-share" /> */}
-                {/*  <WhatsappShareButton url={urlShare}> */}
-                <img src={whatsApp} className="icon-share" />
-                {/*  </WhatsappShareButton> */}
-                {/*  <img src={instagram} className="icon-share" /> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  staycool() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement6.html';
-    return (
-      <div class="container text-center">
-        <div class="row justify-content-md-center">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-            <img src={frame40} className="frame40" />
-            <img src={icon_web} className="icon_web" />
-          </div>
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
-            <div className="canterMode-box">
-              <p className="modeText-box">คุณมีเพื่อนในรายชื่อ 10 คนแล้ว!</p>
-              <p className="share-success">แชร์ความสำเร็จ</p>
-              <div className="box-share">
-                {/*    <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/*  </FacebookShareButton> */}
-                {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/*       <LineShareButton url={urlShare}>
-                    <img src={line} className="icon-share" />
-                  </LineShareButton> */}
-                {/* <img src={tiktok} className="icon-share" /> */}
-                {/*    <WhatsappShareButton url={urlShare}>
-                    <img src={whatsApp} className="icon-share" />
-                  </WhatsappShareButton> */}
-                {/*  <img src={instagram} className="icon-share" /> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
   super() {
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement3.html';
     return (
       <div class="container text-center">
         <div class="row justify-content-md-center">
@@ -1838,16 +1825,29 @@ class Challenges extends Component {
           </div>
           <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
             <div className="canterMode-box">
-              <p className="modeText-box">คุณมีเพื่อนในรายชื่อ 10 คน</p>
+              <p className="modeText-box">ทีมอันดับที่ 1 ประจำสัปดาห์</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
               <p className="share-success">แชร์ความสำเร็จ</p>
               <div className="box-share">
-                <img src={facebook} className="icon-share" />
-                <img src={twitter} className="icon-share" />
-                <img src={message} className="icon-share" />
-                <img src={line} className="icon-share" />
-                <img src={tiktok} className="icon-share" />
-                <img src={whatsApp} className="icon-share" />
-                <img src={instagram} className="icon-share" />
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
+                {/* <TwitterShareButton url={urlShare}>
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
+                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                {/* <FacebookMessengerShareButton url={urlShare} >
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
+                {/* <img src={tiktok} className="icon-share" /> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
+                {/*  <img src={instagram} className="icon-share" /> */}
               </div>
             </div>
           </div>
@@ -1855,8 +1855,9 @@ class Challenges extends Component {
       </div>
     )
   }
+
   wow() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement4.html';
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement4.html';
     return (
       <div class="container text-center">
         <div class="row justify-content-md-center">
@@ -1867,25 +1868,27 @@ class Challenges extends Component {
           <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
             <div className="canterMode-box">
               <p className="modeText-box">ทีมอันดับที่ 2 ประจำสัปดาห์</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx  */}<br />{/* xxxxxxxxxxxxxxxx */}</p>
+
               <p className="share-success">แชร์ความสำเร็จ</p>
               <div className="box-share">
-                {/*  <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/*  </FacebookShareButton> */}
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
                 {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
                 {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
                 {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/*       <LineShareButton url={urlShare}>
-                    <img src={line} className="icon-share" />
-                  </LineShareButton> */}
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
                 {/* <img src={tiktok} className="icon-share" /> */}
-                {/*    <WhatsappShareButton url={urlShare}>
-                    <img src={whatsApp} className="icon-share" />
-                  </WhatsappShareButton> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
                 {/*  <img src={instagram} className="icon-share" /> */}
               </div>
             </div>
@@ -1894,8 +1897,9 @@ class Challenges extends Component {
       </div>
     )
   }
+
   thankYou() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement5.html';
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement5.html';
     return (
       <div class="container text-center">
         <div class="row justify-content-md-center">
@@ -1906,25 +1910,27 @@ class Challenges extends Component {
           <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
             <div className="canterMode-box">
               <p className="modeText-box">ทีมอันดับ Top 10 ประจำสัปดาห์</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
               <p className="share-success">แชร์ความสำเร็จ</p>
               <div className="box-share">
-                {/*    <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/*  </FacebookShareButton> */}
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
                 {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
                 {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
                 {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/*       <LineShareButton url={urlShare}>
-                    <img src={line} className="icon-share" />
-                  </LineShareButton> */}
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
                 {/* <img src={tiktok} className="icon-share" /> */}
-                {/*    <WhatsappShareButton url={urlShare}>
-                    <img src={whatsApp} className="icon-share" />
-                  </WhatsappShareButton> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
                 {/*  <img src={instagram} className="icon-share" /> */}
               </div>
             </div>
@@ -1933,86 +1939,9 @@ class Challenges extends Component {
       </div>
     )
   }
-  goodJob() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement8.html';
-    return (
-      <div class="container text-center">
-        <div class="row justify-content-md-center">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-            <img src={frame45} className="frame40" />
-            <img src={icon_web} className="icon_web" />
-          </div>
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
-            <div className="canterMode-box">
-              <p className="modeText-box">ทำภารกิจครบทุกสัปดาห์จนจบฤดูกาล</p>
-              <p className="share-success">แชร์ความสำเร็จ</p>
-              <div className="box-share">
-                {/*  <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/*  </FacebookShareButton> */}
-                {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/* <LineShareButton url={urlShare}> */}
-                <img src={line} className="icon-share" />
-                {/* </LineShareButton> */}
-                {/* <img src={tiktok} className="icon-share" /> */}
-                {/*  <WhatsappShareButton url={urlShare}> */}
-                <img src={whatsApp} className="icon-share" />
-                {/* </WhatsappShareButton> */}
-                {/*  <img src={instagram} className="icon-share" /> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-  pop() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement7.html';
-    return (
-      <div class="container text-center">
-        <div class="row justify-content-md-center">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
-            <img src={frame46} className="frame40" />
-            <img src={icon_web} className="icon_web" />
-          </div>
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
-            <div className="canterMode-box">
-              <p className="modeText-box">คุณมีเพื่อนในรายชื่อครบ 15 คนแล้ว!</p>
-              <p className="share-success">แชร์ความสำเร็จ</p>
-              <div className="box-share">
-                {/*    <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/* </FacebookShareButton> */}
-                {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/*       <LineShareButton url={urlShare}>
-                    <img src={line} className="icon-share" />
-                  </LineShareButton> */}
-                {/* <img src={tiktok} className="icon-share" /> */}
-                {/*    <WhatsappShareButton url={urlShare}>
-                    <img src={whatsApp} className="icon-share" />
-                  </WhatsappShareButton> */}
-                {/*  <img src={instagram} className="icon-share" /> */}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+
   bang() {
-    const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement1.html';
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement1.html';
     return (
       <div class="container text-center">
         <div class="row justify-content-md-center">
@@ -2023,25 +1952,151 @@ class Challenges extends Component {
           <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
             <div className="canterMode-box">
               <p className="modeText-box">ทำคะแนนได้สูงสุดประจำสัปดาห์</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
               <p className="share-success">แชร์ความสำเร็จ</p>
               <div className="box-share">
-                {/* <FacebookShareButton url={urlShare}> */}
-                <img src={facebook} className="icon-share" />
-                {/*  </FacebookShareButton> */}
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
                 {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
                 {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
                 {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
-                {/*       <LineShareButton url={urlShare}>
-                    <img src={line} className="icon-share" />
-                  </LineShareButton> */}
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
                 {/* <img src={tiktok} className="icon-share" /> */}
-                {/*    <WhatsappShareButton url={urlShare}>
-                    <img src={whatsApp} className="icon-share" />
-                  </WhatsappShareButton> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
+                {/*  <img src={instagram} className="icon-share" /> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  staycool() {
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement6.html';
+    return (
+      <div class="container text-center">
+        <div class="row justify-content-md-center">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+            <img src={frame40} className="frame40" />
+            <img src={icon_web} className="icon_web" />
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+            <div className="canterMode-box">
+              <p className="modeText-box">คุณมีเพื่อนในรายชื่อ 10 คนแล้ว!</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
+              <p className="share-success">แชร์ความสำเร็จ</p>
+              <div className="box-share">
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
+                {/* <TwitterShareButton url={urlShare}>
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
+                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                {/* <FacebookMessengerShareButton url={urlShare} >
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
+                {/* <img src={tiktok} className="icon-share" /> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
+                {/*  <img src={instagram} className="icon-share" /> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  pop() {
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement7.html';
+    return (
+      <div class="container text-center">
+        <div class="row justify-content-md-center">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+            <img src={frame46} className="frame40" />
+            <img src={icon_web} className="icon_web" />
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+            <div className="canterMode-box">
+              <p className="modeText-box">คุณมีเพื่อนในรายชื่อครบ 15 คนแล้ว!</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
+              <p className="share-success">แชร์ความสำเร็จ</p>
+              <div className="box-share">
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
+                {/* <TwitterShareButton url={urlShare}>
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
+                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                {/* <FacebookMessengerShareButton url={urlShare} >
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
+                {/* <img src={tiktok} className="icon-share" /> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
+                {/*  <img src={instagram} className="icon-share" /> */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  goodJob() {
+    const urlShare = 'https://platform.bebefitroutine.com/achievement/achievement8.html';
+    return (
+      <div class="container text-center">
+        <div class="row justify-content-md-center">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+            <img src={frame45} className="frame40" />
+            <img src={icon_web} className="icon_web" />
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+            <div className="canterMode-box">
+              <p className="modeText-box">ทำภารกิจครบทุกสัปดาห์จนจบฤดูกาล</p>
+              <p>{/* xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx */} <br />{/* xxxxxxxxxxxxxxxx */}</p>
+
+              <p className="share-success">แชร์ความสำเร็จ</p>
+              <div className="box-share">
+                <FacebookShareButton url={urlShare}>
+                  <img src={facebook} className="icon-share" />
+                </FacebookShareButton>
+                {/* <TwitterShareButton url={urlShare}>
+                  <img src={twitter} className="icon-share" />
+                </TwitterShareButton> */}
+                {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                {/* <FacebookMessengerShareButton url={urlShare} >
+                  <img src={message} className="icon-share" />
+                </FacebookMessengerShareButton> */}
+                <LineShareButton url={urlShare}>
+                  <img src={line} className="icon-share" />
+                </LineShareButton>
+                {/* <img src={tiktok} className="icon-share" /> */}
+                <WhatsappShareButton url={urlShare}>
+                  <img src={whatsApp} className="icon-share" />
+                </WhatsappShareButton>
                 {/*  <img src={instagram} className="icon-share" /> */}
               </div>
             </div>
@@ -2068,8 +2123,71 @@ class Challenges extends Component {
               this.renderCreateTeam()
         }
 
-        {/* <!-- Modal  modalSubscription --> */}
-        <div class="modal fade" id="modalSubscription-share" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement3Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement3"
+          >
+            modalAchievement3
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement4Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement4"
+          >
+            modalAchievement4
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement5Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement5"
+          >
+            modalAchievement5
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement6Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement6"
+          >
+            achievement6
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement7Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement7"
+          >
+            achievement7
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement8Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement8"
+          >
+            achievement8
+          </button>
+        }
+        {
+          <button
+            style={{ display: 'none' }}
+            id="modalAchievement1Btn"
+            type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAchievement1"
+          >
+            modalAchievement1
+          </button>
+        }
+        {/* <!-- Modal  achievement3 --> */}
+        <div class="modal fade" id="modalAchievement3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog   modal-lg modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
@@ -2077,20 +2195,102 @@ class Challenges extends Component {
               </div>
               <div class="modal-subscription">
                 {
-                  //this.nieyeah()
-                  //this.staycool()
-                  //this.super()
-                  //this.wow()
-                  //this.thankYou()
-                  this.goodJob()
-                  //this.pop()
-                  //this.bang()
+                  this.super()
                 }
               </div>
             </div>
           </div>
         </div>
-
+        {/* <!-- Modal  achievement4 --> */}
+        <div class="modal fade" id="modalAchievement4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.wow()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <!-- Modal  achievement5 --> */}
+        <div class="modal fade" id="modalAchievement5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.thankYou()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <!-- Modal  achievement6 --> */}
+        <div class="modal fade" id="modalAchievement6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.staycool()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <!-- Modal  achievement7 --> */}
+        <div class="modal fade" id="modalAchievement7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.pop()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <!-- Modal  achievement8 --> */}
+        <div class="modal fade" id="modalAchievement8" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.goodJob()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* <!-- Modal  achievement1 --> */}
+        <div class="modal fade" id="modalAchievement1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  this.bang()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -2099,8 +2299,8 @@ class Challenges extends Component {
 const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete };
+  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard };
 };
 
 const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete };

@@ -1762,6 +1762,7 @@ const INIT_STATE = {
   achievementLog: [],
   statusUpdateAchievement: "default",
   statusCheckAllMissionComplete: "default",
+  statusGetLeaderBoard: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -2026,11 +2027,17 @@ export function reducer(state = INIT_STATE, action) {
         numberOfTeamNotFull: action.payload,
         statusGetNumberOfTeamNotFull: "success"
       }
+    case types.GET_LEADER_BOARD:
+      return {
+        ...state,
+        statusGetLeaderBoard: "loading"
+      }
     case types.GET_LEADER_BOARD_SUCCESS:
       return {
         ...state,
         teamRank: action.payload.teamRank,
-        individualRank: action.payload.individualRank
+        individualRank: action.payload.individualRank,
+        statusGetLeaderBoard: "success"
       }
     case types.GET_CHALLENGE_PERIOD_SUCCESS:
       return {
