@@ -3,7 +3,23 @@ import { connect } from "react-redux";
 import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite } from "../redux/challenges";
 import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
 import "./challenges.scss";
-import moment from "moment"
+import moment from "moment";
+import icon_web from "../assets/img/icon-web.png";
+import facebook from "../assets/img/icon-facebook.png";
+import twitter from "../assets/img/icon-Twitter.png";
+import message from "../assets/img/icon-message-fa.png";
+import line from "../assets/img/icon-line.png";
+import tiktok from "../assets/img/icon-tiktok.png";
+import whatsApp from "../assets/img/icon-WhatsApp.png";
+import instagram from "../assets/img/icon-instagram.png";
+import frame40 from "../assets/img/frame41.png";
+import frame41 from "../assets/img/frame41.png";
+import frame42 from "../assets/img/frame42.png";
+import frame43 from "../assets/img/frame43.png";
+import frame44 from "../assets/img/frame44.png";
+import frame45 from "../assets/img/frame45.png";
+import frame46 from "../assets/img/frame46.png";
+import frame47 from "../assets/img/frame47.png";
 
 
 class Challenges extends Component {
@@ -1028,6 +1044,326 @@ class Challenges extends Component {
     )
   }
 
+  renderExploit(){
+    const achievementFinisher =  1;
+    const achievementAce =  400;
+    const achievement1st =  1;
+    const achievement2nd =  2;
+    const achievementTop10 =  10;
+    const achievementSocialStar =  10; 
+    const achievementSocialStarPlus =  15; 
+    return(
+      <div className="row">
+       <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
+        <div className="card-body">
+        {
+          <>
+           <button /* style={{ display: 'none' }} */ id="modalSubscription-shareClick" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSubscription-share"></button>
+            <div className="box-challengeIn">
+              <p className="text-challenge">
+                <div class="container">
+
+                  {
+                    achievementFinisher ?
+                      <>
+                        <div class="row">
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                  <img src={`./assets/img/icon_achievement/finisher.png`} width="70" height="70" className="icon_rank-img" />
+                                </div>
+                                <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                  <div class="container">
+                                    <div class="row">
+                                      <div class="col-12 col-sm-12  col-md-10">
+                                        <p><span className="bold">Finisher</span><br /> ทำภารกิจครบทุกสัปดาห์จนจบฤดูกาล
+                                        </p>
+                                      </div>
+                                      <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement8Btn") && document.getElementById("modalAchievement8Btn").click()}>
+                                        <button type="button" class="btn btn-achievement ">แชร์</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                      :
+                      <>
+                        <div class="row">
+                          <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                  <img src={`./assets/img/icon_achievement/finisher_grey.png`} width="70" height="70" className="icon_rank-img" />
+                                </div>
+                                <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                  <p className="share-text"><span className="bold">Finisher</span><br /> ทำภารกิจครบทุกสัปดาห์จนจบฤดูกาล</p></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                  }
+                  {
+                    achievementAce ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/ace.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">Ace</span><br />ได้อันดับคะแนนสูงสุดประจำสัปดาห์</p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement1Btn") && document.getElementById("modalAchievement1Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/ace_grey.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <p><span className="bold">Ace</span><br />
+                                  ได้อันดับคะแนนสูงสุดประจำสัปดาห์
+                                </p>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  }
+                  {
+                    achievement1st ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/1st.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">1st</span><br /> ได้ทีมอันดับที่ 1 ประจำสัปดาห์  </p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement3Btn") && document.getElementById("modalAchievement3Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/1st_grey.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <p><span className="bold">1st</span><br /> ได้ทีมอันดับที่ 1 ประจำสัปดาห์</p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                  }
+                  {
+                    achievement2nd ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/2nd.png`} width="80" height="80" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">2nd</span><br /> ได้ทีมอันดับที่ 2 ประจำสัปดาห์</p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement4Btn") && document.getElementById("modalAchievement4Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/2nd_grey.png`} width="80" height="80" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10"><p><span className="bold">2nd</span><br /> ได้ทีมอันดับที่ 2 ประจำสัปดาห์
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  }
+                  {
+                    achievementTop10 ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/top10.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">Top 10</span><br /> ได้ทีมอันดับที่ 3-10 ประจำสัปดาห์ </p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement5Btn") && document.getElementById("modalAchievement5Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/top10_grey.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10"><p><span className="bold">Top 10</span><br /> ได้ทีมอันดับที่ 3-10 ประจำสัปดาห์
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  }
+                  {
+                    achievementSocialStar ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/social_star.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">Social star</span><br /> มีเพื่อนในรายชื่อ 10 คน </p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement6Btn") && document.getElementById("modalAchievement6Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/social_star_grey.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10"><p><span className="bold">Social star</span><br /> มีเพื่อนในรายชื่อ 10 คน
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  }
+                  {
+                    achievementSocialStarPlus ?
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-4 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/social_star_plus.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-8 col-sm-9 col-md-10 col-lg-9 col-xl-10">
+                                <div class="container">
+                                  <div class="row">
+                                    <div class="col-12 col-sm-12  col-md-10">
+                                      <p><span className="bold">Social star+</span><br />  มีเพื่อนในรายชื่อ 15 คน</p>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-md-2" onClick={() => document.getElementById("modalAchievement7Btn") && document.getElementById("modalAchievement7Btn").click()}>
+                                      <button type="button" class="btn btn-achievement ">แชร์</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      :
+                      <div class="row">
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 mt-2">
+                          <div class="container">
+                            <div class="row">
+                              <div class="col-5 col-sm-3 col-md-2 col-lg-3 col-xl-2">
+                                <img src={`./assets/img/icon_achievement/social_star_plus_grey.png`} width="70" height="70" className="icon_rank-img" />
+                              </div>
+                              <div class="col-7 col-sm-9 col-md-10 col-lg-9 col-xl-10"><p><span className="bold">Social star+</span><br />  มีเพื่อนในรายชื่อ 15 คน
+                              </p></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  }
+                </div>
+              </p>
+            </div>
+          </>
+        }
+        </div>
+       </div>
+      </div>
+    )
+  }
+
   renderChallenge() {
     const { selectedNavLink } = this.state;
     return (
@@ -1073,11 +1409,19 @@ class Challenges extends Component {
                   >
                     <b>รายชื่อเพื่อน</b>
                   </a>
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "exploit" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.setState({ selectedNavLink: "exploit", selectedAddFriend: false })}
+                  >
+                    <b>ความสำเร็จ</b>
+                  </a>
                 </nav>
                 {(selectedNavLink === "mission") && this.renderMission()}
                 {(selectedNavLink === "teamList") && this.renderTeamList()}
                 {(selectedNavLink === "scoreBoard") && this.renderScoreBoard()}
                 {(selectedNavLink === "friendList") && this.renderFriendList()}
+                {(selectedNavLink === "exploit") && this.renderExploit()}
               </div>
             </div>
           </form>
@@ -1400,11 +1744,316 @@ class Challenges extends Component {
     document.getElementById("popupScoreDetail").classList.toggle("active");
     document.getElementById("overlayPopupScoreDetail").classList.toggle("active");
   }
+  
+
+    /* เเชร์  */
+    nieyeah() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement2.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame41} className="frame41" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">วันนี้คุณออกกำลังกายครบแล้ว</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+               {/*    <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                  {/* </FacebookShareButton> */}
+                  {/*    <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/* <LineShareButton url={urlShare}> */}
+                    <img src={line} className="icon-share" />
+                {/*   </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                 {/*  <WhatsappShareButton url={urlShare}> */}
+                    <img src={whatsApp} className="icon-share" />
+                 {/*  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  
+    staycool() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement6.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame40} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">คุณมีเพื่อนในรายชื่อ 10 คนแล้ว!</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+               {/*    <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                 {/*  </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/*       <LineShareButton url={urlShare}>
+                    <img src={line} className="icon-share" />
+                  </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                  {/*    <WhatsappShareButton url={urlShare}>
+                    <img src={whatsApp} className="icon-share" />
+                  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    super() {
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame42} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">คุณมีเพื่อนในรายชื่อ 10 คน</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+                  <img src={facebook} className="icon-share" />
+                  <img src={twitter} className="icon-share" />
+                  <img src={message} className="icon-share" />
+                  <img src={line} className="icon-share" />
+                  <img src={tiktok} className="icon-share" />
+                  <img src={whatsApp} className="icon-share" />
+                  <img src={instagram} className="icon-share" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    wow() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement4.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame43} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">ทีมอันดับที่ 2 ประจำสัปดาห์</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+                 {/*  <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                 {/*  </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/*       <LineShareButton url={urlShare}>
+                    <img src={line} className="icon-share" />
+                  </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                  {/*    <WhatsappShareButton url={urlShare}>
+                    <img src={whatsApp} className="icon-share" />
+                  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    thankYou() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement5.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame44} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">ทีมอันดับ Top 10 ประจำสัปดาห์</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+               {/*    <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                 {/*  </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/*       <LineShareButton url={urlShare}>
+                    <img src={line} className="icon-share" />
+                  </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                  {/*    <WhatsappShareButton url={urlShare}>
+                    <img src={whatsApp} className="icon-share" />
+                  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    goodJob() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement8.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame45} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">ทำภารกิจครบทุกสัปดาห์จนจบฤดูกาล</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+                 {/*  <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                 {/*  </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/* <LineShareButton url={urlShare}> */}
+                    <img src={line} className="icon-share" />
+                  {/* </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                 {/*  <WhatsappShareButton url={urlShare}> */}
+                    <img src={whatsApp} className="icon-share" />
+                  {/* </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    pop() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement7.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame46} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">คุณมีเพื่อนในรายชื่อครบ 15 คนแล้ว!</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+               {/*    <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                  {/* </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/*       <LineShareButton url={urlShare}>
+                    <img src={line} className="icon-share" />
+                  </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                  {/*    <WhatsappShareButton url={urlShare}>
+                    <img src={whatsApp} className="icon-share" />
+                  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
+    bang() {
+      const urlShare = 'https://fit.bebefitroutine.com/achievement/achievement1.html';
+      return (
+        <div class="container text-center">
+          <div class="row justify-content-md-center">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6">
+              <img src={frame47} className="frame40" />
+              <img src={icon_web} className="icon_web" />
+            </div>
+            <div class="col-12 col-sm-12 col-md-12 col-lg-6  ">
+              <div className="canterMode-box">
+                <p className="modeText-box">ทำคะแนนได้สูงสุดประจำสัปดาห์</p>
+                <p className="share-success">แชร์ความสำเร็จ</p>
+                <div className="box-share">
+                  {/* <FacebookShareButton url={urlShare}> */}
+                    <img src={facebook} className="icon-share" />
+                 {/*  </FacebookShareButton> */}
+                  {/* <TwitterShareButton url={urlShare}>
+                    <img src={twitter} className="icon-share" />
+                  </TwitterShareButton> */}
+                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
+                  {/* <FacebookMessengerShareButton url={urlShare} >
+                    <img src={message} className="icon-share" />
+                  </FacebookMessengerShareButton> */}
+                  {/*       <LineShareButton url={urlShare}>
+                    <img src={line} className="icon-share" />
+                  </LineShareButton> */}
+                  {/* <img src={tiktok} className="icon-share" /> */}
+                  {/*    <WhatsappShareButton url={urlShare}>
+                    <img src={whatsApp} className="icon-share" />
+                  </WhatsappShareButton> */}
+                  {/*  <img src={instagram} className="icon-share" /> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    }
 
   render() {
     const { numberOfTeamNotFull, statusGetNumberOfTeamNotFull, user } = this.props;
     return (
       <div>
+
         {this.renderPopupFriendRequest()}
         {this.renderPopupTeamInvite()}
         {
@@ -1416,6 +2065,30 @@ class Challenges extends Component {
               :
               this.renderCreateTeam()
         }
+
+         {/* <!-- Modal  modalSubscription --> */}
+         <div class="modal fade" id="modalSubscription-share" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog   modal-lg modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-subscription">
+                {
+                  //this.nieyeah()
+                  //this.staycool()
+                  //this.super()
+                  //this.wow()
+                  //this.thankYou()
+                  this.goodJob()
+                  //this.pop()
+                  //this.bang()
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     )
   }
