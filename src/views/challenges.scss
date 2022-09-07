@@ -400,7 +400,100 @@
   padding: 5px;
   border-radius:4px;
 }
-/* .top {
-  margin-top: 20px;
-  margin-bottom: -20px;
-} */
+.btn-achievement {
+  background-color: #F45197;
+  width: 80px;
+  height: 40px;
+  color: #FFFF;
+  border-color: #e25e96;
+  border-radius: 50px !important;
+  font-weight: bold;
+  font-size:  18px;
+}
+.btn-achievement:hover {
+  background-color: #F45197;
+  width: 80px;
+  height: 40px;
+  color: #FFFF;
+  border-color: #e25e96 !important;
+  box-shadow: 0 0 0 0.25rem hsl(335, 69%, 63%, 0.25) !important;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size:  18px;
+}
+.btn-achievement:focus {
+  background-color: #F45197 ;
+  width: 80px;
+  height: 40px;
+  color: #FFFF;
+  border-color: #e25e96 !important;
+  box-shadow: 0 0 0 0.25rem hsl(335, 69%, 63%, 0.25) !important;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size:  18px;
+}
+.modal-subscription {
+  margin-top: -50px;
+  margin-right: -15px;
+  position: relative;
+}
+.icon-share {
+  padding-left: 4px;
+  padding-right: 4px;
+  cursor: pointer;
+}
+.frame40 {
+  margin-top: 2px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  width: 100%;
+}
+.frame41 {
+  width: 100%;
+}
+.icon_web {
+  position: absolute;
+  z-index: 1;
+  margin-left: -51px;
+  margin-top: 2px;
+  border-bottom-left-radius: 10px;
+}
+.share-success {
+  font-size: 20px;
+  color: #F45197;
+  font-weight: bold;
+ font-family: BdCondHe;
+}
+.box-share {
+  position: relative;
+  border: 1px solid #E25E96;
+  width: 100%;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 70px;
+  margin-bottom: 40px;
+  border-radius: 100px;
+}
+.modeText-box {
+  font-size: 24px;
+  color: #F45197;
+  font-weight: bold;
+ font-family: BdCondHe;
+ }
+ .canterMode-box {
+  margin-top: 100px;
+  text-align: center;
+  display: inline-block;
+  padding-right: 10px;
+}
+.modal-headerShare {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--bs-modal-header-padding);
+  border-bottom: none;
+  border-top-left-radius: var(--bs-modal-inner-border-radius);
+  border-top-right-radius: var(--bs-modal-inner-border-radius);
+}
