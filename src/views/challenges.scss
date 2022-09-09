@@ -659,6 +659,7 @@
 }
 .copy-link {
   margin-top: -20px !important;
+  margin-bottom: 10px !important;
 }
 .button-copyLink {
   background-color: #FFFFFF;
@@ -682,11 +683,15 @@
   margin-left: -7px;
 background-color: #e25e96;
 } */
+.offcanvas-index {
+  margin-top: -40px !important;
+}
 .share-to {
   color: #E25E96;
   font-size: 16px;
   font-weight: bold;
-/*   margin-left: 40%; */
+  text-align: center;
+  margin-bottom: 20px !important;
 }
 .line-hr {
   margin-top: 0px;
