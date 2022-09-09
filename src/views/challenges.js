@@ -2495,7 +2495,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2535,7 +2535,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row ">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2575,7 +2575,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row ">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2615,7 +2615,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row ">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2655,7 +2655,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row ">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2695,7 +2695,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index">
-            <div className="row ">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
@@ -2735,7 +2735,7 @@ class Challenges extends Component {
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
-            <div className="row">
+            <div className="row2">
             <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">

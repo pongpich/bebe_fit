@@ -1266,7 +1266,7 @@ background-color: #e25e96;
   --bs-offcanvas-border-color: var(--bs-border-color-translucent);
   --bs-offcanvas-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)
 }
-.row {
+.row2 {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
   display: flex;
@@ -1276,7 +1276,7 @@ background-color: #e25e96;
   margin-left: calc(-.5 * var(--bs-gutter-x))
 }
 
-.row>* {
+.row2>* {
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
@@ -1289,7 +1289,7 @@ background-color: #e25e96;
   flex: 1 0 0%
 }
 
-.row-cols-auto>* {
+.row2-cols-auto>* {
   flex: 0 0 auto;
   width: auto
 }
