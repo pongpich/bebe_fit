@@ -2502,21 +2502,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare1}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare1}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare1}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2542,21 +2533,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare3}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare3}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare3}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2582,21 +2564,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare4}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare4}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare4}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2622,21 +2595,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare5}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare5}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare5}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2662,21 +2626,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare6}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare6}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare6}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2702,21 +2657,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare7}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare7}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare7}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">
@@ -2742,21 +2688,12 @@ class Challenges extends Component {
                   <FacebookShareButton url={urlShare8}>
                     <img src={facebook} className="icon-share" />
                   </FacebookShareButton>
-                  {/* <TwitterShareButton url={urlShare}>
-                    <img src={twitter} className="icon-share" />
-                  </TwitterShareButton> */}
-                  {/* appId={} ต้องใช้ appId ถึงจะแชร์ได้  */}
-                  {/* <FacebookMessengerShareButton url={urlShare} >
-                    <img src={message} className="icon-share" />
-                  </FacebookMessengerShareButton> */}
                   <LineShareButton url={urlShare8}>
                     <img src={line} className="icon-share" />
                   </LineShareButton>
-                  {/* <img src={tiktok} className="icon-share" /> */}
                   <WhatsappShareButton url={urlShare8}>
                     <img src={whatsApp} className="icon-share" />
                   </WhatsappShareButton>
-                  {/*  <img src={instagram} className="icon-share" /> */}
                 </div>
               </div>
               <div className="copy-link">

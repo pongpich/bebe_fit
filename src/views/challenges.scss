@@ -701,7 +701,7 @@ background-color: #e25e96;
   margin-top: 0px;
   margin-bottom: 20px;
 }
-/* 
+
 @media (max-width: 575.98px) {
   .offcanvas-sm.offcanvas-bottom {
       right:0;
@@ -1179,6 +1179,8 @@ background-color: #e25e96;
   border-bottom: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
   transform: translateY(-100%)
 }
+/** 
+*! ข้างบนได้ เเล้ว  */
 
 .offcanvas.offcanvas-bottom {
   right: 0;
@@ -1213,12 +1215,14 @@ background-color: #e25e96;
   justify-content: space-between;
   padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x)
 }
+/**
+*! ตัวที่ไม่ได้  */
 
 .offcanvas-header .btn-close {
-  padding: calc(var(--bs-offcanvas-padding-y) * .5) calc(var(--bs-offcanvas-padding-x) * .5);
-  margin-top: calc(var(--bs-offcanvas-padding-y) * -.5);
+   padding: calc(var(--bs-offcanvas-padding-y) * .5) calc(var(--bs-offcanvas-padding-x) * .5);
+  /* margin-top: calc(var(--bs-offcanvas-padding-y) * -.5);
   margin-right: calc(var(--bs-offcanvas-padding-x) * -.5);
-  margin-bottom: calc(var(--bs-offcanvas-padding-y) * -.5)
+  margin-bottom: calc(var(--bs-offcanvas-padding-y) * -.5) */
 }
 
 .offcanvas-title {
@@ -1230,7 +1234,10 @@ background-color: #e25e96;
   flex-grow: 1;
   padding: var(--bs-offcanvas-padding-y) var(--bs-offcanvas-padding-x);
   overflow-y: auto
-}
+} 
+
+/**
+*! ล่างได้เเล้ว  */
 
 .navbar-expand-sm .offcanvas {
   position: static;
@@ -1266,6 +1273,9 @@ background-color: #e25e96;
   --bs-offcanvas-border-color: var(--bs-border-color-translucent);
   --bs-offcanvas-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)
 }
+/**
+*!  ได้  */
+ 
 .row2 {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
@@ -1322,7 +1332,7 @@ background-color: #e25e96;
 .row-cols-6>* {
   flex: 0 0 auto;
   width: 16.6666666667%
-}
+} 
 
 button {
   border-radius: 0
@@ -1364,4 +1374,4 @@ button,select {
 ::file-selector-button {
   font: inherit;
   -webkit-appearance: button
-} */
+} 
