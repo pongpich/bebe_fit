@@ -522,7 +522,7 @@
   font-size: 20px;
   color: #000000;
   font-weight: bold;
- font-family: Prompt;
+ font-family: 'Prompt';
 }
 .box-share {
   position: relative;
@@ -539,14 +539,14 @@
   font-size: 24px;
   color: #F45197;
   font-weight: bold;
- font-family: Prompt;
+ font-family: 'Prompt';
  }
  .canterMode-box {
   margin-top: 105px;
   text-align: center;
   display: inline-block;
   padding-right: 10px;
-  font-family: Prompt;
+  font-family: 'Prompt';
 }
 .modal-headerShare {
   position: relative;
@@ -701,7 +701,7 @@ background-color: #e25e96;
   margin-top: 0px;
   margin-bottom: 20px;
 }
-
+/* 
 @media (max-width: 575.98px) {
   .offcanvas-sm.offcanvas-bottom {
       right:0;
@@ -1342,7 +1342,7 @@ button,input,optgroup,select,textarea {
 button,select {
   text-transform: none
 }
-/* 
+
 [role=button] {
   cursor: pointer
 }
