@@ -991,7 +991,8 @@ export function reducer(state = INIT_STATE, action) {
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {
         ...state,
-        exerciseVideoLastWeek: action.payload
+        exerciseVideoLastWeek: action.payload,
+        isFirstWeek: false
       };
     case types.GET_LASTWEEK:
       return {
