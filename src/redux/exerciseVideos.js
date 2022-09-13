@@ -986,7 +986,7 @@ export function reducer(state = INIT_STATE, action) {
     case types.UPDATE_PLAYTIME_LASTWEEK_SUCCESS:
       return {
         ...state,
-        exerciseVideo: action.payload
+        exerciseVideoLastWeek: action.payload
       };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {
