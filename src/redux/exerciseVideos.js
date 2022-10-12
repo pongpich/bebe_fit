@@ -68,14 +68,15 @@ export const deleteProgramInWeek = (email) => ({
   }
 });
 
-export const createCustomWeekForUser = (user_id, weight, start_date, expire_date, offset) => ({
+export const createCustomWeekForUser = (user_id, weight, start_date, expire_date, offset,displayName) => ({
   type: types.CREATE_CUSTOM_WEEK_FOR_USER,
   payload: {
     user_id,
     weight,
     start_date,
     expire_date,
-    offset
+    offset,
+    displayName
   }
 });
 
@@ -441,7 +442,8 @@ const createCustomWeekForUserSagaAsync = async (
   weight,
   start_date,
   expire_date,
-  offset
+  offset,
+  displayName
 ) => {
   try {
     const apiResult = await API.post("bebe", "/createCustomWeekForUser", {
@@ -450,7 +452,8 @@ const createCustomWeekForUserSagaAsync = async (
         weight,
         start_date,
         expire_date,
-        offset
+        offset,
+        displayName
       }
     });
     return apiResult;
@@ -844,7 +847,8 @@ function* createCustomWeekForUserSaga({ payload }) {
     weight,
     start_date,
     expire_date,
-    offset
+    offset,
+    displayName
   } = payload
 
   try {
@@ -854,7 +858,8 @@ function* createCustomWeekForUserSaga({ payload }) {
       weight,
       start_date,
       expire_date,
-      offset
+      offset,
+      displayName
     );
     yield put({
       type: types.CREATE_CUSTOM_WEEK_FOR_USER_SUCCESS

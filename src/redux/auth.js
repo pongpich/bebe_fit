@@ -122,11 +122,13 @@ export const loginUser = (email, password) => ({
 
 export const updateProfile = (
   email,
-  other_attributes) => ({
+  other_attributes,
+  displayName) => ({
     type: types.UPDATE_PROFILE,
     payload: {
       email,
-      other_attributes
+      other_attributes,
+      displayName
     }
   });
 
@@ -273,13 +275,15 @@ const registerSagaAsync = async (
 
 const updateProfileSagaAsync = async (
   email,
-  other_attributes
+  other_attributes,
+  displayName
 ) => {
   try {
     const apiResult = await API.post("bebe", "/updateProfile", {
       body: {
         email: email,
-        other_attributes
+        other_attributes,
+        displayName
       }
     });
     return apiResult;
@@ -446,14 +450,16 @@ function* checkUpdateMaxFriendsSaga({ payload }) {
 function* updateProfileSaga({ payload }) {
   const {
     email,
-    other_attributes
+    other_attributes,
+    displayName
   } = payload
 
   try {
     yield call(
       updateProfileSagaAsync,
       email,
-      other_attributes
+      other_attributes,
+      displayName
     );
     yield put({
       type: types.UPDATE_PROFILE_SUCCESS,
