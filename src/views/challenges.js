@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete } from "../redux/challenges";
+import { cancelFriendRequest, getFriendRequestSent, getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, sendFriendRequest, getFriendRequest, rejectFriend, acceptFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete } from "../redux/challenges";
 import { getGroupID, checkUpdateMaxFriends } from "../redux/auth";
+import { getAllMemberStayFit } from "../redux/get";
 import "./challenges.scss";
 import { FacebookShareButton, TwitterShareButton, FacebookMessengerShareButton, LineShareButton, WhatsappShareButton } from "react-share";
 import moment from "moment";
@@ -537,9 +538,6 @@ class Challenges extends Component {
                   user.group_id == item.group_id ?
                     <p className="card-text user-idLogin">{index + 1}. {item.group_name}
                       &nbsp;
-                      {
-                        console.log("index", index)
-                      }
                       {
                         index + 1 == "1" ?
                           <img src="../assets/img/coin/gold.png" alt="" />
@@ -2496,7 +2494,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare1}>
@@ -2527,7 +2525,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare3}>
@@ -2558,7 +2556,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare4}>
@@ -2589,7 +2587,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare5}>
@@ -2620,7 +2618,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare6}>
@@ -2651,7 +2649,7 @@ class Challenges extends Component {
           </div>
           <div class="offcanvas-body small offcanvas-index">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare7}>
@@ -2677,12 +2675,12 @@ class Challenges extends Component {
 
         <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom8" aria-labelledby="offcanvasBottomLabel">
           <div class="offcanvas-header">
-          <p class="offcanvas-title" id="offcanvasBottomLabel"></p>
+            <p class="offcanvas-title" id="offcanvasBottomLabel"></p>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">x</button>
           </div>
           <div class="offcanvas-body small offcanvas-index ">
             <div className="row2">
-            <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
+              <p class="offcanvas-title share-to" id="offcanvasBottomLabel">แชร์ไปที่</p>
               <div className="center">
                 <div className="box-shareMobile">
                   <FacebookShareButton url={urlShare8}>
@@ -2710,14 +2708,15 @@ class Challenges extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, challenges, exerciseVideos }) => {
+const mapStateToProps = ({ authUser, challenges, exerciseVideos, get }) => {
   const { user } = authUser;
   const { exerciseVideo, statusVideoList } = exerciseVideos;
-  const { rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard } = challenges;
-  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard };
+  const { allMemberStayFit } = get;
+  const { friend_request_sent, statusGetFriendRequestSent, statusCancelFriendRequest, rank, logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard } = challenges;
+  return { user, rank, logWeightCount, exerciseVideo, statusVideoList, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, numberOfTeamNotFull, statusGetNumberOfTeamNotFull, statusLeaveTeam, membersOfTeam, group_name, totalScoreOfTeam, teamRank, individualRank, statusCreateTeam, challengePeriod, friend_list, statusGetFriendList, max_friends, statusGetMaxFriends, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, friendsRank, statusGetFriendsRank, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusAcceptTeamInvite, statusRejectTeamInvite, statusGetAchievement, achievementLog, statusUpdateAchievement, statusCheckAllMissionComplete, statusGetLeaderBoard, allMemberStayFit, friend_request_sent, statusGetFriendRequestSent, statusCancelFriendRequest };
 };
 
-const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete };
+const mapActionsToProps = { getRank, getLogWeight, getIsReducedWeight, getLogWeightTeam, getDailyTeamWeightBonus, getNumberOfTeamNotFull, assignGroupToMember, getGroupID, clearChallenges, createChallengeGroup, leaveTeam, getMembersAndRank, getGroupName, getScoreOfTeam, getLeaderboard, getChallengePeriod, getFriendList, getMaxFriends, checkUpdateMaxFriends, sendFriendRequest, getFriendRequest, acceptFriend, rejectFriend, deleteFriend, getFriendsRank, sendTeamInvite, getTeamInvite, acceptTeamInvite, rejectTeamInvite, getAchievementLog, updateAchievementLog, checkAllMissionComplete, getAllMemberStayFit, getFriendRequestSent, cancelFriendRequest };
 
 export default connect(
   mapStateToProps,

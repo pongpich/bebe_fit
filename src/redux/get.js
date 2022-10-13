@@ -3,6 +3,8 @@ import { API } from "aws-amplify";
 /* ACTION Section */
 
 export const types = {
+  GET_ALL_MEMBER_STAY_FIT: "GET_ALL_MEMBER_STAY_FIT",
+  GET_ALL_MEMBER_STAY_FIT_SUCCESS: "GET_ALL_MEMBER_STAY_FIT_SUCCESS",
   GET_CHECK_DISPAY_NAME: "GET_CHECK_DISPAY_NAME",
   GET_CHECK_DISPAY_NAME_FALE: "GET_CHECK_DISPAY_NAME_FALE",
   GET_CHECK_DISPAY_NAME_SUCCESS: "GET_CHECK_DISPAY_NAME_SUCCESS",
@@ -25,7 +27,26 @@ export const getMemberInfo = (user_id) => ({
   }
 })
 
+export const getAllMemberStayFit = () => ({
+  type: types.GET_ALL_MEMBER_STAY_FIT
+})
+
 /* SAGA Section */
+const getAllMemberStayFitSagaAsync = async (
+
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getAllMemberStayFit", {
+      queryStringParameters: {
+
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const getCheckDisplayNameSagaAsync = async (
   display_name
 ) => {
@@ -53,6 +74,21 @@ const getMemberInfoSagaAsync = async (
     return apiResult
   } catch (error) {
     return { error, messsage: error.message };
+  }
+}
+
+function* getAllMemberStayFitSaga({ }) {
+
+  try {
+    const apiResult = yield call(
+      getAllMemberStayFitSagaAsync
+    );
+    yield put({
+      type: types.GET_ALL_MEMBER_STAY_FIT_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    console.log("error from getAllMemberStayFitSaga :", error);
   }
 }
 
@@ -126,12 +162,18 @@ export function* saga() {
 const INIT_STATE = {
   statusDisplayName: "default",
   statusGetMemberInfo: "default",
-  member_info: null
+  member_info: null,
+  allMemberStayFit: null,
 };
 
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.GET_ALL_MEMBER_STAY_FIT_SUCCESS:
+      return {
+        ...state,
+        allMemberStayFit: action.payload.allMemberStayFit
+      }
     case types.GET_MEMBER_INFO:
       return {
         ...state,

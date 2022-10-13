@@ -85,7 +85,30 @@ export const types = {
   CHECK_ALL_MISSION_COMPLETE: "CHECK_ALL_MISSION_COMPLETE",
   CHECK_ALL_MISSION_COMPLETE_SUCCESS: "CHECK_ALL_MISSION_COMPLETE_SUCCESS",
   CHECK_ALL_MISSION_COMPLETE_FAIL: "CHECK_ALL_MISSION_COMPLETE_FAIL",
+  GET_FRIEND_REQUEST_SENT: "GET_FRIEND_REQUEST_SENT",
+  GET_FRIEND_REQUEST_SENT_SUCCESS: "GET_FRIEND_REQUEST_SENT_SUCCESS",
+  GET_FRIEND_REQUEST_SENT_FAIL: "GET_FRIEND_REQUEST_SENT_FAIL",
+  CANCEL_FRIEND_REQUEST: "CANCEL_FRIEND_REQUEST",
+  CANCEL_FRIEND_REQUEST_SUCCESS: "CANCEL_FRIEND_REQUEST_SUCCESS",
 }
+
+export const cancelFriendRequest = (
+  sender_id,
+  receiver_id
+) => ({
+  type: types.CANCEL_FRIEND_REQUEST,
+  payload: {
+    sender_id,
+    receiver_id
+  }
+})
+
+export const getFriendRequestSent = (user_id) => ({
+  type: types.GET_FRIEND_REQUEST_SENT,
+  payload: {
+    user_id
+  }
+});
 
 export const getAchievementLog = (user_id) => ({
   type: types.GET_ACHIEVEMENT_LOG,
@@ -329,6 +352,40 @@ export const getIsReducedWeight = (user_id) => ({
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+const cancelFriendRequestSagaAsync = async (
+  sender_id,
+  receiver_id
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/cancelFriendRequest", {
+      body: {
+        sender_id,
+        receiver_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
+
+const getFriendRequestSentSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getFriendRequestSent", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    console.log("error :", error);
+    return { error, messsage: error.message }
+  }
+}
 
 const checkAllMissionCompleteSagaAsync = async (
   user_id
@@ -1044,6 +1101,27 @@ function* sendTeamInviteSaga({ payload }) {
   }
 }
 
+function* cancelFriendRequestSaga({ payload }) {
+  const {
+    sender_id,
+    receiver_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      cancelFriendRequestSagaAsync,
+      sender_id,
+      receiver_id
+    );
+
+    yield put({
+      type: types.CANCEL_FRIEND_REQUEST_SUCCESS
+    })
+
+  } catch (error) {
+    console.log("error from cancelFriendRequestSaga :", error);
+  }
+}
+
 function* getFriendsRankSaga({ payload }) {
   const {
     user_id
@@ -1085,6 +1163,31 @@ function* rejectFriendSaga({ payload }) {
     }
   } catch (error) {
     console.log("error from rejectFriendSaga :", error);
+  }
+}
+
+function* getFriendRequestSentSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getFriendRequestSentSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.GET_FRIEND_REQUEST_SENT_SUCCESS,
+        payload: apiResult.results.friend_request
+      })
+    } else if (apiResult.results.message === "no_friend_request") {
+      yield put({
+        type: types.GET_FRIEND_REQUEST_SENT_FAIL
+      })
+    }
+
+  } catch (error) {
+    console.log("error from getFriendRequestSentSaga :", error);
   }
 }
 
@@ -1680,6 +1783,14 @@ export function* watchCheckAllMissionComplete() {
   yield takeEvery(types.CHECK_ALL_MISSION_COMPLETE, checkAllMissionCompleteSaga)
 }
 
+export function* watchGetFriendRequestSent() {
+  yield takeEvery(types.GET_FRIEND_REQUEST_SENT, getFriendRequestSentSaga)
+}
+
+export function* watchCancelFriendRequest() {
+  yield takeEvery(types.CANCEL_FRIEND_REQUEST, cancelFriendRequestSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetRank),
@@ -1714,6 +1825,8 @@ export function* saga() {
     fork(watchGetAchievementLog),
     fork(watchUpdateAchievementLog),
     fork(watchCheckAllMissionComplete),
+    fork(watchGetFriendRequestSent),
+    fork(watchCancelFriendRequest),
   ]);
 }
 
@@ -1748,7 +1861,9 @@ const INIT_STATE = {
   max_friends: 1,
   statusSendFriendRequest: "default",
   friend_request: [],
+  friend_request_sent: [],
   statusGetFriendRequest: "default",
+  statusGetFriendRequestSent: "default",
   statusAcceptFriend: "default",
   statusRejectFriend: "default",
   statusDeleteFriend: "default",
@@ -1763,10 +1878,38 @@ const INIT_STATE = {
   statusUpdateAchievement: "default",
   statusCheckAllMissionComplete: "default",
   statusGetLeaderBoard: "default",
+  statusCancelFriendRequest: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.CANCEL_FRIEND_REQUEST:
+      return {
+        ...state,
+        statusCancelFriendRequest: "loading"
+      }
+    case types.CANCEL_FRIEND_REQUEST_SUCCESS:
+      return {
+        ...state,
+        statusCancelFriendRequest: "success"
+      }
+    case types.GET_FRIEND_REQUEST_SENT:
+      return {
+        ...state,
+        statusGetFriendRequestSent: "loading"
+      }
+    case types.GET_FRIEND_REQUEST_SENT_SUCCESS:
+      return {
+        ...state,
+        friend_request_sent: action.payload,
+        statusGetFriendRequestSent: "success"
+      }
+    case types.GET_FRIEND_REQUEST_SENT_FAIL:
+      return {
+        ...state,
+        friend_request_sent: [],
+        statusGetFriendRequestSent: "fail"
+      }
     case types.CHECK_ALL_MISSION_COMPLETE:
       return {
         ...state,
