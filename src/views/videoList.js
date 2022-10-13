@@ -5,7 +5,8 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth";
-import {getCheckDisplayName } from "../redux/get";
+import { getCheckDisplayName, getMemberInfo } from "../redux/get";
+import { updateDisplayName } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
@@ -48,7 +49,7 @@ class VideoList extends Component {
       displayName2: null,
       displayName3: null,
       validation_displayname: false,
-      checkDisplayName:null,
+      checkDisplayName: null,
     };
 
     this.prevPlayTime = 0;
@@ -66,6 +67,9 @@ class VideoList extends Component {
 
   async componentDidMount() {
     const { user } = this.props;
+    if (user) {
+      this.props.getMemberInfo(user.user_id)
+    }
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
         this.props.user.user_id,
@@ -104,8 +108,8 @@ class VideoList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { displayName,displayName2,displayName3 }= this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge,statusDisplayName } = this.props;
+    const { displayName, displayName2, displayName3 } = this.state;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName } = this.props;
     if (prevProps.statusPostDailyWeighChallenge !== statusPostDailyWeighChallenge && statusPostDailyWeighChallenge === "success") {
       this.props.history.push('/challenges');
     }
@@ -214,17 +218,17 @@ class VideoList extends Component {
         })
         console.log("statusDisplayName", statusDisplayName);
       } else if (statusDisplayName === "fail") {
-          if ((displayName3 && displayName3 === displayName2)) {
-            this.setState({
-              displayName: displayName2,
-            })
-          }else{
-            this.setState({
-              displayName: null,
-              checkDisplayName: "fail",
-            })
-          }
-       
+        if ((displayName3 && displayName3 === displayName2)) {
+          this.setState({
+            displayName: displayName2,
+          })
+        } else {
+          this.setState({
+            displayName: null,
+            checkDisplayName: "fail",
+          })
+        }
+
       }
     }
   }
@@ -281,15 +285,15 @@ class VideoList extends Component {
   }
 
   handleChange(event) {
-   /*  console.log("444"); */
- const name =  event.target.name;
-  const valuName =  event.target.value;
+    /*  console.log("444"); */
+    const name = event.target.name;
+    const valuName = event.target.value;
 
-  
+
     if (name === "displayName") {
-          this.setState({
-            [name]: valuName,
-          })
+      this.setState({
+        [name]: valuName,
+      })
 
       if (/^([0-9a-zA-Zก-ฮัะาเแอำไใโอิอีอึอือุอูอ่อ้อ๊อ๋อ็อ์])+$/i.test(valuName)) {
         this.props.getCheckDisplayName(valuName);
@@ -304,12 +308,12 @@ class VideoList extends Component {
           displayName2: null
         })
       }
-    }else{
+    } else {
       this.setState({
         [event.target.id]: event.target.value
       })
     }
-   
+
   };
 
   onChange = e => {
@@ -514,8 +518,12 @@ class VideoList extends Component {
       displayName,
       displayName2,
     } = this.state;
+    const { member_info } = this.props;
 
-     if (sex !== "" && age !== "" && weight !== "" && height !== "" && displayName !== null ) {
+    if (
+      sex !== "" && age !== "" && weight !== "" && height !== ""
+      && ((member_info && !member_info.display_name) ? displayName !== null : true) //ถ้าผู้ใช้ยังไม่มีข้อมูล display_name ในระบบ ตรงช่องกรอก displayName ต้องไม่เท่ากับ null
+    ) {
       if (age % 1 === 0) {
         this.setState({
           otherAttributesPage: "bodyInfo",
@@ -544,12 +552,13 @@ class VideoList extends Component {
       hip,
       displayName
     } = this.state;
+    const { member_info, user } = this.props;
 
     this.setState({
       statusOtherAttributes: "default"
     })
 
-    if (sex !== "" && age !== "" && weight !== "" && height !== "" && chest !== "" && waist !== "" && hip !== "" && displayName !== "") {
+    if (sex !== "" && age !== "" && weight !== "" && height !== "" && chest !== "" && waist !== "" && hip !== "") {
       const other_attributes = {
         sex,
         age: Number(age),
@@ -572,8 +581,10 @@ class VideoList extends Component {
           this.props.user.start_date,
           this.props.user.expire_date,
           this.props.user.offset,
-          displayName
         );
+        if (member_info && !member_info.display_name) { //เช็คว่าในระบบยังไม่มีข้อมูล display_name
+          this.props.updateDisplayName((user && user.user_id), displayName);
+        }
       } else { //ถ้า other_attributes = NULL ให้ update ฟิลด์ other_attributes ของ member
         this.props.updateProfile(
           this.props.user.email,
@@ -883,7 +894,8 @@ class VideoList extends Component {
   }
 
   renderBasicInfo() {
-    const { statusOtherAttributes,displayName,validation_displayname,displayName2,checkDisplayName,displayname } = this.state;
+    const { statusOtherAttributes, displayName, validation_displayname, displayName2, checkDisplayName, displayname } = this.state;
+    const { member_info } = this.props;
     return (
       <div>
         <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
@@ -896,41 +908,44 @@ class VideoList extends Component {
           </div>
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="form-group">
-              <label for="age" className="bmd-label-floating" style={{ color: "#F45197" }}>ชื่อที่ใช้แสดงในระบบ</label>
-              <input
-                type="text"
-                className="form-control"
-                id="display-name"
-                name="displayName"
-                step="1"
-                value={displayName}
-                onChange={(event) => this.handleChange(event)}
-              />
-              
-               {
-                    (validation_displayname) ?
-                      <p style={{ color: "red" }}>อนุญาติให้ใส่ 0-9, A-Z, ก-ฮ เท่านั้น</p>
-                      :
-                      null
-                  }
-                  {
-                     checkDisplayName === "fail" ?
-                     <p style={{ color: "red" }}>มีผู้ใช้ชื่อ {displayName2} อยู่แล้วในระบบ</p>
-                     : null
-                  }
-                  {
-                    (displayName && displayName.length < 4) ?
-                      <p style={{ color: "red" }}>กรุณากรอกตัวอักษร 4 ตัว ขึ้นไป</p>
-                      :
-                      null
-                  }
+
+              {
+                (member_info && !member_info.display_name) &&
+                <>
+                  <label for="age" className="bmd-label-floating" style={{ color: "#F45197" }}>ชื่อที่ใช้แสดงในระบบ</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="display-name"
+                    name="displayName"
+                    step="1"
+                    value={displayName}
+                    onChange={(event) => this.handleChange(event)}
+                  />
+                </>
+              }
+
+
+              {
+                (validation_displayname) ?
+                  <p style={{ color: "red" }}>อนุญาติให้ใส่ 0-9, A-Z, ก-ฮ เท่านั้น</p>
+                  :
+                  null
+              }
+              {
+                checkDisplayName === "fail" ?
+                  <p style={{ color: "red" }}>มีผู้ใช้ชื่อ {displayName2} อยู่แล้วในระบบ</p>
+                  : null
+              }
+              {
+                (displayName && displayName.length < 4) ?
+                  <p style={{ color: "red" }}>กรุณากรอกตัวอักษร 4 ตัว ขึ้นไป</p>
+                  :
+                  null
+              }
             </div>
             {
-              (statusOtherAttributes === "ageNotUseDecimals") &&
-              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>อายุ ห้ามเป็นเลขทศนิยม</h6></small>
-            }
-            {
-              (statusOtherAttributes === "fail") &&
+              (statusOtherAttributes === "fail" && !displayName) &&
               <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
             }
           </div>
@@ -1909,15 +1924,16 @@ class VideoList extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseVideos, challenges,get }) => {
+const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) => {
   const { user } = authUser;
-  const { statusDisplayName } = get;
+  const { statusDisplayName, statusGetMemberInfo, member_info } = get;
+  const { statusUpdateDisplayName } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
   const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge,statusDisplayName };
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends,getCheckDisplayName };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName };
 
 export default connect(
   mapStateToProps,

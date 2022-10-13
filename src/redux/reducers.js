@@ -9,6 +9,7 @@ import { reducer as exerciseProgram} from './exerciseProgram';
 import { reducer as payment} from './payment';
 import { reducer as challenges} from './challenges';
 import { reducer as dashboard} from './dashboard';
+import { reducer as update} from './update';
 
 
 
@@ -26,6 +27,7 @@ const reducers = combineReducers({
   challenges,
   dashboard,
   get,
+  update,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducers)

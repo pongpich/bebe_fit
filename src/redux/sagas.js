@@ -6,6 +6,7 @@ import { saga as payment} from './payment';
 import { saga as challenges} from './challenges';
 import { saga as dashboard} from './dashboard';
 import { saga as get } from './get';
+import { saga as update } from './update';
 
 export default function* rootSaga(getState) {
   yield all([
@@ -16,5 +17,6 @@ export default function* rootSaga(getState) {
     challenges(),
     dashboard(),
     get(),
+    update(),
   ]);
 }
