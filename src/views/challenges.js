@@ -1651,7 +1651,7 @@ class Challenges extends Component {
                         value={emailOrDisplayName}
                         onChange={(event) => this.handleChange(event)}
                         onKeyUp={this.filterSearch()}
-                        placeholder="ชื่อ หรืออีเมลเพื่อนของคุณที่สมัคร Bebe Stay Fit"
+                        placeholder="ชื่อ หรืออีเมลเพื่อนของคุณ"
                       />
                     </div>
                     <div className="col-auto col-sm-2 col-md-2   col-lg-3 col-xl-3">
