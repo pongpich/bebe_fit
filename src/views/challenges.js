@@ -40,6 +40,7 @@ class Challenges extends Component {
       numbOfFriends: 0,
       myTeamRank: 0,
       myIndividualRank: 0,
+      emailOrDisplayName: "",
     }
   }
 
@@ -74,7 +75,7 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, teamRank, individualRank, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite, statusGetFriendList, friend_list, statusCheckAllMissionComplete, achievementLog, statusUpdateAchievement, statusGetLeaderBoard } = this.props;
+    const { user, teamRank, individualRank, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite, statusGetFriendList, friend_list, statusCheckAllMissionComplete, achievementLog, statusUpdateAchievement, statusGetLeaderBoard, statusCancelFriendRequest } = this.props;
     const achievementFinisher = (achievementLog && (achievementLog.filter(item => item.achievement === 'Finisher')).length > 0) ? true : false;
     const achievementAce = (achievementLog && (achievementLog.filter(item => item.achievement === 'Ace')).length > 0) ? true : false;
     const achievement1st = (achievementLog && (achievementLog.filter(item => item.achievement === '1st')).length > 0) ? true : false;
@@ -82,6 +83,10 @@ class Challenges extends Component {
     const achievementTop10 = (achievementLog && (achievementLog.filter(item => item.achievement === 'Top 10')).length > 0) ? true : false;
     const achievementSocialStar = (achievementLog && (achievementLog.filter(item => item.achievement === 'Social star')).length > 0) ? true : false;
     const achievementSocialStarPlus = (achievementLog && (achievementLog.filter(item => item.achievement === 'Social star+')).length > 0) ? true : false;
+
+    if ((prevProps.statusCancelFriendRequest !== statusCancelFriendRequest) && statusCancelFriendRequest === "success") {
+      this.props.getFriendRequestSent(this.props.user && this.props.user.user_id);
+    }
 
     if ((prevProps.statusGetLeaderBoard !== statusGetLeaderBoard) && statusGetLeaderBoard === "success") {
       const myTeamRankIndex = teamRank.findIndex(item => item.group_id === parseInt(this.props.user.group_id));
@@ -183,7 +188,8 @@ class Challenges extends Component {
     }
 
     if ((prevProps.statusSendFriendRequest !== statusSendFriendRequest) && (statusSendFriendRequest === "success")) {
-      this.setState({ selectedAddFriend: false })
+      this.setState({ selectedAddFriend: false });
+      this.props.getFriendRequestSent(this.props.user && this.props.user.user_id);
     }
 
     if (prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "success") {
@@ -1563,6 +1569,182 @@ class Challenges extends Component {
     )
   }
 
+  filterSearch() {
+    const { emailOrDisplayName } = this.state;
+
+    // Declare variables
+    var filter, ul, li, a, i, txtValue;
+    filter = emailOrDisplayName && emailOrDisplayName.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul && ul.getElementsByTagName('li');
+
+    // Loop through all list items, and hide those who don't match the search query
+    if (li) {
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("h5")[0];
+        txtValue = a && (a.textContent || a.innerText);
+        if (txtValue && (txtValue.toUpperCase().indexOf(filter) > -1)) {
+          li[i].style.display = "";
+        } else {
+          li[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  checkFriendRequestStatus(receiver_id) {
+    const { friend_request_sent } = this.props;
+    if (friend_request_sent) {
+      const filter_friend_request_sent = friend_request_sent.filter(item => item.receiver_id === receiver_id);
+      if (filter_friend_request_sent.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  checkFriendStatus(receiver_id) {
+    const { friend_list } = this.props;
+    if (friend_list) {
+      const filter_friend_list = friend_list.filter(item => item.user_id === receiver_id);
+      if (filter_friend_list.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  all_users() {
+    const { allMemberStayFit, user, statusSendFriendRequest, statusCancelFriendRequest } = this.props;
+    const { emailOrDisplayName } = this.state;
+
+    var allMemberStayFitFilter = allMemberStayFit;
+    var filter, ul, li, a, i, txtValue;
+    filter = emailOrDisplayName && emailOrDisplayName.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul && ul.getElementsByTagName('li');
+    if (li) {
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("h5")[0];
+        txtValue = a && (a.textContent || a.innerText);
+        allMemberStayFitFilter = allMemberStayFit.filter(item => (item.email.toUpperCase().indexOf(filter) > -1) || (item.display_name && item.display_name.toUpperCase().indexOf(filter) > -1))
+      }
+    }
+
+    return (
+      <>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-8">
+          <div className="box-challengeIn">
+            <div className="display_name">
+              <div className="row">
+                <p className="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 user_all">ผู้ใช้งานทั้งหมดในระบบ</p>
+                <div className="col-12 col-sm-12 col-md-12   col-lg-8 col-xl-8">
+                  <div className="row justify-content-md-center">
+                    <div className="col-8 col-sm-10 col-md-10 col-lg-9 col-xl-9">
+                      <input
+                        type="text" className="form-control"
+                        id="emailOrDisplayName"
+                        value={emailOrDisplayName}
+                        onChange={(event) => this.handleChange(event)}
+                        onKeyUp={this.filterSearch()}
+                        placeholder="ชื่อ หรืออีเมลเพื่อนของคุณที่สมัคร Bebe Stay Fit"
+                      />
+                    </div>
+                    <div className="col-auto col-sm-2 col-md-2   col-lg-3 col-xl-3">
+                      <button className="btn bottom-search" type="button">ค้นหา</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <ul id="myUL" className='myUL'>
+                <div class="container">
+
+                  {
+                    (allMemberStayFitFilter && allMemberStayFitFilter.length > 0) ?
+                      allMemberStayFit &&
+                      allMemberStayFit.map((item, i) =>
+                        <li key={i} className="li">
+                          <div class="row">
+                            <div class="col-12 col-md-auto col-lg-5 col-xl-5  text-left">
+                              <h5>
+                                {item.display_name ? item.display_name : item.email}
+                                <span style={{ display: "none" }}> {item.email}</span>
+                              </h5>
+                            </div>
+                            <div class="col-12 col-lg-2 col-xl-2 text-center">
+                              <span> {item.rank}</span>
+                            </div>
+                            <div class="col-12 col-lg-auto col-xl-auto  text-center">
+                              {
+                                (this.checkFriendStatus(item.user_id)) ? //เช็คว่ามีคนนี้เป็นเพื่อนแล้วหรือยัง
+                                  <span style={{ color: "#000000", fontSize: "16px" }} > เพื่อนของคุณ </span>
+                                  :
+                                  (this.checkFriendRequestStatus(item.user_id)) ? //เช็คว่าเคยส่งคำขอเพื่อนไปหาคนนี้หรือยัง
+                                    <div>
+                                      <span style={{ color: "#D30769", fontSize: "16px" }}> รอการยืนยัน </span>
+                                      {
+                                        (statusCancelFriendRequest !== "loading") && //เช็คเพื่อซ่อนปุ่มในจังหวะ loading ป้องกันการกดยกเลิกรัวๆ
+                                        <span
+                                          style={{ cursor: "pointer" }} className="btn bottom-cancel"
+                                          onClick={() => this.props.cancelFriendRequest(user.user_id, item.user_id)}
+                                        >
+                                          <img className="cancel-H" />
+                                          ยกเลิกคำขอ
+                                        </span>
+                                      }
+                                    </div>
+                                    :
+                                    (statusSendFriendRequest !== "loading" && (item.user_id !== user.user_id)) && //เช็คเพื่อซ่อนปุ่มในจังหวะ loading ป้องกันการกดเพิ่มเพื่อนรัวๆ
+                                    <span className="btn bottom-add"
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => this.props.sendFriendRequest(user.user_id, item.email)}
+                                    >
+                                      {`เพิ่มเพื่อน`}
+                                    </span>
+                              }
+                            </div>
+                          </div>
+                        </li>
+                      )
+                      :
+                      <h5>
+                        <div className="col-12 col-sm-12 col-md-12 col-lg-12 ellipse24">
+                          <img />
+                        </div>
+                        <p className="text-noSystem">ไม่มีชื่ออยู่ในระบบ</p>
+                        {/*  <div className="col-12 col-sm-12 col-md-12 col-lg-12  center2  margin-top-3">
+                        <div className="bottom-teamList">
+                          <button type="button" className="btn bottom-outlineaddTeam " onClick={(e) => this.clickaddfriend(true)}><IntlMessages id="challenge.invitefriends" /></button>
+                        </div>
+                      </div> */}
+                      </h5>
+                  }
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-sm-12 col-md-12 col-lg-4">
+          {
+
+          }
+        </div>
+      </>
+    )
+  }
+
+  onSearchMember() {
+    this.setState({ selectedNavLink: "searchMember", selectedAddFriend: false });
+    this.props.getAllMemberStayFit(this.props.user && this.props.user.fb_group);
+    this.props.getFriendRequestSent(this.props.user && this.props.user.user_id);
+  }
+
   renderChallenge() {
     const { selectedNavLink } = this.state;
     return (
@@ -1615,12 +1797,20 @@ class Challenges extends Component {
                   >
                     <b>ความสำเร็จ</b>
                   </a>
+                  <a
+                    className="nav-link"
+                    style={{ color: `${selectedNavLink === "searchMember" ? "#F45197" : ""}`, cursor: "pointer" }}
+                    onClick={() => this.onSearchMember()}
+                  >
+                    <b>ผู้ใช้งานทั้งหมดในระบบ</b>
+                  </a>
                 </nav>
                 {(selectedNavLink === "mission") && this.renderMission()}
                 {(selectedNavLink === "teamList") && this.renderTeamList()}
                 {(selectedNavLink === "scoreBoard") && this.renderScoreBoard()}
                 {(selectedNavLink === "friendList") && this.renderFriendList()}
                 {(selectedNavLink === "achievement") && this.renderAchievement()}
+                {(selectedNavLink === "searchMember") && this.all_users()}
               </div>
             </div>
           </form>

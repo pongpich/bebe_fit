@@ -27,18 +27,21 @@ export const getMemberInfo = (user_id) => ({
   }
 })
 
-export const getAllMemberStayFit = () => ({
-  type: types.GET_ALL_MEMBER_STAY_FIT
+export const getAllMemberStayFit = (fb_group) => ({
+  type: types.GET_ALL_MEMBER_STAY_FIT,
+  payload: {
+    fb_group
+  }
 })
 
 /* SAGA Section */
 const getAllMemberStayFitSagaAsync = async (
-
+  fb_group
 ) => {
   try {
-    const apiResult = await API.get("bebe", "/getAllMemberStayFit", {
+    const apiResult = await API.get("bebe", "/getAllMemberPlatfrom", {
       queryStringParameters: {
-
+        fb_group
       }
     });
     return apiResult
@@ -77,11 +80,15 @@ const getMemberInfoSagaAsync = async (
   }
 }
 
-function* getAllMemberStayFitSaga({ }) {
+function* getAllMemberStayFitSaga({ payload }) {
+  const {
+    fb_group
+  } = payload
 
   try {
     const apiResult = yield call(
-      getAllMemberStayFitSagaAsync
+      getAllMemberStayFitSagaAsync,
+      fb_group
     );
     yield put({
       type: types.GET_ALL_MEMBER_STAY_FIT_SUCCESS,
@@ -147,11 +154,16 @@ export function* watchGetMemberInfoSagaAsyncSaga() {
   yield takeEvery(types.GET_MEMBER_INFO, getMemberInfoSagaAsyncSaga)
 }
 
+export function* watchGetAllMemberStayFitSaga() {
+  yield takeEvery(types.GET_ALL_MEMBER_STAY_FIT, getAllMemberStayFitSaga)
+}
+
 
 export function* saga() {
   yield all([
     fork(watchGetCheckDisplayNameSaga),
     fork(watchGetMemberInfoSagaAsyncSaga),
+    fork(watchGetAllMemberStayFitSaga),
   ]);
 }
 
