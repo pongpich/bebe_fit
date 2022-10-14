@@ -419,7 +419,7 @@ class Challenges extends Component {
                         <p className="card-text">
                           <div className="row">
                             <div className="col-lg-6 col-md-6 col-12">
-                              {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                              {index + 1}. {item.display_name ? item.display_name : item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
                             </div>
                             <div className="col-lg-3 col-md-3 col-6">
                               <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
@@ -635,7 +635,7 @@ class Challenges extends Component {
             (individualRankFilter) &&
             individualRankFilter.map((item, index) => {
               const fullName = `${item.first_name} ${item.last_name}`;
-              const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
+              const rankDetail = `${index + 1}. ${item.display_name ? item.display_name : item.facebook ? item.facebook : fullName}`;
               index = index + 1;
               return (
                 <>
@@ -700,7 +700,7 @@ class Challenges extends Component {
         {
           <b className="row mb-4">
             <hr class="w-100" />
-            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
+            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].display_name ? myRank[0].display_name : myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
               </span>
@@ -716,7 +716,7 @@ class Challenges extends Component {
     var myRank = friendsRank.filter(item => item.user_id === this.props.user.user_id);
     // myRank[0] === undefined คือกรณีผู้ใช้ไม่มีข้อมูลอยู่เลยใน member_event_log  (ทำให้เกิดบัค จึงต้องกำหนดค่าให้)
     if (myRank[0] === undefined) {
-      myRank[0] = { "rank": 0, "facebook": user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
+      myRank[0] = { "rank": 0, "facebook": user.display_name ? user.display_name : user.facebook ? user.facebook : `${user.first_name} ${user.last_name}`, "total_score": 0 };
     }
 
     var myRankIndex = friendsRank.findIndex(item => item.user_id === this.props.user.user_id);
@@ -729,7 +729,7 @@ class Challenges extends Component {
             (friendsRank && (friendsRank.length > 0)) &&
             friendsRank.map((item, index) => {
               const fullName = `${item.first_name} ${item.last_name}`;
-              const rankDetail = `${index + 1}. ${item.facebook ? item.facebook : fullName}`;
+              const rankDetail = `${index + 1}. ${item.display_name ? item.display_name : item.facebook ? item.facebook : fullName}`;
               index = index + 1;
               return (
                 <>
@@ -790,7 +790,7 @@ class Challenges extends Component {
         {
           <b className="row mb-6">
             <hr class="w-100" />
-            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
+            <p className="card-text col-12">{myRankIndex + 1}. {myRank[0].display_name ? myRank[0].display_name : myRank[0].facebook ? myRank[0].facebook : `${myRank[0].first_name} ${myRank[0].last_name}`}
               <span style={{ float: "right", color: "#F45197" }}>
                 {myRank[0].total_score ? myRank[0].total_score : 0} คะแนน
               </span>
@@ -1071,7 +1071,7 @@ class Challenges extends Component {
                         <p className="card-text">
                           <div className="row">
                             <div className="col-lg-6 col-md-6 col-12">
-                              {index + 1}. {item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                              {index + 1}. {item.display_name ? item.display_name : item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
                             </div>
                             <div className="col-lg-3 col-md-3 col-6">
                               <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
