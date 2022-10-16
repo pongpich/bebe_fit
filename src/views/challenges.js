@@ -21,6 +21,7 @@ import frame43 from "../assets/img/frame43.png";
 import frame44 from "../assets/img/frame44.png";
 import frame45 from "../assets/img/frame45.png";
 import frame46 from "../assets/img/frame46.png";
+import group25 from '../assets/img/group25.png';
 import frame47 from "../assets/img/frame47.png";
 import copyLink from "../assets/img/copy-link.png";
 
@@ -1638,13 +1639,13 @@ class Challenges extends Component {
     return (
       <>
         <div class="col-12 col-sm-12 col-md-12 col-lg-8">
-          <div className="box-challengeIn">
-            <div className="display_name">
+          <div className="card display_name">
+            <div className="top-search">
               <div className="row">
                 <p className="col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 user_all">ผู้ใช้งานทั้งหมดในระบบ</p>
                 <div className="col-12 col-sm-12 col-md-12   col-lg-8 col-xl-8">
                   <div className="row justify-content-md-center">
-                    <div className="col-8 col-sm-10 col-md-10 col-lg-9 col-xl-9">
+                    <div className="col-12 col-sm-8 col-md-10 col-lg-9 col-xl-9">
                       <input
                         type="text" className="form-control"
                         id="emailOrDisplayName"
@@ -1654,7 +1655,7 @@ class Challenges extends Component {
                         placeholder="ชื่อ หรืออีเมลเพื่อนของคุณ"
                       />
                     </div>
-                    <div className="col-auto col-sm-2 col-md-2   col-lg-3 col-xl-3">
+                    <div className="col-12 col-sm-4 col-md-2   col-lg-3 col-xl-3">
                       <button className="btn bottom-search" type="button">ค้นหา</button>
                     </div>
                   </div>
@@ -1663,13 +1664,13 @@ class Challenges extends Component {
 
 
               <ul id="myUL" className='myUL'>
-                <div class="container">
+                <div class="li">
 
                   {
                     (allMemberStayFitFilter && allMemberStayFitFilter.length > 0) ?
                       allMemberStayFit &&
                       allMemberStayFit.map((item, i) =>
-                        <li key={i} className="li">
+                        <li key={i}>
                           <div class="row">
                             <div class="col-12 col-md-auto col-lg-5 col-xl-5  text-left">
                               <h5>
@@ -1715,7 +1716,7 @@ class Challenges extends Component {
                       :
                       <h5>
                         <div className="col-12 col-sm-12 col-md-12 col-lg-12 ellipse24">
-                          <img />
+                        <img src={group25} />
                         </div>
                         <p className="text-noSystem">ไม่มีชื่ออยู่ในระบบ</p>
                         {/*  <div className="col-12 col-sm-12 col-md-12 col-lg-12  center2  margin-top-3">
