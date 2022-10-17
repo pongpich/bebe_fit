@@ -210,7 +210,7 @@ class VideoList extends Component {
     }
 
 
-    if (prevProps.statusDisplayName !== statusDisplayName) {
+    if ((prevProps.statusDisplayName) && (prevProps.statusDisplayName !== statusDisplayName)) {
       if (statusDisplayName === "success") {
         this.setState({
           /*    validation_displayname: false, */
