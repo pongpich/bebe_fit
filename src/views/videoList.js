@@ -246,7 +246,7 @@ class VideoList extends Component {
     this.setState({
       indexPlaylist: index
     });
-    this.props.selectChangeVideo(video_id, category, type);
+    this.props.selectChangeVideo(video_id, category, type, (this.props.user && this.props.user.user_id));
     this.props.resetStatus();
     document.body.style.overflow = "hidden";
   }
@@ -342,7 +342,7 @@ class VideoList extends Component {
       indexPlaylist: index,
       spinnerRandomVideo: "loading"
     });
-    this.props.randomVideo(video_id, category, type);
+    this.props.randomVideo(video_id, category, type, (this.props.user && this.props.user.user_id));
     var delayInMilliseconds = 500; //0.5 second
     setTimeout(() => { // แสดง Spinner 0.5 วินาที 
       this.setState({
