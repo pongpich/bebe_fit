@@ -1560,7 +1560,7 @@ class VideoList extends Component {
                                 }
                                 {
                                   (item.tag === "low_impact") &&
-                                  <p style={{ color: "grey" }}> {'(Low impact)'} </p>
+                                  <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
                                 }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
