@@ -928,7 +928,7 @@ class VideoList extends Component {
 
               {
                 (validation_displayname) ?
-                  <p style={{ color: "red" }}>อนุญาติให้ใส่ 0-9, A-Z, ก-ฮ เท่านั้น</p>
+                  <p style={{ color: "red" }}>อนุญาตให้ใส่ 0-9, A-Z, ก-ฮ เท่านั้น</p>
                   :
                   null
               }
@@ -1557,6 +1557,10 @@ class VideoList extends Component {
                                   <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
                                   :
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                }
+                                {
+                                  (item.tag === "low_impact") &&
+                                  <p style={{ color: "grey" }}> {'(Low impact)'} </p>
                                 }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
