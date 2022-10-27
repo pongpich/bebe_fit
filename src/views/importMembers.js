@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers, changeEmail } from "../redux/auth";
+import { updateStatusLowImpact } from "../redux/update";
 import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo, selectBodyInfo } from "../redux/exerciseVideos";
 import { selectMemberEventLog } from "../redux/challenges";
 import DatePicker from "react-datepicker";
@@ -27,6 +28,7 @@ class ImportMembers extends Component {
       facebook: "",
       fb_group: 404,
       member_type: "normal",
+      editMemberType: false,
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
   }
@@ -39,6 +41,14 @@ class ImportMembers extends Component {
       }
     } else {
       this.props.history.push('/login');
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { statusUpdateLowImpact } = this.props;
+    if ((prevProps.statusUpdateLowImpact !== statusUpdateLowImpact) && (statusUpdateLowImpact === "success")) {
+      this.setState({ editMemberType: false });
+      this.props.selectMemberInfo(this.state.email)
     }
   }
 
@@ -234,7 +244,18 @@ class ImportMembers extends Component {
     )
   }
 
+  onEditMemberType() {
+    const { editMemberType } = this.state;
+    if (editMemberType) {
+      this.setState({ editMemberType: false });
+    } else {
+      this.setState({ editMemberType: true });
+    }
+  }
+
   renderMemberInfo() {
+    const { memberInfo, statusUpdateLowImpact } = this.props;
+    const { editMemberType } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -275,6 +296,30 @@ class ImportMembers extends Component {
                 </h5>
                 <h5>{"วันเริ่มต้น : " + this.props.memberInfo.start_date}</h5>
                 <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
+                <h5>{`ประเภทผู้ใช้ : ${(this.props.memberInfo.low_impact === 'no') ? 'ทั่วไป' : 'low impact'}`}
+                  <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>Edit</span>
+                </h5>
+                {
+                  (editMemberType && (statusUpdateLowImpact !== "loading")) &&
+                  (
+                    (this.props.memberInfo.low_impact === 'no') ?
+                      <div>
+                        <h6>
+                          ต้องการปรับเป็นประเภท <span style={{ color: "red" }}>"low impact"</span> ใช่หรือไม่?
+                        </h6>
+                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateStatusLowImpact((memberInfo && memberInfo.user_id), 'yes')}>ยืนยัน</span>
+                        <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>ยกเลิก</span>
+                      </div>
+                      :
+                      <div>
+                        <h6>
+                          ต้องการปรับเป็นประเภท  <span style={{ color: "red" }}>"ทั่วไป"</span> ใช่หรือไม่?
+                        </h6>
+                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateStatusLowImpact((memberInfo && memberInfo.user_id), 'no')}>ยืนยัน</span>
+                        <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>ยกเลิก</span>
+                      </div>
+                  )
+                }
               </div>
             }
           </div>
@@ -728,14 +773,15 @@ class ImportMembers extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseVideos, challenges }) => {
+const mapStateToProps = ({ authUser, exerciseVideos, challenges, update }) => {
   const { user, status, statusChangeEmail } = authUser;
   const { programInWeek, memberInfo, bodyInfo } = exerciseVideos;
   const { memberEventLog } = challenges;
-  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog };
+  const { statusUpdateLowImpact } = update;
+  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog, statusUpdateLowImpact };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog, updateStatusLowImpact };
 
 export default connect(
   mapStateToProps,

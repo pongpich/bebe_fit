@@ -11,7 +11,20 @@ export const types = {
   UPDATE_DISPLAY_NAME: "UPDATE_DISPLAY_NAME",
   UPDATE_DISPLAY_NAME_SUCCESS: "UPDATE_DISPLAY_NAME_SUCCESS",
   UPDATE_DISPLAY_NAME_FAIL: "UPDATE_DISPLAY_NAME_FAIL",
+  UPDATE_STATUS_LOW_IMPACT: "UPDATE_STATUS_LOW_IMPACT",
+  UPDATE_STATUS_LOW_IMPACT_SUCCESS: "UPDATE_STATUS_LOW_IMPACT_SUCCESS",
 }
+
+export const updateStatusLowImpact = (
+  user_id,
+  status_low_impact //yes or no
+) => ({
+  type: types.UPDATE_STATUS_LOW_IMPACT,
+  payload: {
+    user_id,
+    status_low_impact
+  }
+});
 
 export const updateDisplayName = (user_id, display_name) => ({
   type: types.UPDATE_DISPLAY_NAME,
@@ -88,6 +101,22 @@ const updateDisplayNameSagaAsync = async (
     return { error, messsage: error.message };
   }
 }
+const updateStatusLowImpactSagaAsync = async (
+  user_id,
+  status_low_impact
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/updateStatusLowImpact", {
+      body: {
+        user_id,
+        status_low_impact
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 /* END OF SAGA Section */
 
@@ -148,18 +177,38 @@ function* updateDisplayNameSaga({ payload }) {
     yield put({
       type: types.UPDATE_DISPLAY_NAME_SUCCESS
     })
-   /*  if (apiResult.results.message === "new") {
-      yield put({
-        type: types.UPDATE_DISPLAY_NAME_SUCCESS
-      })
-    }
-    if (apiResult.results.message === "exist") {
-      yield put({
-        type: types.UPDATE_DISPLAY_NAME_FAIL
-      })
-    } */
+    /*  if (apiResult.results.message === "new") {
+       yield put({
+         type: types.UPDATE_DISPLAY_NAME_SUCCESS
+       })
+     }
+     if (apiResult.results.message === "exist") {
+       yield put({
+         type: types.UPDATE_DISPLAY_NAME_FAIL
+       })
+     } */
   } catch (error) {
     console.log("error from updateDisplayNameSaga :", error);
+  }
+}
+
+function* updateStatusLowImpactSaga({ payload }) {
+  const {
+    user_id,
+    status_low_impact
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      updateStatusLowImpactSagaAsync,
+      user_id,
+      status_low_impact
+    );
+    yield put({
+      type: types.UPDATE_STATUS_LOW_IMPACT_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from updateStatusLowImpactSaga :", error);
   }
 }
 
@@ -172,12 +221,16 @@ export function* watchupdateAddress() {
 export function* watchupdateDisplayName() {
   yield takeEvery(types.UPDATE_DISPLAY_NAME, updateDisplayNameSaga)
 }
+export function* watchUpdateStatusLowImpact() {
+  yield takeEvery(types.UPDATE_STATUS_LOW_IMPACT, updateStatusLowImpactSaga)
+}
 
 export function* saga() {
   yield all([
     fork(watchupdateFittoPlant),
     fork(watchupdateAddress),
     fork(watchupdateDisplayName),
+    fork(watchUpdateStatusLowImpact),
   ]);
 }
 
@@ -186,11 +239,22 @@ export function* saga() {
 const INIT_STATE = {
   fittoPlant: "default",
   statusAddress: "default",
-  statusUpdateDisplayName: "default"
+  statusUpdateDisplayName: "default",
+  statusUpdateLowImpact: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.UPDATE_STATUS_LOW_IMPACT:
+      return {
+        ...state,
+        statusUpdateLowImpact: "loading"
+      }
+    case types.UPDATE_STATUS_LOW_IMPACT_SUCCESS:
+      return {
+        ...state,
+        statusUpdateLowImpact: "success"
+      }
     case types.UPDATE_DISPLAY_NAME:
       return {
         ...state,
