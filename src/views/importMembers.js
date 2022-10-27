@@ -25,7 +25,8 @@ class ImportMembers extends Component {
       fullname: "",
       phone: "",
       facebook: "",
-      fb_group: 404
+      fb_group: 404,
+      member_type: "normal",
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
   }
@@ -85,7 +86,7 @@ class ImportMembers extends Component {
   }
 
   onSubmitImportMembers() {
-    const { members, selectedStartDate, selectedExpireDate, selectedFile } = this.state;
+    const { members, selectedStartDate, selectedExpireDate, selectedFile, member_type } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
@@ -93,7 +94,7 @@ class ImportMembers extends Component {
     })
 
     if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
-      this.props.importMembers(members, start_date, expire_date);
+      this.props.importMembers(members, start_date, expire_date, member_type);
       document.getElementById("popupSuccessSubmit").classList.toggle("active");
       document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
       var delayInMilliseconds = 1750; //1.75 second
@@ -109,7 +110,7 @@ class ImportMembers extends Component {
   }
 
   onSubmitAddMember() {
-    const { selectedStartDate, selectedExpireDate, email, fullname, phone, facebook, fb_group } = this.state;
+    const { selectedStartDate, selectedExpireDate, email, fullname, phone, facebook, fb_group, member_type } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
@@ -133,7 +134,7 @@ class ImportMembers extends Component {
       console.log("members : ", members);
       console.log("start_date : ", start_date);
       console.log("expire_date : ", expire_date);
-      this.props.importMembers(members, start_date, expire_date);
+      this.props.importMembers(members, start_date, expire_date, member_type);
       document.getElementById("popupSuccessSubmit").classList.toggle("active");
       document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
       var delayInMilliseconds = 1750; //1.75 second
@@ -429,7 +430,7 @@ class ImportMembers extends Component {
   }
 
   renderAddMember() {
-    const { selectedStartDate, selectedExpireDate, statusSubmitAddMember } = this.state;
+    const { selectedStartDate, selectedExpireDate, statusSubmitAddMember, member_type } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -438,6 +439,27 @@ class ImportMembers extends Component {
           <div className="card-body">
 
             <h1 className="mb-5">เพิ่มสมาชิก</h1>
+
+            <div className="mb-2">
+              <h5>เลือกประเภทของผู้ใช้:</h5>
+              <input
+                id='member_type'
+                type="radio"
+                value="normal"
+                checked={member_type === 'normal'}
+                onChange={(event) => this.handleChange(event)}
+              />
+              <label className="ml-2" style={{ color: (member_type === 'normal') ? 'red' : 'black' }}> ทั่วไป</label><br></br>
+              <input
+                id='member_type'
+                type="radio"
+                value='low_impact'
+                checked={member_type === 'low_impact'}
+                onChange={(event) => this.handleChange(event)}
+              />
+              <label className="ml-2" style={{ color: (member_type === 'low_impact') ? 'red' : 'black' }}> low impact</label><br></br>
+            </div>
+
             <label for="fname">Email: </label>
             <input type="text" id="email" name="email" value={this.state.email} onChange={(event) => this.handleChange(event)} /><br></br>
             <label for="fname">Fullname: </label>
@@ -514,7 +536,7 @@ class ImportMembers extends Component {
   }
 
   renderImportMembers() {
-    const { selectedStartDate, selectedExpireDate, statusSubmitImportMembers } = this.state;
+    const { selectedStartDate, selectedExpireDate, statusSubmitImportMembers, member_type } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -523,6 +545,7 @@ class ImportMembers extends Component {
           <div className="card-body">
 
             <h1 className="mb-5">เพิ่มสมาชิก</h1>
+
             <h5>
               <span className="h6 ml-3" style={{ color: "red" }}>
                 *ตัวอย่าง รูปแบบ Table
@@ -533,21 +556,21 @@ class ImportMembers extends Component {
                 <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"email"}</b></h5></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"full_name"}</b></h5></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"phone"}</b></h5></td>
-                <td style={{ border: '1px solid black', width: 100}}><h5><b>{"facebook"}</b></h5></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"facebook"}</b></h5></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h5><b>{"fb_group"}</b></h5></td>
               </tr>
               <tr style={{ border: '1px solid black', textAlign: 'center' }}>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
-                <td style={{ border: '1px solid black', width: 100}}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxx"}</h6></td>
               </tr>
               <tr style={{ border: '1px solid black', textAlign: 'center' }}>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxxxxxx"}</h6></td>
-                <td style={{ border: '1px solid black', width: 100}}><h6>{"xxxx xxxx"}</h6></td>
+                <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxxx xxxx"}</h6></td>
                 <td style={{ border: '1px solid black', width: 100 }}><h6>{"xxx"}</h6></td>
               </tr>
             </table>
@@ -590,6 +613,26 @@ class ImportMembers extends Component {
               }
             </div>
 
+            <div className="mb-2">
+              <h5>เลือกประเภทของผู้ใช้:</h5>
+              <input
+                id='member_type'
+                type="radio"
+                value="normal"
+                checked={member_type === 'normal'}
+                onChange={(event) => this.handleChange(event)}
+              />
+              <label className="ml-2" style={{ color: (member_type === 'normal') ? 'red' : 'black' }}> ทั่วไป</label><br></br>
+              <input
+                id='member_type'
+                type="radio"
+                value='low_impact'
+                checked={member_type === 'low_impact'}
+                onChange={(event) => this.handleChange(event)}
+              />
+              <label className="ml-2" style={{ color: (member_type === 'low_impact') ? 'red' : 'black' }}> low impact</label><br></br>
+            </div>
+
             <section>
               <div style={{ float: "left" }} className="mr-5">
                 <label style={{ display: "block" }} className="h5">วันเริ่มต้น</label>
@@ -618,6 +661,7 @@ class ImportMembers extends Component {
                 />
               </div>
             </section>
+
           </div>
           {
             (statusSubmitImportMembers === "fail") &&

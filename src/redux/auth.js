@@ -132,12 +132,13 @@ export const updateProfile = (
     }
   });
 
-export const importMembers = (members, start_date, expire_date) => ({
+export const importMembers = (members, start_date, expire_date, member_type) => ({
   type: types.IMPORT_MEMBERS,
   payload: {
     members,
     start_date,
-    expire_date
+    expire_date,
+    member_type
   }
 })
 
@@ -234,14 +235,16 @@ const trialPackageSagaAsync = async (
 const importMembersSagaAsync = async (
   members,
   start_date,
-  expire_date
+  expire_date,
+  member_type
 ) => {
   try {
     const apiResult = await API.post("bebe", "/import_members", {
       body: {
         members,
         start_date,
-        expire_date
+        expire_date,
+        member_type
       }
     });
     return apiResult;
@@ -538,7 +541,8 @@ function* importMembersSaga({ payload }) {
   const {
     members,
     start_date,
-    expire_date
+    expire_date,
+    member_type
   } = payload
 
   try {
@@ -546,7 +550,8 @@ function* importMembersSaga({ payload }) {
       importMembersSagaAsync,
       members,
       start_date,
-      expire_date
+      expire_date,
+      member_type
     )
   } catch (error) {
     console.log("error from register :", error);
