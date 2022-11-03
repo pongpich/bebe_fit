@@ -717,7 +717,11 @@ class VideoList extends Component {
 
                     <div className="playlistWrapper border shadow" >
                       <div className="">
-                        <video poster={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} className="" width="100%" height="50%" controls controlslist="nodownload" muted style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}>
+                        <video
+                          poster={item.thumbnail ? `${item.thumbnail}` : `../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`}
+                          className="" width="100%" height="50%" controls controlslist="nodownload" muted
+                          style={{ borderRadius: "20px 20px 0px 0px", overflow: "hidden" }}
+                        >
                           <source src={item.url ? `${item.url}` : `https://media.planforfit.com/bebe/video/${item.video_id}_720.mp4`} type="video/mp4"></source>
                         </video>
                       </div>
@@ -809,7 +813,12 @@ class VideoList extends Component {
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
-                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {
+                                  (item.thumbnail) ?
+                                    <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
+                                    :
+                                    <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                }
                                 {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -1532,7 +1541,12 @@ class VideoList extends Component {
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
-                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {
+                                  (item.thumbnail) ?
+                                    <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
+                                    :
+                                    <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                }
                                 {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
@@ -1757,7 +1771,12 @@ class VideoList extends Component {
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
-                                <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                {
+                                  (item.thumbnail) ?
+                                    <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
+                                    :
+                                    <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                }
                                 {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
