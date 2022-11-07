@@ -65,6 +65,17 @@ class VideoList extends Component {
     this.addEventToVideo = this.addEventToVideo.bind(this);
   }
 
+  isJson(str) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      //ถ้า JSON.parse แล้ว Error แสดงว่าเป็น Json อยู่แล้ว
+      return true;
+    }
+    //ถ้า JSON.parse แล้วไม่มี Error แสดงว่ายังเป็น String อยู่
+    return false;
+  }
+
   async componentDidMount() {
     const { user } = this.props;
     if (user) {
@@ -74,7 +85,7 @@ class VideoList extends Component {
       this.props.videoListForUser(
         this.props.user.user_id,
         // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
-        JSON.parse(this.props.user.other_attributes).weight,
+        (this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight),
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
@@ -82,7 +93,7 @@ class VideoList extends Component {
       this.props.videoListForUserLastWeek(
         this.props.user.user_id,
         // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
-        JSON.parse(this.props.user.other_attributes).weight,
+        (this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight),
         this.props.user.start_date,
         this.props.user.expire_date,
         this.props.user.offset
@@ -93,13 +104,13 @@ class VideoList extends Component {
       this.props.getDailyWeighChallenge(user.user_id);
       this.props.checkUpdateMaxFriends(user.user_id);
       this.setState({
-        sex: JSON.parse(this.props.user.other_attributes).sex,
-        age: JSON.parse(this.props.user.other_attributes).age,
-        weight: JSON.parse(this.props.user.other_attributes).weight,
-        height: JSON.parse(this.props.user.other_attributes).height,
-        chest: JSON.parse(this.props.user.other_attributes).chest,
-        waist: JSON.parse(this.props.user.other_attributes).waist,
-        hip: JSON.parse(this.props.user.other_attributes).hip
+        sex: this.isJson(user.other_attributes) ? user.other_attributes.sex : JSON.parse(user.other_attributes).sex,
+        age: this.isJson(user.other_attributes) ? user.other_attributes.age : JSON.parse(user.other_attributes).age, 
+        weight: this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight,
+        height: this.isJson(user.other_attributes) ? user.other_attributes.height : JSON.parse(user.other_attributes).height,
+        chest: this.isJson(user.other_attributes) ? user.other_attributes.chest : JSON.parse(user.other_attributes).chest,
+        waist: this.isJson(user.other_attributes) ? user.other_attributes.waist : JSON.parse(user.other_attributes).waist, 
+        hip: this.isJson(user.other_attributes) ? user.other_attributes.hip : JSON.parse(user.other_attributes).hip,
       })
     }
     if (user === null) {
