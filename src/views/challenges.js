@@ -1688,8 +1688,8 @@ class Challenges extends Component {
                       allMemberStayFit &&
                       allMemberStayFit.map((item, i) =>
                         <li key={i}>
-                          <div class="row">
-                            <div class="col-12 col-md-auto col-lg-5 col-xl-5  text-left">
+                          <div class="row align-items-center">
+                            <div class="col-12 col-md-auto col-lg-5 col-xl-5 text-left" >
                               <h5>
                                 {item.display_name ? item.display_name : item.email}
                                 <span style={{ display: "none" }}> {item.email}</span>
