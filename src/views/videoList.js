@@ -1930,7 +1930,7 @@ class VideoList extends Component {
           {
             (this.props.user && this.props.user.fb_group && this.props.user.fb_group !== 404) &&
             <div className="">
-              <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+              <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>ชาเลนจ์</a>
             </div>
           }
 

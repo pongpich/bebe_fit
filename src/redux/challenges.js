@@ -26,6 +26,7 @@ export const types = {
   CLEAR_CHALLENGES: "CLEAR_CHALLENGES",
   CREATE_CHALLENGE_GROUP: "CREATE_CHALLENGE_GROUP",
   CREATE_CHALLENGE_GROUP_SUCCESS: "CREATE_CHALLENGE_GROUP_SUCCESS",
+  CREATE_CHALLENGE_GROUP_FAIL: "CREATE_CHALLENGE_GROUP_FAIL",
   LEAVE_TEAM: "LEAVE_TEAM",
   LEAVE_TEAM_SUCCESS: "LEAVE_TEAM_SUCCESS",
   GET_MEMBERS_AND_RANK: "GET_MEMBERS_AND_RANK",
@@ -1659,9 +1660,15 @@ function* createChallengeGroupSaga({ payload }) {
       start_date,
       fb_group
     );
-    yield put({
-      type: types.CREATE_CHALLENGE_GROUP_SUCCESS
-    })
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.CREATE_CHALLENGE_GROUP_SUCCESS
+      })
+    } else if (apiResult.results.message === "teamNameExist") {
+      yield put({
+        type: types.CREATE_CHALLENGE_GROUP_FAIL
+      })
+    }
   } catch (error) {
     console.log("error from createChallengeGroupSaga :", error);
   }
@@ -2344,9 +2351,14 @@ export function reducer(state = INIT_STATE, action) {
     case types.CREATE_CHALLENGE_GROUP_SUCCESS:
       return {
         ...state,
-        statusCreateTeam: "default",
+        statusCreateTeam: "success",
         statusGetNumberOfTeamNotFull: "default",
         statusLeaveTeam: "default"
+      }
+    case types.CREATE_CHALLENGE_GROUP_FAIL:
+      return {
+        ...state,
+        statusCreateTeam: "fail"
       }
     case types.LEAVE_TEAM_SUCCESS:
       return {

@@ -694,6 +694,7 @@ function* loginUserSaga({ payload }) {
   } = payload
 
   try {
+    console.log("hhhhh");
     const loginResult = yield call(
       loginUserSagaAsync,
       email,

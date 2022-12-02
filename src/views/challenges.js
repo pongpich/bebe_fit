@@ -42,6 +42,8 @@ class Challenges extends Component {
       myTeamRank: 0,
       myIndividualRank: 0,
       emailOrDisplayName: "",
+      statusRandomTeam: "default",
+      selectedCreateTeam: false,
     }
   }
 
@@ -76,7 +78,7 @@ class Challenges extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { user, teamRank, individualRank, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite, statusGetFriendList, friend_list, statusCheckAllMissionComplete, achievementLog, statusUpdateAchievement, statusGetLeaderBoard, statusCancelFriendRequest, statusCancelTeamInvite } = this.props;
+    const { user, teamRank, individualRank, statusGetNumberOfTeamNotFull, numberOfTeamNotFull, statusLeaveTeam, statusSendFriendRequest, friend_request, statusGetFriendRequest, statusAcceptFriend, statusRejectFriend, statusDeleteFriend, statusSendTeamInvite, statusGetTeamInvite, team_invite, statusRejectTeamInvite, statusAcceptTeamInvite, statusGetFriendList, friend_list, statusCheckAllMissionComplete, achievementLog, statusUpdateAchievement, statusGetLeaderBoard, statusCancelFriendRequest, statusCancelTeamInvite, statusCreateTeam } = this.props;
     const achievementFinisher = (achievementLog && (achievementLog.filter(item => item.achievement === 'Finisher')).length > 0) ? true : false;
     const achievementAce = (achievementLog && (achievementLog.filter(item => item.achievement === 'Ace')).length > 0) ? true : false;
     const achievement1st = (achievementLog && (achievementLog.filter(item => item.achievement === '1st')).length > 0) ? true : false;
@@ -90,6 +92,11 @@ class Challenges extends Component {
     }
     if ((prevProps.statusCancelTeamInvite !== statusCancelTeamInvite) && statusCancelTeamInvite === "success") {
       this.props.getTeamInviteSent(this.props.user && this.props.user.user_id);
+    }
+
+    if ((prevProps.statusCreateTeam !== statusCreateTeam) && (statusCreateTeam === "success")) {
+      this.props.getGroupID(user.user_id);
+      this.setState({ selectedCreateTeam: false }); //กำหนด selectedCreateTeam เป็น false เพื่อซ่อนหน้าการยืนยันการตั้งชื่อทีม
     }
 
     if ((prevProps.statusGetLeaderBoard !== statusGetLeaderBoard) && statusGetLeaderBoard === "success") {
@@ -200,6 +207,10 @@ class Challenges extends Component {
     if (prevProps.statusGetNumberOfTeamNotFull !== statusGetNumberOfTeamNotFull && statusGetNumberOfTeamNotFull === "success") {
       if (numberOfTeamNotFull > 0) {
         this.props.assignGroupToMember(this.props.user.user_id, this.props.user.start_date, this.props.user.fb_group);
+      } else {
+        this.setState({
+          statusRandomTeam: "fail"
+        });
       }
     }
     //หลังจาก assignGroupToMember หรือ createChallengeGroup  จะมีการ getNumberOfTeamNotFull ให้ทำการ getGroupID
@@ -244,7 +255,7 @@ class Challenges extends Component {
 
   renderMission() {
     const rank = (this.props.rank && this.props.rank.charAt(0).toUpperCase() + this.props.rank.substr(1).toLowerCase()); //ตัวแรกพิมพ์ใหญ่ ตัวที่เหลือพิมพ์เล็ก
-    const { logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount } = this.props;
+    const { logWeightCount, isReducedWeight, logWeightTeamCount, numberOfMembers, dailyTeamWeightBonusCount, challengePeriod } = this.props;
     const isExerciseCompleted = this.isExerciseCompleted(this.props.exerciseVideo);
     var { scoreInWeek } = this.state;
     if (logWeightCount >= 2) { scoreInWeek += 10 }; //ชั่งน้ำหนักครบ 2 ครั้ง
@@ -258,38 +269,49 @@ class Challenges extends Component {
         {this.renderPopupRulesAndPrizes()}
         {this.renderPopupScoreDetail()}
         <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-lg-6  mb-3" style={{ float: "left" }}>
-                <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบทีม</b></h5>
-                <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
-                <p className="card-text">ทีมชั่งน้ำหนักครบ 7 วัน<span style={{ float: "right", color: "#F45197" }}>{dailyTeamWeightBonusCount}/7</span></p>
+          {
+            challengePeriod ?
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-lg-6  mb-3" style={{ float: "left" }}>
+                    <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบทีม</b></h5>
+                    <p className="card-text">ทีมชั่งน้ำหนักครบ {numberOfMembers * 2} ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightTeamCount}/{numberOfMembers * 2}</span></p>
+                    <p className="card-text">ทีมชั่งน้ำหนักครบ 7 วัน<span style={{ float: "right", color: "#F45197" }}>{dailyTeamWeightBonusCount}/7</span></p>
+                  </div>
+                  <div className="col-lg-6 mb-3" style={{ float: "right" }}>
+                    <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
+                    <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightCount}/2</span></p>
+                    <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right", color: "#F45197" }}>{isReducedWeight ? 1 : 0}/1</span></p>
+                    <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{(this.props.statusVideoList !== 'no_video') ? isExerciseCompleted : 0}/4</span></p>
+                  </div>
+                </div>
+                <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
+                <br></br>
+                <hr className="w-100"></hr>
+                <div className="row">
+                  <div className="col-lg-3 col-md-6 col-12">
+                    <h5
+                      className="card-title"
+                      style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                      onClick={() => this.openPopupScoreDetail()}>รายละเอียดคะแนน</h5>
+                  </div>
+                  <div className="col-lg-4 col-md-6 col-12">
+                    <h5
+                      className="card-title"
+                      style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                      onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
+                  </div>
+                </div>
               </div>
-              <div className="col-lg-6 mb-3" style={{ float: "right" }}>
-                <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
-                <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightCount}/2</span></p>
-                <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right", color: "#F45197" }}>{isReducedWeight ? 1 : 0}/1</span></p>
-                <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{(this.props.statusVideoList !== 'no_video') ? isExerciseCompleted : 0}/4</span></p>
+              :
+              <div className="card-body" style={{ textAlign: "center" }}>
+                <div className="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 mt-4" >
+                  <img src={`../assets/img/challenges/icon_not_period.png`} />
+                </div>
+                <p style={{ fontWeight: "bold" }}>ไม่มีภารกิจ เนื่องจากไม่ได้อยู่ในระยะเวลาของชาเลนจ์</p>
               </div>
-            </div>
-            <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
-            <br></br>
-            <hr className="w-100"></hr>
-            <div className="row">
-              <div className="col-lg-3 col-md-6 col-12">
-                <h5
-                  className="card-title"
-                  style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
-                  onClick={() => this.openPopupScoreDetail()}>รายละเอียดคะแนน</h5>
-              </div>
-              <div className="col-lg-4 col-md-6 col-12">
-                <h5
-                  className="card-title"
-                  style={{ cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
-                  onClick={() => this.openPopupRulesAndPrizes()}>กฎกติกาและของรางวัล</h5>
-              </div>
-            </div>
-          </div>
+          }
+
         </div>
 
         <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
@@ -372,8 +394,8 @@ class Challenges extends Component {
   }
 
   renderTeamList() {
-    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam, user, statusSendTeamInvite } = this.props;
-    const { selectedTeamInvite, emailTeamInvite } = this.state;
+    const { numberOfMembers, membersOfTeam, group_name, totalScoreOfTeam, user, statusSendTeamInvite, statusGetNumberOfTeamNotFull, challengePeriod } = this.props;
+    const { selectedTeamInvite, emailTeamInvite, statusRandomTeam, selectedCreateTeam } = this.state;
     return (
       <div className="row">
         {this.renderPopupLeaveTeam()}
@@ -412,56 +434,112 @@ class Challenges extends Component {
             </div>
             :
             <div className="card shadow col-lg-7 col-md-12" style={{ borderRadius: "25px" }}>
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-lg-12">
-                    <h5 className="card-title"><b style={{ color: "#F45197" }}>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
-                  </div>
-                  <div className="col-lg-10">
-                    {
-                      (membersOfTeam) &&
-                      membersOfTeam.map((item, index) =>
-                        <p className="card-text">
-                          <div className="row">
-                            <div className="col-lg-6 col-md-6 col-12">
-                              {index + 1}. {item.display_name ? item.display_name : item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
-                            </div>
-                            <div className="col-lg-3 col-md-3 col-6">
-                              <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
-                            </div>
-                            <div className="col-lg-3 col-md-3 col-6">
-                              <span style={{ float: "right", color: "#F45197" }}>
-                                {
-                                  item.end_rank ?
-                                    item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
-                                    :
-                                    item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
-                                }
+              {
+                (membersOfTeam.length > 0) ? //membersOfTeam.length > 0 คือ ผู้ใช้มีทีมแล้ว
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-12">
+                        <h5 className="card-title"><b style={{ color: "#F45197" }}>{group_name}</b> <span style={{ float: "right" }}>สมาชิก {numberOfMembers}/10คน</span></h5>
+                      </div>
+                      <div className="col-lg-10">
+                        {
+                          (membersOfTeam) &&
+                          membersOfTeam.map((item, index) =>
+                            <p className="card-text">
+                              <div className="row">
+                                <div className="col-lg-6 col-md-6 col-12">
+                                  {index + 1}. {item.display_name ? item.display_name : item.facebook ? item.facebook : `${item.first_name} ${item.last_name}`}
+                                </div>
+                                <div className="col-lg-3 col-md-3 col-6">
+                                  <span style={{ color: "grey" }}>{item.total_score} คะแนน</span>
+                                </div>
+                                <div className="col-lg-3 col-md-3 col-6">
+                                  <span style={{ float: "right", color: "#F45197" }}>
+                                    {
+                                      item.end_rank ?
+                                        item.end_rank.charAt(0).toUpperCase() + item.end_rank.substr(1).toLowerCase()
+                                        :
+                                        item.start_rank.charAt(0).toUpperCase() + item.start_rank.substr(1).toLowerCase()
+                                    }
 
-                              </span>
-                            </div>
-                          </div>
-                        </p>
-                      )
-                    }
+                                  </span>
+                                </div>
+                              </div>
+                            </p>
+                          )
+                        }
+                      </div>
+                    </div>
+                    <br></br>
+                    <hr className="w-100"></hr>
+                    <div className="row justify-content-between">
+                      <h5
+                        className="underline-on-hover"
+                        style={{ cursor: "pointer", color: "#F45197" }}
+                        onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</h5>
+                      {
+                        (membersOfTeam) && (membersOfTeam.length < 10) &&
+                        <h5
+                          className="underline-on-hover"
+                          style={{ cursor: "pointer", color: "#F45197" }}
+                          onClick={() => this.setState({ selectedTeamInvite: true })}>+ ชวนเข้าทีม</h5>
+                      }
+                    </div>
                   </div>
-                </div>
-                <br></br>
-                <hr className="w-100"></hr>
-                <div className="row justify-content-between">
-                  <h5
-                    className="underline-on-hover"
-                    style={{ cursor: "pointer", color: "#F45197" }}
-                    onClick={() => this.openPopupLeaveTeam()}>ออกจากทีม</h5>
-                  {
-                    (membersOfTeam) && (membersOfTeam.length < 10) &&
-                    <h5
-                      className="underline-on-hover"
-                      style={{ cursor: "pointer", color: "#F45197" }}
-                      onClick={() => this.setState({ selectedTeamInvite: true })}>+ ชวนเข้าทีม</h5>
-                  }
-                </div>
-              </div>
+                  :
+                  !selectedCreateTeam ?
+                    <div className="card-body" style={{ textAlign: "center" }}>
+                      <div className="col-12 col-sm-12 col-md-12 col-lg-12 mb-4 mt-4" >
+                        <img src={`../assets/img/challenges/icon_no_team.png`} />
+                      </div>
+                      <p style={{ fontWeight: "bold" }}>คุณยังไม่มีทีม</p>
+                      <div className="col-12 col-sm-12 col-md-12 col-lg-12  center2  margin-top-3">
+                        <div className="bottom-teamList">
+                          {
+                            ((statusRandomTeam === "fail") && (statusGetNumberOfTeamNotFull === "success")) &&
+                            <h6 style={{ color: "red" }}>ระบบไม่สามารถสุ่มเข้าทีมให้ได้ เนื่องจากทุกทีมมีสมาชิกครบแล้ว กรุณาสร้างทีมใหม่ด้วยตนเอง หรือรอจนกว่าจะเกิดการสร้างทีมใหม่และลองสุ่มอีกครั้ง</h6>
+                          }
+                          {
+                            ((statusGetNumberOfTeamNotFull !== "loading") && (challengePeriod) && (user && !user.group_id)) &&
+                            <>
+                              <button type="button" className="btn bottom-add mr-2 mb-3" style={{ width: "160px" }} onClick={() => this.setState({ selectedCreateTeam: true })}>สร้างทีมของคุณ</button>
+                              <button type="button" className="btn bottom-add ml-2 mb-3" style={{ width: "160px" }} onClick={() => this.props.getNumberOfTeamNotFull((user && user.fb_group))}>สุ่มเข้าร่วมทีม</button>
+                            </>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                    :
+                    <div className="card-body mt-3  col-lg-12 col-md-12" >
+                      <center>
+                        <h4 className="card-title mt-3 mb-4" style={{ color: "#F45197" }}><b>ตั้งชื่อทีมของคุณ</b></h4>
+                        <input
+                          type=""
+                          className="form-control"
+                          placeholder="ชื่อทีมต้องมากกว่า 6 ตัวอักษร"
+                          id="teamName"
+                          value={this.state.teamName}
+                          onChange={(event) => this.handleChange(event)}
+                        />
+                        {
+                          (this.props.statusCreateTeam === "fail") &&
+                          <h6 className="mt-3" style={{ color: "red" }}>มีชื่อทีมนี้ในระบบแล้ว</h6>
+                        }
+                        {
+                          (this.props.statusCreateTeam !== "loading") ?
+                            <button
+                              type="button"
+                              class="btn btn-danger mt-4 mb-4 col-12"
+                              style={{ backgroundColor: "#F45197" }}
+                              onClick={() =>
+                                this.createTeam(this.state.teamName)
+                              }>ยืนยัน</button>
+                            :
+                            <div />
+                        }
+                      </center>
+                    </div>
+              }
             </div>
         }
 
@@ -1805,7 +1883,7 @@ class Challenges extends Component {
             <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
           </div>
           <div className="">
-            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+            <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>ชาเลนจ์</a>
           </div>
         </div>
         <div className="card-body d-flex justify-content-center" style={{ backgroundColor: "#D8D6DF" }}>
@@ -1823,7 +1901,7 @@ class Challenges extends Component {
                   <a
                     className="nav-link"
                     style={{ color: `${selectedNavLink === "teamList" ? "#F45197" : ""}`, cursor: "pointer" }}
-                    onClick={() => this.setState({ selectedNavLink: "teamList", selectedTeamInvite: false })}
+                    onClick={() => this.setState({ selectedNavLink: "teamList", selectedTeamInvite: false, selectedCreateTeam: false })}
                   >
                     <b>สมาชิกในทีม</b>
                   </a>
@@ -1898,7 +1976,7 @@ class Challenges extends Component {
                 <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
               </div>
               <div className="">
-                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>ชาเลนจ์</a>
               </div>
             </div>
 
@@ -1947,7 +2025,7 @@ class Challenges extends Component {
                 <a className="" id="home-tab" data-toggle="tab" href="/#/Videdivst" role="tab" aria-controls="home" aria-selected="true" style={{ color: "black", textDecorationColor: "white" }}>Routine workout</a>
               </div>
               <div className="">
-                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>เข้าร่วมชาเลนจ์</a>
+                <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>ชาเลนจ์</a>
               </div>
             </div>
 
@@ -2543,10 +2621,11 @@ class Challenges extends Component {
             (user && user.group_id) ?
               this.renderChallenge()
               :
-              (statusGetNumberOfTeamNotFull === "default" || numberOfTeamNotFull > 0) ?
-                this.renderJoinChallenge()
-                :
-                this.renderCreateTeam()
+              this.renderChallenge()
+            /*  (statusGetNumberOfTeamNotFull === "default" || numberOfTeamNotFull > 0) ?
+               this.renderJoinChallenge()
+               :
+               this.renderCreateTeam() */
           }
 
           {
