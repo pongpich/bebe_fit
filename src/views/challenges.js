@@ -573,12 +573,9 @@ class Challenges extends Component {
           </div>
           <br></br>
           <center>
-            <h1 className="mt-1 mb-4" style={{ color: "red" }}>
-              <i className="fa fa-exclamation-triangle fa-2x mr-2" aria-hidden="true"></i>
-              Warning!</h1>
-            <h5>หากออกจากทีม</h5>
-            <h5>แล้วยังไม่เข้าร่วมทีมใหม่ ภายในวันอาทิตย์นี้ 23:30 น.</h5>
-            <h5 style={{ color: "red" }}>- Rank จะถูกปรับเป็น "Newbie"</h5>
+            <h3 className="mt-5 mb-4" style={{ color: "red" }}>
+              คุณต้องการออกจากทีม
+            </h3>
             <h5><b>คุณแน่ใจหรือไม่ ?</b></h5>
           </center>
           <div className="row mt-5">
