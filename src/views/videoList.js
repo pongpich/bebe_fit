@@ -105,11 +105,11 @@ class VideoList extends Component {
       this.props.checkUpdateMaxFriends(user.user_id);
       this.setState({
         sex: this.isJson(user.other_attributes) ? user.other_attributes.sex : JSON.parse(user.other_attributes).sex,
-        age: this.isJson(user.other_attributes) ? user.other_attributes.age : JSON.parse(user.other_attributes).age, 
+        age: this.isJson(user.other_attributes) ? user.other_attributes.age : JSON.parse(user.other_attributes).age,
         weight: this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight,
         height: this.isJson(user.other_attributes) ? user.other_attributes.height : JSON.parse(user.other_attributes).height,
         chest: this.isJson(user.other_attributes) ? user.other_attributes.chest : JSON.parse(user.other_attributes).chest,
-        waist: this.isJson(user.other_attributes) ? user.other_attributes.waist : JSON.parse(user.other_attributes).waist, 
+        waist: this.isJson(user.other_attributes) ? user.other_attributes.waist : JSON.parse(user.other_attributes).waist,
         hip: this.isJson(user.other_attributes) ? user.other_attributes.hip : JSON.parse(user.other_attributes).hip,
       })
     }
@@ -1391,6 +1391,8 @@ class VideoList extends Component {
 
   renderVideoList() {
     const { focusDay, selectedVDO } = this.state;
+    const { exerciseVideo } = this.props;
+    const numbDayExercise = exerciseVideo.length;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
@@ -1423,34 +1425,47 @@ class VideoList extends Component {
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน {this.props.user.fb_group !== 404 ? <span>(WEEK {this.props.week})</span> : <span></span>}</h4>
               <nav className="nav">
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(0)}
-                >
-                  <h5><b>DAY 1</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(1)}
-                >
-                  <h5><b>DAY 2</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(2)}
-                >
-                  <h5><b>DAY 3</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(3)}
-                >
-                  <h5><b>DAY 4</b></h5>
-                </a>
+                {
+                  (numbDayExercise >= 1) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(0)}
+                  >
+                    <h5><b>DAY 1</b></h5>
+                  </a>
+                }
+                {
+                  (numbDayExercise >= 2) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(1)}
+                  >
+                    <h5><b>DAY 2</b></h5>
+                  </a>
+                }
+                {
+                  (numbDayExercise >= 3) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(2)}
+                  >
+                    <h5><b>DAY 3</b></h5>
+                  </a>
+                }
+                {
+                  (numbDayExercise >= 4) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(3)}
+                  >
+                    <h5><b>DAY 4</b></h5>
+                  </a>
+                }
+
                 {
                   (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
                   <a
@@ -1635,6 +1650,7 @@ class VideoList extends Component {
 
   renderVideoListLastWeek() {
     const { focusDay, selectedVDO } = this.state;
+    const { exerciseVideoLastWeek } = this.props;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     let allMinute = [];
@@ -1666,34 +1682,47 @@ class VideoList extends Component {
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
               <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมสัปดาห์ที่ผ่านมา</h4>
               <nav className="nav">
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(0)}
-                >
-                  <h5><b>DAY 1</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(1)}
-                >
-                  <h5><b>DAY 2</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(2)}
-                >
-                  <h5><b>DAY 3</b></h5>
-                </a>
-                <a
-                  className="nav-link"
-                  style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
-                  onClick={() => this.onDayChange(3)}
-                >
-                  <h5><b>DAY 4</b></h5>
-                </a>
+                {
+                  (exerciseVideoLastWeek.length >= 1) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(0)}
+                  >
+                    <h5><b>DAY 1</b></h5>
+                  </a>
+                }
+                {
+                  (exerciseVideoLastWeek.length >= 2) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(1)}
+                  >
+                    <h5><b>DAY 2</b></h5>
+                  </a>
+                }
+                {
+                  (exerciseVideoLastWeek.length >= 3) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(2)}
+                  >
+                    <h5><b>DAY 3</b></h5>
+                  </a>
+                }
+                {
+                  (exerciseVideoLastWeek.length >= 4) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
+                    onClick={() => this.onDayChange(3)}
+                  >
+                    <h5><b>DAY 4</b></h5>
+                  </a>
+                }
+
                 <a
                   className="nav-link ml-auto"
                   style={{ cursor: "pointer", color: "#F45197" }}
