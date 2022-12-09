@@ -282,7 +282,7 @@ class Challenges extends Component {
                     <h5 className="card-title mb-4" style={{ color: "#F45197" }}><b>รายการชาเลนจ์แบบเดี่ยว</b></h5>
                     <p className="card-text">ชั่งน้ำหนักครบ 2 ครั้ง <span style={{ float: "right", color: "#F45197" }}>{logWeightCount}/2</span></p>
                     <p className="card-text">น้ำหนักลดลงจากสัปดาห์ก่อน<span style={{ float: "right", color: "#F45197" }}>{isReducedWeight ? 1 : 0}/1</span></p>
-                    <p className="card-text">ออกกำลังกายครบ 4 วันต่อสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{(this.props.statusVideoList !== 'no_video') ? isExerciseCompleted : 0}/{exerciseVideo.length}</span></p>
+                    <p className="card-text">ออกกำลังกายครบทุกวันในสัปดาห์<span style={{ float: "right", color: "#F45197" }}>{(this.props.statusVideoList !== 'no_video') ? isExerciseCompleted : 0}/{exerciseVideo.length}</span></p>
                   </div>
                 </div>
                 <p className="card-text" style={{ float: "right", fontSize: "15px", color: "red" }}>*รายการจะถูก Reset และสรุปคะแนนทุกวันอาทิตย์ เพื่อคำนวณ Rank</p>
@@ -2193,7 +2193,7 @@ class Challenges extends Component {
           <h5 style={{ color: "#F45197" }}><b>• รายการชาเลนจ์แบบเดี่ยว</b></h5>
           <h6><b>ชั่งน้ำหนักครบ 2 ครั้ง</b> จะได้รับ 10 คะแนน</h6>
           <h6><b>น้ำหนักลดลงจากสัปดาห์ก่อน</b> จะได้รับ 10 คะแนน</h6>
-          <h6><b>ออกกำลังกายครบ 4 วันต่อสัปดาห์</b> จะได้รับ 10 คะแนน</h6>
+          <h6><b>ออกกำลังกายครบทุกวันในสัปดาห์</b> จะได้รับ 10 คะแนน</h6>
           <br></br>
           <h5 style={{ color: "#F45197" }}><b>• รายการชาเลนจ์แบบทีม</b></h5>
           <h6><b>สมาชิกทุกคนชั่งน้ำหนักครบ 2 ครั้ง</b> ทั้งทีมจะได้รับ คนละ 10 คะแนน</h6>
