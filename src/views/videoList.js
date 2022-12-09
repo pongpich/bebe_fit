@@ -855,6 +855,10 @@ class VideoList extends Component {
                                   :
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
+                                {
+                                  (item.tag && (item.tag === "low_impact")) &&
+                                  <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
+                                }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
                                 (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit") &&
@@ -1599,7 +1603,7 @@ class VideoList extends Component {
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
                                 {
-                                  (item.tag === "low_impact") &&
+                                  (item.tag && (item.tag === "low_impact")) &&
                                   <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
                                 }
                               </div>
@@ -1831,7 +1835,7 @@ class VideoList extends Component {
                               <div className="videoDuration mt-3">
                                 <h6>
                                   <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                  {minuteLabel}นาที
+                                  {minuteLabel} นาที
                               </h6>
                               </div>
                               <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
@@ -1842,6 +1846,11 @@ class VideoList extends Component {
                                   :
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
+                                {
+                                  (item.tag && (item.tag === "low_impact")) &&
+                                  <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
+                                }
+
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
                                 (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit") &&
