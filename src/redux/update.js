@@ -13,7 +13,22 @@ export const types = {
   UPDATE_DISPLAY_NAME_FAIL: "UPDATE_DISPLAY_NAME_FAIL",
   UPDATE_STATUS_LOW_IMPACT: "UPDATE_STATUS_LOW_IMPACT",
   UPDATE_STATUS_LOW_IMPACT_SUCCESS: "UPDATE_STATUS_LOW_IMPACT_SUCCESS",
+  UPDATE_PROGRAM_PROMPT_LOG: "UPDATE_PROGRAM_PROMPT_LOG",
+  UPDATE_PROGRAM_PROMPT_LOG_SUCCESS: "UPDATE_PROGRAM_PROMPT_LOG_SUCCESS",
 }
+
+export const updateProgramPromptLog = (
+  user_id,
+  log_name, // 4 weeks prompt, renew prompt
+  log_value // level up, not level up
+) => ({
+  type: types.UPDATE_PROGRAM_PROMPT_LOG,
+  payload: {
+    user_id,
+    log_name,
+    log_value
+  }
+});
 
 export const updateStatusLowImpact = (
   user_id,
@@ -117,6 +132,24 @@ const updateStatusLowImpactSagaAsync = async (
     return { error, messsage: error.message };
   }
 }
+const updateProgramPromptLogSagaAsync = async (
+  user_id,
+  log_name,
+  log_value
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/updateProgramPromptLog", {
+      body: {
+        user_id,
+        log_name,
+        log_value
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 /* END OF SAGA Section */
 
@@ -212,6 +245,28 @@ function* updateStatusLowImpactSaga({ payload }) {
   }
 }
 
+function* updateProgramPromptLogSaga({ payload }) {
+  const {
+    user_id,
+    log_name,
+    log_value
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      updateProgramPromptLogSagaAsync,
+      user_id,
+      log_name,
+      log_value
+    );
+    yield put({
+      type: types.UPDATE_PROGRAM_PROMPT_LOG_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from updateProgramPromptLogSaga :", error);
+  }
+}
+
 export function* watchupdateFittoPlant() {
   yield takeEvery(types.UPDATE_FITTO_PLANT, updateFittoPlantSaga)
 }
@@ -225,12 +280,17 @@ export function* watchUpdateStatusLowImpact() {
   yield takeEvery(types.UPDATE_STATUS_LOW_IMPACT, updateStatusLowImpactSaga)
 }
 
+export function* watchUpdateProgramPromptLog() {
+  yield takeEvery(types.UPDATE_PROGRAM_PROMPT_LOG, updateProgramPromptLogSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchupdateFittoPlant),
     fork(watchupdateAddress),
     fork(watchupdateDisplayName),
     fork(watchUpdateStatusLowImpact),
+    fork(watchUpdateProgramPromptLog),
   ]);
 }
 
@@ -241,10 +301,21 @@ const INIT_STATE = {
   statusAddress: "default",
   statusUpdateDisplayName: "default",
   statusUpdateLowImpact: "default",
+  statusUpdateProgramPromptLog: "default",
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.UPDATE_PROGRAM_PROMPT_LOG:
+      return {
+        ...state,
+        statusUpdateProgramPromptLog: "loading"
+      }
+    case types.UPDATE_PROGRAM_PROMPT_LOG_SUCCESS:
+      return {
+        ...state,
+        statusUpdateProgramPromptLog: "success"
+      }
     case types.UPDATE_STATUS_LOW_IMPACT:
       return {
         ...state,

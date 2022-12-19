@@ -10,9 +10,19 @@ export const types = {
   GET_CHECK_DISPAY_NAME_SUCCESS: "GET_CHECK_DISPAY_NAME_SUCCESS",
   GET_MEMBER_INFO: "GET_MEMBER_INFO",
   GET_MEMBER_INFO_SUCCESS: "GET_MEMBER_INFO_SUCCESS",
+  CHECK_4WEEKS_PROMPT: "CHECK_4WEEKS_PROMPT",
+  CHECK_4WEEKS_PROMPT_SUCCESS: "CHECK_4WEEKS_PROMPT_SUCCESS"
 }
 
 /* END OF ACTION Section */
+
+export const check4WeeksPrompt = (user_id) => ({
+  type: types.CHECK_4WEEKS_PROMPT,
+  payload: {
+    user_id
+  }
+})
+
 export const getCheckDisplayName = (display_name) => ({
   type: types.GET_CHECK_DISPAY_NAME,
   payload: {
@@ -80,6 +90,21 @@ const getMemberInfoSagaAsync = async (
   }
 }
 
+const check4WeeksPromptSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/check4WeeksPrompt", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* getAllMemberStayFitSaga({ payload }) {
   const {
     fb_group
@@ -116,6 +141,27 @@ function* getMemberInfoSagaAsyncSaga({ payload }) {
     })
   } catch (error) {
     console.log("error from getMemberInfoSagaAsyncSaga :", error);
+  }
+
+}
+
+function* check4WeeksPromptSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      check4WeeksPromptSagaAsync,
+      user_id
+    );
+
+    yield put({
+      type: types.CHECK_4WEEKS_PROMPT_SUCCESS,
+      payload: apiResult.results
+    })
+  } catch (error) {
+    console.log("error from check4WeeksPromptSaga :", error);
   }
 
 }
@@ -158,12 +204,16 @@ export function* watchGetAllMemberStayFitSaga() {
   yield takeEvery(types.GET_ALL_MEMBER_STAY_FIT, getAllMemberStayFitSaga)
 }
 
+export function* watchCheck4WeeksPromptSaga() {
+  yield takeEvery(types.CHECK_4WEEKS_PROMPT, check4WeeksPromptSaga)
+}
 
 export function* saga() {
   yield all([
     fork(watchGetCheckDisplayNameSaga),
     fork(watchGetMemberInfoSagaAsyncSaga),
     fork(watchGetAllMemberStayFitSaga),
+    fork(watchCheck4WeeksPromptSaga),
   ]);
 }
 
@@ -176,6 +226,8 @@ const INIT_STATE = {
   statusGetMemberInfo: "default",
   member_info: null,
   allMemberStayFit: null,
+  statusCheck4WeeksPrompt: false,
+  statusGetCheck4WeeksPrompt: "default",
 };
 
 
@@ -185,6 +237,17 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         allMemberStayFit: action.payload.allMemberStayFit
+      }
+    case types.CHECK_4WEEKS_PROMPT:
+      return {
+        ...state,
+        statusGetCheck4WeeksPrompt: "loading"
+      }
+    case types.CHECK_4WEEKS_PROMPT_SUCCESS:
+      return {
+        ...state,
+        statusCheck4WeeksPrompt: action.payload.statusCheck4WeeksPrompt,
+        statusGetCheck4WeeksPrompt: "success"
       }
     case types.GET_MEMBER_INFO:
       return {

@@ -5,8 +5,8 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth";
-import { getCheckDisplayName, getMemberInfo } from "../redux/get";
-import { updateDisplayName } from "../redux/update";
+import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt } from "../redux/get";
+import { updateDisplayName, updateProgramPromptLog } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
@@ -79,7 +79,8 @@ class VideoList extends Component {
   async componentDidMount() {
     const { user } = this.props;
     if (user) {
-      this.props.getMemberInfo(user.user_id)
+      this.props.getMemberInfo(user.user_id);
+      this.props.check4WeeksPrompt(user.user_id);
     }
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
@@ -1376,9 +1377,17 @@ class VideoList extends Component {
 
   }
 
-
-
-
+  render4WeeksPrompt() { //4WeeksPrompt จะแสดงเมื่อออกกำลังกายด้วย BFR program เพิ่งครบ 4 weeks เป็นครั้งแรก
+    const { user } = this.props;
+    return (
+      <div>
+        <h1>ยินดีด้วยคุณผ่านโปรแกรม beginner</h1>
+        <h1>สนใจอัพเวลไหม</h1>
+        <button onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'not level up')}>ไม่สนใจ</button>
+        <button onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'level up')}>สนใจ</button>
+      </div>
+    )
+  }
 
   renderOtherAttribute() {
     const { otherAttributesPage } = this.state;
@@ -1949,7 +1958,7 @@ class VideoList extends Component {
 
   render() {
     const { editVDO_click, lastWeekVDO_click } = this.state;
-    const { dailyWeighChallenge } = this.props;
+    const { dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt } = this.props;
     return (
       < div >
         {
@@ -1985,7 +1994,13 @@ class VideoList extends Component {
                       :
                       this.renderVideoList()
                   :
-                  this.renderOtherAttribute()
+                  (statusGetCheck4WeeksPrompt !== 'loading') &&
+                  (
+                    (statusCheck4WeeksPrompt) ?
+                      this.render4WeeksPrompt()
+                      :
+                      this.renderOtherAttribute()
+                  )
               }
             </div>
           </div>
@@ -1997,14 +2012,14 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) => {
   const { user } = authUser;
-  const { statusDisplayName, statusGetMemberInfo, member_info } = get;
-  const { statusUpdateDisplayName } = update;
+  const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt } = get;
+  const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
   const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info };
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt };
 
 export default connect(
   mapStateToProps,
