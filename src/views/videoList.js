@@ -5,7 +5,7 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth";
-import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt } from "../redux/get";
+import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
@@ -82,6 +82,7 @@ class VideoList extends Component {
     if (user) {
       this.props.getMemberInfo(user.user_id);
       this.props.check4WeeksPrompt(user.user_id);
+      this.props.checkRenewPrompt(user.user_id);
     }
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
@@ -92,14 +93,7 @@ class VideoList extends Component {
         this.props.user.expire_date,
         this.props.user.offset
       );
-      this.props.videoListForUserLastWeek(
-        this.props.user.user_id,
-        // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
-        (this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight),
-        this.props.user.start_date,
-        this.props.user.expire_date,
-        this.props.user.offset
-      );
+
       if (this.props.statusVideoList !== "no_video") {
         this.addEventToVideo();
       }
@@ -122,9 +116,29 @@ class VideoList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { displayName, displayName2, displayName3 } = this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusCheckRenewPrompt } = this.props;
+    if (prevProps.statusGetCheckRenewPrompt !== statusGetCheckRenewPrompt && statusGetCheckRenewPrompt === "success") {
+      if (!statusCheckRenewPrompt) { //ย้าย videoListForUserLastWeek จาก componentDidMount มาไว้ตรงนี้เพราะไปสร้าง week ย้อนหลังทุกครั้ง ทำให้ checkRenewPrompt ผิดพลาด
+        this.props.videoListForUserLastWeek(
+          this.props.user.user_id,
+          // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+          (this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight),
+          this.props.user.start_date,
+          this.props.user.expire_date,
+          this.props.user.offset
+        );
+      }
+    }
     if (prevProps.statusUpdateProgramPromptLog !== statusUpdateProgramPromptLog && statusUpdateProgramPromptLog === "success") {
       this.setState({ step4WeeksPrompt: 4 })
+      this.props.videoListForUserLastWeek(
+        this.props.user.user_id,
+        // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
+        (this.isJson(user.other_attributes) ? user.other_attributes.weight : JSON.parse(user.other_attributes).weight),
+        this.props.user.start_date,
+        this.props.user.expire_date,
+        this.props.user.offset
+      );
     }
     if (prevProps.statusPostDailyWeighChallenge !== statusPostDailyWeighChallenge && statusPostDailyWeighChallenge === "success") {
       this.props.history.push('/challenges');
@@ -1382,7 +1396,7 @@ class VideoList extends Component {
   }
 
   render4WeeksPrompt() { //4WeeksPrompt จะแสดงเมื่อออกกำลังกายด้วย BFR program เพิ่งครบ 4 weeks เป็นครั้งแรก
-    const { user, statusUpdateProgramPromptLog } = this.props;
+    const { user, statusUpdateProgramPromptLog, statusCheckRenewPrompt } = this.props;
     const { step4WeeksPrompt } = this.state;
     return (
       <div style={{ display: "flex", justifyContent: "center", paddingTop: 100, paddingBottom: 100, }}>
@@ -1393,7 +1407,10 @@ class VideoList extends Component {
               <h1 style={{ color: "#F45197" }}>ยินดีด้วย!</h1>
               <h1 style={{ color: "#F45197" }}>คุณได้ผ่านโปรแกรม "Beginner"</h1>
               <h1 >สำหรับปูพื้นฐานเตรียมพร้อมร่างกาย</h1>
-              <h1 >ครบ 4 สัปดาห์แล้วค่ะ</h1>
+              {
+                (!statusCheckRenewPrompt) &&
+                <h1 >ครบ 4 สัปดาห์แล้วค่ะ</h1>
+              }
               <br></br>
               <span  >ตอนนี้คุณพร้อมแล้ว! ที่จะติดสปีดไปกับเบเบ้</span>
               <br></br>
@@ -1459,7 +1476,7 @@ class VideoList extends Component {
             (statusUpdateProgramPromptLog !== "loading") &&
             <div className="row" style={{ justifyContent: "center" }}>
               <button
-                onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'not level up')}
+                onClick={() => this.props.updateProgramPromptLog(user.user_id, (!statusCheckRenewPrompt) ? '4 weeks prompt' : 'renew prompt', 'not level up')}
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", color: "#F45197" }}
                 className="mt-3"
               >{(step4WeeksPrompt < 3) ? "ไม่สนใจ, ขอใช้โปรแกรมเดิม" : "ยังไม่แน่ใจ, ขอใช้โปรแกรมเดิม"}</button>
@@ -1469,7 +1486,7 @@ class VideoList extends Component {
                   (step4WeeksPrompt < 3) ?
                     () => this.setState({ step4WeeksPrompt: step4WeeksPrompt + 1 })
                     :
-                    () => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'level up')
+                    () => this.props.updateProgramPromptLog(user.user_id, (!statusCheckRenewPrompt) ? '4 weeks prompt' : 'renew prompt', 'level up')
                 }
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", backgroundColor: "#F45197", color: "white" }}
                 className="mt-3"
@@ -2050,7 +2067,7 @@ class VideoList extends Component {
 
   render() {
     const { editVDO_click, lastWeekVDO_click, step4WeeksPrompt } = this.state;
-    const { dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt } = this.props;
+    const { dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = this.props;
     return (
       < div >
         {
@@ -2086,9 +2103,9 @@ class VideoList extends Component {
                       :
                       this.renderVideoList()
                   :
-                  (statusGetCheck4WeeksPrompt !== 'loading') &&
+                  ((statusGetCheck4WeeksPrompt !== 'loading') && (statusGetCheckRenewPrompt !== 'loading')) &&
                   (
-                    ((statusCheck4WeeksPrompt) && (step4WeeksPrompt < 4)) ?
+                    ((statusCheck4WeeksPrompt || statusCheckRenewPrompt) && (step4WeeksPrompt < 4)) ? //ปัจจุบัน (4weeks, renew) Prompt ใช้ render เดียวกัน
                       this.render4WeeksPrompt()
                       :
                       this.renderOtherAttribute()
@@ -2104,14 +2121,14 @@ class VideoList extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) => {
   const { user } = authUser;
-  const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt } = get;
+  const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = get;
   const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
   const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog };
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt };
 
 export default connect(
   mapStateToProps,
