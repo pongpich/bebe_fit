@@ -50,6 +50,7 @@ class VideoList extends Component {
       displayName3: null,
       validation_displayname: false,
       checkDisplayName: null,
+      step4WeeksPrompt: 1,
     };
 
     this.prevPlayTime = 0;
@@ -121,7 +122,10 @@ class VideoList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { displayName, displayName2, displayName3 } = this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog } = this.props;
+    if (prevProps.statusUpdateProgramPromptLog !== statusUpdateProgramPromptLog && statusUpdateProgramPromptLog === "success") {
+      this.setState({ step4WeeksPrompt: 4 })
+    }
     if (prevProps.statusPostDailyWeighChallenge !== statusPostDailyWeighChallenge && statusPostDailyWeighChallenge === "success") {
       this.props.history.push('/challenges');
     }
@@ -1378,13 +1382,101 @@ class VideoList extends Component {
   }
 
   render4WeeksPrompt() { //4WeeksPrompt จะแสดงเมื่อออกกำลังกายด้วย BFR program เพิ่งครบ 4 weeks เป็นครั้งแรก
-    const { user } = this.props;
+    const { user, statusUpdateProgramPromptLog } = this.props;
+    const { step4WeeksPrompt } = this.state;
     return (
-      <div>
-        <h1>ยินดีด้วยคุณผ่านโปรแกรม beginner</h1>
-        <h1>สนใจอัพเวลไหม</h1>
-        <button onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'not level up')}>ไม่สนใจ</button>
-        <button onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'level up')}>สนใจ</button>
+      <div style={{ display: "flex", justifyContent: "center", paddingTop: 100, paddingBottom: 100, }}>
+        <div style={{ backgroundColor: "white", borderRadius: 8, padding: 30, paddingTop: 60, paddingBottom: 60, textAlign: "center", width: "fit-content" }}>
+          {
+            (step4WeeksPrompt === 1) &&
+            <div>
+              <h1 style={{ color: "#F45197" }}>ยินดีด้วย!</h1>
+              <h1 style={{ color: "#F45197" }}>คุณได้ผ่านโปรแกรม "Beginner"</h1>
+              <h1 >สำหรับปูพื้นฐานเตรียมพร้อมร่างกาย</h1>
+              <h1 >ครบ 4 สัปดาห์แล้วค่ะ</h1>
+              <br></br>
+              <span  >ตอนนี้คุณพร้อมแล้ว! ที่จะติดสปีดไปกับเบเบ้</span>
+              <br></br>
+              <span >ด้วยการอัปเกรดโปรแกรมเป็น “Standard” เพิ่มเลเวลความฟิต</span>
+              <br></br>
+              <span >และความท้าทายให้กับร่างกาย เพื่อผลลัพธ์ที่ดีกว่าได้แล้ว</span>
+              <br></br>
+              <span className="font-weight-bold" style={{ lineHeight: 4 }}>คุณต้องการที่จะปรับโปรแกรมหรือไม่ ?</span>
+              <br></br>
+            </div>
+          }
+          {
+            (step4WeeksPrompt === 2) &&
+            <div>
+              <h1 style={{ color: "#F45197" }}>อัปเกรดความฟิต ปั้นหุ่นเฟิร์ม!</h1>
+              <h1 style={{ color: "#F45197" }}>พร้อมเบิร์นขั้นสุด!</h1>
+              <h1 >สนุกไปกับโปรแกรม “Standard.”</h1>
+              <div style={{ textAlign: "left" }}>
+                <br></br>
+                <span  >โปรแกรมนี้ จะเป็นโปรแกรมที่ถูกออกแบบมาพิเศษ</span>
+                <br></br>
+                <span >เพื่อพาคุณไปสู่ผลลัพธ์ แห่งการเปลี่ยนแปลง ที่ดีที่สุดของคุณ</span>
+                <br></br>
+                <span >โดยจะมีการปรับโปรแกรม เป็นรูปแบบการฝึกแบบ Circuit Training</span>
+                <br></br>
+                <span >ที่ประกอบไปด้วย Body Weight Training และ Cardio</span>
+                <br></br>
+                <span >ที่มีความเข้มข้นสูง (HIIT) เพื่อเพิ่มการเผาผลาญ พลังงาน</span>
+                <br></br>
+                <span >พร้อมสร้างกล้ามเนื้อแบบ 2IN1 !!!</span>
+                <br></br> <br></br>
+                <span >โปรแกรมจะถูกจัดให้ฝึกเป็น</span>
+                <br></br>
+                <span > • 4 วัน/สัปดาห์</span>
+                <br></br>
+                <span > • ระยะเวลาการฝึก ประมาณ 60 นาทีต่อวัน</span>
+                <br></br><br></br>
+                <span className="font-weight-bold">เหมาะสำหรับผู้ที่ต้องการปลดล็อกขีดจำกัด</span>
+                <br></br>
+                <span className="font-weight-bold">เพิ่มความท้าทายสร้างความแข็งแรงให้กับร่างกาย สู่ผลลัพธ์ที่ดีที่สุด!</span>
+                <br></br>
+                <span className="font-weight-bold" style={{ lineHeight: 4 }}>คุณต้องการที่จะปรับโปรแกรมหรือไม่ ?</span>
+                <br></br>
+              </div>
+            </div>
+          }
+          {
+            (step4WeeksPrompt === 3) &&
+            <div className="mb-3">
+              <h1 >หมายเหตุ</h1>
+              <br></br>
+              <span  >เมื่อทำการอัปเกรดโปรแกรมเป็น “Standard”</span>
+              <br></br>
+              <span >แล้วจะไม่สามารถย้อนกลับไปเป็นโปรแกรม “Beginner” ได้นะคะ</span>
+              <br></br>
+              <span className="font-weight-bold">แต่ถ้าคุณ… พร้อมที่จะอัปเกรดเลเวลความฟิต! เบิร์นขั้นสุด!</span>
+              <br></br>
+              <span className="font-weight-bold">และสนุกไปกับเบเบ้แล้ว คลิ้กที่ปุ่ม “ยืนยัน”เพื่ออัปเกรดโปรแกรมได้เลยค่า!!</span>
+              <br></br>
+            </div>
+          }
+          {
+            (statusUpdateProgramPromptLog !== "loading") &&
+            <div className="row" style={{ justifyContent: "center" }}>
+              <button
+                onClick={() => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'not level up')}
+                style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", color: "#F45197" }}
+                className="mt-3"
+              >{(step4WeeksPrompt < 3) ? "ไม่สนใจ, ขอใช้โปรแกรมเดิม" : "ยังไม่แน่ใจ, ขอใช้โปรแกรมเดิม"}</button>
+              <div className="ml-2 mr-2"></div>
+              <button
+                onClick={
+                  (step4WeeksPrompt < 3) ?
+                    () => this.setState({ step4WeeksPrompt: step4WeeksPrompt + 1 })
+                    :
+                    () => this.props.updateProgramPromptLog(user.user_id, '4 weeks prompt', 'level up')
+                }
+                style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", backgroundColor: "#F45197", color: "white" }}
+                className="mt-3"
+              >{(step4WeeksPrompt < 3) ? "สนใจ, อ่านรายละเอียด" : "ยืนยัน, ต้องการอัปเกรดโปรแกรม"}</button>
+            </div>
+          }
+        </div>
       </div>
     )
   }
@@ -1957,7 +2049,7 @@ class VideoList extends Component {
   }
 
   render() {
-    const { editVDO_click, lastWeekVDO_click } = this.state;
+    const { editVDO_click, lastWeekVDO_click, step4WeeksPrompt } = this.state;
     const { dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt } = this.props;
     return (
       < div >
@@ -1996,7 +2088,7 @@ class VideoList extends Component {
                   :
                   (statusGetCheck4WeeksPrompt !== 'loading') &&
                   (
-                    (statusCheck4WeeksPrompt) ?
+                    ((statusCheck4WeeksPrompt) && (step4WeeksPrompt < 4)) ?
                       this.render4WeeksPrompt()
                       :
                       this.renderOtherAttribute()
