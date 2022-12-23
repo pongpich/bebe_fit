@@ -1,3 +1,11 @@
+import moment from 'moment';
+
+export const calculateWeekInProgram = (startDate, endDate) => {
+  let startDateMoment = moment(startDate).startOf('isoWeek');
+  let endDateMoment = endDate ? moment(endDate) : moment();
+  return endDateMoment.diff(startDateMoment, 'week') + 1
+}
+
 export function str_pad_left(string, pad, length) {
   return (new Array(length + 1).join(pad) + string).slice(-length);
 }

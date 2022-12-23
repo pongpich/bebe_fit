@@ -10,8 +10,9 @@ import { updateDisplayName, updateProgramPromptLog } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
 import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
-import { convertSecondsToMinutes, convertFormatTime } from "../helpers/utils";
+import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
+import moment from 'moment';
 
 class VideoList extends Component {
   constructor(props) {
@@ -116,9 +117,12 @@ class VideoList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { displayName, displayName2, displayName3 } = this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusCheckRenewPrompt } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusCheckRenewPrompt, member_info } = this.props;
+    const currentDate = `${moment(new Date()).format('YYYY-MM-DD')}`;
+    const startDate = `${moment(member_info && member_info.start_date).format('YYYY-MM-DD')} 00:00:00`;
+    const currentWeek = calculateWeekInProgram(startDate, currentDate);
     if (prevProps.statusGetCheckRenewPrompt !== statusGetCheckRenewPrompt && statusGetCheckRenewPrompt === "success") {
-      if (!statusCheckRenewPrompt) { //ย้าย videoListForUserLastWeek จาก componentDidMount มาไว้ตรงนี้เพราะไปสร้าง week ย้อนหลังทุกครั้ง ทำให้ checkRenewPrompt ผิดพลาด
+      if (!statusCheckRenewPrompt && currentWeek > 1 && (user && user.other_attributes)) { //ย้าย videoListForUserLastWeek จาก componentDidMount มาไว้ตรงนี้เพราะไปสร้าง week ย้อนหลังทุกครั้ง ทำให้ checkRenewPrompt ผิดพลาด
         this.props.videoListForUserLastWeek(
           this.props.user.user_id,
           // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
@@ -944,6 +948,10 @@ class VideoList extends Component {
         <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
           <div className="mb-3 col-lg-12  col-md-12 col-12">
             <center>
+              {/*  <h2 className="mt-5" style={{ color: "#F45197" }}><b>กรอกข้อมูลเบื้องต้น</b></h2>
+              <h2 className="mb-4" style={{ color: "#F45197" }}><b>เพื่อเริ่มต้นการใช้งาน</b></h2>
+              <h5>การกรอกข้อมูลจะทำให้เราสามารถออกแบบ</h5>
+              <h5>โปรแกรมออกกำลังกายให้เหมาะสมกับคุณได้ดียิ่งขึ้น</h5> */}
               <h2 className="mt-5 mb-4" style={{ color: "#F45197" }}><b>ยินดีต้อนรับสู่ Bebe Fit Routine</b></h2>
               <h5>กรุณากรอกข้อมูลด้านล่างเพื่อที่คุณจะได้รับประสบการณ์</h5>
               <h5>โปรแกรมออกกำลังกายสำหรับคุณโดยเฉพาะ</h5>
@@ -955,7 +963,7 @@ class VideoList extends Component {
               {
                 (member_info && !member_info.display_name) &&
                 <>
-                  <label for="age" className="bmd-label-floating" style={{ color: "#F45197" }}>ชื่อที่ใช้แสดงในระบบ</label>
+                  <label for="age" className="bmd-label-floating" style={{ color: "#000000" }}>ชื่อที่ใช้แสดงในระบบ</label>
                   <input
                     type="text"
                     className="form-control"
@@ -993,9 +1001,33 @@ class VideoList extends Component {
             }
           </div>
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
-            <p style={{ color: "#F45197" }}>เพศ</p>
-            <div className="form-check" onChange={this.onChangeValue}>
-              <label className="form-check-label mb-3 mr-4">
+            <label style={{ color: "#000000" }}>เพศ</label>
+            <div style={{ display: "flex", justifyContent: "flex-start" }} onChange={this.onChangeValue}>
+              <div>
+                <input
+                  type="radio"
+                  value="male"
+                  name="sex"
+                  checked={this.state.sex === "male"}
+                  onChange={this.onChange}
+                  className="mr-3"
+                  style={{ height: 25, width: 25, verticalAlign: "middle" }}
+                />
+                <label>ชาย</label>
+              </div>
+              <div>
+                <input
+                  type="radio"
+                  value="female"
+                  name="sex"
+                  checked={this.state.sex === "female"}
+                  onChange={this.onChange}
+                  className="mr-3 ml-3"
+                  style={{ height: 25, width: 25, verticalAlign: "middle" }}
+                />
+                <label>หญิง</label>
+              </div>
+              {/* <label className="form-check-label mb-3 mr-4">
                 <input
                   className="form-check-input"
                   type="radio"
@@ -1003,12 +1035,13 @@ class VideoList extends Component {
                   name="sex"
                   checked={this.state.sex === "male"}
                   onChange={this.onChange}
+                  style={{ height: 25, width: 25, verticalAlign: "middle" }}
                 /> ชาย
                           <span className="circle">
                   <span className="check"></span>
                 </span>
-              </label>
-              <label className="form-check-label" style={{ marginLeft: "20px" }}>
+              </label> */}
+              {/* <label className="form-check-label" style={{ marginLeft: "20px" }}>
                 <input
                   className="form-check-input"
                   type="radio"
@@ -1016,17 +1049,18 @@ class VideoList extends Component {
                   name="sex"
                   checked={this.state.sex === "female"}
                   onChange={this.onChange}
+                  style={{ height: 25, width: 25, verticalAlign: "middle" }}
                 /> หญิง
                           <span className="circle">
                   <span className="check"></span>
                 </span>
-              </label>
+              </label> */}
             </div>
           </div>
 
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="form-group">
-              <label for="age" className="bmd-label-floating" style={{ color: "#F45197" }}>อายุ</label>
+              <label for="age" className="bmd-label-floating" style={{ color: "#000000" }}>อายุ</label>
               <input
                 type="number"
                 className="form-control"
@@ -1048,7 +1082,7 @@ class VideoList extends Component {
           </div>
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="form-group">
-              <label for="weight" className="bmd-label-floating" style={{ color: "#F45197" }}>น้ำหนัก (กก.)</label>
+              <label for="weight" className="bmd-label-floating" style={{ color: "#000000" }}>น้ำหนัก (กก.)</label>
               <input
                 type="number"
                 className="form-control"
@@ -1066,7 +1100,7 @@ class VideoList extends Component {
           </div>
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="form-group">
-              <label for="height" className="bmd-label-floating" style={{ color: "#F45197" }}>ส่วนสูง (ซม.)</label>
+              <label for="height" className="bmd-label-floating" style={{ color: "#000000" }}>ส่วนสูง (ซม.)</label>
               <input
                 type="number"
                 className="form-control"
@@ -1097,7 +1131,7 @@ class VideoList extends Component {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     )
   }
 
