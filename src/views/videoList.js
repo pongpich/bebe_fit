@@ -119,11 +119,8 @@ class VideoList extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { displayName, displayName2, displayName3 } = this.state;
     const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusCheckRenewPrompt, member_info } = this.props;
-    const currentDate = `${moment(new Date()).format('YYYY-MM-DD')}`;
-    const startDate = `${moment(member_info && member_info.start_date).format('YYYY-MM-DD')} 00:00:00`;
-    const currentWeek = calculateWeekInProgram(startDate, currentDate);
     if (prevProps.statusGetCheckRenewPrompt !== statusGetCheckRenewPrompt && statusGetCheckRenewPrompt === "success") {
-      if (!statusCheckRenewPrompt && currentWeek > 1 && (user && user.other_attributes)) { //ย้าย videoListForUserLastWeek จาก componentDidMount มาไว้ตรงนี้เพราะไปสร้าง week ย้อนหลังทุกครั้ง ทำให้ checkRenewPrompt ผิดพลาด
+      if (!statusCheckRenewPrompt && (user && user.other_attributes)) { //ย้าย videoListForUserLastWeek จาก componentDidMount มาไว้ตรงนี้เพราะไปสร้าง week ย้อนหลังทุกครั้ง ทำให้ checkRenewPrompt ผิดพลาด
         this.props.videoListForUserLastWeek(
           this.props.user.user_id,
           // this.props.user.other_attributes = "{"age": 32, "hip": 41, "sex": "female", "chest": 38, "waist": 31, "height": 175, "weight": 79}"
