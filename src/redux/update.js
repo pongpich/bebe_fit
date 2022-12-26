@@ -15,7 +15,18 @@ export const types = {
   UPDATE_STATUS_LOW_IMPACT_SUCCESS: "UPDATE_STATUS_LOW_IMPACT_SUCCESS",
   UPDATE_PROGRAM_PROMPT_LOG: "UPDATE_PROGRAM_PROMPT_LOG",
   UPDATE_PROGRAM_PROMPT_LOG_SUCCESS: "UPDATE_PROGRAM_PROMPT_LOG_SUCCESS",
+  CHECK_PROGRAM_LEVEL: "CHECK_PROGRAM_LEVEL",
+  CHECK_PROGRAM_LEVEL_SUCCESS: "CHECK_PROGRAM_LEVEL_SUCCESS",
 }
+
+export const checkProgramLevel = (
+  user_id
+) => ({
+  type: types.CHECK_PROGRAM_LEVEL,
+  payload: {
+    user_id
+  }
+})
 
 export const updateProgramPromptLog = (
   user_id,
@@ -109,6 +120,20 @@ const updateDisplayNameSagaAsync = async (
       body: {
         user_id,
         display_name
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+const checkProgramLevelSagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/checkProgramLevel", {
+      body: {
+        user_id
       }
     });
     return apiResult
@@ -225,6 +250,25 @@ function* updateDisplayNameSaga({ payload }) {
   }
 }
 
+function* checkProgramLevelSaga({ payload }) {
+  const {
+    user_id,
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      checkProgramLevelSagaAsync,
+      user_id,
+    );
+    yield put({
+      type: types.CHECK_PROGRAM_LEVEL_SUCCESS
+    })
+
+  } catch (error) {
+    console.log("error from checkProgramLevelSaga :", error);
+  }
+}
+
 function* updateStatusLowImpactSaga({ payload }) {
   const {
     user_id,
@@ -284,6 +328,10 @@ export function* watchUpdateProgramPromptLog() {
   yield takeEvery(types.UPDATE_PROGRAM_PROMPT_LOG, updateProgramPromptLogSaga)
 }
 
+export function* watchCheckProgramLevel() {
+  yield takeEvery(types.CHECK_PROGRAM_LEVEL, checkProgramLevelSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchupdateFittoPlant),
@@ -291,6 +339,7 @@ export function* saga() {
     fork(watchupdateDisplayName),
     fork(watchUpdateStatusLowImpact),
     fork(watchUpdateProgramPromptLog),
+    fork(watchCheckProgramLevel),
   ]);
 }
 
@@ -306,6 +355,14 @@ const INIT_STATE = {
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.CHECK_PROGRAM_LEVEL:
+      return {
+        ...state
+      }
+    case types.CHECK_PROGRAM_LEVEL_SUCCESS:
+      return {
+        ...state
+      }
     case types.UPDATE_PROGRAM_PROMPT_LOG:
       return {
         ...state,
