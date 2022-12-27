@@ -669,7 +669,7 @@ class VideoList extends Component {
               <div className="row mt-4 body_part_header" >
 
                 { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
-                  ((this.props.videos[0]) && this.props.videos[0].category !== "Main Circuit Combo" && this.props.videos[0].category !== "Main Circuit") &&
+                  ((this.props.videos[0]) && this.props.videos[0].category !== "Main Circuit Combo" && this.props.videos[0].category !== "Main Circuit" && this.props.videos[0].category !== "Challenge") &&
                   <img className="body_part" src={`../assets/img/body_part/${this.props.videos[0].category.toLowerCase().split(" ").join("")}.png`}></img>
                 }
                 {
@@ -882,7 +882,7 @@ class VideoList extends Component {
                                 }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
-                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit") &&
+                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
                                 <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
                               }
                               {
@@ -1758,7 +1758,7 @@ class VideoList extends Component {
                                 }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
-                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit") &&
+                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
                                 <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
                               }
                               {
@@ -2002,7 +2002,7 @@ class VideoList extends Component {
                                 }
                               </div>
                               { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
-                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit") &&
+                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
                                 <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
                               }
                               {
