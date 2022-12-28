@@ -1,8 +1,8 @@
 .header {
-  padding: 100px;
+  padding: 130px;
   text-align: center;
-  background: #EEB2CA;
-  background-image: url("./assets/img/bgintro_lg.png");
+  background: #F0EEF3;
+  background-image: url("./assets/img/bgintro2_lg.png");
   background-repeat: no-repeat;
   background-size: cover;
   color: #F45197;
@@ -12,13 +12,13 @@
   font-size: 18px; 
   cursor: pointer; 
   float: left; 
-  margin-top: 30px; 
+  margin-top: 70px; 
   color: black; 
 }
 
 @media (max-width: 769px) {
   .header {
-    background-image: url("./assets/img/bgintro_md.png");
+    background-image: url("./assets/img/bgintro2_lg.png");
   }
   .watch_introduction {
     margin-top: 40px;
@@ -26,14 +26,15 @@
   }
 }
 
-@media (max-width: 376px) {
+@media (max-width: 450px) {
   .header {
-    background-image: url("./assets/img/bgintro_sm.png");
+    background-image: url("./assets/img/bgintro2_sm.png");
+    background-size: 100% 100%;
   }
   .watch_introduction {
     margin-top: 40px;
     margin-left: -60px;
-    width: 200%;
+    width: 100%;
   }
 }
 

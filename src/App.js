@@ -125,13 +125,11 @@ class App extends Component {
   renderHeader() {
     return (
       <div className="header">
-
         <div className="popupIntroVDO" id={`popupIntroVDO`}>
           <video src={'https://player.vimeo.com/external/414645540.hd.mp4?s=d2c95abe8443336f858f4bf9243b79fee350a8d4&profile_id=174'} id="introVDO" controls controlsList="nodownload" disablePictureInPicture ></video>
           <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle()}></img>
         </div>
 
-        <h3>คอร์สออกกำลังกาย</h3>
         <div className="watch_introduction">
           <div
             onClick={() => this.toggle()}
@@ -148,7 +146,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" style={{ backgroundColor: "#F0EEF3"}}>
         {/* {this.renderTopbar()} */}
         {this.renderNavbar()}
         {this.props.user && this.renderHeader()}

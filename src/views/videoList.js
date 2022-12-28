@@ -778,10 +778,10 @@ class VideoList extends Component {
           <div className="tab-content mb-3 row" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "10px" }}>
             <div className="tab-pane fade show active col-lg-8 col-md-4 col-12" id="home" role="tabpanel" aria-labelledby="home-tab">
               <div className="mt-3">
-                {focusDay === 0 && <h5><b>DAY 1</b></h5>}
-                {focusDay === 1 && <h5><b>DAY 2</b></h5>}
-                {focusDay === 2 && <h5><b>DAY 3</b></h5>}
-                {focusDay === 3 && <h5><b>DAY 4</b></h5>}
+                {focusDay === 0 && <h5 style={{ color: "#F45197" }}><b>DAY 1</b></h5>}
+                {focusDay === 1 && <h5 style={{ color: "#F45197" }}><b>DAY 2</b></h5>}
+                {focusDay === 2 && <h5 style={{ color: "#F45197" }}><b>DAY 3</b></h5>}
+                {focusDay === 3 && <h5 style={{ color: "#F45197" }}><b>DAY 4</b></h5>}
               </div>
             </div>
             <div className="col-lg-2 col-md-4 col-6">
@@ -819,7 +819,7 @@ class VideoList extends Component {
                 <div>
                   <div className="tabletitle row mb-4">
                     {
-                      <span className="col-lg-8 col-md-6 col-12" style={{ fontSize: "16px" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                      <span className="col-lg-8 col-md-6 col-12" style={{ fontSize: "16px", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                     }
                   </div>
                 </div>
@@ -839,9 +839,9 @@ class VideoList extends Component {
                                     <i className="fa fa-refresh fa-spin fa-5x"></i>
                                   </div>
                                   :
-                                  <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
                                 :
-                                <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                                <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
@@ -946,13 +946,10 @@ class VideoList extends Component {
         <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
           <div className="mb-3 col-lg-12  col-md-12 col-12">
             <center>
-              {/*  <h2 className="mt-5" style={{ color: "#F45197" }}><b>กรอกข้อมูลเบื้องต้น</b></h2>
+              <h2 className="mt-5" style={{ color: "#F45197" }}><b>กรอกข้อมูลเบื้องต้น</b></h2>
               <h2 className="mb-4" style={{ color: "#F45197" }}><b>เพื่อเริ่มต้นการใช้งาน</b></h2>
               <h5>การกรอกข้อมูลจะทำให้เราสามารถออกแบบ</h5>
-              <h5>โปรแกรมออกกำลังกายให้เหมาะสมกับคุณได้ดียิ่งขึ้น</h5> */}
-              <h2 className="mt-5 mb-4" style={{ color: "#F45197" }}><b>ยินดีต้อนรับสู่ Bebe Fit Routine</b></h2>
-              <h5>กรุณากรอกข้อมูลด้านล่างเพื่อที่คุณจะได้รับประสบการณ์</h5>
-              <h5>โปรแกรมออกกำลังกายสำหรับคุณโดยเฉพาะ</h5>
+              <h5>โปรแกรมออกกำลังกายให้เหมาะสมกับคุณได้ดียิ่งขึ้น</h5>
             </center>
           </div>
           <div className="col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
@@ -1116,16 +1113,11 @@ class VideoList extends Component {
           </div>
           <div className="mb-5 mt-4 col-lg-8 offset-lg-2 col-md-8 offset-md-2 col-12">
             <div className="text-center">
-              <Button
-                color="danger"
+              <button
                 className="btn-shadow"
-                size="lg"
                 onClick={() => this.onUpdateBasicInfo()}
-                block
-                style={{ backgroundColor: "#F45197" }}
-              >
-                ถัดไป
-            </Button>
+                style={{ backgroundColor: "#F45197", borderColor: "#F45197", color: "white", borderRadius: "50px", width: "300px", height: "48px", padding: "0px" }}
+              >ถัดไป</button>
             </div>
           </div>
         </div>
@@ -1135,102 +1127,108 @@ class VideoList extends Component {
 
   renderBodyInfo() {
     const { statusOtherAttributes } = this.state;
+    console.log("window.innerWidth :", window.innerWidth);
     return (
-      <div className="card shadow mb-4 col-lg-6 offset-lg-3 col-md-12 col-12" style={{ borderRadius: "20px" }}>
+      <div className="card shadow" style={{ borderRadius: "8px", padding: (window.innerWidth >= 922) ? '5px 50px 5px' : '5px' }}>
         <div className="mt-5 mb-5 col-lg-12  col-md-12 col-12">
           <center>
-            <h5>กรุณาวัดสัดส่วนของคุณ</h5>
-            <h5>โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h5>
+            <h2 className="" style={{ color: "#F45197" }}><b>กรอกข้อมูลเบื้องต้น</b></h2>
+            <h2 className="mb-4" style={{ color: "#F45197" }}><b>เพื่อเริ่มต้นการใช้งาน</b></h2>
+            <h5>การกรอกข้อมูลจะทำให้เราสามารถออกแบบ</h5>
+            <h5>โปรแกรมออกกำลังกายให้เหมาะสมกับคุณได้ดียิ่งขึ้น</h5>
+            <hr></hr>
           </center>
-        </div>
-        <div className="row">
-          <div className="col-md-7 offset-md-1">
-            <div className="d-flex ">
-              {
-                (this.state.sex === "male") && <img src="../assets/img/male.png" width="100%" alt="" />
-              }
-              {
-                (this.state.sex === "female") && <img src="../assets/img/female.png" width="100%" alt="" />
-              }
-            </div>
+          <div style={{ textAlign: (window.innerWidth > 768) ? "left" : "center" }}>
+            <h5><b>สัดส่วน</b></h5>
+            <h5>กรุณาวัดสัดส่วนของคุณ โดยใช้รูปตัวอย่างเพื่อเป็นไกด์ในการวัดสัดส่วน</h5>
           </div>
+        </div>
 
-          <div className="col-md-3">
-            <div className="form-group">
-              <label for="chest" className="bmd-label-floating" style={{ color: "#F45197" }}>รอบอก (นิ้ว)</label>
-              <input
-                type="number"
-                className="form-control"
-                id="chest"
-                name="chest"
-                step=".01"
-                value={this.state.chest}
-                onChange={(event) => this.handleChange(event)} />
+        <div className="row">
+          <div className="col-lg-12  col-md-12 col-12 d-flex" style={{ justifyContent: "space-evenly", flexWrap: "wrap", alignItems: "center" }}>
+
+            <div className="mb-2">
+              {
+                <img src="../assets/img/male2.png" width="314" alt="" />
+              }
             </div>
-            {
-              (statusOtherAttributes === "fail" && this.state.chest === "") &&
-              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-            }
-            <div className="form-group">
-              <label for="waist" className="bmd-label-floating" style={{ color: "#F45197" }}>รอบเอว (นิ้ว)</label>
-              <input
-                type="number"
-                className="form-control"
-                id="waist"
-                name="waist"
-                step=".01"
-                value={this.state.waist}
-                onChange={(event) => this.handleChange(event)}
-              />
+            <div className="mb-2">
+              {
+                <img src="../assets/img/female2.png" width="314" alt="" />
+              }
             </div>
-            {
-              (statusOtherAttributes === "fail" && this.state.waist === "") &&
-              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-            }
-            <div className="form-group">
-              <label for="hip" className="bmd-label-floating" style={{ color: "#F45197" }}>สะโพก (นิ้ว)</label>
-              <input
-                type="number"
-                className="form-control"
-                id="hip"
-                name="hip"
-                step=".01"
-                value={this.state.hip} onChange={(event) => this.handleChange(event)}
-              />
+
+            <div className="">
+              <div className="form-group">
+                <label for="chest" className="bmd-label-floating" style={{ color: "#00000" }}>รอบอก (นิ้ว)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="chest"
+                  name="chest"
+                  step=".01"
+                  value={this.state.chest}
+                  onChange={(event) => this.handleChange(event)} />
+              </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.chest === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
+              <div className="form-group">
+                <label for="waist" className="bmd-label-floating" style={{ color: "#00000" }}>รอบเอว (นิ้ว)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="waist"
+                  name="waist"
+                  step=".01"
+                  value={this.state.waist}
+                  onChange={(event) => this.handleChange(event)}
+                />
+              </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.waist === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
+              <div className="form-group">
+                <label for="hip" className="bmd-label-floating" style={{ color: "#00000" }}>สะโพก (นิ้ว)</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="hip"
+                  name="hip"
+                  step=".01"
+                  value={this.state.hip} onChange={(event) => this.handleChange(event)}
+                />
+              </div>
+              {
+                (statusOtherAttributes === "fail" && this.state.hip === "") &&
+                <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
+              }
             </div>
-            {
-              (statusOtherAttributes === "fail" && this.state.hip === "") &&
-              <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>กรุณากรอกข้อมูล</h6></small>
-            }
           </div>
         </div>
 
         <div className="space-70 mb-5"></div>
         <div className="form-group mb-5">
           <div className="text-center">
-            <div className="row">
-              <div className="col-md-5 offset-md-1">
-                <Button
-                  color="danger"
-                  className="btn-shadow"
-                  size="lg"
-                  onClick={() => this.setState({ otherAttributesPage: "basicInfo" })}
-                  block
-                  style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197" }}
-                >ย้อนกลับ</Button>
-              </div>
-              <div className="col-md-5">
-                <Button
-                  color="danger"
-                  className="btn-shadow"
-                  size="lg"
+            <div className="row" style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", alignItems: "center" }} >
 
-                  /*   onClick={() => this.onUpdateProfile()} */
-                  onClick={() => this.setState({ otherAttributesPage: "renderBasicBodyInfo" })}
-                  block
-                  style={{ backgroundColor: "#F45197" }}
-                >ยืนยัน</Button>
+              <div className="mb-2 mr-2">
+                <button
+                  className="btn-shadow"
+                  onClick={() => this.setState({ otherAttributesPage: "basicInfo" })}
+                  style={{ backgroundColor: "white", borderColor: "#F45197", color: "#F45197", borderRadius: "50px", width: "300px", height: "48px", padding: "0px" }}
+                >ย้อนกลับ</button>
               </div>
+              <div className="mb-2 ml-2">
+                <button
+                  className="btn-shadow"
+                  onClick={() => this.setState({ otherAttributesPage: "renderBasicBodyInfo" })}
+                  style={{ backgroundColor: "#F45197", borderColor: "#F45197", color: "white", borderRadius: "50px", width: "300px", height: "48px", padding: "0px" }}
+                >ยืนยัน</button>
+              </div>
+
             </div>
           </div>
         </div>
@@ -1331,14 +1329,11 @@ class VideoList extends Component {
           <div className={this.state.staticHip}></div>
           <div className="centerForm">
             <div className="mb-6 col-lg-6 offset-lg-3 col-md-12 col-12">
-              <Button
-                color="danger"
+              <button
                 className="btn-shadow"
-                size="lg"
                 onClick={() => this.onUpdateProfile()}
-                block
-                style={{ backgroundColor: "#F45197" }}
-              >ยืนยัน</Button>
+                style={{ backgroundColor: "#F45197", borderColor: "#F45197", color: "white", borderRadius: "50px", width: "300px", height: "48px", padding: "0px" }}
+              >ยืนยัน</button>
             </div>
           </div>
           <br />
@@ -1583,7 +1578,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 1) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 0 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(0)}
                   >
                     <h5><b>DAY 1</b></h5>
@@ -1593,7 +1588,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 2) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 1 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(1)}
                   >
                     <h5><b>DAY 2</b></h5>
@@ -1603,7 +1598,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 3) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 2 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(2)}
                   >
                     <h5><b>DAY 3</b></h5>
@@ -1613,7 +1608,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 4) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 3 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(3)}
                   >
                     <h5><b>DAY 4</b></h5>
@@ -1651,7 +1646,7 @@ class VideoList extends Component {
                   <div className="row">
                     <div className="col-lg-6">
                       <div className="">
-                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                         {
                           todayExercise && (todayExercise[todayExercise.length - 1] && !(todayExercise[todayExercise.length - 1].play_time / todayExercise[todayExercise.length - 1].duration >= completeVideoPlayPercentage)) &&
                           <div
@@ -1667,7 +1662,7 @@ class VideoList extends Component {
                     <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
-                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold" }}>เล่นอัตโนมัติ</span>
+                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
                           <label className="switch" onClick={() => this.autoPlayCheck()}>
                             <input type="checkbox" className="danger" id="autoPlayCheck"></input>
                             <span className="slider round"></span>
@@ -1713,11 +1708,11 @@ class VideoList extends Component {
                           <div className="videoItem border shadow">
                             {
                               (this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleList(index)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggleList(index)}></img>
                             }
                             {
                               (!this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
@@ -1840,7 +1835,7 @@ class VideoList extends Component {
                   (exerciseVideoLastWeek.length >= 1) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 0 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 0 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(0)}
                   >
                     <h5><b>DAY 1</b></h5>
@@ -1850,7 +1845,7 @@ class VideoList extends Component {
                   (exerciseVideoLastWeek.length >= 2) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 1 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 1 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(1)}
                   >
                     <h5><b>DAY 2</b></h5>
@@ -1860,7 +1855,7 @@ class VideoList extends Component {
                   (exerciseVideoLastWeek.length >= 3) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 2 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 2 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(2)}
                   >
                     <h5><b>DAY 3</b></h5>
@@ -1870,7 +1865,7 @@ class VideoList extends Component {
                   (exerciseVideoLastWeek.length >= 4) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 3 ? "black" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${focusDay === 3 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(3)}
                   >
                     <h5><b>DAY 4</b></h5>
@@ -1905,13 +1900,13 @@ class VideoList extends Component {
                   <div className="row">
                     <div className="col-lg-6">
                       <div className="">
-                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                       </div>
                     </div>
                     <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
-                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold" }}>เล่นอัตโนมัติ</span>
+                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
                           <label className="switch" onClick={() => this.autoPlayCheck()}>
                             <input type="checkbox" className="danger" id="autoPlayCheck"></input>
                             <span className="slider round"></span>
@@ -1957,11 +1952,11 @@ class VideoList extends Component {
                           <div className="videoItem border shadow">
                             {
                               (this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
                             }
                             {
                               (!this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button.png" width="64px" onClick={() => this.toggle(item)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
@@ -2122,7 +2117,7 @@ class VideoList extends Component {
           }
 
         </div>
-        <div className="main main-raised" style={{ backgroundColor: "#D8D6DF" }}>
+        <div className="main main-raised" style={{ backgroundColor: "white" }}>
           <div className="container">
             <div className="">
               {
