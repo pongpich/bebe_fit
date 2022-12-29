@@ -1329,11 +1329,11 @@ class VideoList extends Component {
           <div className={this.state.staticHip}></div>
           <div className="centerForm">
             <div className="mb-6 col-lg-6 offset-lg-3 col-md-12 col-12">
-              <button
+              <Button
                 className="btn-shadow"
                 onClick={() => this.onUpdateProfile()}
                 style={{ backgroundColor: "#F45197", borderColor: "#F45197", color: "white", borderRadius: "50px", width: "300px", height: "48px", padding: "0px" }}
-              >ยืนยัน</button>
+              >ยืนยัน</Button>
             </div>
           </div>
           <br />
@@ -1427,7 +1427,7 @@ class VideoList extends Component {
     const { step4WeeksPrompt } = this.state;
     return (
       <div style={{ display: "flex", justifyContent: "center", paddingTop: 100, paddingBottom: 100, }}>
-        <div style={{ backgroundColor: "white", borderRadius: 8, padding: 30, paddingTop: 60, paddingBottom: 60, textAlign: "center", width: "fit-content" }}>
+        <div className="shadow-sm" style={{ backgroundColor: "white", borderRadius: 8, padding: 30, paddingTop: 60, paddingBottom: 60, textAlign: "center", width: "fit-content" }}>
           {
             (step4WeeksPrompt === 1) &&
             <div>
@@ -2112,12 +2112,12 @@ class VideoList extends Component {
           {
             (this.props.user && this.props.user.fb_group && this.props.user.fb_group !== 404) &&
             <div className="">
-              <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "black", textDecorationColor: "white" }}>ชาเลนจ์</a>
+              <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "grey", textDecorationColor: "white" }}>ชาเลนจ์</a>
             </div>
           }
 
         </div>
-        <div className="main main-raised" style={{ backgroundColor: "white" }}>
+        <div className="main main-raised" style={{ backgroundColor: "#F0EEF3" }}>
           <div className="container">
             <div className="">
               {
