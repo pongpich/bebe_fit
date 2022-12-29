@@ -839,9 +839,9 @@ class VideoList extends Component {
                                     <i className="fa fa-refresh fa-spin fa-5x"></i>
                                   </div>
                                   :
-                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
+                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
                                 :
-                                <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
+                                <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
@@ -1952,11 +1952,11 @@ class VideoList extends Component {
                           <div className="videoItem border shadow">
                             {
                               (this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggleListLastWeek(index)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggleListLastWeek(index)}></img>
                             }
                             {
                               (!this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="64px" onClick={() => this.toggle(item)}></img>
+                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
                             }
                             <div className="videoThumb">
                               <div className="containerThumb">
@@ -2094,7 +2094,7 @@ class VideoList extends Component {
 
   render() {
     const { editVDO_click, lastWeekVDO_click, step4WeeksPrompt } = this.state;
-    const { dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = this.props;
+    const { user, statusVideoList, dailyWeighChallenge, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = this.props;
     return (
       < div >
         {
@@ -2117,7 +2117,7 @@ class VideoList extends Component {
           }
 
         </div>
-        <div className="main main-raised" style={{ backgroundColor: "#F0EEF3" }}>
+        <div className="main main-raised" style={{ backgroundColor: ((user && user.other_attributes) && (statusVideoList !== "no_video")) ? "white" : "#F0EEF3" }}>
           <div className="container">
             <div className="">
               {
