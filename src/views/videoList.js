@@ -877,7 +877,7 @@ class VideoList extends Component {
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
                                 {
-                                  (item.tag && item.tag.includes("low_impact")) &&
+                                  (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
                                   <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
                                 }
                               </div>
@@ -1748,7 +1748,7 @@ class VideoList extends Component {
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
                                 {
-                                  (item.tag && item.tag.includes("low_impact")) &&
+                                  (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
                                   <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
                                 }
                               </div>
@@ -1992,7 +1992,7 @@ class VideoList extends Component {
                                   <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
                                 }
                                 {
-                                  (item.tag && item.tag.includes("low_impact")) &&
+                                  (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
                                   <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
                                 }
                               </div>
