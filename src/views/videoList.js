@@ -634,6 +634,7 @@ class VideoList extends Component {
 
   renderEditVDO() {
     const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList } = this.state;
+    const { member_info } = this.props;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
     let allMinute = [];
     let allSecond = [];
@@ -914,16 +915,21 @@ class VideoList extends Component {
                         </div>
                         {
                           (item.play_time !== item.duration) && (item.category !== "Challenge") &&
-                          <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
-                            <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
-                              <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
-                            เลือกวีดีโอใหม่
-                          </div>
-                            <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
-                              <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
-                            สุ่มวีดีโอ
-                          </div>
-                          </div>
+                          (
+                            ((item.category === "Warm Up" || item.category === "Cool Down") && (member_info && member_info.program_level === 'bfr_lv1')) ?
+                              <div></div>
+                              :
+                              <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
+                                <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                                  <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                                เลือกวีดีโอใหม่
+                                </div>
+                                <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                                  <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                                สุ่มวีดีโอ
+                                </div>
+                              </div>
+                          )
                         }
                       </div>
                     )
