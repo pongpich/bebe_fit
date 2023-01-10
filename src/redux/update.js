@@ -13,6 +13,8 @@ export const types = {
   UPDATE_DISPLAY_NAME_FAIL: "UPDATE_DISPLAY_NAME_FAIL",
   UPDATE_STATUS_LOW_IMPACT: "UPDATE_STATUS_LOW_IMPACT",
   UPDATE_STATUS_LOW_IMPACT_SUCCESS: "UPDATE_STATUS_LOW_IMPACT_SUCCESS",
+  UPDATE_PROGRAM_LEVEL: "UPDATE_PROGRAM_LEVEL",
+  UPDATE_PROGRAM_LEVEL_SUCCESS: "UPDATE_PROGRAM_LEVEL_SUCCESS",
   UPDATE_PROGRAM_PROMPT_LOG: "UPDATE_PROGRAM_PROMPT_LOG",
   UPDATE_PROGRAM_PROMPT_LOG_SUCCESS: "UPDATE_PROGRAM_PROMPT_LOG_SUCCESS",
   CHECK_PROGRAM_LEVEL: "CHECK_PROGRAM_LEVEL",
@@ -49,6 +51,17 @@ export const updateStatusLowImpact = (
   payload: {
     user_id,
     status_low_impact
+  }
+});
+
+export const updateProgramLevel = (
+  user_id,
+  program_level //bfr_lv1 or bfr_lv2
+) => ({
+  type: types.UPDATE_PROGRAM_LEVEL,
+  payload: {
+    user_id,
+    program_level
   }
 });
 
@@ -150,6 +163,22 @@ const updateStatusLowImpactSagaAsync = async (
       body: {
         user_id,
         status_low_impact
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+const updateProgramLevelSagaAsync = async (
+  user_id,
+  program_level
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/updateProgramLevel", {
+      body: {
+        user_id,
+        program_level
       }
     });
     return apiResult
@@ -289,6 +318,26 @@ function* updateStatusLowImpactSaga({ payload }) {
   }
 }
 
+function* updateProgramLevelSaga({ payload }) {
+  const {
+    user_id,
+    program_level
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      updateProgramLevelSagaAsync,
+      user_id,
+      program_level
+    );
+    yield put({
+      type: types.UPDATE_PROGRAM_LEVEL_SUCCESS
+    })
+  } catch (error) {
+    console.log("error from updateProgramLevelSaga :", error);
+  }
+}
+
 function* updateProgramPromptLogSaga({ payload }) {
   const {
     user_id,
@@ -324,6 +373,10 @@ export function* watchUpdateStatusLowImpact() {
   yield takeEvery(types.UPDATE_STATUS_LOW_IMPACT, updateStatusLowImpactSaga)
 }
 
+export function* watchUpdateProgramLevel() {
+  yield takeEvery(types.UPDATE_PROGRAM_LEVEL, updateProgramLevelSaga)
+}
+
 export function* watchUpdateProgramPromptLog() {
   yield takeEvery(types.UPDATE_PROGRAM_PROMPT_LOG, updateProgramPromptLogSaga)
 }
@@ -340,6 +393,7 @@ export function* saga() {
     fork(watchUpdateStatusLowImpact),
     fork(watchUpdateProgramPromptLog),
     fork(watchCheckProgramLevel),
+    fork(watchUpdateProgramLevel),
   ]);
 }
 
@@ -350,6 +404,7 @@ const INIT_STATE = {
   statusAddress: "default",
   statusUpdateDisplayName: "default",
   statusUpdateLowImpact: "default",
+  statusUpdateProgramLevel: "default",
   statusUpdateProgramPromptLog: "default",
 };
 
@@ -372,6 +427,16 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         statusUpdateProgramPromptLog: "success"
+      }
+    case types.UPDATE_PROGRAM_LEVEL:
+      return {
+        ...state,
+        statusUpdateProgramLevel: "loading"
+      }
+    case types.UPDATE_PROGRAM_LEVEL_SUCCESS:
+      return {
+        ...state,
+        statusUpdateProgramLevel: "success"
       }
     case types.UPDATE_STATUS_LOW_IMPACT:
       return {

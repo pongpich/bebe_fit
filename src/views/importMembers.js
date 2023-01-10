@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { importMembers, changeEmail } from "../redux/auth";
-import { updateStatusLowImpact } from "../redux/update";
+import { updateStatusLowImpact, updateProgramLevel } from "../redux/update";
 import { selectProgramInWeek, deleteProgramInWeek, selectMemberInfo, selectBodyInfo } from "../redux/exerciseVideos";
 import { selectMemberEventLog } from "../redux/challenges";
 import DatePicker from "react-datepicker";
@@ -29,6 +29,7 @@ class ImportMembers extends Component {
       fb_group: 404,
       member_type: "normal",
       editMemberType: false,
+      editProgramLevel: false,
     };
     this.fileSelectedHandler = this.fileSelectedHandler.bind(this);
   }
@@ -45,9 +46,13 @@ class ImportMembers extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { statusUpdateLowImpact } = this.props;
+    const { statusUpdateLowImpact, statusUpdateProgramLevel } = this.props;
     if ((prevProps.statusUpdateLowImpact !== statusUpdateLowImpact) && (statusUpdateLowImpact === "success")) {
       this.setState({ editMemberType: false });
+      this.props.selectMemberInfo(this.state.email)
+    }
+    if ((prevProps.statusUpdateProgramLevel !== statusUpdateProgramLevel) && (statusUpdateProgramLevel === "success")) {
+      this.setState({ editProgramLevel: false });
       this.props.selectMemberInfo(this.state.email)
     }
   }
@@ -253,9 +258,18 @@ class ImportMembers extends Component {
     }
   }
 
+  onEditProgramLevel() {
+    const { editProgramLevel } = this.state;
+    if (editProgramLevel) {
+      this.setState({ editProgramLevel: false });
+    } else {
+      this.setState({ editProgramLevel: true });
+    }
+  }
+
   renderMemberInfo() {
-    const { memberInfo, statusUpdateLowImpact } = this.props;
-    const { editMemberType } = this.state;
+    const { memberInfo, statusUpdateLowImpact, statusUpdateProgramLevel } = this.props;
+    const { editMemberType, editProgramLevel } = this.state;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -297,7 +311,7 @@ class ImportMembers extends Component {
                 <h5>{"วันเริ่มต้น : " + this.props.memberInfo.start_date}</h5>
                 <h5>{"วันสิ้นสุด : " + this.props.memberInfo.expire_date}</h5>
                 <h5>{`ประเภทผู้ใช้ : ${(this.props.memberInfo.low_impact === 'no') ? 'ทั่วไป' : 'low impact'}`}
-                  <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>Edit</span>
+                  <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>แก้ไข</span>
                 </h5>
                 {
                   (editMemberType && (statusUpdateLowImpact !== "loading")) &&
@@ -317,6 +331,40 @@ class ImportMembers extends Component {
                         </h6>
                         <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateStatusLowImpact((memberInfo && memberInfo.user_id), 'no')}>ยืนยัน</span>
                         <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditMemberType()}>ยกเลิก</span>
+                      </div>
+                  )
+                }
+                {
+                  (memberInfo.low_impact === 'no') &&
+                  <h5>ระดับโปรแกรม :
+                  <span>
+                      {(memberInfo.program_level === 'bfr_lv1') && ' bfr_lv1 (Beginner)'}
+                      {(memberInfo.program_level === 'bfr_lv2') && ' bfr_lv2 (Standard)'}
+                    </span>
+                    {
+                      (memberInfo.low_impact === 'no') &&
+                      <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditProgramLevel()}>แก้ไข</span>
+                    }
+                  </h5>
+                }
+                {
+                  (editProgramLevel && (statusUpdateProgramLevel !== "loading")) &&
+                  (
+                    (memberInfo.program_level === 'bfr_lv1') ?
+                      <div>
+                        <h6>
+                          ต้องการปรับเป็นโปรแกรม <span style={{ color: "red" }}>"bfr_lv2 (Standard)"</span> ใช่หรือไม่?
+                        </h6>
+                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateProgramLevel((memberInfo && memberInfo.user_id), 'bfr_lv2')}>ยืนยัน</span>
+                        <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditProgramLevel()}>ยกเลิก</span>
+                      </div>
+                      :
+                      <div>
+                        <h6>
+                          ต้องการปรับเป็นโปรแกรม <span style={{ color: "red" }}>"bfr_lv1 (Beginner)"</span> ใช่หรือไม่?
+                        </h6>
+                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateProgramLevel((memberInfo && memberInfo.user_id), 'bfr_lv1')}>ยืนยัน</span>
+                        <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditProgramLevel()}>ยกเลิก</span>
                       </div>
                   )
                 }
@@ -777,11 +825,11 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, update }) => {
   const { user, status, statusChangeEmail } = authUser;
   const { programInWeek, memberInfo, bodyInfo } = exerciseVideos;
   const { memberEventLog } = challenges;
-  const { statusUpdateLowImpact } = update;
-  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog, statusUpdateLowImpact };
+  const { statusUpdateLowImpact, statusUpdateProgramLevel } = update;
+  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog, statusUpdateLowImpact, statusUpdateProgramLevel };
 };
 
-const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog, updateStatusLowImpact };
+const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog, updateStatusLowImpact, updateProgramLevel };
 
 export default connect(
   mapStateToProps,
