@@ -2104,7 +2104,7 @@ class VideoList extends Component {
     return (
       < div >
         {
-          (dailyWeighChallenge && (this.props.user && this.props.user.group_id)) &&
+          (dailyWeighChallenge && (this.props.user)) &&
           this.renderPopupDailyWeighChallenge()
         }
 
