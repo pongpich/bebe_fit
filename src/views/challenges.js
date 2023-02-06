@@ -58,6 +58,13 @@ class Challenges extends Component {
       this.props.getRank(this.props.user.user_id, this.props.user.start_date);
       this.props.getLogWeight(this.props.user.user_id);
       this.props.getIsReducedWeight(this.props.user.user_id);
+      
+      this.props.getLeaderboard();
+      this.props.getFriendList(this.props.user.user_id);
+      this.props.getFriendRequest(this.props.user.user_id);
+      this.props.getMaxFriends(this.props.user.user_id);
+      this.props.getAchievementLog(this.props.user.user_id);
+      this.props.getFriendsRank(this.props.user.user_id)
       if (this.props.user && this.props.user.group_id) {
       
       
@@ -67,12 +74,7 @@ class Challenges extends Component {
         this.props.getMembersAndRank(this.props.user.group_id, this.props.user.start_date);
         this.props.getGroupName(this.props.user.group_id);
         this.props.getScoreOfTeam(this.props.user.group_id);
-        this.props.getLeaderboard();
-        this.props.getFriendList(this.props.user.user_id);
-        this.props.getFriendRequest(this.props.user.user_id);
-        this.props.getMaxFriends(this.props.user.user_id);
-        this.props.getAchievementLog(this.props.user.user_id);
-        this.props.getFriendsRank(this.props.user.user_id)
+     
       } else {
         this.props.clearChallenges()
       }
