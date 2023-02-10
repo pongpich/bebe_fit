@@ -209,8 +209,11 @@ class App extends Component {
         }
         <div className="popupQuestionnaire" id={`popupQuestionnaire`}>
           <div style={{ display: "block" }}>
-            <h3 ><b>แบบสอบถาม Bebe Fit Routine</b></h3>
-            <h5 style={{ color: "black", marginTop: 30 }}>โปรดทำแบบสอบถามเพื่อรับคำแนะนำและสิทธิพิเศษในการต่ออายุ</h5>
+            <h3 ><b>*แบบประเมินความพึงพอใจและประเมินผลการทำตามโปรแกรม*</b></h3>
+            <h3 ><b>(ใช้เวลาประมาณ 5 นาที)</b></h3>
+            <h5 style={{ color: "black", marginTop: 30 }}>ร่วมตอบแบบสอบถามเพื่อประเมินความพึงพอใจในการเข้าร่วมคอร์ส</h5>
+            <h5 style={{ color: "black" }}>ประเมินผลการทำตามโปรแกรมเพื่อรับคำแนะนำ</h5>
+            <h5 style={{ color: "black" }}>และรับสิทธิ์สมัครต่ออายุคอร์สในราคาพิเศษ!</h5>
             <a style={{ fontSize: 24, textDecoration: "underline"}} href="https://form.typeform.com/to/fYVxetCs" target="_blank" onClick={() => this.setState({ statusQuestionnaire: "done" })}>ทำแบบสอบถาม</a>
           </div>
           <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle('popupQuestionnaire')}></img>
