@@ -10,6 +10,8 @@ import { connect } from "react-redux";
 import { logoutUser } from "./redux/auth";
 import { clearVideoList } from "./redux/exerciseVideos";
 import { clearChallenges } from "./redux/challenges"
+import { checkQuestionnaireLog } from "./redux/get"
+import { insertQuestionnaireLog } from "./redux/update"
 
 /* import bgintro from "./assets/img/bgintro.png"; */
 
@@ -26,6 +28,8 @@ import Dashboard from "./views/dashboard";
 import { awsConfig } from "./constants/defaultValues";
 
 import ReactGa from 'react-ga';
+import { locale } from "moment";
+import { calculateWeekInProgram } from "./helpers/utils";
 
 Amplify.configure(awsConfig);
 
@@ -33,7 +37,38 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      statusQuestionnaire: "default",
+      overlay: false
+    }
+  }
 
+  async componentDidMount() {
+    const { user } = this.props;
+    this.props.checkQuestionnaireLog((user && user.user_id), 'satisfaction_assessment');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { statusCheckQuestionnaireLog, statusGetCheckQuestionnaireLog, user, statusInsertQuestionnaireLog } = this.props;
+    const { statusQuestionnaire } = this.state;
+
+    if ((prevState.statusQuestionnaire !== statusQuestionnaire) && (statusQuestionnaire === "done")) {
+      this.props.insertQuestionnaireLog((user && user.user_id), 'satisfaction_assessment')  //อัพเดทว่าผู้ใช้ทำแบบสอบถามแล้ว
+      this.closeToggle('popupQuestionnaire');//ปิด Popup
+    }
+
+    if ((prevProps.statusGetCheckQuestionnaireLog !== statusGetCheckQuestionnaireLog) && (statusGetCheckQuestionnaireLog === 'success')) {
+      console.log("statusCheckQuestionnaireLog :", statusCheckQuestionnaireLog);
+      let week;
+      if (user) {
+        week = calculateWeekInProgram(user.start_date);
+      }
+      if (!statusCheckQuestionnaireLog && ((week >= 6) && (week <= 8))) {
+        this.toggle('popupQuestionnaire');
+      }
+    }
+
+    if ((prevProps.statusInsertQuestionnaireLog !== statusInsertQuestionnaireLog) && (statusInsertQuestionnaireLog === 'success')) {
+      this.props.checkQuestionnaireLog((user && user.user_id), 'satisfaction_assessment');
     }
   }
 
@@ -45,6 +80,11 @@ class App extends Component {
   }
 
   renderNavbar() {
+    const { user, statusCheckQuestionnaireLog } = this.props;
+    let week;
+    if (user) {
+      week = calculateWeekInProgram(user.start_date);
+    }
     return (
       <nav className="navbar navbar-expand" style={{ backgroundColor: "#F45197", fontFamily: "'Prompt', sans-serif" }}>
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
@@ -82,6 +122,21 @@ class App extends Component {
               </li>
             }
             {
+              ((this.props.user !== null) && (week >= 6 && week <= 8)) &&
+              <li className="nav-item">
+                {
+                  ((!statusCheckQuestionnaireLog)) ? //ยังไม่ได้ทำแบบสอบถาม
+                    <div className="bell-notification" current-count="1">
+                      <i class="fas fa-bell" onClick={() => this.toggle("popupQuestionnaire")}  ></i>
+                    </div>
+                    : //ทำแบบสอบถามแล้ว
+                    <div className="bell-default" >
+                      <i class="fas fa-bell" onClick={() => this.toggle("popupQuestionnaire")}  ></i>
+                    </div>
+                }
+              </li>
+            }
+            {
               (this.props.user !== null) &&
               <li className="nav-item">
                 <a className="nav-link" href="/#" onClick={() => this.onUserLogout()} style={{ color: "white", cursor: "pointer" }}>
@@ -109,30 +164,62 @@ class App extends Component {
     )
   }
 
-  toggle() {
-    document.getElementById("popupIntroVDO").classList.toggle("active");
-    var video = document.getElementById(`introVDO`);
-    video.play();
+  toggle(popupName) {
+    if (popupName === "popupIntroVDO") {
+      document.getElementById("popupIntroVDO").classList.toggle("active");
+      var video = document.getElementById(`introVDO`);
+      video.play();
+    }
+    if (popupName === "popupQuestionnaire") {
+      document.getElementById("popupQuestionnaire").classList.toggle("active");
+      this.setState({ overlay: true });
+    }
   }
 
-  closeToggle() {
-    document.getElementById("popupIntroVDO").classList.toggle("active");
-    var video = document.getElementById(`introVDO`);
-    video.pause();
-    video.currentTime = 0;
+  closeToggle(popupName) {
+    if (popupName === "popupIntroVDO") {
+      document.getElementById("popupIntroVDO").classList.toggle("active");
+      var video = document.getElementById(`introVDO`);
+      video.pause();
+      video.currentTime = 0;
+    }
+    if (popupName === "popupQuestionnaire") {
+      document.getElementById("popupQuestionnaire").classList.toggle("active");
+      this.setState({ overlay: false });
+    }
   }
 
   renderHeader() {
+    const { overlay } = this.state;
     return (
       <div className="header">
+
         <div className="popupIntroVDO" id={`popupIntroVDO`}>
           <video src={'https://player.vimeo.com/external/414645540.hd.mp4?s=d2c95abe8443336f858f4bf9243b79fee350a8d4&profile_id=174'} id="introVDO" controls controlsList="nodownload" disablePictureInPicture ></video>
-          <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle()}></img>
+          <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle('popupIntroVDO')}></img>
         </div>
+
+        {
+          overlay &&
+          <div
+            className="overlayPopupQuestionnaire"
+            id="overlayPopupQuestionnaire"
+            onClick={() => this.closeToggle('popupQuestionnaire')}
+          />
+        }
+        <div className="popupQuestionnaire" id={`popupQuestionnaire`}>
+          <div style={{ display: "block" }}>
+            <h3 ><b>แบบสอบถาม Bebe Fit Routine</b></h3>
+            <h5 style={{ color: "black", marginTop: 30 }}>โปรดทำแบบสอบถามเพื่อรับคำแนะนำและสิทธิพิเศษในการต่ออายุ</h5>
+            <a style={{ fontSize: 24, textDecoration: "underline"}} href="https://form.typeform.com/to/fYVxetCs" target="_blank" onClick={() => this.setState({ statusQuestionnaire: "done" })}>ทำแบบสอบถาม</a>
+          </div>
+          <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle('popupQuestionnaire')}></img>
+        </div>
+
 
         <div className="watch_introduction">
           <div
-            onClick={() => this.toggle()}
+            onClick={() => this.toggle('popupIntroVDO')}
             className=""
             style={{ float: "left" }}
             aria-hidden="true">
@@ -146,7 +233,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App" style={{ backgroundColor: "#F0EEF3"}}>
+      <div className="App" style={{ backgroundColor: "#F0EEF3" }}>
         {/* {this.renderTopbar()} */}
         {this.renderNavbar()}
         {this.props.user && this.renderHeader()}
@@ -173,16 +260,20 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = ({ authUser, exerciseVideos }) => {
+const mapStateToProps = ({ authUser, exerciseVideos, get, update }) => {
   const { user } = authUser;
+  const { statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog } = get;
+  const { statusInsertQuestionnaireLog } = update;
   const { exerciseVideo, status, video, videos } = exerciseVideos;
-  return { user, exerciseVideo, status, video, videos };
+  return { user, exerciseVideo, status, video, videos, statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog, statusInsertQuestionnaireLog };
 };
 
 const mapActionsToProps = {
   logoutUser,
   clearVideoList,
-  clearChallenges
+  clearChallenges,
+  checkQuestionnaireLog,
+  insertQuestionnaireLog
 };
 
 export default connect(

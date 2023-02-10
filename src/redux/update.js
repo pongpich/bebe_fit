@@ -19,7 +19,20 @@ export const types = {
   UPDATE_PROGRAM_PROMPT_LOG_SUCCESS: "UPDATE_PROGRAM_PROMPT_LOG_SUCCESS",
   CHECK_PROGRAM_LEVEL: "CHECK_PROGRAM_LEVEL",
   CHECK_PROGRAM_LEVEL_SUCCESS: "CHECK_PROGRAM_LEVEL_SUCCESS",
+  INSERT_QUESTIONNAIRE_LOG: "INSERT_QUESTIONNAIRE_LOG",
+  INSERT_QUESTIONNAIRE_LOG_SUCCESS: "INSERT_QUESTIONNAIRE_LOG_SUCCESS",
 }
+
+export const insertQuestionnaireLog = (
+  user_id,
+  log
+) => ({
+  type: types.INSERT_QUESTIONNAIRE_LOG,
+  payload: {
+    user_id,
+    log
+  }
+})
 
 export const checkProgramLevel = (
   user_id
@@ -154,6 +167,24 @@ const checkProgramLevelSagaAsync = async (
     return { error, messsage: error.message };
   }
 }
+
+const insertQuestionnaireLogSagaAsync = async (
+  user_id,
+  log
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/insertQuestionnaireLog", {
+      body: {
+        user_id,
+        log
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const updateStatusLowImpactSagaAsync = async (
   user_id,
   status_low_impact
@@ -298,6 +329,27 @@ function* checkProgramLevelSaga({ payload }) {
   }
 }
 
+function* insertQuestionnaireLogSaga({ payload }) {
+  const {
+    user_id,
+    log
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      insertQuestionnaireLogSagaAsync,
+      user_id,
+      log
+    );
+    yield put({
+      type: types.INSERT_QUESTIONNAIRE_LOG_SUCCESS
+    })
+
+  } catch (error) {
+    console.log("error from insertQuestionnaireLogSaga :", error);
+  }
+}
+
 function* updateStatusLowImpactSaga({ payload }) {
   const {
     user_id,
@@ -385,6 +437,10 @@ export function* watchCheckProgramLevel() {
   yield takeEvery(types.CHECK_PROGRAM_LEVEL, checkProgramLevelSaga)
 }
 
+export function* watchInsertQuestionnaireLogSaga() {
+  yield takeEvery(types.INSERT_QUESTIONNAIRE_LOG, insertQuestionnaireLogSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchupdateFittoPlant),
@@ -394,6 +450,7 @@ export function* saga() {
     fork(watchUpdateProgramPromptLog),
     fork(watchCheckProgramLevel),
     fork(watchUpdateProgramLevel),
+    fork(watchInsertQuestionnaireLogSaga),
   ]);
 }
 
@@ -406,10 +463,21 @@ const INIT_STATE = {
   statusUpdateLowImpact: "default",
   statusUpdateProgramLevel: "default",
   statusUpdateProgramPromptLog: "default",
+  statusInsertQuestionnaireLog: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.INSERT_QUESTIONNAIRE_LOG:
+      return {
+        ...state,
+        statusInsertQuestionnaireLog: "loading"
+      }
+    case types.INSERT_QUESTIONNAIRE_LOG_SUCCESS:
+      return {
+        ...state,
+        statusInsertQuestionnaireLog: "success"
+      }
     case types.CHECK_PROGRAM_LEVEL:
       return {
         ...state

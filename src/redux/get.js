@@ -13,10 +13,20 @@ export const types = {
   CHECK_4WEEKS_PROMPT: "CHECK_4WEEKS_PROMPT",
   CHECK_4WEEKS_PROMPT_SUCCESS: "CHECK_4WEEKS_PROMPT_SUCCESS",
   CHECK_RENEW_PROMPT: "CHECK_RENEW_PROMPT",
-  CHECK_RENEW_PROMPT_SUCCESS: "CHECK_RENEW_PROMPT_SUCCESS"
+  CHECK_RENEW_PROMPT_SUCCESS: "CHECK_RENEW_PROMPT_SUCCESS",
+  CHECK_QUESTIONNAIRE_LOG: "CHECK_QUESTIONNAIRE_LOG",
+  CHECK_QUESTIONNAIRE_LOG_SUCCESS: "CHECK_QUESTIONNAIRE_LOG_SUCCESS"
 }
 
 /* END OF ACTION Section */
+
+export const checkQuestionnaireLog = (user_id, log) => ({
+  type: types.CHECK_QUESTIONNAIRE_LOG,
+  payload: {
+    user_id,
+    log
+  }
+})
 
 export const checkRenewPrompt = (user_id) => ({
   type: types.CHECK_RENEW_PROMPT,
@@ -129,6 +139,23 @@ const checkRenewPromptSagaAsync = async (
   }
 }
 
+const checkQuestionnaireLogSagaAsync = async (
+  user_id,
+  log
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/checkQuestionnaireLog", {
+      queryStringParameters: {
+        user_id,
+        log
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 function* getAllMemberStayFitSaga({ payload }) {
   const {
     fb_group
@@ -211,6 +238,32 @@ function* checkRenewPromptSaga({ payload }) {
 
 }
 
+function* checkQuestionnaireLogSaga({ payload }) {
+  const {
+    user_id,
+    log
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      checkQuestionnaireLogSagaAsync,
+      user_id,
+      log
+    );
+    let checkQuestionnaireLog = true;
+    if (apiResult.results && (apiResult.results.message !== 'done')) {
+      checkQuestionnaireLog = false;
+    }
+    yield put({
+      type: types.CHECK_QUESTIONNAIRE_LOG_SUCCESS,
+      payload: checkQuestionnaireLog
+    })
+  } catch (error) {
+    console.log("error from checkQuestionnaireLogSaga :", error);
+  }
+
+}
+
 function* getCheckDisplayNameSaga({ payload }) {
   const {
     display_name
@@ -257,6 +310,10 @@ export function* watchCheckRenewPromptSaga() {
   yield takeEvery(types.CHECK_RENEW_PROMPT, checkRenewPromptSaga)
 }
 
+export function* watchCheckQuestionnaireLogSaga() {
+  yield takeEvery(types.CHECK_QUESTIONNAIRE_LOG, checkQuestionnaireLogSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchGetCheckDisplayNameSaga),
@@ -264,6 +321,7 @@ export function* saga() {
     fork(watchGetAllMemberStayFitSaga),
     fork(watchCheck4WeeksPromptSaga),
     fork(watchCheckRenewPromptSaga),
+    fork(watchCheckQuestionnaireLogSaga),
   ]);
 }
 
@@ -280,6 +338,8 @@ const INIT_STATE = {
   statusGetCheck4WeeksPrompt: "default",
   statusCheckRenewPrompt: false,
   statusGetCheckRenewPrompt: "default",
+  statusCheckQuestionnaireLog: true,
+  statusGetCheckQuestionnaireLog: "default",
 };
 
 
@@ -289,6 +349,17 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         allMemberStayFit: action.payload.allMemberStayFit
+      }
+    case types.CHECK_QUESTIONNAIRE_LOG:
+      return {
+        ...state,
+        statusGetCheckQuestionnaireLog: "loading"
+      }
+    case types.CHECK_QUESTIONNAIRE_LOG_SUCCESS:
+      return {
+        ...state,
+        statusCheckQuestionnaireLog: action.payload,
+        statusGetCheckQuestionnaireLog: "success"
       }
     case types.CHECK_RENEW_PROMPT:
       return {
