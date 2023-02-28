@@ -339,6 +339,7 @@ class ImportMembers extends Component {
                   <h5>ระดับโปรแกรม :
                   <span>
                       {(memberInfo.program_level === 'bfr_lv1') && ' bfr_lv1 (Beginner)'}
+                      {(memberInfo.program_level === 'bfr_lv1.5') && ' bfr_lv1.5'}
                       {(memberInfo.program_level === 'bfr_lv2') && ' bfr_lv2 (Standard)'}
                     </span>
                     {
@@ -350,7 +351,7 @@ class ImportMembers extends Component {
                 {
                   (editProgramLevel && (statusUpdateProgramLevel !== "loading")) &&
                   (
-                    (memberInfo.program_level === 'bfr_lv1') ?
+                    (memberInfo.program_level !== 'bfr_lv2') ?
                       <div>
                         <h6>
                           ต้องการปรับเป็นโปรแกรม <span style={{ color: "red" }}>"bfr_lv2 (Standard)"</span> ใช่หรือไม่?
@@ -361,9 +362,9 @@ class ImportMembers extends Component {
                       :
                       <div>
                         <h6>
-                          ต้องการปรับเป็นโปรแกรม <span style={{ color: "red" }}>"bfr_lv1 (Beginner)"</span> ใช่หรือไม่?
+                          ต้องการปรับเป็นโปรแกรม <span style={{ color: "red" }}>"bfr_lv1.5"</span> ใช่หรือไม่?
                         </h6>
-                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateProgramLevel((memberInfo && memberInfo.user_id), 'bfr_lv1')}>ยืนยัน</span>
+                        <span style={{ color: "green", marginLeft: 30, cursor: "pointer" }} onClick={() => this.props.updateProgramLevel((memberInfo && memberInfo.user_id), 'bfr_lv1.5')}>ยืนยัน</span>
                         <span style={{ color: "red", marginLeft: 30, cursor: "pointer" }} onClick={() => this.onEditProgramLevel()}>ยกเลิก</span>
                       </div>
                   )

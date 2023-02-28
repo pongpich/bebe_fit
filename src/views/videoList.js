@@ -867,7 +867,7 @@ class VideoList extends Component {
                                 <h6>
                                   <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                   {minuteLabel} นาที
-                              </h6>
+                                </h6>
                               </div>
                               <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                               <div className="videoName">
@@ -922,11 +922,11 @@ class VideoList extends Component {
                               <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
                                 <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
                                   <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
-                                เลือกวีดีโอใหม่
+                                  เลือกวีดีโอใหม่
                                 </div>
                                 <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
                                   <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
-                                สุ่มวีดีโอ
+                                  สุ่มวีดีโอ
                                 </div>
                               </div>
                           )
@@ -1437,21 +1437,14 @@ class VideoList extends Component {
           {
             (step4WeeksPrompt === 1) &&
             <div>
-              <h1 style={{ color: "#F45197" }}>ยินดีด้วย!</h1>
-              <h1 style={{ color: "#F45197" }}>คุณได้ผ่านโปรแกรม "Beginner"</h1>
-              <h1 >สำหรับปูพื้นฐานเตรียมพร้อมร่างกาย</h1>
-              {
-                (!statusCheckRenewPrompt) &&
-                <h1 >ครบ 4 สัปดาห์แล้วค่ะ</h1>
-              }
+              <h1 style={{ color: "#F45197" }}>ยินดีด้วยค่ะ</h1>
+              <h1 style={{ color: "#F45197" }}>คุณผ่านโปรแกรมในสัปดาห์แรกได้สำเร็จ!</h1>
               <br></br>
-              <span  >ตอนนี้คุณพร้อมแล้ว! ที่จะติดสปีดไปกับเบเบ้</span>
+              <span  >คุณพร้อมที่จะอัปเกรดความฟิต</span>
               <br></br>
-              <span >ด้วยการอัปเกรดโปรแกรมเป็น “Standard” เพิ่มเลเวลความฟิต</span>
+              <span >ด้วยโปรแกรมที่ท้าทายขึ้น และผลลัพธ์ที่ดีกว่า</span>
               <br></br>
-              <span >และความท้าทายให้กับร่างกาย เพื่อผลลัพธ์ที่ดีกว่าได้แล้ว</span>
-              <br></br>
-              <span className="font-weight-bold" style={{ lineHeight: 4 }}>คุณต้องการที่จะปรับโปรแกรมหรือไม่ ?</span>
+              <span >ไปกับโปรแกรม “Standard” หรือไม่</span>
               <br></br>
             </div>
           }
@@ -1507,7 +1500,7 @@ class VideoList extends Component {
           }
           {
             (statusUpdateProgramPromptLog !== "loading") &&
-            <div className="row" style={{ justifyContent: "center" }}>
+            <div className="row mt-4" style={{ justifyContent: "center" }}>
               <button
                 onClick={() => this.props.updateProgramPromptLog(user.user_id, (!statusCheckRenewPrompt) ? '4 weeks prompt' : 'renew prompt', 'not level up')}
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", color: "#F45197" }}
@@ -1743,7 +1736,7 @@ class VideoList extends Component {
                                 <h6>
                                   <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                   {minuteLabel} นาที
-                              </h6>
+                                </h6>
                               </div>
                               <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                               <div className="videoName">
@@ -1987,7 +1980,7 @@ class VideoList extends Component {
                                 <h6>
                                   <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
                                   {minuteLabel} นาที
-                              </h6>
+                                </h6>
                               </div>
                               <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
                               <div className="videoName">
