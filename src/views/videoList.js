@@ -1451,34 +1451,27 @@ class VideoList extends Component {
           {
             (step4WeeksPrompt === 2) &&
             <div>
-              <h1 style={{ color: "#F45197" }}>อัปเกรดความฟิต ปั้นหุ่นเฟิร์ม!</h1>
-              <h1 style={{ color: "#F45197" }}>พร้อมเบิร์นขั้นสุด!</h1>
-              <h1 >สนุกไปกับโปรแกรม “Standard.”</h1>
+              <h1 style={{ color: "#F45197" }}>โปรแกรม Bebe Fit Routine</h1>
+              <h1 style={{ color: "#F45197" }}>เต็มรูปแบบ (Standard)</h1>
+              <h3 >โปรแกรมการออกกำลังกายที่ออกแบบมา</h3>
+              <h3 >เพื่อให้คุณได้ผลลัพธ์จากการเปลี่ยนแปลงที่ดีที่สุด</h3>
               <div style={{ textAlign: "left" }}>
                 <br></br>
-                <span  >โปรแกรมนี้ จะเป็นโปรแกรมที่ถูกออกแบบมาพิเศษ</span>
+                <span  >โดยจะมีการปรับโปรแกรมเป็นรูปแบบการฝึกแบบ Circuit Training</span>
                 <br></br>
-                <span >เพื่อพาคุณไปสู่ผลลัพธ์ แห่งการเปลี่ยนแปลง ที่ดีที่สุดของคุณ</span>
+                <span >ที่ประกอบไปด้วย Body Weight Training และ Cardio ที่มีความเข้มข้นสูง (HIIT)</span>
                 <br></br>
-                <span >โดยจะมีการปรับโปรแกรม เป็นรูปแบบการฝึกแบบ Circuit Training</span>
-                <br></br>
-                <span >ที่ประกอบไปด้วย Body Weight Training และ Cardio</span>
-                <br></br>
-                <span >ที่มีความเข้มข้นสูง (HIIT) เพื่อเพิ่มการเผาผลาญ พลังงาน</span>
-                <br></br>
-                <span >พร้อมสร้างกล้ามเนื้อแบบ 2IN1 !!!</span>
+                <span >เพื่อเพิ่มการเผาผลาญพลังงาน พร้อมสร้างกล้ามเนื้อแบบ 2IN1 !!!</span>
                 <br></br> <br></br>
-                <span >โปรแกรมจะถูกจัดให้ฝึกเป็น</span>
+                <span >ใช้ระยะเวลาการฝึกเพิ่มขึ้นเล็กน้อย สูงสุด*อยู่ที่ประมาณ 60 นาที/วัน</span>
                 <br></br>
-                <span > • 4 วัน/สัปดาห์</span>
+                <span >**ระยะเวลาขึ้นอยู่กับเกณฑ์น้ำหนัก แต่ละเกณฑ์น้ำหนักจะได้ระยะเวลาฝึกไม่เท่ากัน</span>
                 <br></br>
-                <span > • ระยะเวลาการฝึก ประมาณ 60 นาทีต่อวัน</span>
+                <span >โดยระยะเวลาสูงสุดอยู่ที่ประมาณ 60 นาที**</span>
                 <br></br><br></br>
-                <span className="font-weight-bold">เหมาะสำหรับผู้ที่ต้องการปลดล็อกขีดจำกัด</span>
+                <span className="font-weight-bold">เหมาะสำหรับผู้ที่ต้องการ เพิ่มความฟิต และความท้าทายให้กับร่างกาย</span>
                 <br></br>
-                <span className="font-weight-bold">เพิ่มความท้าทายสร้างความแข็งแรงให้กับร่างกาย สู่ผลลัพธ์ที่ดีที่สุด!</span>
-                <br></br>
-                <span className="font-weight-bold" style={{ lineHeight: 4 }}>คุณต้องการที่จะปรับโปรแกรมหรือไม่ ?</span>
+                <span className="font-weight-bold">เพื่อผลลัพธ์ที่ดีที่สุดของคุณ!</span>
                 <br></br>
               </div>
             </div>
@@ -1486,15 +1479,11 @@ class VideoList extends Component {
           {
             (step4WeeksPrompt === 3) &&
             <div className="mb-3">
+
               <h1 >หมายเหตุ</h1>
+              <span >การตัดสินใจส่งผลต่อการปรับโปรแกรมของระบบ</span>
               <br></br>
-              <span  >เมื่อทำการอัปเกรดโปรแกรมเป็น “Standard”</span>
-              <br></br>
-              <span >แล้วจะไม่สามารถย้อนกลับไปเป็นโปรแกรม “Beginner” ได้นะคะ</span>
-              <br></br>
-              <span className="font-weight-bold">แต่ถ้าคุณ… พร้อมที่จะอัปเกรดเลเวลความฟิต! เบิร์นขั้นสุด!</span>
-              <br></br>
-              <span className="font-weight-bold">และสนุกไปกับเบเบ้แล้ว คลิ้กที่ปุ่ม “ยืนยัน”เพื่ออัปเกรดโปรแกรมได้เลยค่า!!</span>
+              <span >กรุณาอ่านรายละเอียดก่อนตัดสินใจนะคะ</span>
               <br></br>
             </div>
           }
@@ -1505,7 +1494,7 @@ class VideoList extends Component {
                 onClick={() => this.props.updateProgramPromptLog(user.user_id, (!statusCheckRenewPrompt) ? '4 weeks prompt' : 'renew prompt', 'not level up')}
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", color: "#F45197" }}
                 className="mt-3"
-              >{(step4WeeksPrompt < 3) ? "ไม่สนใจ, ขอใช้โปรแกรมเดิม" : "ยังไม่แน่ใจ, ขอใช้โปรแกรมเดิม"}</button>
+              >{(step4WeeksPrompt < 3) ? "ไม่สนใจ, ขอคงโปรแกรมเดิม" : "ขอใช้โปรแกรมเดิม"}</button>
               <div className="ml-2 mr-2"></div>
               <button
                 onClick={
@@ -1516,7 +1505,7 @@ class VideoList extends Component {
                 }
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", backgroundColor: "#F45197", color: "white" }}
                 className="mt-3"
-              >{(step4WeeksPrompt < 3) ? "สนใจ, อ่านรายละเอียด" : "ยืนยัน, ต้องการอัปเกรดโปรแกรม"}</button>
+              >{(step4WeeksPrompt < 3) ? "สนใจ, อ่านรายละเอียด" : "ยืนยัน, อัปเกรดโปรแกรม"}</button>
             </div>
           }
         </div>
