@@ -1505,7 +1505,17 @@ class VideoList extends Component {
                 }
                 style={{ width: (step4WeeksPrompt < 3) ? 250 : 300, borderRadius: 30, borderColor: "#F45197", backgroundColor: "#F45197", color: "white" }}
                 className="mt-3"
-              >{(step4WeeksPrompt < 3) ? "สนใจ, อ่านรายละเอียด" : "ยืนยัน, อัปเกรดโปรแกรม"}</button>
+              >
+                {
+                  (step4WeeksPrompt < 3) ?
+                    (step4WeeksPrompt === 2) ?
+                      "สนใจ, อัปเกรดโปรแกรม"
+                      :
+                      "สนใจ, อ่านรายละเอียด"
+                    :
+                    "ยืนยัน, อัปเกรดโปรแกรม"
+                }
+              </button>
             </div>
           }
         </div>
