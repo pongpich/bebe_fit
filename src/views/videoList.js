@@ -1536,6 +1536,16 @@ class VideoList extends Component {
     )
   }
 
+  checkDayPlaytime(todayExercise) {
+    var showEditBtn = false;
+    todayExercise.map(item => {
+      if ((item.play_time / item.duration) < completeVideoPlayPercentage) {
+        showEditBtn = true;
+      }
+    });
+    return showEditBtn;
+  }
+
   renderVideoList() {
     const { focusDay, selectedVDO } = this.state;
     const { exerciseVideo } = this.props;
@@ -1646,7 +1656,7 @@ class VideoList extends Component {
                       <div className="">
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                         {
-                          todayExercise && (todayExercise[todayExercise.length - 1] && !(todayExercise[todayExercise.length - 1].play_time / todayExercise[todayExercise.length - 1].duration >= completeVideoPlayPercentage)) &&
+                          (todayExercise && this.checkDayPlaytime(todayExercise)) &&
                           <div
                             className="mb-3"
                             style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
