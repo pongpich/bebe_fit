@@ -52,6 +52,7 @@ class VideoList extends Component {
       validation_displayname: false,
       checkDisplayName: null,
       step4WeeksPrompt: 1,
+      selectVideoPlayer: 1
     };
 
     this.prevPlayTime = 0;
@@ -405,6 +406,7 @@ class VideoList extends Component {
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
     const selectedVDO = todayExercise.find(element => (element.order === index));
+    this.setState({ selectVideoPlayer: 1 });
     if (selectedVDO) {
       this.setState({
         selectedVDO
@@ -421,6 +423,7 @@ class VideoList extends Component {
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     const selectedVDO = todayExercise.find(element => (element.order === index));
+    this.setState({ selectVideoPlayer: 1 });
     if (selectedVDO) {
       this.setState({
         selectedVDO
@@ -445,6 +448,7 @@ class VideoList extends Component {
   toggle(selectedVDO) {
     var trailer = document.getElementById(`popupVDO`);
     var video = document.getElementById(`videoPlayer`);
+    this.setState({ selectVideoPlayer: 1 });
     if (selectedVDO) {
       this.setState({
         selectedVDO: selectedVDO
@@ -633,9 +637,10 @@ class VideoList extends Component {
   };
 
   renderEditVDO() {
-    const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList } = this.state;
+    const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList, selectVideoPlayer } = this.state;
     const { member_info } = this.props;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl2 = (selectedVDO && selectedVDO.url2) ? `${selectedVDO.url2}` : "";
     let allMinute = [];
     let allSecond = [];
     tempPlaylist.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
@@ -808,11 +813,17 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture ></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayer" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture ></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
@@ -1546,11 +1557,28 @@ class VideoList extends Component {
     return showEditBtn;
   }
 
+  renderBtnSelectVideoPlayer(videoUrl, videoUrl2) {
+    const { selectVideoPlayer } = this.state;
+    return (
+      <div>
+        {
+          (videoUrl && videoUrl2) &&
+          <button type="button" className="btn btn-light btn-sm mr-2" style={{ borderColor: "#F45197", borderWidth: (selectVideoPlayer === 1) ? 3 : 0 }} onClick={() => this.setState({ selectVideoPlayer: 1 })}>ตัวเล่นหลัก</button>
+        }
+        {
+          videoUrl2 &&
+          <button type="button" className="btn btn-light btn-sm mr-2" style={{ borderColor: "#F45197", borderWidth: (selectVideoPlayer === 2) ? 3 : 0 }} onClick={() => this.setState({ selectVideoPlayer: 2 })}>ตัวเล่นสำรอง</button>
+        }
+      </div>
+    )
+  }
+
   renderVideoList() {
-    const { focusDay, selectedVDO } = this.state;
+    const { focusDay, selectedVDO, selectVideoPlayer } = this.state;
     const { exerciseVideo } = this.props;
     const numbDayExercise = exerciseVideo.length;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl2 = (selectedVDO && selectedVDO.url2) ? `${selectedVDO.url2}` : "";
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
@@ -1641,11 +1669,17 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayer" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
@@ -1806,9 +1840,10 @@ class VideoList extends Component {
   }
 
   renderVideoListLastWeek() {
-    const { focusDay, selectedVDO } = this.state;
+    const { focusDay, selectedVDO, selectVideoPlayer } = this.state;
     const { exerciseVideoLastWeek } = this.props;
     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl2 = (selectedVDO && selectedVDO.url2) ? `${selectedVDO.url2}` : "";
     const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
     let allMinute = [];
     let allSecond = [];
@@ -1895,11 +1930,17 @@ class VideoList extends Component {
 
           <div className="">
             <div className="trailer" id={`popupVDO`}>
-              <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayer" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
             </div>
             <div className="trailer" id={`popupVDOList`}>
-              <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              <div>
+                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
+                <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+              </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
             </div>
             <table className="table table-responsive">
