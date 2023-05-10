@@ -10,8 +10,8 @@ import { connect } from "react-redux";
 import { logoutUser } from "./redux/auth";
 import { clearVideoList } from "./redux/exerciseVideos";
 import { clearChallenges } from "./redux/challenges"
-import { checkQuestionnaireLog } from "./redux/get"
-import { insertQuestionnaireLog } from "./redux/update"
+import { checkQuestionnaireLog, checkNewsLog } from "./redux/get"
+import { insertQuestionnaireLog, insertNewsLog } from "./redux/update"
 
 /* import bgintro from "./assets/img/bgintro.png"; */
 
@@ -38,26 +38,33 @@ class App extends Component {
     super(props);
     this.state = {
       statusQuestionnaire: "default",
-      overlay: false
+      statusNews: "default",
+      overlay: false,
+      overlay2: false,
     }
   }
 
   async componentDidMount() {
     const { user } = this.props;
     this.props.checkQuestionnaireLog((user && user.user_id), 'satisfaction_assessment');
+    this.props.checkNewsLog((user && user.user_id), 'backup_video_player ');
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { statusCheckQuestionnaireLog, statusGetCheckQuestionnaireLog, user, statusInsertQuestionnaireLog } = this.props;
-    const { statusQuestionnaire } = this.state;
+    const { statusCheckQuestionnaireLog, statusGetCheckQuestionnaireLog, user, statusInsertQuestionnaireLog, statusGetCheckNewsLog, statusCheckNewsLog, statusInsertNewsLog } = this.props;
+    const { statusQuestionnaire, statusNews } = this.state;
 
     if ((prevState.statusQuestionnaire !== statusQuestionnaire) && (statusQuestionnaire === "done")) {
       this.props.insertQuestionnaireLog((user && user.user_id), 'satisfaction_assessment')  //อัพเดทว่าผู้ใช้ทำแบบสอบถามแล้ว
       this.closeToggle('popupQuestionnaire');//ปิด Popup
     }
 
+    if ((prevState.statusNews !== statusNews) && (statusNews === "done")) {
+      this.props.insertNewsLog((user && user.user_id), 'backup_video_player')  //อัพเดทว่าผู้ใช้เห็นข่าวสารนี้แล้ว
+      document.getElementById("popupNews").classList.toggle("active");//ปิด Popup
+    }
+
     if ((prevProps.statusGetCheckQuestionnaireLog !== statusGetCheckQuestionnaireLog) && (statusGetCheckQuestionnaireLog === 'success')) {
-      console.log("statusCheckQuestionnaireLog :", statusCheckQuestionnaireLog);
       let week;
       if (user) {
         week = calculateWeekInProgram(user.start_date);
@@ -67,8 +74,17 @@ class App extends Component {
       }
     }
 
+    if ((prevProps.statusGetCheckNewsLog !== statusGetCheckNewsLog) && (statusGetCheckNewsLog === 'success')) {
+      if (!statusCheckNewsLog) {
+        this.toggle('popupNews');
+      }
+    }
+
     if ((prevProps.statusInsertQuestionnaireLog !== statusInsertQuestionnaireLog) && (statusInsertQuestionnaireLog === 'success')) {
       this.props.checkQuestionnaireLog((user && user.user_id), 'satisfaction_assessment');
+    }
+    if ((prevProps.statusInsertNewsLog !== statusInsertNewsLog) && (statusInsertNewsLog === 'success')) {
+      this.props.checkNewsLog((user && user.user_id), 'backup_video_player');
     }
   }
 
@@ -174,6 +190,10 @@ class App extends Component {
       document.getElementById("popupQuestionnaire").classList.toggle("active");
       this.setState({ overlay: true });
     }
+    if (popupName === "popupNews") {
+      document.getElementById("popupNews").classList.toggle("active");
+      this.setState({ overlay2: true });
+    }
   }
 
   closeToggle(popupName) {
@@ -187,10 +207,13 @@ class App extends Component {
       document.getElementById("popupQuestionnaire").classList.toggle("active");
       this.setState({ overlay: false });
     }
+    if (popupName === "popupNews") {
+      this.setState({ overlay2: false, statusNews: "done" });
+    }
   }
 
   renderHeader() {
-    const { overlay } = this.state;
+    const { overlay, overlay2 } = this.state;
     return (
       <div className="header">
 
@@ -207,6 +230,14 @@ class App extends Component {
             onClick={() => this.closeToggle('popupQuestionnaire')}
           />
         }
+        {
+          overlay2 &&
+          <div
+            className="overlayPopupNews"
+            id="overlayPopupNews"
+            onClick={() => this.closeToggle('popupNews')}
+          />
+        }
         <div className="popupQuestionnaire" id={`popupQuestionnaire`}>
           <div style={{ display: "block" }}>
             <h3 ><b>*แบบประเมินความพึงพอใจและประเมินผลการทำตามโปรแกรม*</b></h3>
@@ -214,9 +245,19 @@ class App extends Component {
             <h5 style={{ color: "black", marginTop: 30 }}>ร่วมตอบแบบสอบถามเพื่อประเมินความพึงพอใจในการเข้าร่วมคอร์ส</h5>
             <h5 style={{ color: "black" }}>ประเมินผลการทำตามโปรแกรมเพื่อรับคำแนะนำ</h5>
             <h5 style={{ color: "black" }}>และรับสิทธิ์สมัครต่ออายุคอร์สในราคาพิเศษ!</h5>
-            <a style={{ fontSize: 24, textDecoration: "underline"}} href="https://form.typeform.com/to/fYVxetCs" target="_blank" onClick={() => this.setState({ statusQuestionnaire: "done" })}>ทำแบบสอบถาม</a>
+            <a style={{ fontSize: 24, textDecoration: "underline" }} href="https://form.typeform.com/to/fYVxetCs" target="_blank" onClick={() => this.setState({ statusQuestionnaire: "done" })}>ทำแบบสอบถาม</a>
           </div>
           <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle('popupQuestionnaire')}></img>
+        </div>
+
+        <div className="popupNews" id={`popupNews`}>
+          <div style={{ display: "block" }}>
+            <h3 ><b>ใหม่!</b></h3>
+            <h3 ><b>เพิ่มฟังก์ชั่น “ตัวเล่นสำรอง” เพื่อรองรับการเล่นวิดีโอคลิปแบบไม่สะดุด</b></h3>
+            <h5 style={{ color: "black", marginTop: 30 }}>*เมนูเลือกตัวเล่น จะอยู่ด้านบนของคลิป เมื่อคลิปจากตัวเล่นหลักเปิดไม่ได้ ให้เลือก “ตัวเล่นสำรอง” แทน</h5>
+            <img src={`../assets/img/news1.jpg`} width="90%" />
+          </div>
+          <img alt="" src="./assets/img/thumb/close.png" className="close" onClick={() => this.closeToggle('popupNews')}></img>
         </div>
 
 
@@ -265,10 +306,10 @@ class App extends Component {
 
 const mapStateToProps = ({ authUser, exerciseVideos, get, update }) => {
   const { user } = authUser;
-  const { statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog } = get;
-  const { statusInsertQuestionnaireLog } = update;
+  const { statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog, statusCheckNewsLog, statusGetCheckNewsLog } = get;
+  const { statusInsertQuestionnaireLog, statusInsertNewsLog } = update;
   const { exerciseVideo, status, video, videos } = exerciseVideos;
-  return { user, exerciseVideo, status, video, videos, statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog, statusInsertQuestionnaireLog };
+  return { user, exerciseVideo, status, video, videos, statusGetCheckQuestionnaireLog, statusCheckQuestionnaireLog, statusInsertQuestionnaireLog, statusCheckNewsLog, statusGetCheckNewsLog, statusInsertNewsLog };
 };
 
 const mapActionsToProps = {
@@ -276,7 +317,9 @@ const mapActionsToProps = {
   clearVideoList,
   clearChallenges,
   checkQuestionnaireLog,
-  insertQuestionnaireLog
+  insertQuestionnaireLog,
+  checkNewsLog,
+  insertNewsLog,
 };
 
 export default connect(

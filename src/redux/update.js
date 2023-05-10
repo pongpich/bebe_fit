@@ -21,6 +21,8 @@ export const types = {
   CHECK_PROGRAM_LEVEL_SUCCESS: "CHECK_PROGRAM_LEVEL_SUCCESS",
   INSERT_QUESTIONNAIRE_LOG: "INSERT_QUESTIONNAIRE_LOG",
   INSERT_QUESTIONNAIRE_LOG_SUCCESS: "INSERT_QUESTIONNAIRE_LOG_SUCCESS",
+  INSERT_NEWS_LOG: "INSERT_NEWS_LOG",
+  INSERT_NEWS_LOG_SUCCESS: "INSERT_NEWS_LOG_SUCCESS",
 }
 
 export const insertQuestionnaireLog = (
@@ -28,6 +30,17 @@ export const insertQuestionnaireLog = (
   log
 ) => ({
   type: types.INSERT_QUESTIONNAIRE_LOG,
+  payload: {
+    user_id,
+    log
+  }
+})
+
+export const insertNewsLog = (
+  user_id,
+  log
+) => ({
+  type: types.INSERT_NEWS_LOG,
   payload: {
     user_id,
     log
@@ -174,6 +187,23 @@ const insertQuestionnaireLogSagaAsync = async (
 ) => {
   try {
     const apiResult = await API.post("bebe", "/insertQuestionnaireLog", {
+      body: {
+        user_id,
+        log
+      }
+    });
+    return apiResult
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const insertNewsLogSagaAsync = async (
+  user_id,
+  log
+) => {
+  try {
+    const apiResult = await API.post("bebe", "/insertNewsLog", {
       body: {
         user_id,
         log
@@ -349,6 +379,26 @@ function* insertQuestionnaireLogSaga({ payload }) {
     console.log("error from insertQuestionnaireLogSaga :", error);
   }
 }
+function* insertNewsLogSaga({ payload }) {
+  const {
+    user_id,
+    log
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      insertNewsLogSagaAsync,
+      user_id,
+      log
+    );
+    yield put({
+      type: types.INSERT_NEWS_LOG_SUCCESS
+    })
+
+  } catch (error) {
+    console.log("error from insertNewsLogSaga :", error);
+  }
+}
 
 function* updateStatusLowImpactSaga({ payload }) {
   const {
@@ -441,6 +491,10 @@ export function* watchInsertQuestionnaireLogSaga() {
   yield takeEvery(types.INSERT_QUESTIONNAIRE_LOG, insertQuestionnaireLogSaga)
 }
 
+export function* watchInsertNewsLogSaga() {
+  yield takeEvery(types.INSERT_NEWS_LOG, insertNewsLogSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchupdateFittoPlant),
@@ -451,6 +505,7 @@ export function* saga() {
     fork(watchCheckProgramLevel),
     fork(watchUpdateProgramLevel),
     fork(watchInsertQuestionnaireLogSaga),
+    fork(watchInsertNewsLogSaga),
   ]);
 }
 
@@ -463,7 +518,8 @@ const INIT_STATE = {
   statusUpdateLowImpact: "default",
   statusUpdateProgramLevel: "default",
   statusUpdateProgramPromptLog: "default",
-  statusInsertQuestionnaireLog: "default"
+  statusInsertQuestionnaireLog: "default",
+  statusInsertNewsLog: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -477,6 +533,16 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         statusInsertQuestionnaireLog: "success"
+      }
+    case types.INSERT_NEWS_LOG:
+      return {
+        ...state,
+        statusInsertNewsLog: "loading"
+      }
+    case types.INSERT_NEWS_LOG_SUCCESS:
+      return {
+        ...state,
+        statusInsertNewsLog: "success"
       }
     case types.CHECK_PROGRAM_LEVEL:
       return {
