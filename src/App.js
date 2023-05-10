@@ -191,8 +191,10 @@ class App extends Component {
       this.setState({ overlay: true });
     }
     if (popupName === "popupNews") {
-      document.getElementById("popupNews") && document.getElementById("popupNews").classList.toggle("active");
-      this.setState({ overlay2: true });
+      if (document.getElementById("popupNews")) {
+        document.getElementById("popupNews").classList.toggle("active");
+        this.setState({ overlay2: true });
+      }
     }
   }
 
