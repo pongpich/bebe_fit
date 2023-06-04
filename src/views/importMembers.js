@@ -46,7 +46,7 @@ class ImportMembers extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { statusUpdateLowImpact, statusUpdateProgramLevel } = this.props;
+    const { statusUpdateLowImpact, statusUpdateProgramLevel, statusImportMembers } = this.props;
     if ((prevProps.statusUpdateLowImpact !== statusUpdateLowImpact) && (statusUpdateLowImpact === "success")) {
       this.setState({ editMemberType: false });
       this.props.selectMemberInfo(this.state.email)
@@ -54,6 +54,21 @@ class ImportMembers extends Component {
     if ((prevProps.statusUpdateProgramLevel !== statusUpdateProgramLevel) && (statusUpdateProgramLevel === "success")) {
       this.setState({ editProgramLevel: false });
       this.props.selectMemberInfo(this.state.email)
+    }
+
+    if ((prevProps.statusImportMembers !== statusImportMembers) && (statusImportMembers === "success")) {
+      document.getElementById("popupSuccessSubmit").classList.toggle("active");
+      document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
+      var delayInMilliseconds = 1750; //1.75 second
+      setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
+        this.closePopupSuccessSubmit();
+      }, delayInMilliseconds);
+
+
+    }
+
+    if ((prevProps.statusImportMembers !== statusImportMembers) && (statusImportMembers === "fail")) {
+
     }
   }
 
@@ -64,9 +79,8 @@ class ImportMembers extends Component {
   }
 
   fileSelectedHandler = event => {
-    var { members } = this.state;
     const Papa = require('papaparse');
-
+    var members = [];
     this.setState({
       selectedFile: null
     })
@@ -95,7 +109,8 @@ class ImportMembers extends Component {
         }
       });
       this.setState({
-        selectedFile: document.getElementById('upload-csv').files[0]
+        selectedFile: document.getElementById('upload-csv').files[0],
+        members: members
       })
     }
   }
@@ -110,12 +125,7 @@ class ImportMembers extends Component {
 
     if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
       this.props.importMembers(members, start_date, expire_date, member_type);
-      document.getElementById("popupSuccessSubmit").classList.toggle("active");
-      document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
-      var delayInMilliseconds = 1750; //1.75 second
-      setTimeout(() => { // เด้ง Popup SucccessSubmit 1.75 วินาที แล้วปิดเอง 
-        this.closePopupSuccessSubmit();
-      }, delayInMilliseconds);
+      console.log("members :", members);
     } else {
       this.setState({
         statusSubmitImportMembers: "fail"
@@ -337,7 +347,7 @@ class ImportMembers extends Component {
                 {
                   (memberInfo.low_impact === 'no') &&
                   <h5>ระดับโปรแกรม :
-                  <span>
+                    <span>
                       {(memberInfo.program_level === 'bfr_lv1') && ' bfr_lv1 (Beginner)'}
                       {(memberInfo.program_level === 'bfr_lv1.5') && ' bfr_lv1.5'}
                       {(memberInfo.program_level === 'bfr_lv2') && ' bfr_lv2 (Standard)'}
@@ -631,6 +641,7 @@ class ImportMembers extends Component {
 
   renderImportMembers() {
     const { selectedStartDate, selectedExpireDate, statusSubmitImportMembers, member_type } = this.state;
+    const { statusImportMembers } = this.props;
     return (
       <div className="row">
         {this.renderPopupSuccessSubmit()}
@@ -693,7 +704,7 @@ class ImportMembers extends Component {
                     style={{ background: "#333333", color: "white" }}
                   >
                     อัปโหลด
-              </button>
+                  </button>
                 </div>
                 <input
                   type="text"
@@ -761,6 +772,10 @@ class ImportMembers extends Component {
             (statusSubmitImportMembers === "fail") &&
             <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>**กรุณากรอกข้อมูลให้ครบถ้วน</h6></small>
           }
+          {
+            (statusImportMembers === "fail") &&
+            <small id="emailHelp" className="form-text text-muted mb-3"><h6 style={{ color: "red" }}>**พบความผิดปกติ** กรุณาเช็คไฟล์ .csv ให้ถูกต้อง (ข้อมูลผู้ใช้ห้ามมี Emoji)</h6></small>
+          }
         </div>
 
 
@@ -823,11 +838,11 @@ class ImportMembers extends Component {
 }
 
 const mapStateToProps = ({ authUser, exerciseVideos, challenges, update }) => {
-  const { user, status, statusChangeEmail } = authUser;
+  const { user, status, statusChangeEmail, statusImportMembers } = authUser;
   const { programInWeek, memberInfo, bodyInfo } = exerciseVideos;
   const { memberEventLog } = challenges;
   const { statusUpdateLowImpact, statusUpdateProgramLevel } = update;
-  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog, statusUpdateLowImpact, statusUpdateProgramLevel };
+  return { user, status, programInWeek, memberInfo, bodyInfo, statusChangeEmail, memberEventLog, statusUpdateLowImpact, statusUpdateProgramLevel, statusImportMembers };
 };
 
 const mapActionsToProps = { importMembers, selectProgramInWeek, deleteProgramInWeek, changeEmail, selectMemberInfo, selectBodyInfo, selectMemberEventLog, updateStatusLowImpact, updateProgramLevel };

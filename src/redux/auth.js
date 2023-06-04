@@ -26,6 +26,8 @@ export const types = {
   RESET_PASSWORD_SUCCESS: "RESET_PASSWORD_SUCCESS",
   RESET_PASSWORD_FAIL: "RESET_PASSWORD_FAIL",
   IMPORT_MEMBERS: "IMPORT_MEMBERS",
+  IMPORT_MEMBERS_SUCCESS: "IMPORT_MEMBERS_SUCCESS",
+  IMPORT_MEMBERS_FAIL: "IMPORT_MEMBERS_FAIL",
   GET_GROUP_ID: "GET_GROUP_ID",
   GET_GROUP_ID_SUCCESS: "GET_GROUP_ID_SUCCESS",
   CHANGE_EMAIL: "CHANGE_EMAIL",
@@ -546,15 +548,28 @@ function* importMembersSaga({ payload }) {
   } = payload
 
   try {
-    yield call(
+    const apiResult = yield call(
       importMembersSagaAsync,
       members,
       start_date,
       expire_date,
       member_type
     )
+    console.log("apiResult :", apiResult);
+    if (apiResult && apiResult.results.message === "success") {
+      yield put({
+        type: types.IMPORT_MEMBERS_SUCCESS
+      })
+    } else {
+      yield put({
+        type: types.IMPORT_MEMBERS_FAIL
+      })
+    }
   } catch (error) {
-    console.log("error from register :", error);
+    yield put({
+      type: types.IMPORT_MEMBERS_FAIL
+    })
+    console.log("error from importMembersSaga :", error);
   }
 }
 
@@ -803,11 +818,27 @@ const INIT_STATE = {
   loading: false,
   statusRegister: "default",
   statusResetPassword: "default",
-  statusChangeEmail: "default"
+  statusChangeEmail: "default",
+  statusImportMembers: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.IMPORT_MEMBERS:
+      return {
+        ...state,
+        statusImportMembers: "loading"
+      }
+    case types.IMPORT_MEMBERS_SUCCESS:
+      return {
+        ...state,
+        statusImportMembers: "success"
+      }
+    case types.IMPORT_MEMBERS_FAIL:
+      return {
+        ...state,
+        statusImportMembers: "fail"
+      }
     case types.GET_EXPIRE_DATE_SUCCESS:
       return {
         ...state,
