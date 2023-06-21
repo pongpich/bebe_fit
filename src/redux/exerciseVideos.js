@@ -38,7 +38,17 @@ export const types = {
   DELETE_PROGRAM_IN_WEEK: "DELETE_PROGRAM_IN_WEEK",
   CLEAR_VIDEO_LIST: "CLEAR_VIDEO_LIST",
   CLEAR_VIDEOS: "CLEAR_VIDEOS",
+  GET_ALL_EXERCISE_ACTIVITY: "GET_ALL_EXERCISE_ACTIVITY",
+  GET_ALL_EXERCISE_ACTIVITY_SUCCESS: "GET_ALL_EXERCISE_ACTIVITY_SUCCESS",
+  GET_ALL_EXERCISE_ACTIVITY_FAIL: "GET_ALL_EXERCISE_ACTIVITY_FAIL",
 }
+
+export const getAllExerciseActivity = (user_id) => ({
+  type: types.GET_ALL_EXERCISE_ACTIVITY,
+  payload: {
+    user_id
+  }
+});
 
 export const selectBodyInfo = (email) => ({
   type: types.SELECT_BODY_INFO,
@@ -443,6 +453,21 @@ const deleteProgramInWeekSagaAsync = async (
   }
 }
 
+const getAllExerciseActivitySagaAsync = async (
+  user_id
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getAllExerciseActivity", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
 const createCustomWeekForUserSagaAsync = async (
   user_id,
   weight,
@@ -670,6 +695,33 @@ function* deleteProgramInWeekSaga({ payload }) {
     return apiResult;
   } catch (error) {
     return { error, messsage: error.message };
+  }
+}
+
+function* getAllExerciseActivitySaga({ payload }) {
+  const {
+    user_id
+  } = payload
+  try {
+    const apiResult = yield call(
+      getAllExerciseActivitySagaAsync,
+      user_id
+    );
+
+    if (apiResult.results && apiResult.results.all_exercise_activity) {
+      yield put({
+        type: types.GET_ALL_EXERCISE_ACTIVITY_SUCCESS,
+        payload: apiResult.results.all_exercise_activity
+      });
+    } else {
+      yield put({
+        type: types.GET_ALL_EXERCISE_ACTIVITY_FAIL
+      });
+    }
+
+    return apiResult;
+  } catch (error) {
+    console.log("error from getAllExerciseActivitySaga :", error);
   }
 }
 
@@ -931,6 +983,10 @@ export function* watchDeleteProgramInWeek() {
   yield takeEvery(types.DELETE_PROGRAM_IN_WEEK, deleteProgramInWeekSaga)
 }
 
+export function* watchGetAllExerciseActivity() {
+  yield takeEvery(types.GET_ALL_EXERCISE_ACTIVITY, getAllExerciseActivitySaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
@@ -945,7 +1001,8 @@ export function* saga() {
     fork(watchSelectProgramInWeek),
     fork(watchSelectMemberInfo),
     fork(watchSelectBodyInfo),
-    fork(watchDeleteProgramInWeek)
+    fork(watchDeleteProgramInWeek),
+    fork(watchGetAllExerciseActivity),
   ]);
 }
 
@@ -967,10 +1024,28 @@ const INIT_STATE = {
   programInWeek: [],
   memberInfo: [],
   bodyInfo: [],
+  statusGetAllExAct: "default",
+  all_exercise_activity: []
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.GET_ALL_EXERCISE_ACTIVITY:
+      return {
+        ...state,
+        statusGetAllExAct: "loading"
+      }
+    case types.GET_ALL_EXERCISE_ACTIVITY_SUCCESS:
+      return {
+        ...state,
+        statusGetAllExAct: "success",
+        all_exercise_activity: action.payload
+      }
+    case types.GET_ALL_EXERCISE_ACTIVITY_FAIL:
+      return {
+        ...state,
+        statusGetAllExAct: "fail"
+      }
     case types.UPDATE_BODY_INFO_SUCCESS:
       return {
         ...state,

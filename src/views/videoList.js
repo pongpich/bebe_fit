@@ -8,7 +8,7 @@ import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth"
 import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog, checkProgramLevel } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
@@ -86,6 +86,8 @@ class VideoList extends Component {
       this.props.checkProgramLevel(user.user_id);
       this.props.check4WeeksPrompt(user.user_id);
       this.props.checkRenewPrompt(user.user_id);
+
+      this.props.getAllExerciseActivity(user.user_id);
     }
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
@@ -1653,13 +1655,24 @@ class VideoList extends Component {
 
                 {
                   (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
-                  <a
-                    className="nav-link ml-auto"
-                    style={{ cursor: "pointer", color: "#F45197" }}
-                    onClick={() => this.setState({ lastWeekVDO_click: "show" })}
-                  >
-                    <u>ดูวีดีโอออกกำลังกายสัปดาห์ที่ผ่านมา</u>
-                  </a>
+                  (
+                    (false) ? //เช็คว่าผู้ใช้หมดอายุหรือยัง
+                      <a
+                        className="nav-link ml-auto"
+                        style={{ cursor: "pointer", color: "#F45197" }}
+                        onClick={() => this.setState({ lastWeekVDO_click: "show" })}
+                      >
+                        <u>ดูวีดีโอออกกำลังกายสัปดาห์ที่ผ่านมา</u>
+                      </a>
+                      :
+                      <a
+                        className="nav-link ml-auto"
+                        style={{ cursor: "pointer", color: "#F45197" }}
+                        onClick={() => this.setState({ lastWeekVDO_click: "show" })}
+                      >
+                        <u>ดูวีดีโอออกกำลังกายสัปดาห์ที่ผ่านมา</u>
+                      </a>
+                  )
                 }
               </nav>
             </div>
@@ -2200,11 +2213,11 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) 
   const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = get;
   const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, all_exercise_activity } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, all_exercise_activity };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity };
 
 export default connect(
   mapStateToProps,
