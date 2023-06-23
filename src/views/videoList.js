@@ -183,7 +183,7 @@ class VideoList extends Component {
 
 
     if (prevState.lastWeekStart !== lastWeekStart) {
-      console.log("555", lastWeekStart);
+
       // ทำสิ่งที่คุณต้องการเมื่อ lastWeekStart เปลี่ยนค่า
       this.selectVideoLastWeek(lastWeekStart);
     }
@@ -411,7 +411,6 @@ class VideoList extends Component {
 
   selectExerciseDaySelectionLastWeek(focusDay) {
     const { selectExerciseVideoLastWeek } = this.state
-
     if (selectExerciseVideoLastWeek) {
       return selectExerciseVideoLastWeek[focusDay];
     }
@@ -503,6 +502,7 @@ class VideoList extends Component {
   }
 
   toggleList(index) {
+    console.log("toggleList");
     const { focusDay } = this.state;
     const todayExercise = this.exerciseDaySelection(focusDay);
     const selectedVDO = todayExercise.find(element => (element.order === index));
@@ -519,22 +519,43 @@ class VideoList extends Component {
     }
   }
 
+
   toggleListLastWeek(index) {
-    const { focusDay } = this.state;
-    const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
-    const selectedVDO = todayExercise.find(element => (element.order === index));
-    this.setState({ selectVideoPlayer: 1 });
-    if (selectedVDO) {
-      this.setState({
-        selectedVDO
-      }, () => {
-        var trailer = document.getElementById(`popupVDOList`);
-        var video = document.getElementById(`videoPlayerList`);
-        trailer.classList.add("active_list");
-        video.play();
-      })
+    const { focusDay, lastWeekVDOAll } = this.state;
+    if (!lastWeekVDOAll) {
+
+      const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+      const selectedVDO = todayExercise.find(element => (element.order === index));
+      this.setState({ selectVideoPlayer: 1 });
+      if (selectedVDO) {
+        this.setState({
+          selectedVDO
+        }, () => {
+          var trailer = document.getElementById(`popupVDOList`);
+          var video = document.getElementById(`videoPlayerList`);
+          trailer.classList.add("active_list");
+          video.play();
+        })
+      }
+    } else {
+      const todayExercise = this.selectExerciseDaySelectionLastWeek(focusDay);
+      const selectedVDO = todayExercise.find(element => (element.order === index));
+      this.setState({ selectVideoPlayer: 1 });
+      if (selectedVDO) {
+        this.setState({
+          selectedVDO
+        }, () => {
+          var trailer = document.getElementById(`popupVDOList`);
+          var video = document.getElementById(`videoPlayerList`);
+          trailer.classList.add("active_list");
+          video.play();
+        })
+      }
     }
+
   }
+
+
 
   closeList() {
     var trailer = document.getElementById(`popupVDOList`);
@@ -546,6 +567,7 @@ class VideoList extends Component {
   }
 
   toggle(selectedVDO) {
+
     var trailer = document.getElementById(`popupVDO`);
     var video = document.getElementById(`videoPlayer`);
     this.setState({ selectVideoPlayer: 1 });
@@ -2214,7 +2236,6 @@ class VideoList extends Component {
     let allMinute = [];
     let allSecond = [];
 
-    console.log("selectExerciseVideoLastWeek", selectExerciseVideoLastWeek,);
 
 
     /*  const selectExerciseVideoLastWeek = exerciseVideoLastWeek */
