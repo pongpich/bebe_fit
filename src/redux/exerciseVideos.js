@@ -10,6 +10,8 @@ export const types = {
   UPDATE_PLAYTIME_SUCCESS: "UPDATE_PLAYTIME_SUCCESS",
   UPDATE_PLAYTIME_LASTWEEK: "UPDATE_PLAYTIME_LASTWEEK",
   UPDATE_PLAYTIME_LASTWEEK_SUCCESS: "UPDATE_PLAYTIME_LASTWEEK_SUCCESS",
+  UPDATE_PLAYTIME_LASTWEEK_SELECTED: "UPDATE_PLAYTIME_LASTWEEK_SELECTED",
+  UPDATE_PLAYTIME_LASTWEEK_SELECTED_SUCCESS: "UPDATE_PLAYTIME_LASTWEEK_SELECTED_SUCCESS",
   UPDATE_PLAYLIST: "UPDATE_PLAYLIST",
   UPDATE_PLAYLIST_SUCCESS: "UPDATE_PLAYLIST_SUCCESS",
   UPDATE_BODY_INFO: "UPDATE_BODY_INFO",
@@ -171,6 +173,21 @@ export const updatePlaytimeLastWeek = (user_id, start_date, expire_date, day_num
   }
 })
 
+export const updatePlaytimeLastWeekSelected = (user_id, start_date, expire_date, day_number, video_number, play_time, duration, exerciseVideo, week_in_program) => ({
+  type: types.UPDATE_PLAYTIME_LASTWEEK_SELECTED,
+  payload: {
+    user_id,
+    start_date,
+    expire_date,
+    day_number,
+    video_number,
+    play_time,
+    duration,
+    exerciseVideo,
+    week_in_program
+  }
+})
+
 export const videoListForUserLastWeek = (
   user_id,
   weight,
@@ -274,6 +291,35 @@ const updatePlaytimeLastWeekSagaAsync = async (
         video_number,
         play_time,
         duration
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const updatePlaytimeLastWeekSelectedSagaAsync = async (
+  user_id,
+  start_date,
+  expire_date,
+  day_number,
+  video_number,
+  play_time,
+  duration,
+  week_in_program
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/updatePlayTimeLastWeekSelected", {
+      body: {
+        user_id,
+        start_date,
+        expire_date,
+        day_number,
+        video_number,
+        play_time,
+        duration,
+        week_in_program
       }
     });
     return apiResult;
@@ -822,6 +868,56 @@ function* updatePlaytimeLastWeekSaga({ payload }) {
     return { error, messsage: error.message };
   }
 }
+function* updatePlaytimeLastWeekSelectedSaga({ payload }) {
+  const {
+    user_id,
+    start_date,
+    expire_date,
+    day_number,
+    video_number,
+    play_time,
+    duration,
+    exerciseVideo,
+    week_in_program
+  } = payload
+  try {
+    const apiResult = yield call(
+      updatePlaytimeLastWeekSelectedSagaAsync,
+      user_id,
+      start_date,
+      expire_date,
+      day_number,
+      video_number,
+      play_time,
+      duration,
+      week_in_program
+    );
+    let keyDay = "";
+    switch (day_number) {
+      case 0:
+        keyDay = "day1";
+        break;
+      case 1:
+        keyDay = "day2";
+        break;
+      case 2:
+        keyDay = "day3";
+        break;
+      case 3:
+        keyDay = "day4";
+        break;
+      default:
+        break;
+    }
+    yield put({
+      type: types.UPDATE_PLAYTIME_LASTWEEK_SELECTED_SUCCESS,
+      payload: exerciseVideo
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 
 function* videoListForUserLastWeekSaga({ payload }) {
@@ -939,6 +1035,10 @@ export function* watchUpdatePlaytimeLastWeek() {
   yield takeEvery(types.UPDATE_PLAYTIME_LASTWEEK, updatePlaytimeLastWeekSaga)
 }
 
+export function* watchUpdatePlaytimeLastWeekSelectedSaga() {
+  yield takeEvery(types.UPDATE_PLAYTIME_LASTWEEK_SELECTED, updatePlaytimeLastWeekSelectedSaga)
+}
+
 export function* watchUpdatePlaylist() {
   yield takeEvery(types.UPDATE_PLAYLIST, updatePlaylistSaga)
 }
@@ -1003,6 +1103,7 @@ export function* saga() {
     fork(watchSelectBodyInfo),
     fork(watchDeleteProgramInWeek),
     fork(watchGetAllExerciseActivity),
+    fork(watchUpdatePlaytimeLastWeekSelectedSaga),
   ]);
 }
 
@@ -1025,7 +1126,8 @@ const INIT_STATE = {
   memberInfo: [],
   bodyInfo: [],
   statusGetAllExAct: "default",
-  all_exercise_activity: []
+  all_exercise_activity: [],
+  statusUpdatePlayTimeWeekAll: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -1077,6 +1179,17 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         exerciseVideoLastWeek: action.payload
+      };
+    case types.UPDATE_PLAYTIME_LASTWEEK_SELECTED:
+      return {
+        ...state,
+        statusUpdatePlayTimeWeekAll: "loading"
+      };
+    case types.UPDATE_PLAYTIME_LASTWEEK_SELECTED_SUCCESS:
+      return {
+        ...state,
+        all_exercise_activity: action.payload,
+        statusUpdatePlayTimeWeekAll: "success"
       };
     case types.VIDEO_LIST_FOR_USER_LASTWEEK_SUCCESS:
       return {

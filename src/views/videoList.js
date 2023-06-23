@@ -8,7 +8,7 @@ import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth"
 import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog, checkProgramLevel } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
@@ -129,8 +129,6 @@ class VideoList extends Component {
     const { displayName, displayName2, displayName3, lastWeekStart } = this.state;
     const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusGetMemberInfo, statusCheckRenewPrompt, statusGetAllExAct, member_info, all_exercise_activity } = this.props;
 
-
-
     // เช็ควันหมดอยู่ expire_date ของuser
     if (prevProps.statusGetMemberInfo !== statusGetMemberInfo && member_info) {
       const expirationDate = new Date(member_info.expire_date);
@@ -184,6 +182,8 @@ class VideoList extends Component {
 
       // ทำสิ่งที่คุณต้องการเมื่อ lastWeekStart เปลี่ยนค่า
       this.selectVideoLastWeek(lastWeekStart);
+
+      //this.props.getAllExerciseActivity(user.user_id);
     }
 
 
@@ -623,7 +623,7 @@ class VideoList extends Component {
   }
 
   onVideoTimeUpdate(compName = "video") {
-    const { selectedVDO, focusDay, lastWeekVDO_click } = this.state;
+    const { selectedVDO, focusDay, lastWeekVDO_click, lastWeekVDOAll, lastWeekStart, selectExerciseVideoLastWeek } = this.state;
     var video = compName === "video" ? this.refs.videoPlayer : this.refs.videoPlayerList;
     if (!video || !selectedVDO) { return }
 
@@ -638,7 +638,6 @@ class VideoList extends Component {
       return
     }
 
-    //if (video.currentTime >= (video.duration * 0.85) && (selectedVDO.duration !== selectedVDO.play_time)) {
     const user_id = this.props.user.user_id;
     const start_date = this.props.user.start_date;
     const expire_date = this.props.user.expire_date;
@@ -646,23 +645,38 @@ class VideoList extends Component {
     const video_number = selectedVDO.order;
     const play_time = video.currentTime;
     const duration = video.duration;
+    const tempExerciseVideoLastWeekSelect = [...selectExerciseVideoLastWeek];
+    const tempExerciseVideoLastWeekAll = [...this.props.all_exercise_activity];
     const tempExerciseVideoLastWeek = [...this.props.exerciseVideoLastWeek];
     const tempExerciseVideo = [...this.props.exerciseVideo];
+
+
     if (lastWeekVDO_click === "show") {
-      tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time, duration: duration };
+      if (!lastWeekVDOAll) {
+        tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: play_time, duration: duration };
+      } else {
+        tempExerciseVideoLastWeekSelect[day_number][video_number] = { ...tempExerciseVideoLastWeekSelect[day_number][video_number], play_time: play_time, duration: duration };
+        tempExerciseVideoLastWeekAll[lastWeekStart - 1].activities = JSON.stringify(tempExerciseVideoLastWeekSelect);
+      }
     } else {
       tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: play_time, duration: duration };
     }
+
     const newVideo = { ...selectedVDO, play_time, duration };
     this.setState({
       selectedVDO: newVideo
     });
+
     if (lastWeekVDO_click === "show") {
-      this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideoLastWeek);
+      if (!lastWeekVDOAll) {
+        this.props.updatePlaytimeLastWeek(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideoLastWeek);
+      } else {
+        this.props.updatePlaytimeLastWeekSelected(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideoLastWeekAll, lastWeekStart);
+
+      }
     } else {
       this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo);
     }
-    //}
   }
 
   onUpdateBasicInfo(event) {
@@ -2612,7 +2626,7 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) 
   return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected };
 
 export default connect(
   mapStateToProps,
