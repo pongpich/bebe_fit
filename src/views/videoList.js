@@ -136,13 +136,11 @@ class VideoList extends Component {
       const expirationDate = new Date(member_info.expire_date);
       const currentDate = new Date();
 
-      /* if (currentDate < expirationDate) {
+      if (currentDate < expirationDate) {
         this.setState({ lastWeekVDOAll: true }) //  expire_date ยังไม่หมดอายุ
       } else {
         this.setState({ lastWeekVDOAll: false }) //  expire_date หมดอายุ
-      } */
-
-
+      }
 
     }
 
