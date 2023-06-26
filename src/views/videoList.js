@@ -1795,7 +1795,7 @@ class VideoList extends Component {
                 }
 
                 {
-                  (!this.props.isFirstWeek) && // !isFirstWeek คือ ไม่ใช่ Week1
+                  (this.props.week > 1) &&
                   (
 
                     <a
