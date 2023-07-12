@@ -28,6 +28,8 @@ class ImportMembers extends Component {
       facebook: "",
       fb_group: 404,
       member_type: "normal",
+      member_type2: "normal",
+      import_type: "import_members",
       editMemberType: false,
       editProgramLevel: false,
     };
@@ -123,6 +125,10 @@ class ImportMembers extends Component {
       statusSubmitImportMembers: "default"
     })
 
+    if (member_type === "low_impact") {
+      this.togglePopupConfirmLowimp(); //สั่งปิด popup ConfirmLowimp
+    }
+
     if (selectedFile !== null && selectedStartDate !== null && selectedExpireDate !== null) {
       this.props.importMembers(members, start_date, expire_date, member_type);
       console.log("members :", members);
@@ -135,7 +141,7 @@ class ImportMembers extends Component {
   }
 
   onSubmitAddMember() {
-    const { selectedStartDate, selectedExpireDate, email, fullname, phone, facebook, fb_group, member_type } = this.state;
+    const { selectedStartDate, selectedExpireDate, email, fullname, phone, facebook, fb_group, member_type2 } = this.state;
     const start_date = this.formatDate(selectedStartDate) + " 00:00:00"; // Ex. "2021-02-19 00:00:00"
     const expire_date = this.formatDate(selectedExpireDate) + " 23:59:59"; // Ex. "2021-04-30 23:59:59"
     this.setState({
@@ -155,11 +161,15 @@ class ImportMembers extends Component {
       }
     ];
 
+    if (member_type2 === "low_impact") {
+      this.togglePopupConfirmLowimp(); //สั่งปิด popup ConfirmLowimp
+    }
+
     if (email && fb_group && selectedStartDate !== null && selectedExpireDate !== null) {
       console.log("members : ", members);
       console.log("start_date : ", start_date);
       console.log("expire_date : ", expire_date);
-      this.props.importMembers(members, start_date, expire_date, member_type);
+      this.props.importMembers(members, start_date, expire_date, member_type2);
       document.getElementById("popupSuccessSubmit").classList.toggle("active");
       document.getElementById("overlayPopupSuccessSubmit").classList.toggle("active");
       var delayInMilliseconds = 1750; //1.75 second
@@ -210,6 +220,61 @@ class ImportMembers extends Component {
         <div className="overlayContainerPopupSuccessSubmit" id="overlayPopupSuccessSubmit" ></div>
         <div className="popupSuccessSubmit" id="popupSuccessSubmit" style={{ marginTop: "10%" }}>
           <center><h2 style={{ color: "green" }}><i className="fa fa-check fa-lg" > Success</i></h2></center>
+        </div>
+      </div>
+    )
+  }
+
+  togglePopupConfirmLowimp(import_type) {
+
+    this.setState({
+      import_type: import_type
+    })
+
+    document.getElementById("popupConfirmLowimp").classList.toggle("active");
+    document.getElementById("overlayPopupConfirmLowimp").classList.toggle("active");
+  }
+
+  renderPopupConfirmLowimp() {
+    const { import_type } = this.state;
+    return (
+      <div>
+        <div className="overlayContainerPopupConfirmLowimp" id="overlayPopupConfirmLowimp" ></div>
+        <div className="popupConfirmLowimp" id="popupConfirmLowimp" style={{ marginTop: "10%" }}>
+          <center>
+            <h2 style={{ color: "red" }}>แน่ใจหรือไม่ ?</h2>
+            <h2>คุณกำลังเลือก Import ผู้ใช้เป็นกลุ่ม</h2>
+            <h2 style={{ color: "orange" }}>"Low impact"</h2>
+          </center>
+          <center style={{ display: "flex", justifyContent: "space-around", marginTop: 30 }}>
+            <button
+              type="button"
+              className="btn btn-danger col-lg-5 col-md-6 "
+              onClick={() => this.togglePopupConfirmLowimp()}
+            >
+              ยกเลิก
+            </button>
+            {
+              (import_type === "import_members") &&
+              <button
+                type="button"
+                className="btn btn-success col-lg-5 col-md-6 "
+                onClick={() => this.onSubmitImportMembers()}
+              >
+                ยืนยัน
+              </button>
+            }
+            {
+              (import_type === "add_member") &&
+              <button
+                type="button"
+                className="btn btn-success col-lg-5 col-md-6 "
+                onClick={() => this.onSubmitAddMember()}
+              >
+                ยืนยัน
+              </button>
+            }
+          </center>
         </div>
       </div>
     )
@@ -534,10 +599,13 @@ class ImportMembers extends Component {
   }
 
   renderAddMember() {
-    const { selectedStartDate, selectedExpireDate, statusSubmitAddMember, member_type } = this.state;
+    const { selectedStartDate, selectedExpireDate, statusSubmitAddMember, member_type2 } = this.state;
     return (
       <div className="row">
+
         {this.renderPopupSuccessSubmit()}
+        {this.renderPopupConfirmLowimp()}
+
         <h1>.</h1>
         <div className="card mt-5 mb-3 col-lg-12">
           <div className="card-body">
@@ -547,21 +615,21 @@ class ImportMembers extends Component {
             <div className="mb-2">
               <h5>เลือกประเภทของผู้ใช้:</h5>
               <input
-                id='member_type'
+                id='member_type2'
                 type="radio"
                 value="normal"
-                checked={member_type === 'normal'}
+                checked={member_type2 === 'normal'}
                 onChange={(event) => this.handleChange(event)}
               />
-              <label className="ml-2" style={{ color: (member_type === 'normal') ? 'red' : 'black' }}> ทั่วไป</label><br></br>
+              <label className="ml-2" style={{ color: (member_type2 === 'normal') ? 'orange' : 'black', fontSize: (member_type2 === 'normal') ? 24 : 16 }}> ทั่วไป</label><br></br>
               <input
-                id='member_type'
+                id='member_type2'
                 type="radio"
                 value='low_impact'
-                checked={member_type === 'low_impact'}
+                checked={member_type2 === 'low_impact'}
                 onChange={(event) => this.handleChange(event)}
               />
-              <label className="ml-2" style={{ color: (member_type === 'low_impact') ? 'red' : 'black' }}> low impact</label><br></br>
+              <label className="ml-2" style={{ color: (member_type2 === 'low_impact') ? 'orange' : 'black', fontSize: (member_type2 === 'low_impact') ? 24 : 16 }}> Low impact</label><br></br>
             </div>
 
             <label for="fname">Email: </label>
@@ -628,13 +696,25 @@ class ImportMembers extends Component {
         >
           ยกเลิก
         </button>
-        <button
-          type="button"
-          className="btn btn-success col-lg-1 col-md-6 "
-          onClick={() => this.onSubmitAddMember()}
-        >
-          ยืนยัน
-        </button>
+        {
+          (member_type2 === 'low_impact') ?
+            <button
+              type="button"
+              className="btn btn-success col-lg-1 col-md-6 "
+              onClick={() => this.togglePopupConfirmLowimp("add_member")}
+            >
+              ยืนยัน
+            </button>
+            :
+            <button
+              type="button"
+              className="btn btn-success col-lg-1 col-md-6 "
+              onClick={() => this.onSubmitAddMember()}
+            >
+              ยืนยัน
+            </button>
+        }
+
       </div>
     )
   }
@@ -644,7 +724,10 @@ class ImportMembers extends Component {
     const { statusImportMembers } = this.props;
     return (
       <div className="row">
+
         {this.renderPopupSuccessSubmit()}
+        {this.renderPopupConfirmLowimp()}
+
         <h1>.</h1>
         <div className="card mt-5 mb-3 col-lg-12">
           <div className="card-body">
@@ -727,7 +810,7 @@ class ImportMembers extends Component {
                 checked={member_type === 'normal'}
                 onChange={(event) => this.handleChange(event)}
               />
-              <label className="ml-2" style={{ color: (member_type === 'normal') ? 'red' : 'black' }}> ทั่วไป</label><br></br>
+              <label className="ml-2" style={{ color: (member_type === 'normal') ? 'orange' : 'black', fontSize: (member_type === 'normal') ? 24 : 16 }}> ทั่วไป</label><br></br>
               <input
                 id='member_type'
                 type="radio"
@@ -735,7 +818,7 @@ class ImportMembers extends Component {
                 checked={member_type === 'low_impact'}
                 onChange={(event) => this.handleChange(event)}
               />
-              <label className="ml-2" style={{ color: (member_type === 'low_impact') ? 'red' : 'black' }}> low impact</label><br></br>
+              <label className="ml-2" style={{ color: (member_type === 'low_impact') ? 'orange' : 'black', fontSize: (member_type === 'low_impact') ? 24 : 16 }}> Low impact</label><br></br>
             </div>
 
             <section>
@@ -790,13 +873,25 @@ class ImportMembers extends Component {
         >
           ยกเลิก
         </button>
-        <button
-          type="button"
-          className="btn btn-success col-lg-1 col-md-6 "
-          onClick={() => this.onSubmitImportMembers()}
-        >
-          ยืนยัน
-        </button>
+        {
+          (member_type === 'low_impact') ?
+            <button
+              type="button"
+              className="btn btn-success col-lg-1 col-md-6 "
+              onClick={() => this.togglePopupConfirmLowimp("import_members")}
+            >
+              ยืนยัน
+            </button>
+            :
+            <button
+              type="button"
+              className="btn btn-success col-lg-1 col-md-6 "
+              onClick={() => this.onSubmitImportMembers()}
+            >
+              ยืนยัน
+            </button>
+        }
+
       </div>
     )
   }
