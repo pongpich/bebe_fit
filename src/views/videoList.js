@@ -585,10 +585,14 @@ class VideoList extends Component {
   }
 
   onVideoEnd() {
-    const { focusDay, selectedVDO, lastWeekVDO_click } = this.state;
+    const { focusDay, selectedVDO, lastWeekVDO_click, lastWeekVDOAll } = this.state;
     var todayExercise;
     if (lastWeekVDO_click === "show") {
-      todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+      if (!lastWeekVDOAll) {
+        todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+      } else {
+        todayExercise = this.selectExerciseDaySelectionLastWeek(focusDay);
+      }
     } else {
       todayExercise = this.exerciseDaySelection(focusDay);
     }
