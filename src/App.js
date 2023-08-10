@@ -24,6 +24,7 @@ import Package from "./views/package";
 import ImportMembers from "./views/importMembers";
 import Challenges from "./views/challenges";
 import Dashboard from "./views/dashboard";
+import TestGPS from "./views/test_gps";
 
 import { awsConfig } from "./constants/defaultValues";
 
@@ -289,6 +290,7 @@ class App extends Component {
             <Redirect to="/login" />
           </Route>
           <Route path='/login' component={Login} />
+          <Route path='/test_gps' component={TestGPS} />
           {/* <Route path='/register' component={Register} />
           <Route path='/forgot-password' component={ForgotPassword} /> */}
           <Route path='/import-Members' component={ImportMembers} />
