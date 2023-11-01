@@ -19,6 +19,7 @@ import Login from "./views/login";
 import Register from "./views/register";
 import ForgotPassword from "./views/forgotPassword";
 import VideoList from "./views/videoList";
+import VideoList2 from "./views/videoList2";
 import Platform from "./views/platform";
 import Package from "./views/package";
 import ImportMembers from "./views/importMembers";
@@ -301,6 +302,7 @@ class App extends Component {
           <Route path='/Challenges' component={Challenges} />
           <Route path='/Dashboard' component={Dashboard} />
           <Route path='/VideoList' component={VideoList} />
+          <Route path='/VideoList2' component={VideoList2} />
           <Route path='/BonusChallenge' component={BonusChallenge} />
           {/* <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} /> */}

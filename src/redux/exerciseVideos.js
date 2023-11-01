@@ -43,7 +43,15 @@ export const types = {
   GET_ALL_EXERCISE_ACTIVITY: "GET_ALL_EXERCISE_ACTIVITY",
   GET_ALL_EXERCISE_ACTIVITY_SUCCESS: "GET_ALL_EXERCISE_ACTIVITY_SUCCESS",
   GET_ALL_EXERCISE_ACTIVITY_FAIL: "GET_ALL_EXERCISE_ACTIVITY_FAIL",
+  HIDE_POPUP_VIDEO_PLAYER: "HIDE_POPUP_VIDEO_PLAYER",
 }
+
+export const hidePopupVideoPlayer = (status) => ({
+  type: types.HIDE_POPUP_VIDEO_PLAYER,
+  payload: {
+    status
+  }
+});
 
 export const getAllExerciseActivity = (user_id) => ({
   type: types.GET_ALL_EXERCISE_ACTIVITY,
@@ -1127,11 +1135,17 @@ const INIT_STATE = {
   bodyInfo: [],
   statusGetAllExAct: "default",
   all_exercise_activity: [],
-  statusUpdatePlayTimeWeekAll: "default"
+  statusUpdatePlayTimeWeekAll: "default",
+  hidePopUpVideoPlayer: false
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.HIDE_POPUP_VIDEO_PLAYER:
+      return {
+        ...state,
+        hidePopUpVideoPlayer: action.payload
+      }
     case types.GET_ALL_EXERCISE_ACTIVITY:
       return {
         ...state,
