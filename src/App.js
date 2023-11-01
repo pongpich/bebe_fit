@@ -27,6 +27,7 @@ import Dashboard from "./views/dashboard";
 import TestGPS from "./views/test_gps";
 import TestGPS_GG from "./views/test_gps_gg";
 import TestGPS_Permission from "./views/test_gps_permission";
+import BonusChallenge from "./views/bonus_challenge";
 
 import { awsConfig } from "./constants/defaultValues";
 
@@ -300,6 +301,7 @@ class App extends Component {
           <Route path='/Challenges' component={Challenges} />
           <Route path='/Dashboard' component={Dashboard} />
           <Route path='/VideoList' component={VideoList} />
+          <Route path='/BonusChallenge' component={BonusChallenge} />
           {/* <Route path='/platform' component={Platform} />
           <Route path='/package' component={Package} /> */}
           <Route path='*'>
