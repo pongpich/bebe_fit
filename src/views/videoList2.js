@@ -1473,7 +1473,7 @@ class VideoList2 extends Component {
             <div className="trailer" id={`popupVDO`}>
               <div>
                 {/* <video ref="videoPlayer" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>*/}
-                <VideoPlayerByteArk url={videoUrl} />
+                <VideoPlayerByteArk url={videoUrl} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} />
               </div>
             </div>
             <div className="trailer" id={`popupVDOList`}>
