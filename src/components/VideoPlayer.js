@@ -2,9 +2,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import Hls from 'hls.js';
 import { useSelector, useDispatch } from "react-redux";
 import { hidePopupVideoPlayer, updatePlaytime } from "../redux/exerciseVideos";
+import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 
 
-const VideoPlayerByteArk = ({ url, day_number, video_number }) => {
+const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO }) => {
   const dispatch = useDispatch();
   const hidePopUpVideoPlayer = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.hidePopUpVideoPlayer : ""));
   const exerciseVideo = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.exerciseVideo : ""));
@@ -13,6 +14,8 @@ const VideoPlayerByteArk = ({ url, day_number, video_number }) => {
   const [videoEnded, setVideoEnded] = useState(false); // เพิ่ม state สำหรับตรวจสอบว่าวีดีโอถูกดูจบหรือไม่
   const [videoCurrDuration, setVideoCurrDuration] = useState(0); // เพิ่ม state สำหรับเก็บระยะเวลาที่เล่นไปของวีดีโอ
   const [videoDuration, setVideoDuration] = useState(0); // เพิ่ม state สำหรับเก็บความยาวของวีดีโอ
+  const [prevPlayTime, setPrevPlayTime] = useState(0);
+
 
   useEffect(() => {
 
@@ -59,25 +62,40 @@ const VideoPlayerByteArk = ({ url, day_number, video_number }) => {
   }, [videoDuration]);
 
   useEffect(() => {
-    //เช็คว่าดูวีดีโอเกิน 50 Percent
-    if (videoCurrDuration / videoDuration > 0.5) {
-      const tempExerciseVideo = [...exerciseVideo];
-      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: videoDuration, duration: videoDuration };
 
-      /* this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo); */
-      dispatch(updatePlaytime(
-        user.user_id,
-        user.start_date,
-        user.expire_date,
-        day_number,
-        video_number,
-        videoDuration,
-        videoDuration,
-        tempExerciseVideo
-      ));
+    //ทำการหน่วงเวลาตาม updateFrequency เพื่อยิง updatePlayTime
+    const diffTime = Math.abs(videoCurrDuration - prevPlayTime);
+    if (diffTime < updateFrequency) { return }
+    setPrevPlayTime(videoCurrDuration)
+
+    //เช็คว่าถ้าดูวีดีโอยังไม่ถึง minimumVideoPlayPercentage ไม่ต้อง updatePlayTime
+    //เช็คว่าถ้าเคยดูคลิปนั้นจบแล้ว ไม่ต้อง updatePlayTime
+    if (
+      (videoCurrDuration / videoDuration < minimumVideoPlayPercentage) ||
+      (selectedVDO.play_time / selectedVDO.duration >= completeVideoPlayPercentage)) {
+      return
     }
 
+    updatePlayTime();
   }, [videoCurrDuration]);
+
+  const updatePlayTime = () => {
+    const tempExerciseVideo = [...exerciseVideo];
+    tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: videoDuration, duration: videoDuration };
+
+    /* this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo); */
+    dispatch(updatePlaytime(
+      user.user_id,
+      user.start_date,
+      user.expire_date,
+      day_number,
+      video_number,
+      videoDuration,
+      videoDuration,
+      tempExerciseVideo
+    ));
+
+  }
 
   const handleVideoClose = () => {
     const video = videoRef.current;

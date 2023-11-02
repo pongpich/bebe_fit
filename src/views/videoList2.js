@@ -1377,8 +1377,10 @@ class VideoList2 extends Component {
     const { focusDay, selectedVDO, selectVideoPlayer } = this.state;
     const { exerciseVideo } = this.props;
     const numbDayExercise = exerciseVideo.length;
-    const videoUrl = 'https://byteark-poc-slvkafvgn1mh.stream-playlist.byteark.com/streams/TuFAlxQoDhDr/playlist.m3u8';
-    const videoUrl2 = 'https://planforfittufqepu.stream-playlist.byteark.com/streams/TuFSWQUUyDB2/playlist.m3u8';
+/*     const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl2 = (selectedVDO && selectedVDO.url2) ? `${selectedVDO.url2}` : ""; */
+    const videoUrl3 = (selectedVDO && selectedVDO.url3) ? `${selectedVDO.url3}` : "";
+
     const todayExercise = this.exerciseDaySelection(focusDay);
     let allMinute = [];
     let allSecond = [];
@@ -1473,16 +1475,16 @@ class VideoList2 extends Component {
             <div className="trailer" id={`popupVDO`}>
               <div>
                 {/* <video ref="videoPlayer" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>*/}
-                <VideoPlayerByteArk url={videoUrl} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} />
+                <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} />
               </div>
             </div>
-            <div className="trailer" id={`popupVDOList`}>
+            {/* <div className="trailer" id={`popupVDOList`}>
               <div>
                 {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
                 <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
               </div>
               <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
-            </div>
+            </div> */}
             <table className="table table-responsive">
               <div>
                 <div>
