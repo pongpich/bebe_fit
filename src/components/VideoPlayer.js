@@ -114,8 +114,6 @@ const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO }) => {
         id="videoPlayer"
         ref={videoRef}
         controls
-        width="560"
-        height="320"
       />
       <button onClick={handleVideoClose} style={{ position: 'absolute', top: 0, right: 0 }}>
         ปิดวีดีโอ
