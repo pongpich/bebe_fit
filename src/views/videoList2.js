@@ -1491,7 +1491,7 @@ class VideoList2 extends Component {
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                       </div>
                     </div>
-                    <div className="col-lg-6">
+                    {/* <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
                           <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
@@ -1501,7 +1501,7 @@ class VideoList2 extends Component {
                           </label>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
