@@ -1,14 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Hls from 'hls.js';
 import { useSelector, useDispatch } from "react-redux";
-import { hidePopupVideoPlayer, updatePlaytime } from "../redux/exerciseVideos";
+import { hidePopupVideoPlayer, updatePlaytime, updatePlaytimeLastWeek, updatePlaytimeLastWeekSelected } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 
 
-const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO }) => {
+const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO, lastWeekVDO_click, lastWeekVDOAll, lastWeekStart, selectExerciseVideoLastWeek }) => {
+
   const dispatch = useDispatch();
   const hidePopUpVideoPlayer = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.hidePopUpVideoPlayer : ""));
   const exerciseVideo = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.exerciseVideo : ""));
+  const all_exercise_activity = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.all_exercise_activity : ""));
+  const exerciseVideoLastWeek = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.exerciseVideoLastWeek : ""));
   const user = useSelector(({ authUser }) => (authUser ? authUser.user : ""));
   const videoRef = useRef(null);
   const [videoEnded, setVideoEnded] = useState(false); // เพิ่ม state สำหรับตรวจสอบว่าวีดีโอถูกดูจบหรือไม่
@@ -80,20 +83,55 @@ const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO }) => {
   }, [videoCurrDuration]);
 
   const updatePlayTime = () => {
-    const tempExerciseVideo = [...exerciseVideo];
-    tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: videoDuration, duration: videoDuration };
+    if (lastWeekVDO_click === "show") {
+      if (!lastWeekVDOAll) { //updatePlayTime ของผู้ใช้หมดอายุดูย้อนหลัง
+        const tempExerciseVideoLastWeek = [...exerciseVideoLastWeek];
+        tempExerciseVideoLastWeek[day_number][video_number] = { ...tempExerciseVideoLastWeek[day_number][video_number], play_time: videoDuration, duration: videoDuration };
 
-    /* this.props.updatePlaytime(user_id, start_date, expire_date, day_number, video_number, play_time, duration, tempExerciseVideo); */
-    dispatch(updatePlaytime(
-      user.user_id,
-      user.start_date,
-      user.expire_date,
-      day_number,
-      video_number,
-      videoDuration,
-      videoDuration,
-      tempExerciseVideo
-    ));
+        dispatch(updatePlaytimeLastWeek(
+          user.user_id,
+          user.start_date,
+          user.expire_date,
+          day_number,
+          video_number,
+          videoDuration,
+          videoDuration,
+          tempExerciseVideoLastWeek
+        ));
+      } else {  //updatePlayTime ของผู้ใช้ต่ออายุดูย้อนหลัง
+        const tempExerciseVideoLastWeekSelect = [...selectExerciseVideoLastWeek];
+        const tempExerciseVideoLastWeekAll = [...all_exercise_activity];
+        tempExerciseVideoLastWeekSelect[day_number][video_number] = { ...tempExerciseVideoLastWeekSelect[day_number][video_number], play_time: videoDuration, duration: videoDuration };
+        tempExerciseVideoLastWeekAll[lastWeekStart - 1].activities = JSON.stringify(tempExerciseVideoLastWeekSelect);
+
+        dispatch(updatePlaytimeLastWeekSelected(
+          user.user_id,
+          user.start_date,
+          user.expire_date,
+          day_number,
+          video_number,
+          videoDuration,
+          videoDuration,
+          tempExerciseVideoLastWeekAll,
+          lastWeekStart
+        ));
+      }
+    } else {  //updatePlayTime ของผู้ใช้ต่ออายุดูคลิปปัจจุบัน
+      const tempExerciseVideo = [...exerciseVideo];
+      tempExerciseVideo[day_number][video_number] = { ...tempExerciseVideo[day_number][video_number], play_time: videoDuration, duration: videoDuration };
+
+      dispatch(updatePlaytime(
+        user.user_id,
+        user.start_date,
+        user.expire_date,
+        day_number,
+        video_number,
+        videoDuration,
+        videoDuration,
+        tempExerciseVideo
+      ));
+    }
+
 
   }
 
@@ -115,9 +153,8 @@ const VideoPlayerByteArk = ({ url, day_number, video_number, selectedVDO }) => {
         ref={videoRef}
         controls
       />
-      <button onClick={handleVideoClose} style={{ position: 'absolute', top: 0, right: 0 }}>
-        ปิดวีดีโอ
-      </button>Î
+
+      <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={handleVideoClose}></img>
     </div>);
 };
 
