@@ -9,12 +9,13 @@ import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth"
 import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog, checkProgramLevel } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setHidePopupVideoPlayerList, setEndedVideoPlayerList } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
 import moment from 'moment';
 import VideoPlayerByteArk from '../components/VideoPlayer';
+import VideoPlayerListByteArk from '../components/VideoPlayerList';
 import VideoListLastWeekAll from '../components/VideoListLastWeekAll';
 
 class VideoList2 extends Component {
@@ -90,6 +91,8 @@ class VideoList2 extends Component {
   async componentDidMount() {
     const { user } = this.props;
 
+    this.props.setEndedVideoPlayerList(false);
+
     if (user) {
       this.props.getMemberInfo(user.user_id);
       this.props.checkProgramLevel(user.user_id);
@@ -131,14 +134,24 @@ class VideoList2 extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { displayName, displayName2, displayName3, lastWeekStart } = this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusGetMemberInfo, statusCheckRenewPrompt, statusGetAllExAct, member_info, all_exercise_activity, hidePopUpVideoPlayer } = this.props;
+    const { displayName, displayName2, displayName3, lastWeekStart, focusDay, selectedVDO } = this.state;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusGetMemberInfo, statusCheckRenewPrompt, statusGetAllExAct, member_info, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList } = this.props;
 
     //เช็คเพื่อซ่อน popup จากไฟล์ component VideoPlayer
     if (prevProps.hidePopUpVideoPlayer !== hidePopUpVideoPlayer) {
       if (hidePopUpVideoPlayer) {
         this.toggle();
       }
+    }
+    //เช็คเพื่อซ่อน popup จากไฟล์ component VideoPlayerList
+    if (prevProps.hidePopUpVideoPlayerList !== hidePopUpVideoPlayerList) {
+      if (hidePopUpVideoPlayerList) {
+        this.closeList();
+      }
+    }
+
+    if ((prevProps.endedVideoPlayerList !== endedVideoPlayerList) && (endedVideoPlayerList === true)) {
+      this.onVideoEnd();
     }
 
     // เช็ควันหมดอยู่ expire_date ของuser
@@ -370,10 +383,51 @@ class VideoList2 extends Component {
 
   addEventToVideo() {
     var video = this.refs.videoPlayer;
-    // var videoList = this.refs.videoPlayerList;
-    video.ontimeupdate = () => this.onVideoTimeUpdate("video");
-    // videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
-    //videoList.onended = () => this.onVideoEnd();
+    if (video) {
+      video.ontimeupdate = () => this.onVideoTimeUpdate("video");
+    }
+    var videoList = this.refs.videoPlayerList;
+    if (videoList) {
+      videoList.ontimeupdate = () => this.onVideoTimeUpdate("videoList");
+      videoList.onended = () => this.onVideoEnd();
+    }
+
+  }
+
+  toggleListLastWeek(index) {
+    const { focusDay, lastWeekVDOAll } = this.state;
+    if (!lastWeekVDOAll) {
+
+      const todayExercise = this.exerciseDaySelectionLastWeek(focusDay);
+      const selectedVDO = todayExercise.find(element => (element.order === index));
+      this.setState({ selectVideoPlayer: 1 });
+      if (selectedVDO) {
+        this.setState({
+          selectedVDO
+        }, () => {
+          var trailer = document.getElementById(`popupVDOList`);
+          var video = document.getElementById(`videoPlayerList`);
+          trailer.classList.add("active_list");
+          video.play();
+        })
+      }
+    } else {
+      const todayExercise = this.selectExerciseDaySelectionLastWeek(focusDay);
+      const selectedVDO = todayExercise.find(element => (element.order === index));
+      this.setState({ selectVideoPlayer: 1 });
+      if (selectedVDO) {
+        this.setState({
+          selectedVDO
+        }, () => {
+          var trailer = document.getElementById(`popupVDOList`);
+          var video = document.getElementById(`videoPlayerList`);
+          trailer.classList.add("active_list");
+          video.play();
+        })
+      }
+    }
+    this.props.setHidePopupVideoPlayerList(false);
+
   }
 
   togglePopupSelectEditVideo(video_id, category, type, index) {
@@ -522,19 +576,27 @@ class VideoList2 extends Component {
         selectedVDO
       }, () => {
         var trailer = document.getElementById(`popupVDOList`);
-        //var video = document.getElementById(`videoPlayerList`);
+        var video = document.getElementById(`videoPlayerList`);
         trailer.classList.add("active_list");
-        // video.play();
+        video.play();
       })
     }
+
+    this.props.setHidePopupVideoPlayerList(false);
   }
 
   closeList() {
     var trailer = document.getElementById(`popupVDOList`);
-    // var video = document.getElementById(`videoPlayerList`);
-    trailer.classList.remove("active_list");
-    //video.pause();
-    //video.currentTime = 0;
+    if (trailer) {
+      trailer.classList.remove("active_list");
+    }
+    var video = document.getElementById(`videoPlayerList`);
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+
+    this.props.setHidePopupVideoPlayerList(true);
 
   }
 
@@ -582,11 +644,13 @@ class VideoList2 extends Component {
         selectedVDO: nextVDO
       }, () => {
         var trailer = document.getElementById(`popupVDOList`);
-        // var video = document.getElementById(`videoPlayerList`);
+        var video = document.getElementById(`videoPlayerList`);
         trailer.classList.add("active_list");
-        //video.play();
+        video.play();
       })
     }
+
+    this.props.setEndedVideoPlayerList(false);
   }
 
   onVideoListUpdate() {
@@ -1462,26 +1526,37 @@ class VideoList2 extends Component {
           </div>
 
           <div className="">
-            <div className="trailer" id={`popupVDO`}>
-              <div>
-                {
-                  videoUrl3 ?
-                    <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
-                    :
-                    <>
-                      <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
-                      <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
-                    </>
-                }
-              </div>
-              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
-            </div>
-            <div className="trailer" id={`popupVDOList`}>
-              {/* <div>
-                <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
-              </div> */}
-              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
-            </div>
+            {
+              this.state.autoPlayCheck ?
+                <div className="trailer" id={`popupVDOList`}>
+                  <div>
+
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerListByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+                :
+                <div className="trailer" id={`popupVDO`}>
+                  <div>
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+            }
             <table className="table table-responsive">
               <div>
                 <div>
@@ -1491,7 +1566,7 @@ class VideoList2 extends Component {
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                       </div>
                     </div>
-                    {/* <div className="col-lg-6">
+                    <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
                           <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
@@ -1501,7 +1576,7 @@ class VideoList2 extends Component {
                           </label>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1745,22 +1820,37 @@ class VideoList2 extends Component {
           </div>
 
           <div className="">
-            <div className="trailer" id={`popupVDO`}>
-              <div>
-                {
-                  videoUrl3 ?
-                    <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
-                    :
-                    <>
-                      <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
-                      <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
-                    </>
-                }
-              </div>
-            </div>
-            {/* <div className="trailer" id={`popupVDOList`}>
-              <div>
-            </div> */}
+            {
+              this.state.autoPlayCheck ?
+                <div className="trailer" id={`popupVDOList`}>
+                  <div>
+
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerListByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+                :
+                <div className="trailer" id={`popupVDO`}>
+                  <div>
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+            }
             <table className="table table-responsive">
               <div>
                 <div>
@@ -1770,7 +1860,7 @@ class VideoList2 extends Component {
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
                       </div>
                     </div>
-                    {/*  <div className="col-lg-6">
+                    <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
                           <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
@@ -1780,7 +1870,7 @@ class VideoList2 extends Component {
                           </label>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2008,26 +2098,39 @@ class VideoList2 extends Component {
           </div>
 
           <div className="">
-            <div className="trailer" id={`popupVDO`}>
-              <div>
-                {
-                  videoUrl3 ?
-                    <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
-                    :
-                    <>
-                      <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
-                      <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
-                    </>
-                }
-              </div>
-            </div>
-            {/* <div className="trailer" id={`popupVDOList`}>
-              <div>
-                {this.renderBtnSelectVideoPlayer(videoUrl, videoUrl2)}
-                <video ref="videoPlayerList" src={selectVideoPlayer === 1 ? videoUrl : videoUrl2 ? videoUrl2 : videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
-              </div>
-              <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
-            </div> */}
+            {
+              this.state.autoPlayCheck ?
+                <div className="trailer" id={`popupVDOList`}>
+                  <div>
+
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerListByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayerList" src={videoUrl} id="videoPlayerList" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.closeList()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+                :
+                <div className="trailer" id={`popupVDO`}>
+                  <div>
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+            }
+
+
             <table className="table table-responsive">
               <div>
                 <div>
@@ -2047,7 +2150,7 @@ class VideoList2 extends Component {
                         } */}
                       </div>
                     </div>
-                    {/* <div className="col-lg-6">
+                    <div className="col-lg-6">
                       <div className="col-lg-12 col-md-4 col-12">
                         <div className="mt-1" style={{ float: "right" }} >
                           <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
@@ -2057,7 +2160,7 @@ class VideoList2 extends Component {
                           </label>
                         </div>
                       </div>
-                    </div> */}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2297,11 +2400,11 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) 
   const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = get;
   const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setEndedVideoPlayerList, setHidePopupVideoPlayerList };
 
 export default connect(
   mapStateToProps,

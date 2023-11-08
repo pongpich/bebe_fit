@@ -44,10 +44,26 @@ export const types = {
   GET_ALL_EXERCISE_ACTIVITY_SUCCESS: "GET_ALL_EXERCISE_ACTIVITY_SUCCESS",
   GET_ALL_EXERCISE_ACTIVITY_FAIL: "GET_ALL_EXERCISE_ACTIVITY_FAIL",
   HIDE_POPUP_VIDEO_PLAYER: "HIDE_POPUP_VIDEO_PLAYER",
+  HIDE_POPUP_VIDEO_PLAYER_LIST: "HIDE_POPUP_VIDEO_PLAYER_LIST",
+  SET_ENDED_VIDEO_PLAYER_LIST: "SET_ENDED_VIDEO_PLAYER_LIST",
 }
 
 export const hidePopupVideoPlayer = (status) => ({
   type: types.HIDE_POPUP_VIDEO_PLAYER,
+  payload: {
+    status
+  }
+});
+
+export const setHidePopupVideoPlayerList = (status) => ({
+  type: types.HIDE_POPUP_VIDEO_PLAYER_LIST,
+  payload: {
+    status
+  }
+});
+
+export const setEndedVideoPlayerList = (status) => ({
+  type: types.SET_ENDED_VIDEO_PLAYER_LIST,
   payload: {
     status
   }
@@ -1136,7 +1152,9 @@ const INIT_STATE = {
   statusGetAllExAct: "default",
   all_exercise_activity: [],
   statusUpdatePlayTimeWeekAll: "default",
-  hidePopUpVideoPlayer: false
+  hidePopUpVideoPlayer: false,
+  hidePopUpVideoPlayerList: false,
+  endedVideoPlayerList: false
 };
 
 export function reducer(state = INIT_STATE, action) {
@@ -1145,6 +1163,16 @@ export function reducer(state = INIT_STATE, action) {
       return {
         ...state,
         hidePopUpVideoPlayer: action.payload
+      }
+    case types.HIDE_POPUP_VIDEO_PLAYER_LIST:
+      return {
+        ...state,
+        hidePopUpVideoPlayerList: action.payload.status
+      }
+    case types.SET_ENDED_VIDEO_PLAYER_LIST:
+      return {
+        ...state,
+        endedVideoPlayerList: action.payload.status
       }
     case types.GET_ALL_EXERCISE_ACTIVITY:
       return {
