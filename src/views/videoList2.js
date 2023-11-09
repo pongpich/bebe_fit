@@ -16,6 +16,7 @@ import "./videoList.scss";
 import moment from 'moment';
 import VideoPlayerByteArk from '../components/VideoPlayer';
 import VideoPlayerListByteArk from '../components/VideoPlayerList';
+import SelectChangeVideoList from '../components/SelectChangeVideoList';
 import VideoListLastWeekAll from '../components/VideoListLastWeekAll';
 
 class VideoList2 extends Component {
@@ -529,7 +530,8 @@ class VideoList2 extends Component {
 
   closeEditVDO() {
     this.setState({
-      editVDO_click: "default"
+      editVDO_click: "default",
+      autoPlayCheck: false
     })
   }
 
@@ -553,7 +555,8 @@ class VideoList2 extends Component {
     const tempPlaylist = [...todayExercise];
     this.setState({
       editVDO_click: "show",
-      tempPlaylist: tempPlaylist
+      tempPlaylist: tempPlaylist,
+      autoPlayCheck: false
     })
   }
 
@@ -814,7 +817,336 @@ class VideoList2 extends Component {
     }
   };
 
+  renderEditVDO() {
+    const { focusDay, selectedVDO, tempPlaylist, selectChangeVideoList, selectVideoPlayer, lastWeekVDO_click, lastWeekVDOAll, lastWeekStart, selectExerciseVideoLastWeek } = this.state;
+    const { member_info } = this.props;
+    const videoUrl = selectedVDO ? selectedVDO.url ? `${selectedVDO.url}` : `https://media.planforfit.com/bebe/video/${selectedVDO.video_id}_720.mp4` : "";
+    const videoUrl2 = (selectedVDO && selectedVDO.url2) ? `${selectedVDO.url2}` : "";
+    const videoUrl3 = (selectedVDO && selectedVDO.url3) ? `${selectedVDO.url3}` : "";
+    let allMinute = [];
+    let allSecond = [];
+    tempPlaylist.map((item) => (allMinute.push(Number((item.duration.toFixed(2)).split(".")[0]))));
+    tempPlaylist.map((item) => (allSecond.push(Number((item.duration.toFixed(2)).split(".")[1]))));
+    let sumMinute = allMinute.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let sumSecond = allSecond.reduce((acc, curr) => acc += curr, 0).toFixed(0);
+    let minute2 = Math.floor(sumSecond / 60);
+    let totalMinute = Number(sumMinute) + Number(minute2);
+    let totalSecond = sumSecond % 60;
+    let timesExercise;
+    if (totalMinute > 100) { // เช็คเพราะมีการปรับ database ให้เก็บVDOเป็นหน่วยวินาที
+      totalMinute = Math.floor(sumMinute / 60);
+      totalSecond = (sumMinute % 60);
+    }
+    if (totalSecond < 10) {
+      timesExercise = `${totalMinute}:0${totalSecond}`;
+    } else {
+      timesExercise = `${totalMinute}:${totalSecond}`;
+    }
 
+    return (
+      <div className="card-body d-flex justify-content-center">
+
+        <form className="mt-3">
+          <span className="mr-5" style={{ fontSize: "15px", color: "#F45197" }}> <h4> แก้ไขคลิปออกกำลังกาย</h4></span>
+
+          <div className="popup" id="popupSelectEditVideo">
+            <div className="overlay" onClick={() => this.closeTogglePopupSelectEditVideo()}>
+            </div>
+            <div className="content">
+              <div className="close-btn" onClick={() => this.closeTogglePopupSelectEditVideo()}>&times;</div>
+              <div className="row mt-4 body_part_header" >
+
+                { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
+                  ((this.props.videos[0]) && this.props.videos[0].category !== "Main Circuit Combo" && this.props.videos[0].category !== "Main Circuit" && this.props.videos[0].category !== "Challenge") &&
+                  <img className="body_part" src={`../assets/img/body_part/${this.props.videos[0].category.toLowerCase().split(" ").join("")}.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
+                }
+                {
+                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                }
+
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "warmup") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Warm Up</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Chest</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Back and Core</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Chest and Back</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Leg</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Arm and Shoulder</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Leg and Arm</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "subcircuit") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Full Body</b></h2>
+                }
+                {
+                  (this.props.videos[0]) &&
+                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "cardio") &&
+                  <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Cardio</b></h2>
+                }
+              </div>
+              <div className="selectEditPlaylist">
+                {
+                  selectChangeVideoList.map((item, index) => (
+
+                    <div className="playlistWrapper border shadow" >
+                      <div className="">
+                        <SelectChangeVideoList thumbnail={item.thumbnail} category={item.category} url={item.url3} />
+                      </div>
+                      <div className="mt-1 ml-3 mb-4">
+                        <h6 style={{ color: "#F45197" }}><b> {item.name} </b></h6>
+                      </div>
+                      <button
+                        className="btn btn-danger mb-3 mt-5"
+                        type="button"
+                        style={{ fontSize: "15px", cursor: "pointer", padding: "10px 24px", marginLeft: "auto", marginRight: "auto", display: "block", width: "85%", backgroundColor: "#F45197", borderRadius: "20px" }}
+                        onClick={() => this.selectEditVideo(item)}
+                      >
+                        <b>เลือกวีดีโอนี้</b>
+                      </button>
+                    </div>
+                  ))
+                }
+              </div>
+            </div>
+          </div>
+
+          <div className="tab-content mb-3 row" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "10px" }}>
+            <div className="tab-pane fade show active col-lg-8 col-md-4 col-12" id="home" role="tabpanel" aria-labelledby="home-tab">
+              <div className="mt-3">
+                {focusDay === 0 && <h5 style={{ color: "#F45197" }}><b>DAY 1</b></h5>}
+                {focusDay === 1 && <h5 style={{ color: "#F45197" }}><b>DAY 2</b></h5>}
+                {focusDay === 2 && <h5 style={{ color: "#F45197" }}><b>DAY 3</b></h5>}
+                {focusDay === 3 && <h5 style={{ color: "#F45197" }}><b>DAY 4</b></h5>}
+              </div>
+            </div>
+            <div className="col-lg-2 col-md-4 col-6">
+              <button
+                className="btn btn-light" type="button"
+                style={{ backgroundColor: "white", color: "#F45197", borderColor: "#F45197", fontSize: "17px", cursor: "pointer", borderRadius: "12px", width: "100%", padding: "10px" }}
+                onClick={() => this.closeEditVDO()}
+              >
+                <b>ยกเลิก</b>
+              </button>
+            </div>
+            <div className="col-lg-2 col-md-4 col-6">
+              <button
+                className="btn"
+                type="button"
+                style={{ backgroundColor: "#F45197", color: "white", fontSize: "17px", cursor: "pointer", borderRadius: "12px", float: "right", width: "100%", padding: "10px" }}
+                onClick={() => this.onVideoListUpdate()}
+              >
+                <b>ยืนยันการแก้ไข</b>
+              </button>
+            </div>
+          </div>
+
+
+          <div className="">
+            {
+              this.state.autoPlayCheck ?
+                <div className="trailer" id={`popupVDO`}>
+                  <div>
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+                :
+                <div className="trailer" id={`popupVDO`}>
+                  <div>
+                    {
+                      videoUrl3 ?
+                        <VideoPlayerByteArk url={videoUrl3} day_number={focusDay} video_number={selectedVDO && selectedVDO.order} selectedVDO={selectedVDO} lastWeekVDO_click={lastWeekVDO_click} lastWeekVDOAll={lastWeekVDOAll} lastWeekStart={lastWeekStart} selectExerciseVideoLastWeek={selectExerciseVideoLastWeek} />
+                        :
+                        <>
+                          <video ref="videoPlayer" src={videoUrl} id="videoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+                          <img alt="" src="../assets/img/thumb/close.png" className="close" onClick={() => this.toggle()}></img>
+                        </>
+                    }
+                  </div>
+                </div>
+            }
+            <table className="table table-responsive">
+              <div>
+                <div>
+                  <div className="tabletitle row mb-4">
+                    {
+                      <span className="col-lg-8 col-md-6 col-12" style={{ fontSize: "16px", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                    }
+                  </div>
+                </div>
+              </div>
+              <tbody>
+                {
+                  tempPlaylist.map((item, index) => {
+                    const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                    return (
+                      <div className="row" key={index}>
+                        <div className="mt-3 mb-1 col-lg-8 col-md-12 col-10">
+                          <div className="videoItem border shadow">
+                            {
+                              (this.state.spinnerRandomVideo === "loading") ?
+                                (item.video_id === this.props.video.video_id) ? //ถ้า video_id ของ item ตรงกับของ this.props.video คือตรงกับที่มีการสุ่มวีดีโอใหม่ให้
+                                  <div className="play_button">
+                                    <i className="fa fa-refresh fa-spin fa-5x"></i>
+                                  </div>
+                                  :
+                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
+                                :
+                                <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
+                            }
+                            <div className="videoThumb">
+                              <div className="containerThumb">
+                                {
+                                  (item.thumbnail) ?
+                                    <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
+                                    :
+                                    <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                }
+                                {/* <div className="overlay" onClick={() => this.toggle(item)}>
+                                <i className="fa fa-play fa-4x" aria-hidden="true"></i>
+                                <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
+                                  <h6>
+                                    <b>{(item.duration + "").split(".")[0]}:{(item.duration + "").split(".")[1]} นาที</b>
+                                  </h6>
+                                </div>
+                              </div> */}
+                              </div>
+                            </div>
+                            <div className="videoDetail">
+                              <div className="videoDuration mt-3">
+                                <h6>
+                                  <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
+                                  {minuteLabel} นาที
+                                </h6>
+                              </div>
+                              <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
+                              <div className="videoName">
+                                <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
+                                {(item.name.length < 17) ?
+                                  <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
+                                  :
+                                  <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                }
+                                {
+                                  (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
+                                  <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
+                                }
+                              </div>
+                              { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
+                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
+                                <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "chestfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "legfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
+                              }
+                              {
+                                (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        {
+                          (item.play_time !== item.duration) && (item.category !== "Challenge") &&
+                          (
+                            ((item.category === "Warm Up" || item.category === "Cool Down") && (member_info && member_info.program_level === 'bfr_lv1')) ?
+                              <div></div>
+                              :
+                              <div className="col-lg-2 col-md-12 col-8" style={{ top: "50%" }}>
+                                <div className="changeVideoBtn mb-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.togglePopupSelectEditVideo(item.video_id, item.category, item.type, index)} >
+                                  <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                                  เลือกวีดีโอใหม่
+                                </div>
+                                <div className="randomVideoBtn mt-2 btn col-lg-12 col-md-4 col-12" onClick={() => this.randomVideo(item.video_id, item.category, item.type, index)} >
+                                  <img className="ml-3 mr-2" src={`../assets/img/shuffle.png`} style={{ float: "left" }} width="30px" height="30px" />
+                                  สุ่มวีดีโอ
+                                </div>
+                              </div>
+                          )
+                        }
+                      </div>
+                    )
+                  })
+                }
+              </tbody>
+            </table>
+          </div>
+        </form>
+
+      </div>
+    )
+  }
 
   renderBasicInfo() {
     const { statusOtherAttributes, displayName, validation_displayname, displayName2, checkDisplayName, displayname } = this.state;
@@ -2035,7 +2367,7 @@ class VideoList2 extends Component {
         <form>
           <div className="tab-content mt-3 mb-3" id="myTabContent" style={{ borderBottom: "3px solid #4F4F4F", paddingBottom: "0px" }}>
             <div className="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน V.2 {this.props.user.fb_group !== 404 ? <span>(WEEK {this.props.week})</span> : <span></span>}</h4>
+              <h4 className="ml-3 mb-3" style={{ color: "#F45197" }}>โปรแกรมปัจจุบัน {this.props.user.fb_group !== 404 ? <span>(WEEK {this.props.week})</span> : <span></span>}</h4>
               <nav className="nav">
                 {
                   (numbDayExercise >= 1) &&
@@ -2138,7 +2470,7 @@ class VideoList2 extends Component {
                     <div className="col-lg-6">
                       <div className="">
                         <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
-                        {/* {
+                        {
                           (todayExercise && this.checkDayPlaytime(todayExercise)) &&
                           <div
                             className="mb-3"
@@ -2147,7 +2479,7 @@ class VideoList2 extends Component {
                             <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
                             แก้ไขวีดีโอ
                           </div>
-                        } */}
+                        }
                       </div>
                     </div>
                     <div className="col-lg-6">
@@ -2371,13 +2703,16 @@ class VideoList2 extends Component {
             <div className="">
               {
                 ((this.props.user && this.props.user.other_attributes) && (this.props.statusVideoList !== "no_video")) ?
-                  (lastWeekVDO_click === "show") ?
-                    lastWeekVDOAll === true ?
-                      this.renderVideoListLastWeekAll()
-                      :
-                      this.renderVideoListLastWeek()
+                  (editVDO_click === "show") ?
+                    this.renderEditVDO()
                     :
-                    this.renderVideoList()
+                    (lastWeekVDO_click === "show") ?
+                      lastWeekVDOAll === true ?
+                        this.renderVideoListLastWeekAll()
+                        :
+                        this.renderVideoListLastWeek()
+                      :
+                      this.renderVideoList()
                   :
                   ((statusGetCheck4WeeksPrompt !== 'loading') && (statusGetCheckRenewPrompt !== 'loading')) &&
                   (
