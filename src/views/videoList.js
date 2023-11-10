@@ -309,6 +309,9 @@ class VideoList extends Component {
     if (prevState.editVDO_click !== "show" && this.state.editVDO_click === "show") {
       this.addEventToVideo();
     }
+    if (prevState.autoPlayCheck !== this.state.autoPlayCheck) {
+      this.addEventToVideo();
+    }
     if (user && prevProps.user && (prevProps.user.other_attributes !== user.other_attributes)) {
       /* this.setState({
         other_attributes: user.other_attributes
