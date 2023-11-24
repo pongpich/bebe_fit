@@ -1,9 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 import Hls from 'hls.js';
 import VideoPlayer from '../components/VideoPlayer';
-import { ByteArkPlayerContainer } from 'byteark-player-react'
-
+import { ByteArkPlayerContainer } from 'byteark-player-react';
+import brave_burn1 from "../assets/img/brave&burn/brave&burn1.png";
+import brave_burn2 from "../assets/img/brave&burn/brave&burn2.png";
+import brave_burn3 from "../assets/img/brave&burn/brave&burn3.png";
+import brave_burn4 from "../assets/img/brave&burn/brave&burn4.png";
+import brave_burn5 from "../assets/img/brave&burn/brave&burn5.png";
+import brave_burn6 from "../assets/img/brave&burn/brave&burn6.png";
+import brave_burn7 from "../assets/img/brave&burn/brave&burn7.png";
+import brave_burn8 from "../assets/img/brave&burn/brave&burn8.png";
 
 
 
@@ -34,6 +42,9 @@ function BonusChallenge() {
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [videoEnded, setVideoEnded] = useState(false);
 
+    const week = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.week : ""));
+
+
 
     // คำสั่งเปิด/ปิด popup
     const togglePopup = () => {
@@ -53,25 +64,25 @@ function BonusChallenge() {
     const time_update = (ts) => {
         console.log(ts);
     };
-/*     useEffect(() => {
-        const player = bytearkPlayer('the-video-player', {
-            fluid: true,
-            poster: '/assets/samples/player/images/poster-big-buck-bunny.jpg',
-            sources: [
-                {
-                    title: 'Planforfit clip1',
-                    src:
-                        'https://planforfittufqepu.stream-playlist.byteark.com/streams/TuFSWQUUyDB2/playlist.m3u8',
-                    type: 'application/x-mpegURL',
-                },
-            ],
-        });
-
-        player.on('ended', handleVideoEnd);
-        setInterval(function () {
-            time_update(player.currentTime());
-        }, 5000);
-    }, []); */
+    /*     useEffect(() => {
+            const player = bytearkPlayer('the-video-player', {
+                fluid: true,
+                poster: '/assets/samples/player/images/poster-big-buck-bunny.jpg',
+                sources: [
+                    {
+                        title: 'Planforfit clip1',
+                        src:
+                            'https://planforfittufqepu.stream-playlist.byteark.com/streams/TuFSWQUUyDB2/playlist.m3u8',
+                        type: 'application/x-mpegURL',
+                    },
+                ],
+            });
+    
+            player.on('ended', handleVideoEnd);
+            setInterval(function () {
+                time_update(player.currentTime());
+            }, 5000);
+        }, []); */
 
 
     useEffect(() => {
@@ -113,7 +124,7 @@ function BonusChallenge() {
                 }
                 {
                     <div className="ml-4">
-                        <a className="" id="contact-tab" data-toggle="tab" href="/#/BonusChallenge" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>Bonus Challenge</a>
+                        <a className="" id="contact-tab" data-toggle="tab" href="/#/BonusChallenge" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "#F45197", borderBottom: "5px solid #F45197", paddingBottom: "2px", textDecorationColor: "white" }}>Brave & Burn</a>
                     </div>
                 }
 
@@ -121,17 +132,47 @@ function BonusChallenge() {
 
             <div className='center d-flex flex-column align-items-center' style={{ backgroundColor: "white", padding: 50 }}>
 
-                <div className='card' style={{ width: 300, backgroundColor: "white", padding: 1 }}>
+                <div className='card' style={{ width: 476, backgroundColor: "white", padding: 1, borderRadius: 20 }}>
                     <div className='containerThumb'>
-                        <img className='img-fluid' src='https://platform.bebefitroutine.com/assets/img/thumb/cardio_g4.jpg'></img>
+                        <img
+                            className='img-fluid'
+                            style={{
+                                borderTopLeftRadius: '20px',
+                                borderTopRightRadius: '20px',
+                                borderBottomLeftRadius: '0',
+                                borderBottomRightRadius: '0'
+                            }}
+                            src={require(`../assets/img/brave&burn/brave&burn${week}.png`)}>
+                        </img>
                     </div>
-                    <div className='center'>
+                    {/* <div className='center'>
                         <img className="play_button" onClick={togglePopup} src="../assets/img/thumb/play_button2.png" width="100px" ></img>
-                    </div>
-                    <div>
-                        <div>Video Name</div>
-                        <div className='center'>
-                            <div className='btn btn-danger'>เลือกวีดีโอนี้</div>
+                    </div> */}
+                    <div style={{ padding: 35 }}>
+                        <p style={{ fontSize: 22, margin: '0' }}>Brave&Burn</p>
+                        <p style={{ fontSize: 42, margin: '0' }}>
+                            {
+                                (week > 3) ?
+                                    `${week}th`
+                                    :
+                                    (week === 3) ?
+                                        `${week}rd`
+                                        :
+                                        (week === 2) ?
+                                            `${week}nd`
+                                            :
+                                            `${week}st`
+                            }
+                            {` Challenge!!`}
+                        </p>
+                        <div className='d-flex justify-content-center align-items-center'>
+                            <div
+                                className='btn d-flex justify-content-center align-items-center'
+                                style={{ color: "white", backgroundColor: "#EF60A3", width: 386, height: 82, borderRadius: 50, fontSize: 24 }}
+                                onClick={togglePopup}
+                            >
+                                เล่นชาเลนจ์นี้
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -2718,6 +2718,12 @@ class VideoList extends Component {
               <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "grey", textDecorationColor: "white" }}>ชาเลนจ์</a>
             </div>
           }
+          {
+            (this.props.week <= 8) &&
+            <div className="ml-4">
+              <a className="" id="contact-tab" data-toggle="tab" href="/#/BonusChallenge" role="tab" aria-controls="contact" aria-selected="false" style={{  color: "grey", textDecorationColor: "white" }}>Brave & Burn</a>
+            </div>
+          }
 
         </div>
         <div className="main main-raised" style={{ backgroundColor: ((user && user.other_attributes) && (statusVideoList !== "no_video")) ? "white" : "#F0EEF3" }}>
