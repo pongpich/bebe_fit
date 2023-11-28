@@ -142,7 +142,7 @@ const BraveAndBurn = () => {
     }, [videoEnded])
 
     return (
-        <div >
+        <div>
             {isPopupOpen && (
                 <PopupWrapper>
                     <video
@@ -159,7 +159,7 @@ const BraveAndBurn = () => {
 
             <div className='center d-flex flex-column align-items-center' style={{ backgroundColor: "white", padding: 50 }}>
 
-                <div className='card' style={{ width: 476, backgroundColor: "white", padding: 1, borderRadius: 20 }}>
+                <div className='card' style={{ width: 400, backgroundColor: "white", padding: 1, borderRadius: 20 }}>
                     <div className='containerThumb'>
                         {
                             videoEnded ?
@@ -190,7 +190,7 @@ const BraveAndBurn = () => {
 
                     <div style={{ padding: 35 }}>
                         <p style={{ fontSize: 22, margin: '0' }}>Brave&Burn</p>
-                        <p style={{ fontSize: 42, margin: '0' }}>
+                        <p style={{ fontSize: 38, margin: '0' }}>
                             {
                                 (week > 3) ?
                                     `${week}th`
@@ -208,9 +208,9 @@ const BraveAndBurn = () => {
                         {
                             videoEnded ?
                                 <div className='d-flex flex-column justify-content-center align-items-center'>
-                                    <p style={{ fontSize: 22, margin: '0' }}>ยินดีด้วย !!!! {user.facebook ? user.facebook : ""}</p>
-                                    <p style={{ fontSize: 22, margin: '0' }}>ได้พิชิตคลิปประจำสัปดาห์</p>
-                                    <p style={{ fontSize: 22, margin: '0' }}>{timeStamp}</p>
+                                    <p style={{ fontSize: 16, margin: '0' }}>ยินดีด้วย !!!! {user.facebook ? user.facebook : ""}</p>
+                                    <p style={{ fontSize: 16, margin: '0' }}>ได้พิชิตคลิปประจำสัปดาห์</p>
+                                    <p style={{ fontSize: 16, margin: '0' }}>{timeStamp}</p>
                                 </div>
                                 :
                                 <div className='d-flex justify-content-center align-items-center'>
@@ -228,8 +228,14 @@ const BraveAndBurn = () => {
                 </div>
                 {
                     videoEnded &&
-                    <div className='mt-4'>
-                        <FacebookShareButton url={'https://fit.bebefitroutine.com/achievement/achievement8.html'}>
+                    <div className='mt-4 d-flex flex-column justify-content-center align-items-center'>
+                        <p>
+                            แชร์โพสต์นี้บนหน้าเฟซบุ๊กของคุณ โดยตั้งค่าเป็นสาธารณะ และติดแฮชแท็ก
+                        </p>
+                        <p>
+                            #BraveandBurn #bebeforbeginer #วงการเบเบ้ เพื่อรับคะแนน
+                        </p>
+                        <FacebookShareButton url={`https://platform.bebefitroutine.com/brave_and_burn/complete${week}.html`}>
                             <div onClick={() => dispatch(updateFbShareStatusBraveAndBurn(user && user.user_id))} className='btn btn-primary gap-2'>
                                 <i className="fa-brands fa-facebook"> SHARE</i>
                             </div>
