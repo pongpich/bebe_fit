@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import Hls from 'hls.js';
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { FacebookShareButton, TwitterShareButton, FacebookMessengerShareButton, LineShareButton, WhatsappShareButton } from "react-share";
-import { } from "../redux/exerciseVideos";
+import { updateVideoStatusBraveAndBurn } from "../redux/exerciseVideos";
+import ListGroup from 'reactstrap/lib/ListGroup';
 
 
 
@@ -48,7 +49,7 @@ const BraveAndBurn = () => {
 
     const videoRef = useRef(null);
 
-
+    const user = useSelector(({ authUser }) => (authUser ? authUser.user : ""));
     const week = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.week : ""));
     const brave_and_burn_challenge = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.brave_and_burn_challenge : ""));
 
@@ -62,12 +63,12 @@ const BraveAndBurn = () => {
 
     useEffect(() => {
         setVideoUrl(JSON.parse(brave_and_burn_challenge.video).url3)
+        if (brave_and_burn_challenge.video_status === "success") {
+            setVideoEnded(true);
+        }
     }, [])
 
     useEffect(() => {
-
-        console.log("videoUrl :", videoUrl);
-
         const video = videoRef.current;
         if (video) {
             if (Hls.isSupported()) {
@@ -91,7 +92,6 @@ const BraveAndBurn = () => {
 
             video.addEventListener('loadedmetadata', () => {
                 const videoDuration = video.duration; // ความยาวของวีดีโอ (ในวินาที)
-                console.log(`ความยาวของวีดีโอ: ${videoDuration} วินาที`);
                 setVideoDuration(videoDuration);
             });
 
@@ -118,7 +118,7 @@ const BraveAndBurn = () => {
 
     useEffect(() => {
         if (videoEnded) {
-
+            dispatch(updateVideoStatusBraveAndBurn(user && user.user_id))
         }
     }, [videoEnded])
 
@@ -186,9 +186,8 @@ const BraveAndBurn = () => {
                     videoEnded &&
                     <div className='mt-3'>
                         <FacebookShareButton url={'https://fit.bebefitroutine.com/achievement/achievement8.html'}>
-
-                            <div className='btn btn-primary gap-2'>
-                                <i class="fa-brands fa-facebook"> SHARE</i>
+                            <div onClick={() => console.log("SHARE!!")} className='btn btn-primary gap-2'>
+                                <i className="fa-brands fa-facebook"> SHARE</i>
                             </div>
                         </FacebookShareButton>
 
