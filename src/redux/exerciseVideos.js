@@ -49,10 +49,20 @@ export const types = {
   CREATE_BRAVE_AND_BURN_CHALLENGE: "CREATE_BRAVE_AND_BURN_CHALLENGE",
   CREATE_BRAVE_AND_BURN_CHALLENGE_SUCCESS: "CREATE_BRAVE_AND_BURN_CHALLENGE_SUCCESS",
   CREATE_BRAVE_AND_BURN_CHALLENGE_FAIL: "CREATE_BRAVE_AND_BURN_CHALLENGE_FAIL",
+  GET_BRAVE_AND_BURN_CHALLENGE: "GET_BRAVE_AND_BURN_CHALLENGE",
+  GET_BRAVE_AND_BURN_CHALLENGE_SUCCESS: "GET_BRAVE_AND_BURN_CHALLENGE_SUCCESS",
+  GET_BRAVE_AND_BURN_CHALLENGE_FAIL: "GET_BRAVE_AND_BURN_CHALLENGE_FAIL",
 }
 
 export const createBraveAndBurnChallenge = (user_id) => ({
   type: types.CREATE_BRAVE_AND_BURN_CHALLENGE,
+  payload: {
+    user_id
+  }
+});
+
+export const getBraveAndBurnChallenge = (user_id) => ({
+  type: types.GET_BRAVE_AND_BURN_CHALLENGE,
   payload: {
     user_id
   }
@@ -257,6 +267,21 @@ export const videoListForUser = (
 /* END OF ACTION Section */
 
 /* SAGA Section */
+
+const getBraveAndBurnChallengeSagaAsync = async (
+  user_id,
+) => {
+  try {
+    const apiResult = await API.get("bebe", "/getBraveAndBurnChallenge", {
+      queryStringParameters: {
+        user_id
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
 
 const createBraveAndBurnChallengeSagaAsync = async (
   user_id,
@@ -583,6 +608,33 @@ const createCustomWeekForUserSagaAsync = async (
       }
     });
     return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* getBraveAndBurnChallengeSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      getBraveAndBurnChallengeSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.GET_BRAVE_AND_BURN_CHALLENGE_SUCCESS,
+        payload: apiResult.results.brave_and_burn_challenge
+      });
+    }
+    if (apiResult.results.message === "fail") {
+      yield put({
+        type: types.GET_BRAVE_AND_BURN_CHALLENGE_FAIL
+      });
+    }
+
   } catch (error) {
     return { error, messsage: error.message };
   }
@@ -1167,6 +1219,10 @@ export function* watchCreateBraveAndBurnChallenge() {
   yield takeEvery(types.CREATE_BRAVE_AND_BURN_CHALLENGE, createBraveAndBurnChallengeSaga)
 }
 
+export function* watchGetBraveAndBurnChallenge() {
+  yield takeEvery(types.GET_BRAVE_AND_BURN_CHALLENGE, getBraveAndBurnChallengeSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
@@ -1185,6 +1241,7 @@ export function* saga() {
     fork(watchGetAllExerciseActivity),
     fork(watchUpdatePlaytimeLastWeekSelectedSaga),
     fork(watchCreateBraveAndBurnChallenge),
+    fork(watchGetBraveAndBurnChallenge),
   ]);
 }
 
@@ -1212,11 +1269,30 @@ const INIT_STATE = {
   hidePopUpVideoPlayer: false,
   hidePopUpVideoPlayerList: false,
   endedVideoPlayerList: false,
-  statusCreateBraveAndBurn: "default"
+  statusCreateBraveAndBurn: "default",
+  statusGetBraveAndBurn: "default",
+  brave_and_burn_challenge: null
+
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.GET_BRAVE_AND_BURN_CHALLENGE:
+      return {
+        ...state,
+        statusGetBraveAndBurn: "loading"
+      }
+    case types.GET_BRAVE_AND_BURN_CHALLENGE_SUCCESS:
+      return {
+        ...state,
+        statusGetBraveAndBurn: "success",
+        brave_and_burn_challenge: action.payload
+      }
+    case types.GET_BRAVE_AND_BURN_CHALLENGE_FAIL:
+      return {
+        ...state,
+        statusGetBraveAndBurn: "fail"
+      }
     case types.CREATE_BRAVE_AND_BURN_CHALLENGE:
       return {
         ...state,

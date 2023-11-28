@@ -9,7 +9,7 @@ import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth"
 import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog, checkProgramLevel } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setHidePopupVideoPlayerList, setEndedVideoPlayerList, createBraveAndBurnChallenge } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setHidePopupVideoPlayerList, setEndedVideoPlayerList, createBraveAndBurnChallenge, getBraveAndBurnChallenge } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
@@ -146,7 +146,11 @@ class VideoList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { displayName, displayName2, displayName3, lastWeekStart, focusDay, selectedVDO } = this.state;
-    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusGetMemberInfo, statusCheckRenewPrompt, statusGetAllExAct, member_info, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList } = this.props;
+    const { user, exerciseVideo, statusVideoList, statusPostDailyWeighChallenge, statusDisplayName, statusUpdateProgramPromptLog, statusGetCheckRenewPrompt, statusGetMemberInfo, statusCheckRenewPrompt, statusGetAllExAct, member_info, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusGetBraveAndBurn } = this.props;
+
+    if ((prevProps.statusGetBraveAndBurn !== statusGetBraveAndBurn) && (statusGetBraveAndBurn === "success")) {
+      this.setState({ showBarveAndBurn: true })
+    }
 
     //เช็คเพื่อซ่อน popup จากไฟล์ component VideoPlayer
     if (prevProps.hidePopUpVideoPlayer !== hidePopUpVideoPlayer) {
@@ -2435,12 +2439,12 @@ class VideoList extends Component {
                   </a>
                 }
                 {
-                  (this.props.week <= 8) &&
+                  ((this.props.week <= 8) && (this.props.statusGetBraveAndBurn !== "loading")) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${showBarveAndBurn ? "#F45197" : "grey"}`, cursor: "pointer" }} onClick={() => this.setState({
-                      showBarveAndBurn: true
-                    })}
+                    style={{ color: `${showBarveAndBurn ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                    /* onClick={() => this.setState({ showBarveAndBurn: true })} */
+                    onClick={() => this.props.getBraveAndBurnChallenge(this.props.user && this.props.user.user_id)}
                   >
                     <h5><b> Brave & Burn</b></h5>
                   </a>
@@ -2776,11 +2780,11 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) 
   const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = get;
   const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn, statusGetBraveAndBurn, brave_and_burn_challenge } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn, statusGetBraveAndBurn, brave_and_burn_challenge };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setEndedVideoPlayerList, setHidePopupVideoPlayerList, createBraveAndBurnChallenge };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setEndedVideoPlayerList, setHidePopupVideoPlayerList, createBraveAndBurnChallenge, getBraveAndBurnChallenge };
 
 export default connect(
   mapStateToProps,
