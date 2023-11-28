@@ -42,8 +42,8 @@ const BraveAndBurn = () => {
     const [videoUrl, setVideoUrl] = useState(null);
     const [videoDuration, setVideoDuration] = useState(0); // เพิ่ม state สำหรับเก็บความยาวของวีดีโอ
     const [videoCurrDuration, setVideoCurrDuration] = useState(0); // เพิ่ม state สำหรับเก็บระยะเวลาที่เล่นไปของวีดีโอ
-
     const [prevPlayTime, setPrevPlayTime] = useState(0);
+    const [timeStamp, setTimeStamp] = useState(null);
 
 
     const videoRef = useRef(null);
@@ -61,10 +61,29 @@ const BraveAndBurn = () => {
 
 
     useEffect(() => {
-        setVideoUrl(JSON.parse(brave_and_burn_challenge.video).url3)
+        //setVideoUrl
+        setVideoUrl(JSON.parse(brave_and_burn_challenge.video).url3);
+
+        //setVideoEnded
         if (brave_and_burn_challenge.video_status === "success") {
             setVideoEnded(true);
-        }
+        };
+
+        //setTimeStamp
+        const isoDateString = brave_and_burn_challenge.updated_at;
+        const date = new Date(isoDateString);
+        const options = {
+            day: 'numeric',
+            month: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false,
+        };
+        const formattedDate = new Intl.DateTimeFormat('th-TH', options).format(date);
+        setTimeStamp(formattedDate);
+
     }, [])
 
     useEffect(() => {
@@ -72,13 +91,13 @@ const BraveAndBurn = () => {
         if (video) {
             if (Hls.isSupported()) {
                 const hls = new Hls();
-                hls.loadSource("https://planforfittufqepu.stream-playlist.byteark.com/streams/TuMnX1KBc4pR/playlist.m3u8"); // ใช้ URL ที่ถูกส่งเข้ามาใน props
+                hls.loadSource(videoUrl); // ใช้ URL ที่ถูกส่งเข้ามาใน props
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, () => {
                     //video.play();
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = "https://planforfittufqepu.stream-playlist.byteark.com/streams/TuMnX1KBc4pR/playlist.m3u8"; // ใช้ URL ที่ถูกส่งเข้ามาใน props
+                video.src = videoUrl; // ใช้ URL ที่ถูกส่งเข้ามาใน props
                 video.addEventListener('canplay', () => {
                     // video.play();
                 });
@@ -142,16 +161,31 @@ const BraveAndBurn = () => {
 
                 <div className='card' style={{ width: 476, backgroundColor: "white", padding: 1, borderRadius: 20 }}>
                     <div className='containerThumb'>
-                        <img
-                            className='img-fluid'
-                            style={{
-                                borderTopLeftRadius: '20px',
-                                borderTopRightRadius: '20px',
-                                borderBottomLeftRadius: '0',
-                                borderBottomRightRadius: '0'
-                            }}
-                            src={require(`../assets/img/brave&burn/brave&burn${week}.png`)}>
-                        </img>
+                        {
+                            videoEnded ?
+                                <img
+                                    className='img-fluid'
+                                    style={{
+                                        borderTopLeftRadius: '20px',
+                                        borderTopRightRadius: '20px',
+                                        borderBottomLeftRadius: '0',
+                                        borderBottomRightRadius: '0'
+                                    }}
+                                    src={require(`../assets/img/brave&burn/brave&burn_complete${week}.png`)}>
+                                </img>
+                                :
+                                <img
+                                    className='img-fluid'
+                                    style={{
+                                        borderTopLeftRadius: '20px',
+                                        borderTopRightRadius: '20px',
+                                        borderBottomLeftRadius: '0',
+                                        borderBottomRightRadius: '0'
+                                    }}
+                                    src={require(`../assets/img/brave&burn/brave&burn${week}.png`)}>
+                                </img>
+                        }
+
                     </div>
 
                     <div style={{ padding: 35 }}>
@@ -171,20 +205,30 @@ const BraveAndBurn = () => {
                             }
                             {` Challenge!!`}
                         </p>
-                        <div className='d-flex justify-content-center align-items-center'>
-                            <div
-                                className='btn d-flex justify-content-center align-items-center'
-                                style={{ color: "white", backgroundColor: "#EF60A3", width: 350, height: 60, borderRadius: 50, fontSize: 24 }}
-                                onClick={togglePopup}
-                            >
-                                เล่นชาเลนจ์นี้
-                            </div>
-                        </div>
+                        {
+                            videoEnded ?
+                                <div className='d-flex flex-column justify-content-center align-items-center'>
+                                    <p style={{ fontSize: 22, margin: '0' }}>ยินดีด้วย !!!! {user.facebook ? user.facebook : ""}</p>
+                                    <p style={{ fontSize: 22, margin: '0' }}>ได้พิชิตคลิปประจำสัปดาห์</p>
+                                    <p style={{ fontSize: 22, margin: '0' }}>{timeStamp}</p>
+                                </div>
+                                :
+                                <div className='d-flex justify-content-center align-items-center'>
+                                    <div
+                                        className='btn d-flex justify-content-center align-items-center'
+                                        style={{ color: "white", backgroundColor: "#EF60A3", width: 350, height: 60, borderRadius: 50, fontSize: 24 }}
+                                        onClick={togglePopup}
+                                    >
+                                        เล่นชาเลนจ์นี้
+                                    </div>
+                                </div>
+                        }
+
                     </div>
                 </div>
                 {
                     videoEnded &&
-                    <div className='mt-3'>
+                    <div className='mt-4'>
                         <FacebookShareButton url={'https://fit.bebefitroutine.com/achievement/achievement8.html'}>
                             <div onClick={() => dispatch(updateFbShareStatusBraveAndBurn(user && user.user_id))} className='btn btn-primary gap-2'>
                                 <i className="fa-brands fa-facebook"> SHARE</i>
