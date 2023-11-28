@@ -9,11 +9,12 @@ import { updateProfile, logoutUser, checkUpdateMaxFriends } from "../redux/auth"
 import { getCheckDisplayName, getMemberInfo, check4WeeksPrompt, checkRenewPrompt } from "../redux/get";
 import { updateDisplayName, updateProgramPromptLog, checkProgramLevel } from "../redux/update";
 import { getDailyWeighChallenge, postDailyWeighChallenge } from "../redux/challenges";
-import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setHidePopupVideoPlayerList, setEndedVideoPlayerList } from "../redux/exerciseVideos";
+import { createCustomWeekForUser, videoListForUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setHidePopupVideoPlayerList, setEndedVideoPlayerList, createBraveAndBurnChallenge } from "../redux/exerciseVideos";
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
 import { convertSecondsToMinutes, convertFormatTime, calculateWeekInProgram } from "../helpers/utils";
 import "./videoList.scss";
 import moment from 'moment';
+import BraveAndBurn from '../components/BraveAndBurn';
 import VideoPlayerByteArk from '../components/VideoPlayer';
 import VideoPlayerListByteArk from '../components/VideoPlayerList';
 import SelectChangeVideoList from '../components/SelectChangeVideoList';
@@ -63,6 +64,7 @@ class VideoList extends Component {
       lastWeekStart: null,
       weekAll: [],
       selectExerciseVideoLastWeek: null,
+      showBarveAndBurn: false
     };
 
     this.prevPlayTime = 0;
@@ -110,8 +112,7 @@ class VideoList extends Component {
       this.props.checkRenewPrompt(user.user_id);
 
       this.props.getAllExerciseActivity(user.user_id);
-
-
+      this.props.createBraveAndBurnChallenge(user.user_id);
     }
     if (this.props.user && this.props.user.other_attributes) {
       this.props.videoListForUser(
@@ -531,7 +532,8 @@ class VideoList extends Component {
 
   onDayChange = (day) => {
     this.setState({
-      focusDay: day
+      focusDay: day,
+      showBarveAndBurn: false
     });
   }
 
@@ -2343,7 +2345,7 @@ class VideoList extends Component {
   }
 
   renderVideoList() {
-    const { focusDay, selectedVDO, selectVideoPlayer, lastWeekVDO_click, lastWeekVDOAll, lastWeekStart, selectExerciseVideoLastWeek } = this.state;
+    const { focusDay, selectedVDO, selectVideoPlayer, lastWeekVDO_click, lastWeekVDOAll, lastWeekStart, selectExerciseVideoLastWeek, showBarveAndBurn } = this.state;
 
     const { exerciseVideo } = this.props;
     const numbDayExercise = exerciseVideo.length;
@@ -2396,7 +2398,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 1) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 0 ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${(!showBarveAndBurn) && focusDay === 0 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(0)}
                   >
                     <h5><b>DAY 1</b></h5>
@@ -2406,7 +2408,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 2) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 1 ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${(!showBarveAndBurn) && focusDay === 1 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(1)}
                   >
                     <h5><b>DAY 2</b></h5>
@@ -2416,7 +2418,7 @@ class VideoList extends Component {
                   (numbDayExercise >= 3) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 2 ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${(!showBarveAndBurn) && focusDay === 2 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(2)}
                   >
                     <h5><b>DAY 3</b></h5>
@@ -2426,10 +2428,21 @@ class VideoList extends Component {
                   (numbDayExercise >= 4) &&
                   <a
                     className="nav-link"
-                    style={{ color: `${focusDay === 3 ? "#F45197" : "grey"}`, cursor: "pointer" }}
+                    style={{ color: `${(!showBarveAndBurn) && focusDay === 3 ? "#F45197" : "grey"}`, cursor: "pointer" }}
                     onClick={() => this.onDayChange(3)}
                   >
                     <h5><b>DAY 4</b></h5>
+                  </a>
+                }
+                {
+                  (this.props.week <= 8) &&
+                  <a
+                    className="nav-link"
+                    style={{ color: `${showBarveAndBurn ? "#F45197" : "grey"}`, cursor: "pointer" }} onClick={() => this.setState({
+                      showBarveAndBurn: true
+                    })}
+                  >
+                    <h5><b> Brave & Burn</b></h5>
                   </a>
                 }
 
@@ -2485,90 +2498,95 @@ class VideoList extends Component {
                 </div>
             }
 
-
-            <table className="table table-responsive">
-              <div>
+            {
+              showBarveAndBurn ?
                 <div>
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <div className="">
-                        <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
-                        {
-                          (todayExercise && this.checkDayPlaytime(todayExercise)) &&
-                          <div
-                            className="mb-3"
-                            style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
-                            onClick={() => this.editVDO()} aria-hidden="true">
-                            <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
-                            แก้ไขวีดีโอ
+                  <BraveAndBurn></BraveAndBurn>
+                </div>
+                :
+                <table className="table table-responsive">
+                  <div>
+                    <div>
+                      <div className="row">
+                        <div className="col-lg-6">
+                          <div className="">
+                            <span className="mr-5 ml-3" style={{ fontSize: "16px", float: "left", color: "grey" }}> รวมเวลาฝึกทั้งหมด {timesExercise} นาที</span>
+                            {
+                              (todayExercise && this.checkDayPlaytime(todayExercise)) &&
+                              <div
+                                className="mb-3"
+                                style={{ fontSize: "16px", cursor: "pointer", color: "#F45197", textDecoration: "underline" }}
+                                onClick={() => this.editVDO()} aria-hidden="true">
+                                <img className="mr-2" src={`../assets/img/edit.png`} width="30px" height="30px" />
+                                แก้ไขวีดีโอ
+                              </div>
+                            }
                           </div>
-                        }
-                      </div>
-                    </div>
-                    <div className="col-lg-6">
-                      <div className="col-lg-12 col-md-4 col-12">
-                        <div className="mt-1" style={{ float: "right" }} >
-                          <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
-                          <label className="switch" onClick={() => this.autoPlayCheck()}>
-                            <input type="checkbox" className="danger" id="autoPlayCheck"></input>
-                            <span className="slider round"></span>
-                          </label>
+                        </div>
+                        <div className="col-lg-6">
+                          <div className="col-lg-12 col-md-4 col-12">
+                            <div className="mt-1" style={{ float: "right" }} >
+                              <span className="mr-2" style={{ fontSize: "18px", fontWeight: "bold", color: "grey" }}>เล่นอัตโนมัติ</span>
+                              <label className="switch" onClick={() => this.autoPlayCheck()}>
+                                <input type="checkbox" className="danger" id="autoPlayCheck"></input>
+                                <span className="slider round"></span>
+                              </label>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <tbody>
-                {
-                  (this.props.exerciseVideo) &&
-                  (todayExercise.map((item, index) => {
-                    const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
-                    return (
-                      <div className="row" key={index}>
-                        <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
-                          {
-                            (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
-                          }
-                          {
-                            (item.play_time && item.duration && item.play_time / item.duration >= completeVideoPlayPercentage) ?
-                              <span className="dot" style={{ backgroundColor: "#F45197" }}>
-                                <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
-                              </span>
-                              :
-                              <span className="dot">
-                                <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
-                              </span>
-                          }
-                          {
-                            (index === todayExercise.length - 1) ?
-                              <div className="vl" style={{ height: "0%" }}></div>
-                              :
-                              <div className="vl"></div>
-                          }
-                          {
-                            (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
-                          }
-                        </div>
-                        <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
-                          <div className="videoItem border shadow">
-                            {
-                              (this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggleList(index)}></img>
-                            }
-                            {
-                              (!this.state.autoPlayCheck) &&
-                              <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
-                            }
-                            <div className="videoThumb">
-                              <div className="containerThumb">
+                  <tbody>
+                    {
+                      (this.props.exerciseVideo) &&
+                      (todayExercise.map((item, index) => {
+                        const minuteLabel = (item.duration < 20) ? convertFormatTime(item.duration) : convertSecondsToMinutes(item.duration);
+                        return (
+                          <div className="row" key={index}>
+                            <div className="checkCompleteVideo mt-3 col-lg-2 col-md-1 col-2">
+                              {
+                                (index === 0) && <h6 className="firstVideoStartText">เริ่มกันเลย!</h6>
+                              }
+                              {
+                                (item.play_time && item.duration && item.play_time / item.duration >= completeVideoPlayPercentage) ?
+                                  <span className="dot" style={{ backgroundColor: "#F45197" }}>
+                                    <h5 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", color: "white" }}><i className="fa fa-check fa-lg" ></i></h5>
+                                  </span>
+                                  :
+                                  <span className="dot">
+                                    <h3 style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)" }}>{index + 1}</h3>
+                                  </span>
+                              }
+                              {
+                                (index === todayExercise.length - 1) ?
+                                  <div className="vl" style={{ height: "0%" }}></div>
+                                  :
+                                  <div className="vl"></div>
+                              }
+                              {
+                                (index === todayExercise.length - 1) && <h6 className="lastVideoEndText">สำเร็จแล้ว!</h6>
+                              }
+                            </div>
+                            <div className="mt-3 mb-1 col-lg-8 col-md-11 col-10">
+                              <div className="videoItem border shadow">
                                 {
-                                  (item.thumbnail) ?
-                                    <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
-                                    :
-                                    <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                  (this.state.autoPlayCheck) &&
+                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggleList(index)}></img>
                                 }
-                                {/* <div className="overlay" onClick={() => this.toggle(item)}>
+                                {
+                                  (!this.state.autoPlayCheck) &&
+                                  <img className="play_button" src="../assets/img/thumb/play_button2.png" width="100px" onClick={() => this.toggle(item)}></img>
+                                }
+                                <div className="videoThumb">
+                                  <div className="containerThumb">
+                                    {
+                                      (item.thumbnail) ?
+                                        <img className="img-fluid" src={`${item.thumbnail}`} alt="" />
+                                        :
+                                        <img className="img-fluid" src={`../assets/img/thumb/${item.category.toLowerCase().split(" ").join("")}_g3.jpg`} alt="" />
+                                    }
+                                    {/* <div className="overlay" onClick={() => this.toggle(item)}>
                                 <i className="fa fa-play fa-4x" aria-hidden="true"></i>
                                 <div className="videoDuration" style={{ position: "absolute", right: "5%", bottom: "0", color: "white" }}>
                                   <h6>
@@ -2576,66 +2594,68 @@ class VideoList extends Component {
                                   </h6>
                                 </div>
                               </div> */}
+                                  </div>
+                                </div>
+                                <div className="videoDetail">
+                                  <div className="videoDuration mt-3">
+                                    <h6>
+                                      <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
+                                      {minuteLabel} นาที
+                                    </h6>
+                                  </div>
+                                  <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
+                                  <div className="videoName">
+                                    <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
+                                    {(item.name.length < 17) ?
+                                      <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
+                                      :
+                                      <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
+                                    }
+                                    {
+                                      (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
+                                      <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
+                                    }
+                                  </div>
+                                  { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
+                                    (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
+                                    <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "chestfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "legfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
+                                  }
+                                  {
+                                    (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
+                                    && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
+                                  }
+                                </div>
                               </div>
-                            </div>
-                            <div className="videoDetail">
-                              <div className="videoDuration mt-3">
-                                <h6>
-                                  <i className="fa fa-clock-o fa-1x mr-2" aria-hidden="true"></i>
-                                  {minuteLabel} นาที
-                                </h6>
-                              </div>
-                              <hr className="" style={{ width: "100%", marginTop: "40px" }}></hr>
-                              <div className="videoName">
-                                <p style={{ color: "grey", marginBottom: "0px", marginTop: "0px" }}> {item.category} </p>
-                                {(item.name.length < 17) ?
-                                  <h4 style={{ color: "#F45197" }}><b>{item.name}</b></h4>
-                                  :
-                                  <h6 style={{ color: "#F45197" }}><b>{item.name}</b></h6>
-                                }
-                                {
-                                  (this.props.member_info && (this.props.member_info.low_impact === "yes") && item.tag && item.tag.includes("low_impact")) &&
-                                  <p style={{ color: "grey", marginBottom: "0px", marginTop: "-10px" }}> {'(Low impact)'} </p>
-                                }
-                              </div>
-                              { //เช็ค ถ้าหากเป็น category ที่มี type ย่อย จะไม่สามารถนำชื่อ category มาตั้งเป็นชื่อรูปได้ ต้องแยกเป็นเคสๆไป
-                                (item.category !== "Main Circuit Combo" && item.category !== "Main Circuit" && item.category !== "Challenge") &&
-                                <img className="body_part" src={`../assets/img/body_part/${item.category.toLowerCase().split(" ").join("")}.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "chestfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "backfocus" || item.type.toLowerCase().split(" ").join("") === "chest_back")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "legfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
-                              }
-                              {
-                                (item.type.toLowerCase().split(" ").join("") === "armfocus" || item.type.toLowerCase().split(" ").join("") === "leg_arm")
-                                && <img className="body_part ml-2" src={`../assets/img/body_part/shoulder.png`}></img>
-                              }
                             </div>
                           </div>
-                        </div>
-                      </div>
 
-                    )
-                  }))
-                }
-              </tbody>
-            </table>
+                        )
+                      }))
+                    }
+                  </tbody>
+                </table>
+            }
+
           </div>
         </form>
       </div>
@@ -2718,13 +2738,6 @@ class VideoList extends Component {
               <a className="" id="contact-tab" data-toggle="tab" href="/#/challenges" role="tab" aria-controls="contact" aria-selected="false" style={{ color: "grey", textDecorationColor: "white" }}>ชาเลนจ์</a>
             </div>
           }
-          {
-            (this.props.week <= 8) &&
-            <div className="ml-4">
-              <a className="" id="contact-tab" data-toggle="tab" href="/#/BonusChallenge" role="tab" aria-controls="contact" aria-selected="false" style={{  color: "grey", textDecorationColor: "white" }}>Brave & Burn</a>
-            </div>
-          }
-
         </div>
         <div className="main main-raised" style={{ backgroundColor: ((user && user.other_attributes) && (statusVideoList !== "no_video")) ? "white" : "#F0EEF3" }}>
           <div className="container">
@@ -2763,11 +2776,11 @@ const mapStateToProps = ({ authUser, exerciseVideos, challenges, get, update }) 
   const { statusDisplayName, statusGetMemberInfo, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusCheckRenewPrompt, statusGetCheckRenewPrompt } = get;
   const { statusUpdateDisplayName, statusUpdateProgramPromptLog } = update;
   const { dailyWeighChallenge, statusPostDailyWeighChallenge } = challenges;
-  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList } = exerciseVideos;
-  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList };
+  const { exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn } = exerciseVideos;
+  return { user, exerciseVideo, exerciseVideoLastWeek, isFirstWeek, status, video, videos, statusVideoList, statusUpdateBodyInfo, week, lastweek, dailyWeighChallenge, statusPostDailyWeighChallenge, statusDisplayName, statusGetMemberInfo, statusUpdateDisplayName, member_info, statusCheck4WeeksPrompt, statusGetCheck4WeeksPrompt, statusUpdateProgramPromptLog, statusCheckRenewPrompt, statusGetCheckRenewPrompt, statusGetAllExAct, all_exercise_activity, hidePopUpVideoPlayer, hidePopUpVideoPlayerList, endedVideoPlayerList, statusCreateBraveAndBurn };
 };
 
-const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setEndedVideoPlayerList, setHidePopupVideoPlayerList };
+const mapActionsToProps = { updateProfile, createCustomWeekForUser, videoListForUser, logoutUser, updatePlaytime, updatePlaylist, randomVideo, selectChangeVideo, resetStatus, clearVideoList, videoListForUserLastWeek, updateBodyInfo, updatePlaytimeLastWeek, getDailyWeighChallenge, postDailyWeighChallenge, checkUpdateMaxFriends, getCheckDisplayName, getMemberInfo, updateDisplayName, updateProgramPromptLog, check4WeeksPrompt, checkRenewPrompt, checkProgramLevel, getAllExerciseActivity, updatePlaytimeLastWeekSelected, hidePopupVideoPlayer, setEndedVideoPlayerList, setHidePopupVideoPlayerList, createBraveAndBurnChallenge };
 
 export default connect(
   mapStateToProps,
