@@ -2443,10 +2443,9 @@ class VideoList extends Component {
                   <a
                     className="nav-link"
                     style={{ color: `${showBarveAndBurn ? "#F45197" : "grey"}`, cursor: "pointer" }}
-                    /* onClick={() => this.setState({ showBarveAndBurn: true })} */
                     onClick={() => this.props.getBraveAndBurnChallenge(this.props.user && this.props.user.user_id)}
                   >
-                    <h5><b> Brave & Burn</b></h5>
+                    <h5><b> Brave&Burn</b></h5>
                   </a>
                 }
 

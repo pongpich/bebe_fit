@@ -2,47 +2,55 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 import Hls from 'hls.js';
-import VideoPlayer from '../components/VideoPlayer';
-import { ByteArkPlayerContainer } from 'byteark-player-react';
-import brave_burn1 from "../assets/img/brave&burn/brave&burn1.png";
-import brave_burn2 from "../assets/img/brave&burn/brave&burn2.png";
-import brave_burn3 from "../assets/img/brave&burn/brave&burn3.png";
-import brave_burn4 from "../assets/img/brave&burn/brave&burn4.png";
-import brave_burn5 from "../assets/img/brave&burn/brave&burn5.png";
-import brave_burn6 from "../assets/img/brave&burn/brave&burn6.png";
-import brave_burn7 from "../assets/img/brave&burn/brave&burn7.png";
-import brave_burn8 from "../assets/img/brave&burn/brave&burn8.png";
+import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
+import { FacebookShareButton, TwitterShareButton, FacebookMessengerShareButton, LineShareButton, WhatsappShareButton } from "react-share";
+import { } from "../redux/exerciseVideos";
+
 
 
 
 const PopupWrapper = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-`;
-
-const VideoFrame = styled.iframe`
-  width: 30%; /* ปรับขนาดของ iframe ตามความต้องการ */
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.8);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 999;
 `;
 
 const CloseButton = styled.button`
-  background-color: #fff;
-  border: none;
-  padding: 5px 10px;
+background-color: #fff;
+border: none;
+padding: 5px 10px;
+position: absolute;
+top: 10px; /* ปรับตำแหน่งตามที่ต้องการ */
+right: 10px; /* ปรับตำแหน่งตามที่ต้องการ */
+z-index: 1000; /* ตั้งค่า z-index เพื่อให้ปุ่มอยู่ด้านบนสุด */
 `;
 
-function BraveAndBurn() {
+
+
+const BraveAndBurn = () => {
+    const dispatch = useDispatch();
+
     const [isPopupOpen, setPopupOpen] = useState(false);
     const [videoEnded, setVideoEnded] = useState(false);
+    const [videoUrl, setVideoUrl] = useState(null);
+    const [videoDuration, setVideoDuration] = useState(0); // เพิ่ม state สำหรับเก็บความยาวของวีดีโอ
+    const [videoCurrDuration, setVideoCurrDuration] = useState(0); // เพิ่ม state สำหรับเก็บระยะเวลาที่เล่นไปของวีดีโอ
+
+    const [prevPlayTime, setPrevPlayTime] = useState(0);
+
+
+    const videoRef = useRef(null);
+
 
     const week = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.week : ""));
+    const brave_and_burn_challenge = useSelector(({ exerciseVideos }) => (exerciseVideos ? exerciseVideos.brave_and_burn_challenge : ""));
 
 
 
@@ -51,65 +59,82 @@ function BraveAndBurn() {
         setPopupOpen(!isPopupOpen);
     };
 
-    //เก่า
-    /* 
-        const handleVideoEnd = () => {
-            setVideoEnded(true);
-        }; */
 
-    const handleVideoEnd = () => {
-        console.log('video end');
-    };
+    useEffect(() => {
+        setVideoUrl(JSON.parse(brave_and_burn_challenge.video).url3)
+    }, [])
 
-    const time_update = (ts) => {
-        console.log(ts);
-    };
-    /*     useEffect(() => {
-            const player = bytearkPlayer('the-video-player', {
-                fluid: true,
-                poster: '/assets/samples/player/images/poster-big-buck-bunny.jpg',
-                sources: [
-                    {
-                        title: 'Planforfit clip1',
-                        src:
-                            'https://planforfittufqepu.stream-playlist.byteark.com/streams/TuFSWQUUyDB2/playlist.m3u8',
-                        type: 'application/x-mpegURL',
-                    },
-                ],
+    useEffect(() => {
+
+        console.log("videoUrl :", videoUrl);
+
+        const video = videoRef.current;
+        if (video) {
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource("https://planforfittufqepu.stream-playlist.byteark.com/streams/TuMnX1KBc4pR/playlist.m3u8"); // ใช้ URL ที่ถูกส่งเข้ามาใน props
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    //video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = "https://planforfittufqepu.stream-playlist.byteark.com/streams/TuMnX1KBc4pR/playlist.m3u8"; // ใช้ URL ที่ถูกส่งเข้ามาใน props
+                video.addEventListener('canplay', () => {
+                    // video.play();
+                });
+            }
+
+
+            video.addEventListener('ended', () => {
+                setVideoEnded(true); // กำหนดว่าวีดีโอถูกดูจบ
             });
-    
-            player.on('ended', handleVideoEnd);
-            setInterval(function () {
-                time_update(player.currentTime());
-            }, 5000);
-        }, []); */
+
+            video.addEventListener('loadedmetadata', () => {
+                const videoDuration = video.duration; // ความยาวของวีดีโอ (ในวินาที)
+                console.log(`ความยาวของวีดีโอ: ${videoDuration} วินาที`);
+                setVideoDuration(videoDuration);
+            });
+
+            video.addEventListener('timeupdate', () => {
+                setVideoCurrDuration(video.currentTime); // อัปเดตระยะเวลาที่คลิปถูกเล่นไป
+            });
+        }
+    }, [isPopupOpen]);
 
 
     useEffect(() => {
-        if (videoEnded) {
-            console.log("ดูวีดีโอจบ!!");
+        //ทำการหน่วงเวลาตาม updateFrequency เพื่อยิง updatePlayTime
+        const diffTime = Math.abs(videoCurrDuration - prevPlayTime);
+        if (diffTime < updateFrequency) { return }
+        setPrevPlayTime(videoCurrDuration)
+
+        //เช็คว่าถ้าดูวีดีโอยังไม่ถึง minimumVideoPlayPercentage ไม่ต้อง updatePlayTime
+        if (videoCurrDuration / videoDuration < minimumVideoPlayPercentage) {
+            return
         }
-    }, [videoEnded]);
+
+        setVideoEnded(true);
+    }, [videoCurrDuration]);
+
+    useEffect(() => {
+        if (videoEnded) {
+
+        }
+    }, [videoEnded])
 
     return (
         <div >
             {isPopupOpen && (
                 <PopupWrapper>
                     <video
-                        src="https://player.vimeo.com/progressive_redirect/playback/414644940/rendition/720p/file.mp4?loc=external&signature=dbccc6ffbff46df17b0b0a09302e62dc3ff0d16ce39a9a13876821834760430f"
                         id="videoPlayer"
-                        controls controlsList="nodownload" disablePictureInPicture
-                        onEnded={handleVideoEnd}
-                    >
-                    </video>
+                        ref={videoRef}
+                        controls
+                        width={900}
+                    />
                     <CloseButton onClick={togglePopup}>ปิด</CloseButton>
                 </PopupWrapper>
             )}
-
-            {/*             <VideoPlayer url="https://byteark-poc-slvkafvgn1mh.stream-playlist.byteark.com/streams/TuFAlxQoDhDr/playlist.m3u8" />
-            
- */}
-
 
             <div id="the-video-player"></div>
 
@@ -128,9 +153,7 @@ function BraveAndBurn() {
                             src={require(`../assets/img/brave&burn/brave&burn${week}.png`)}>
                         </img>
                     </div>
-                    {/* <div className='center'>
-                        <img className="play_button" onClick={togglePopup} src="../assets/img/thumb/play_button2.png" width="100px" ></img>
-                    </div> */}
+
                     <div style={{ padding: 35 }}>
                         <p style={{ fontSize: 22, margin: '0' }}>Brave&Burn</p>
                         <p style={{ fontSize: 42, margin: '0' }}>
@@ -162,9 +185,13 @@ function BraveAndBurn() {
                 {
                     videoEnded &&
                     <div className='mt-3'>
-                        <div className='btn btn-primary gap-2'>
-                            <i class="fa-brands fa-facebook"> SHARE</i>
-                        </div>
+                        <FacebookShareButton url={'https://fit.bebefitroutine.com/achievement/achievement8.html'}>
+
+                            <div className='btn btn-primary gap-2'>
+                                <i class="fa-brands fa-facebook"> SHARE</i>
+                            </div>
+                        </FacebookShareButton>
+
                     </div>
                 }
 
