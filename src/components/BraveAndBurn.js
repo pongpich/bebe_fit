@@ -3,9 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import styled from 'styled-components';
 import Hls from 'hls.js';
 import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequency } from "../constants/defaultValues";
-import { FacebookShareButton, TwitterShareButton, FacebookMessengerShareButton, LineShareButton, WhatsappShareButton } from "react-share";
-import { updateVideoStatusBraveAndBurn } from "../redux/exerciseVideos";
-import ListGroup from 'reactstrap/lib/ListGroup';
+import { FacebookShareButton } from "react-share";
+import { updateVideoStatusBraveAndBurn, updateFbShareStatusBraveAndBurn } from "../redux/exerciseVideos";
 
 
 
@@ -119,6 +118,7 @@ const BraveAndBurn = () => {
     useEffect(() => {
         if (videoEnded) {
             dispatch(updateVideoStatusBraveAndBurn(user && user.user_id))
+            console.log("END!!");
         }
     }, [videoEnded])
 
@@ -186,7 +186,7 @@ const BraveAndBurn = () => {
                     videoEnded &&
                     <div className='mt-3'>
                         <FacebookShareButton url={'https://fit.bebefitroutine.com/achievement/achievement8.html'}>
-                            <div onClick={() => console.log("SHARE!!")} className='btn btn-primary gap-2'>
+                            <div onClick={() => dispatch(updateFbShareStatusBraveAndBurn(user && user.user_id))} className='btn btn-primary gap-2'>
                                 <i className="fa-brands fa-facebook"> SHARE</i>
                             </div>
                         </FacebookShareButton>

@@ -60,6 +60,13 @@ export const types = {
   UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN_FAIL: "UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN_FAIL"
 }
 
+export const updateFbShareStatusBraveAndBurn = (user_id) => ({
+  type: types.UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN,
+  payload: {
+    user_id
+  }
+});
+
 export const updateVideoStatusBraveAndBurn = (user_id) => ({
   type: types.UPDATE_VIDEO_STATUS_BRAVE_AND_BURN,
   payload: {
@@ -301,6 +308,21 @@ const updateVideoStatusBraveAndBurnSagaAsync = async (
 ) => {
   try {
     const apiResult = await API.put("bebe", "/updateVideoStatusBraveAndBurn", {
+      body: {
+        user_id
+      }
+    });
+    return apiResult;
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+const updateFbShareStatusBraveAndBurnSagaAsync = async (
+  user_id,
+) => {
+  try {
+    const apiResult = await API.put("bebe", "/updateFbShareStatusBraveAndBurn", {
       body: {
         user_id
       }
@@ -654,6 +676,26 @@ function* updateVideoStatusBraveAndBurnSaga({ payload }) {
     if (apiResult.results.message === "success") {
       yield put({
         type: types.UPDATE_VIDEO_STATUS_BRAVE_AND_BURN_SUCCESS
+      });
+    }
+  } catch (error) {
+    return { error, messsage: error.message };
+  }
+}
+
+function* updateFbShareStatusBraveAndBurnSaga({ payload }) {
+  const {
+    user_id
+  } = payload
+
+  try {
+    const apiResult = yield call(
+      updateFbShareStatusBraveAndBurnSagaAsync,
+      user_id
+    );
+    if (apiResult.results.message === "success") {
+      yield put({
+        type: types.UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN_SUCCESS
       });
     }
   } catch (error) {
@@ -1275,6 +1317,10 @@ export function* watchUpdateVideoStatusBraveAndBurn() {
   yield takeEvery(types.UPDATE_VIDEO_STATUS_BRAVE_AND_BURN, updateVideoStatusBraveAndBurnSaga)
 }
 
+export function* watchUpdateFbShareStatusBraveAndBurn() {
+  yield takeEvery(types.UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN, updateFbShareStatusBraveAndBurnSaga)
+}
+
 export function* saga() {
   yield all([
     fork(watchUpdatePlaytime),
@@ -1295,6 +1341,7 @@ export function* saga() {
     fork(watchCreateBraveAndBurnChallenge),
     fork(watchGetBraveAndBurnChallenge),
     fork(watchUpdateVideoStatusBraveAndBurn),
+    fork(watchUpdateFbShareStatusBraveAndBurn),
   ]);
 }
 
@@ -1325,11 +1372,22 @@ const INIT_STATE = {
   statusCreateBraveAndBurn: "default",
   statusGetBraveAndBurn: "default",
   brave_and_burn_challenge: null,
-  status_update_video_brave_and_burn: "default"
+  status_update_video_brave_and_burn: "default",
+  status_update_fb_brave_and_burn: "default"
 };
 
 export function reducer(state = INIT_STATE, action) {
   switch (action.type) {
+    case types.UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN:
+      return {
+        ...state,
+        status_update_fb_brave_and_burn: "loading"
+      }
+    case types.UPDATE_FB_SHARE_STATUS_BRAVE_AND_BURN_SUCCESS:
+      return {
+        ...state,
+        status_update_fb_brave_and_burn: "success",
+      }
     case types.UPDATE_VIDEO_STATUS_BRAVE_AND_BURN:
       return {
         ...state,
