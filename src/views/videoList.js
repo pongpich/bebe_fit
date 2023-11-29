@@ -2503,7 +2503,7 @@ class VideoList extends Component {
 
             {
               showBarveAndBurn ?
-                <div className="">
+                <div>
                   <BraveAndBurn></BraveAndBurn>
                 </div>
                 :

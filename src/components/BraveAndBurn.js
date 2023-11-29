@@ -6,8 +6,42 @@ import { completeVideoPlayPercentage, minimumVideoPlayPercentage, updateFrequenc
 import { FacebookShareButton } from "react-share";
 import { updateVideoStatusBraveAndBurn, updateFbShareStatusBraveAndBurn } from "../redux/exerciseVideos";
 
+const MdText = styled.div`
+font-size: 22px; 
+margin: 0;
+`;
 
+const LgText = styled.div`
+margin: 0px; 
+font-weight: bold;
 
+@media  (max-width: 768px) { /* Small devices (landscape phones) */
+    font-size: 26px; 
+  }
+
+@media  (min-width: 769px) { /* Small devices (landscape phones) */
+    font-size: 36px;
+  }
+
+`;
+
+const Card = styled.div`
+  background-color: white;
+  padding: 1px;
+  border-radius: 20px;
+
+  @media  (max-width: 768px) { /* Small devices (landscape phones) */
+    width: 300px;
+  }
+
+  @media (min-width: 769px) and (max-width: 992px) { /* Medium devices (tablets) */
+    width: 400;
+  }
+
+  @media (min-width: 993px) { /* Large devices (desktops) */
+    width: 400px;
+  }
+`;
 
 const PopupWrapper = styled.div`
 position: fixed;
@@ -159,7 +193,7 @@ const BraveAndBurn = () => {
 
             <div className='center d-flex flex-column align-items-center' style={{ backgroundColor: "white", padding: 50 }}>
 
-                <div className='card' style={{ width: 400, backgroundColor: "white", padding: 1, borderRadius: 20 }}>
+                <Card className='card' /* style={{ width: 300, backgroundColor: "white", padding: 1, borderRadius: 20 }} */>
                     <div className='containerThumb'>
                         {
                             videoEnded ?
@@ -188,9 +222,9 @@ const BraveAndBurn = () => {
 
                     </div>
 
-                    <div style={{ padding: 35 }}>
-                        <p style={{ fontSize: 22, margin: '0' }}>Brave&Burn</p>
-                        <p style={{ fontSize: 38, margin: '0' }}>
+                    <div style={{ padding: "10px 30px" }}>
+                        <MdText>Brave&Burn</MdText>
+                        <LgText>
                             {
                                 (week > 3) ?
                                     `${week}th`
@@ -204,7 +238,7 @@ const BraveAndBurn = () => {
                                             `${week}st`
                             }
                             {` Challenge!!`}
-                        </p>
+                        </LgText>
                         {
                             videoEnded ?
                                 <div className='d-flex flex-column justify-content-center align-items-center'>
@@ -215,8 +249,8 @@ const BraveAndBurn = () => {
                                 :
                                 <div className='d-flex justify-content-center align-items-center'>
                                     <div
-                                        className='btn d-flex justify-content-center align-items-center'
-                                        style={{ color: "white", backgroundColor: "#EF60A3", width: 350, height: 60, borderRadius: 50, fontSize: 24 }}
+                                        className='btn d-flex justify-content-center align-items-center mb-2 mt-2'
+                                        style={{ color: "white", backgroundColor: "#EF60A3", width: 330, height: 55, borderRadius: 50, fontSize: 22, fontWeight: "bold" }}
                                         onClick={togglePopup}
                                     >
                                         เล่นชาเลนจ์นี้
@@ -225,7 +259,7 @@ const BraveAndBurn = () => {
                         }
 
                     </div>
-                </div>
+                </Card>
                 {
                     videoEnded &&
                     <div className='mt-4 d-flex flex-column justify-content-center align-items-center'>
