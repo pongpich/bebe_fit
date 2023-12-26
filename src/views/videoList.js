@@ -1,5 +1,5 @@
 //ByteArk Version
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import ReactDOM from 'react-dom';
 import {
   Button
@@ -19,6 +19,9 @@ import VideoPlayerByteArk from '../components/VideoPlayer';
 import VideoPlayerListByteArk from '../components/VideoPlayerList';
 import SelectChangeVideoList from '../components/SelectChangeVideoList';
 import VideoListLastWeekAll from '../components/VideoListLastWeekAll';
+import Modal from '../modals/modal';
+import Modal_Form from '../modals/modal_form';
+import Success_Modal from '../modals/success_modal';
 
 class VideoList extends Component {
   constructor(props) {
@@ -64,7 +67,10 @@ class VideoList extends Component {
       lastWeekStart: null,
       weekAll: [],
       selectExerciseVideoLastWeek: null,
-      showBarveAndBurn: false
+      showBarveAndBurn: false,
+      show: true,
+      modal_show: false,
+      success_modal_show: false
     };
 
     this.prevPlayTime = 0;
@@ -78,7 +84,39 @@ class VideoList extends Component {
     this.exerciseDaySelection = this.exerciseDaySelection.bind(this);
     this.closeList = this.closeList.bind(this);
     this.addEventToVideo = this.addEventToVideo.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
+    this.showModalForm = this.showModalForm.bind(this);
+    this.hideModalForm = this.hideModalForm.bind(this);
+    this.showSuccessModal = this.showSuccessModal.bind(this);
+    this.hideSuccessModal = this.hideSuccessModal.bind(this);
   }
+
+  showModal = () => {
+    this.setState({ show: true });
+  };
+
+  hideModal = () => {
+    this.setState({ show: false });
+  };
+
+  showModalForm = () => {
+    this.setState({ modal_show: true });
+    this.setState({ show: false });
+  };
+
+  hideModalForm = () => {
+    this.setState({ modal_show: false });
+  };
+
+  showSuccessModal = () => {
+    this.setState({ success_modal_show: true });
+    this.setState({ modal_show: false });
+  };
+
+  hideSuccessModal = () => {
+    this.setState({ success_modal_show: false });
+  };
 
   handlePlayerDropdownChange = (event) => {
     const selectedOption = event.target.value;
@@ -2745,6 +2783,10 @@ class VideoList extends Component {
         <div className="main main-raised" style={{ backgroundColor: ((user && user.other_attributes) && (statusVideoList !== "no_video")) ? "white" : "#F0EEF3" }}>
           <div className="container">
             <div className="">
+              <Modal show={this.state.show} handleClose={this.hideModal} handleForm={this.showModalForm} />
+              <Modal_Form modal_show={this.state.modal_show} handleClose={this.hideModalForm} handleSuccess={this.showSuccessModal} />
+              <Success_Modal success_modal_show={this.state.success_modal_show} handleClose={this.hideSuccessModal} />
+
               {
                 ((this.props.user && this.props.user.other_attributes) && (this.props.statusVideoList !== "no_video")) ?
                   (editVDO_click === "show") ?
