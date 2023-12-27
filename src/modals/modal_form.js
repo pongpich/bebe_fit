@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 
 import './modal.css';
 import modal_img from "../assets/img/modal.jpg";
@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const Modal_Form = ({ handleClose, modal_show, children, handleSuccess }) => {
-    const showHideClassName = modal_show ? "modal display-block" : "modal display-none";
+    const showHideClassName = modal_show ? "display-block" : "display-none";
     const [Company_Name, setCompanyName] = useState('');
     const [Employee_Qty, setEmployeeQty] = useState('');
     const [Contact_Name, setContactName] = useState('');
@@ -91,7 +91,8 @@ const Modal_Form = ({ handleClose, modal_show, children, handleSuccess }) => {
                     />
                     <br></br>
                     <p><b>สอบถามข้อมูลเพิ่มเกี่ยวกับรายละเอียดและสิทธิประโยชน์ โทร. 0938832339</b></p>
-                    <a href="https://lin.ee/7RdqH3v" onclick="return runMyFunction();">
+                    <a href="https://lin.ee/7RdqH3v" target="_blank"
+                        rel="noopener noreferrer">
                         หรือคลิกเพื่อ Add Line
                     </a>
 

@@ -3,13 +3,13 @@ import './modal.css';
 
 
 const Success_Modal = ({ handleClose, success_modal_show, children, handleForm }) => {
-    const showHideClassName = success_modal_show ? "modal display-block" : "modal display-none";
+    const showHideClassName = success_modal_show ? "display-block" : "display-none";
 
     return (
         <div className={showHideClassName}>
             <section className="modal-main3">
                 {children}
-                <b>ขอบคุณสำหรับข้อมูล เราจะติดต่อไปในเร็วๆนี้</b>
+                <b>ขอบคุณสำหรับข้อมูล เราจะติดต่อกลับไปในเร็วๆนี้</b>
                 {/* <button style={{ backgroundSize: "cover", width: "40px", height: "40px" }} type="button" onClick={handleClose}>
                     Close
                 </button> */}

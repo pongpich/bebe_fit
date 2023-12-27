@@ -1,12 +1,13 @@
 import React, { Component }  from 'react';
 
-import './modal.css';
+import '../modals/modal.css';
 import modal_img from "../assets/img/modal.jpg";
 import close from "../assets/img/icon-close.png";
 
 const Modal = ({ handleClose, show, children, handleForm }) => {
-    const showHideClassName = show ? "modal display-block" : "modal display-none";
+    const showHideClassName = show ? "display-block" : "display-none";
 
+    console.log(showHideClassName);
     return (
         <div className={showHideClassName}>
             <section className="modal-main">
