@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, { Component } from 'react';
 
 import '../modals/modal.css';
 import modal_img from "../assets/img/modal.jpg";
@@ -11,12 +11,10 @@ const Modal = ({ handleClose, show, children, handleForm }) => {
     return (
         <div className={showHideClassName}>
             <section className="modal-main">
-                {children}
-                <img src={modal_img} alt="Girl in a jacket" width="500" height="500"></img>
-                {/* <button style={{ backgroundSize: "cover", width: "40px", height: "40px" }} type="button" onClick={handleClose}>
-                    Close
-                </button> */}
-                <div className="content" id="close_button">
+
+                {/* <img src={modal_img} alt="Girl in a jacket" className="image"></img> */}
+
+                {/* <div className="content" id="close_button">
                     <img
                         style={{ width: "30px" }}
                         src={close}
@@ -26,11 +24,23 @@ const Modal = ({ handleClose, show, children, handleForm }) => {
                 </div>
                 <div className="click" id="close_button">
                     <img
-                        style={{ width: "81px", height:"39px" }}
+                        style={{ width: "81px", height: "39px" }}
                         src={close}
                         alt="close icon"
                         onClick={handleForm}
                     />
+                </div> */}
+                <div class="image-container">
+                    <img src={modal_img} alt="Girl in a jacket" className="image"></img>
+                    <div className="top-right-button" id="close_button">
+                        <img
+                            style={{ width: "30px" }}
+                            src={close}
+                            alt="close icon"
+                            onClick={handleClose}
+                        />
+                    </div>
+                    <button class="bottom-right-button" onClick={handleForm}>Click Me</button>
                 </div>
             </section>
         </div>
