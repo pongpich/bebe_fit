@@ -75,7 +75,7 @@ class App extends Component {
         week = calculateWeekInProgram(user.start_date);
       }
       if (!statusCheckQuestionnaireLog && ((week >= 6) && (week <= 8))) {
-        this.toggle('popupQuestionnaire');
+        //this.toggle('popupQuestionnaire');
       }
     }
 
@@ -108,7 +108,7 @@ class App extends Component {
     }
     return (
       <nav className="navbar navbar-expand" style={{ backgroundColor: "#F45197", fontFamily: "'Prompt', sans-serif" }}>
-        <div style={{ color: "white", position: "absolute",left: 20, bottom: 0, fontSize: 12}}>(updated: 27-12-2023)</div>
+        <div style={{ color: "white", position: "absolute", left: 20, bottom: 0, fontSize: 12 }}>(updated: 08-01-2024)</div>
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
           <img className="mr-3" src="/assets/img/logo_g3.png" alt="" />
         </a>
@@ -143,7 +143,7 @@ class App extends Component {
                 </a>
               </li>
             }
-            {
+            {/* {
               ((this.props.user !== null) && (week >= 6 && week <= 8)) &&
               <li className="nav-item">
                 {
@@ -157,7 +157,7 @@ class App extends Component {
                     </div>
                 }
               </li>
-            }
+            } */}
             {
               (this.props.user !== null) &&
               <li className="nav-item">
@@ -192,10 +192,10 @@ class App extends Component {
       var video = document.getElementById(`introVDO`);
       video.play();
     }
-    if (popupName === "popupQuestionnaire") {
-      document.getElementById("popupQuestionnaire").classList.toggle("active");
-      this.setState({ overlay: true });
-    }
+     if (popupName === "popupQuestionnaire") {
+       document.getElementById("popupQuestionnaire").classList.toggle("active");
+       this.setState({ overlay: true });
+     }
     if (popupName === "popupNews") {
       if (document.getElementById("popupNews")) {
         document.getElementById("popupNews").classList.toggle("active");
