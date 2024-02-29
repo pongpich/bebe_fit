@@ -108,7 +108,7 @@ class App extends Component {
     }
     return (
       <nav className="navbar navbar-expand" style={{ backgroundColor: "#F45197", fontFamily: "'Prompt', sans-serif" }}>
-        <div style={{ color: "white", position: "absolute", left: 20, bottom: 0, fontSize: 12 }}>(updated: 08-01-2024)</div>
+        <div style={{ color: "white", position: "absolute", left: 20, bottom: 0, fontSize: 12 }}></div>
         <a className="navbar-brand" href="/#" onClick={() => this.props.history.push('/')} style={{ color: "white", cursor: "pointer" }}>
           <img className="mr-3" src="/assets/img/logo_g3.png" alt="" />
         </a>
