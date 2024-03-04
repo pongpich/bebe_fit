@@ -58,7 +58,7 @@ class Challenges extends Component {
       this.props.getRank(this.props.user.user_id, this.props.user.start_date);
       this.props.getLogWeight(this.props.user.user_id);
       this.props.getIsReducedWeight(this.props.user.user_id);
-      
+
       this.props.getLeaderboard();
       this.props.getFriendList(this.props.user.user_id);
       this.props.getFriendRequest(this.props.user.user_id);
@@ -66,15 +66,15 @@ class Challenges extends Component {
       this.props.getAchievementLog(this.props.user.user_id);
       this.props.getFriendsRank(this.props.user.user_id)
       if (this.props.user && this.props.user.group_id) {
-      
-      
+
+
         this.props.getLogWeightTeam(this.props.user.group_id);
-   
+
         this.props.getDailyTeamWeightBonus(this.props.user.user_id);
         this.props.getMembersAndRank(this.props.user.group_id, this.props.user.start_date);
         this.props.getGroupName(this.props.user.group_id);
         this.props.getScoreOfTeam(this.props.user.group_id);
-     
+
       } else {
         this.props.clearChallenges()
       }
@@ -323,7 +323,19 @@ class Challenges extends Component {
         <div className="card shadow col-lg-4 col-md-12  offset-lg-1" style={{ borderRadius: "25px" }}>
           <div className="card-body">
             <center>
-              <img src={rank && `../assets/img/rank/${rank.toLowerCase()}.png`} className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" />
+              <img
+                src={
+                  rank
+                    ? `../assets/img/rank/${rank.toLowerCase()}.png`
+                    : `../assets/img/rank/newbie.png`
+                }
+                // src={rank && `../assets/img/rank/${rank.toLowerCase()}.png`}
+                className="rounded-circle"
+                alt="Cinque Terre"
+                width="45%"
+                height="45%"
+              />
+              {/* <img src={rank && `../assets/img/rank/${rank.toLowerCase()}.png`} className="rounded-circle" alt="Cinque Terre" width="45%" height="45%" /> */}
               <h3 className="card-title" style={{ color: "#F45197" }}><b>{rank}</b></h3>
               <div class="progress" style={{ width: "70%", borderRadius: "25px" }}>
                 <div class="progress-bar" style={{ width: `${(scoreInWeek / 41) * 100}%`, backgroundColor: "#F45197" }}></div>
@@ -1825,8 +1837,8 @@ class Challenges extends Component {
                                             onClick={() => this.props.cancelTeamInvite(user.user_id, item.user_id)}
                                           >
                                             <img className="cancel-H" />
-                                          ยกเลิกคำชวน
-                                        </span>
+                                            ยกเลิกคำชวน
+                                          </span>
                                         }
                                       </div>
                                       :
