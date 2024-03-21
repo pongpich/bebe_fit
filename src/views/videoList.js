@@ -70,7 +70,8 @@ class VideoList extends Component {
       showBarveAndBurn: false,
       show: true,
       modal_show: false,
-      success_modal_show: false
+      success_modal_show: false,
+      warmup_today_video: ''
     };
 
     this.prevPlayTime = 0;
@@ -137,12 +138,10 @@ class VideoList extends Component {
     //ถ้า JSON.parse แล้วไม่มี Error แสดงว่ายังเป็น String อยู่
     return false;
   }
-
   async componentDidMount() {
     const { user } = this.props;
 
     this.props.setEndedVideoPlayerList(false);
-
     if (user) {
       this.props.getMemberInfo(user.user_id);
       this.props.checkProgramLevel(user.user_id);
@@ -338,10 +337,52 @@ class VideoList extends Component {
       })
     }
     if (prevProps.videos !== this.props.videos) {
+      // console.log(focusDay);
+      const video_today = this.exerciseDaySelection(focusDay);
       const videos = this.props.videos;
-      this.setState({
-        selectChangeVideoList: videos
-      })
+      let warmup_today = '';
+      let maincircuit_today = '';
+      if (video_today) {
+        warmup_today = video_today.find(video => video.category === "Warm Up")['name'];
+        maincircuit_today = video_today.find(video => video.category === "Main Circuit")['name'];
+      }
+      //เอาไว้แยกหมวดคลิปตอนกดแก้ไข จะโชว์เฉพาะตามเงื่อนไขของมัน
+      if (videos[0] && videos[0]['category'] === 'Warm Up') {
+        const filteredVdoData = videos.filter(item => item.category === "Warm Up" && item.name !== warmup_today);
+        this.setState({
+          selectChangeVideoList: filteredVdoData
+        })
+      } else if (videos[0] && videos[0]['category'] === 'Main Circuit') {
+        if (focusDay === 0) {
+          const filteredVdoData = videos.filter(item => item.type === "Chest focus" && item.name !== maincircuit_today);
+          this.setState({
+            selectChangeVideoList: filteredVdoData
+          })
+        } else if (focusDay === 1) {
+          const filteredVdoData = videos.filter(item => item.type === "Back focus" && item.name !== maincircuit_today);
+          this.setState({
+            selectChangeVideoList: filteredVdoData
+          })
+        } else if (focusDay === 2) {
+          const filteredVdoData = videos.filter(item => item.type === "Leg focus" && item.name !== maincircuit_today);
+          this.setState({
+            selectChangeVideoList: filteredVdoData
+          })
+        } else if (focusDay === 3) {
+          const filteredVdoData = videos.filter(item => item.type === "Arm focus" && item.name !== maincircuit_today);
+          this.setState({
+            selectChangeVideoList: filteredVdoData
+          })
+        } else {
+          this.setState({
+            selectChangeVideoList: videos
+          })
+        }
+      } else {
+        this.setState({
+          selectChangeVideoList: videos
+        })
+      }
     }
     if (prevProps.status === "processing" && this.props.status === "success") {
       this.closeEditVDO();
@@ -917,11 +958,11 @@ class VideoList extends Component {
                   <img className="body_part" src={`../assets/img/body_part/${this.props.videos[0].category.toLowerCase().split(" ").join("")}.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  ((selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "chestfocus" || (selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "chest_back")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/chest.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "chest_back")
+                  ((selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "backfocus" || (selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "chest_back")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/back.png`}></img>
                 }
                 {
@@ -929,11 +970,11 @@ class VideoList extends Component {
                   && <img className="body_part ml-2" src={`../assets/img/body_part/core.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  ((selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "legfocus" || (selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "leg_arm")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/leg.png`}></img>
                 }
                 {
-                  ((this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus" || (this.props.videos[0]) && this.props.videos[0].type.toLowerCase().split(" ").join("") === "leg_arm")
+                  ((selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "armfocus" || (selectChangeVideoList[0]) && selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "leg_arm")
                   && <img className="body_part ml-2" src={`../assets/img/body_part/arm.png`}></img>
                 }
                 {
@@ -947,13 +988,13 @@ class VideoList extends Component {
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Warm Up</b></h2>
                 }
                 {
-                  (this.props.videos[0]) &&
-                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "chestfocus") &&
+                  (selectChangeVideoList[0]) &&
+                  (selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "chestfocus") &&
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Chest</b></h2>
                 }
                 {
-                  (this.props.videos[0]) &&
-                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "backfocus") &&
+                  (selectChangeVideoList[0]) &&
+                  (selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "backfocus") &&
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Back and Core</b></h2>
                 }
                 {
@@ -962,13 +1003,13 @@ class VideoList extends Component {
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Chest and Back</b></h2>
                 }
                 {
-                  (this.props.videos[0]) &&
-                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "legfocus") &&
+                  (selectChangeVideoList[0]) &&
+                  (selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "legfocus") &&
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Leg</b></h2>
                 }
                 {
-                  (this.props.videos[0]) &&
-                  (this.props.videos[0].type.toLowerCase().split(" ").join("") === "armfocus") &&
+                  (selectChangeVideoList[0]) &&
+                  (selectChangeVideoList[0].type.toLowerCase().split(" ").join("") === "armfocus") &&
                   <h2 className="ml-2 mt-1" style={{ color: "#F45197" }}><b>Arm and Shoulder</b></h2>
                 }
                 {
@@ -989,7 +1030,9 @@ class VideoList extends Component {
               </div>
               <div className="selectEditPlaylist">
                 {
+                  //อันเดิมก่อน filter คืออันนี้
                   selectChangeVideoList.map((item, index) => (
+                    // filteredVdoData.map((item, index) => (
 
                     <div className="playlistWrapper border shadow" >
                       <div className="">
